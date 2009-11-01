@@ -66,6 +66,6 @@ public class Main {
 		parseArguments(args);
 		
 		// TODO: use spring ioc
-		// new Main();
+		new Main();
 	}
 }
