@@ -111,108 +111,8 @@ public class RequestHandler extends AbstractHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		// AppServerDesc desc = servers.get(app);
-		// if (desc == null) {
-		// desc = startAppServer(app);
-		// }
-		//
-		// int port = desc.getPort();
-		//
-		// try {
-		// ContentExchange exchange = new ContentExchange();
-		//
-		// exchange.setURL("http://localhost:" + port);
-		// exchange.setURI(request.getRequestURI());
-		// exchange.setMethod(baseRequest.getMethod());
-		//
-		// httpClient.send(exchange);
-		// exchange.waitForDone();
-		//
-		// response.getOutputStream().write(exchange.getResponseContentBytes());
-		// response.getOutputStream().close();
-		//
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
 	}
 
-	// private AppServerDesc startAppServer(String app) {
-	// AppServerDesc desc = new AppServerDesc();
-	// desc.setAppName(app);
-	//
-	// try {
-	// ProcessBuilder builder = new ProcessBuilder();
-	// builder.redirectErrorStream(true);
-	// List<String> command = new LinkedList<String>();
-	//
-	// builder.directory(new File("../AppServer/"));
-	//
-	// command.add("javaw");
-	// command.add("-classpath");
-	//
-	// String classpath = "../AppServer/bin/";
-	// File file = new File("../Libs/lib/jetty-7.0.0/");
-	// for (File f : file.listFiles()) {
-	// classpath += (";" + f.getAbsolutePath());
-	// }
-	//
-	// System.out.println("classpath: " + classpath);
-	// command.add(classpath);
-	//
-	// command.add("org.prot.appserver.Main");
-	// builder.command(command);
-	// Process proc = builder.start();
-	// desc.setProcess(proc);
-	//
-	// System.out.println("proc started");
-	//
-	// BufferedReader reader = new BufferedReader(new
-	// InputStreamReader(proc.getInputStream()));
-	//
-	// class ReadThr extends Thread {
-	//
-	// private BufferedReader reader;
-	//
-	// public ReadThr(BufferedReader reader) {
-	// this.reader = reader;
-	// }
-	//
-	// public void run() {
-	// String line;
-	// try {
-	// while ((line = reader.readLine()) != null) {
-	// System.out.println(line);
-	//
-	// Thread.sleep(100);
-	// }
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// }
-	// }
-	//
-	// ReadThr thr = new ReadThr(reader);
-	// thr.start();
-	//
-	// Runtime.getRuntime().addShutdownHook(new Thread() {
-	// public void run() {
-	// // shutdown all local servers
-	// for (AppServerDesc desc : servers.values()) {
-	// System.out.println("KILLING SUBPROCESS");
-	// desc.getProcess().destroy();
-	// }
-	// }
-	// });
-	//
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	//
-	// servers.put(app, desc);
-	//
-	// return desc;
-	// }
 
 	private AppInfo startApp(String appId) throws DuplicatedAppException {
 		if (this.appManager.existsApp(appId)) {
@@ -227,20 +127,6 @@ public class RequestHandler extends AbstractHandler {
 	@Override
 	public void handle(String target, Request baseRequest, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException {
-		//
-		// System.out.println("Target: " + target);
-		// System.out.println("Request infos: ");
-		// System.out.println("Auth type: " + baseRequest.getAuthType());
-		// System.out.println("ContextPath: " + baseRequest.getContextPath());
-		// System.out.println("Method: " + baseRequest.getMethod());
-		// System.out.println("Path info: " + baseRequest.getPathInfo());
-		// System.out.println("Query string: " + baseRequest.getQueryString());
-		// System.out.println("Request uri: " + baseRequest.getRequestURI());
-		// System.out.println("Host url: " + baseRequest.getRemoteHost());
-		// System.out.println("Host address: " + baseRequest.getRemoteAddr());
-		// System.out.println("Server name: " + request.getServerName());
-
-		// Check request port
 		
 		// Heartbeat-Port
 		System.out.println("Port: " + baseRequest.getServerPort());
