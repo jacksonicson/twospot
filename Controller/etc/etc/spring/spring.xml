@@ -1,5 +1,60 @@
+<?xml-stylesheet type="text/xsl" ?>
+<!DOCTYPE beans SYSTEM "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
 <beans>
-	<bean>
+
+	<bean id="OutsideConnector" class="org.eclipse.jetty.server.nio.SelectChannelConnector">
+		<property name="host" value="app.mydomain" />
+		<property name="port" value="8080" />
 		
+		<property name="maxIdleTime" value="300000" />
+		<property name="acceptors" value="2" />
+		<property name="statsOn" value="false" />
+		<property name="confidentialPort" value="8443" />
+		<property name="lowResourcesConnections" value="20000" />
+		<property name="lowResourcesMaxIdleTime" value="5000" />
+	</bean>
+	
+	<bean id="InsideConnector" class="org.eclipse.jetty.server.nio.BlockingChannelConnector">
+		<property name="host" value="127.0.0.1" />
+		<property name="port" value="8079" />
+		
+		<property name="maxIdleTime" value="300000"/>
+		<property name="acceptors" value="1" />
+		<property name="statsOn" value="false" />
+	</bean>
+
+	<bean id="Server" class="org.eclipse.jetty.server.Server">
+		<property name="threadPool">
+			<bean class="org.eclipse.jetty.util.thread.QueuedThreadPool">
+				<property name="minThreads" value="1" />
+				<property name="maxThreads" value="5" />
+			</bean>
+		</property>
+		
+		<property name="connectors">
+			<list>
+				<ref bean="OutsideConnector"/>
+				<ref bean="InsideConnector"/>
+			</list>
+		</property>
+		
+		<property name="handler" ref="HandlerCollection" />
+	</bean>
+	
+	<bean id="HandlerCollection" class="org.eclipse.jetty.server.handler.HandlerCollection">
+		<property name="handlers">
+			<list>
+				<ref bean="RequestHandler"/>
+			</list>
+		</property>
+	</bean>	
+	
+	<bean id="RequestHandler" class="org.prot.controller.RequestHandler">
+	</bean>
+
+	<bean id="Controller" class="org.prot.controller.Controller">
+		<property name="server" ref="Server" />
 	</bean>
 </beans>
+

@@ -91,8 +91,7 @@ public class RequestHandler extends AbstractHandler {
 				for (int i = 0; i < fields.size(); i++) {
 					Field field = fields.getField(i);
 
-					// System.out.println(field.getName() + ":" +
-					// field.getValue());
+					System.out.println(field.getName() + ":" + field.getValue());
 					response.addHeader(field.getName(), field.getValue());
 				}
 
