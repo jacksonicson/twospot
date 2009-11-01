@@ -1,14 +1,7 @@
 package org.prot.controller;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,12 +14,17 @@ import org.eclipse.jetty.http.HttpFields.Field;
 import org.eclipse.jetty.io.EofException;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.prot.controller.manager.AppInfo;
+import org.prot.controller.manager.AppManager;
+import org.prot.controller.manager.AppRegistry;
+import org.prot.controller.manager.AppStarter;
+import org.prot.controller.manager.DuplicatedAppException;
 
 public class RequestHandler extends AbstractHandler {
 
-	private Hashtable<String, AppServerDesc> servers = new Hashtable<String, AppServerDesc>();
+	private HttpClient httpClient;
 
-	HttpClient httpClient;
+	private AppManager appManager;
 
 	public RequestHandler() {
 		System.out.println(">>>>>>> creating a new request handler");
@@ -39,14 +37,19 @@ public class RequestHandler extends AbstractHandler {
 			e.printStackTrace();
 		}
 
+		appManager = new AppManager();
+		appManager.setRegistry(new AppRegistry());
+		appManager.setStarter(new AppStarter());
+
 	}
 
-	private void forwardRequest(String app, Request baseRequest, HttpServletRequest request,
+	private void forwardRequest(AppInfo appInfo, Request baseRequest, HttpServletRequest request,
 			HttpServletResponse response) {
 
 		try {
 			// create request
-			String url = "http://www.hs-augsburg.de" + baseRequest.getUri();
+			int port = appInfo.getPort();
+			String url = "http://127.0.0.1:" + port + baseRequest.getUri();
 			System.out.println("url: " + url);
 
 			ContentExchange exchange = new ContentExchange(true);
@@ -69,7 +72,7 @@ public class RequestHandler extends AbstractHandler {
 			}
 
 			// TODO: for testing purpose only
-			exchange.setRequestHeader("Host", "www.hs-augsburg.de");
+			exchange.setRequestHeader("Host", "127.0.0.1:" + port);
 			// exchange.setRequestHeader("Referer",
 			// "http://www.hs-augsburg.de/");
 
@@ -135,80 +138,91 @@ public class RequestHandler extends AbstractHandler {
 		// }
 	}
 
-	private AppServerDesc startAppServer(String app) {
-		AppServerDesc desc = new AppServerDesc();
-		desc.setAppName(app);
+	// private AppServerDesc startAppServer(String app) {
+	// AppServerDesc desc = new AppServerDesc();
+	// desc.setAppName(app);
+	//
+	// try {
+	// ProcessBuilder builder = new ProcessBuilder();
+	// builder.redirectErrorStream(true);
+	// List<String> command = new LinkedList<String>();
+	//
+	// builder.directory(new File("../AppServer/"));
+	//
+	// command.add("javaw");
+	// command.add("-classpath");
+	//
+	// String classpath = "../AppServer/bin/";
+	// File file = new File("../Libs/lib/jetty-7.0.0/");
+	// for (File f : file.listFiles()) {
+	// classpath += (";" + f.getAbsolutePath());
+	// }
+	//
+	// System.out.println("classpath: " + classpath);
+	// command.add(classpath);
+	//
+	// command.add("org.prot.appserver.Main");
+	// builder.command(command);
+	// Process proc = builder.start();
+	// desc.setProcess(proc);
+	//
+	// System.out.println("proc started");
+	//
+	// BufferedReader reader = new BufferedReader(new
+	// InputStreamReader(proc.getInputStream()));
+	//
+	// class ReadThr extends Thread {
+	//
+	// private BufferedReader reader;
+	//
+	// public ReadThr(BufferedReader reader) {
+	// this.reader = reader;
+	// }
+	//
+	// public void run() {
+	// String line;
+	// try {
+	// while ((line = reader.readLine()) != null) {
+	// System.out.println(line);
+	//
+	// Thread.sleep(100);
+	// }
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
+	// }
+	//
+	// ReadThr thr = new ReadThr(reader);
+	// thr.start();
+	//
+	// Runtime.getRuntime().addShutdownHook(new Thread() {
+	// public void run() {
+	// // shutdown all local servers
+	// for (AppServerDesc desc : servers.values()) {
+	// System.out.println("KILLING SUBPROCESS");
+	// desc.getProcess().destroy();
+	// }
+	// }
+	// });
+	//
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	//
+	// servers.put(app, desc);
+	//
+	// return desc;
+	// }
 
-		try {
-			ProcessBuilder builder = new ProcessBuilder();
-			builder.redirectErrorStream(true);
-			List<String> command = new LinkedList<String>();
-
-			builder.directory(new File("../AppServer/"));
-
-			command.add("javaw");
-			command.add("-classpath");
-
-			String classpath = "../AppServer/bin/";
-			File file = new File("../Libs/lib/jetty-7.0.0/");
-			for (File f : file.listFiles()) {
-				classpath += (";" + f.getAbsolutePath());
-			}
-
-			System.out.println("classpath: " + classpath);
-			command.add(classpath);
-
-			command.add("org.prot.appserver.Main");
-			builder.command(command);
-			Process proc = builder.start();
-			desc.setProcess(proc);
-
-			System.out.println("proc started");
-
-			BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-
-			class ReadThr extends Thread {
-
-				private BufferedReader reader;
-
-				public ReadThr(BufferedReader reader) {
-					this.reader = reader;
-				}
-
-				public void run() {
-					String line;
-					try {
-						while ((line = reader.readLine()) != null) {
-							System.out.println(line);
-
-							Thread.sleep(100);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
-
-			ReadThr thr = new ReadThr(reader);
-			thr.start();
-
-			Runtime.getRuntime().addShutdownHook(new Thread() {
-				public void run() {
-					// shutdown all local servers
-					for (AppServerDesc desc : servers.values()) {
-						System.out.println("KILLING SUBPROCESS");
-						desc.getProcess().destroy();
-					}
-				}
-			});
-
-		} catch (Exception e) {
-			e.printStackTrace();
+	private AppInfo startApp(String appId) throws DuplicatedAppException {
+		if (this.appManager.existsApp(appId)) {
+			return this.appManager.getAppInfo(appId);
 		}
 
-		servers.put(app, desc);
-
-		return desc;
+		AppInfo info = this.appManager.startApp(appId);
+		System.out.println("App started: " + info.getPort());
+		return info;
 	}
 
 	@Override
@@ -227,19 +241,23 @@ public class RequestHandler extends AbstractHandler {
 		// System.out.println("Host address: " + baseRequest.getRemoteAddr());
 		// System.out.println("Server name: " + request.getServerName());
 
-		StringBuffer url = baseRequest.getRequestURL();
-		// System.out.println("URL: " + url);
-		URL myUrl = new URL(url.toString());
-		// System.out.println("Host: " + myUrl.getHost());
-		String host = myUrl.getHost();
-		if (host.indexOf(".") < 0) {
-			throw new NullPointerException();
+		String serverName = baseRequest.getServerName();
+		int index = serverName.indexOf(".");
+		if (index < 0) {
+			response.getOutputStream().print("Error: Missing AppId");
+			response.getOutputStream().close();
+			return;
 		}
-		String app = host.substring(0, host.indexOf("."));
-		// System.out.println("APP: " + app);
-		forwardRequest(app, baseRequest, request, response);
 
-		response.getOutputStream().write("Hello World".getBytes());
-		response.getOutputStream().close();
+		String appId = serverName.substring(0, index);
+		try {
+			
+			AppInfo info = startApp(appId);
+			forwardRequest(info, baseRequest, request, response);
+			
+		} catch (DuplicatedAppException e) {
+			e.printStackTrace();
+		}
+
 	}
 }

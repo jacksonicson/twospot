@@ -26,8 +26,7 @@
 	<classpathentry kind="lib" path="/Libs/lib/apache_commons/apache-mime4j-0.6.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/apache_commons/commons-codec-1.3.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/apache_commons/commons-logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/httpclient-4.0/httpclient-4.0.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/httpclient-4.0/httpcore-4.0.1.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/httpclient-4.0/httpmime-4.0.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RC1/bin/org.springframework.beans-3.0.0.RC1.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RC1/bin/org.springframework.core-3.0.0.RC1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
