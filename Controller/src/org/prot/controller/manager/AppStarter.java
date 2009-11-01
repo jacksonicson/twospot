@@ -15,6 +15,12 @@ public class AppStarter {
 		command.add(loadClasspath());
 		command.add("org.prot.appserver.Main"); 
 		
+		command.add("-appId");
+		command.add(info.getAppId()); 
+		
+		command.add("-ctrlPort"); 
+		command.add("8079");
+		
 		ProcessBuilder procBuilder = new ProcessBuilder(); 
 		procBuilder.directory(new File("../AppServer/"));
 		procBuilder.command(command); 
