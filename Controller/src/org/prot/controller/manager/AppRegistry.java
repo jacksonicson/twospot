@@ -43,4 +43,8 @@ public class AppRegistry {
 		
 		return appInfo; 
 	}
+	
+	private void readPidFile() {
+		
+	}
 }

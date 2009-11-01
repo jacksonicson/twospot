@@ -241,6 +241,15 @@ public class RequestHandler extends AbstractHandler {
 		// System.out.println("Host address: " + baseRequest.getRemoteAddr());
 		// System.out.println("Server name: " + request.getServerName());
 
+		// Check request port
+		
+		// Heartbeat-Port
+		System.out.println("Port: " + baseRequest.getServerPort());
+		if(baseRequest.getServerPort() == 8079) {
+			response.getOutputStream().close();
+			return; 
+		}
+		
 		String serverName = baseRequest.getServerName();
 		int index = serverName.indexOf(".");
 		if (index < 0) {

@@ -30,6 +30,24 @@
 			</New>
 		</Arg>
 	</Call>
+	
+	<Call name="addConnector">
+		<Arg>
+			<New class="org.eclipse.jetty.server.nio.BlockingChannelConnector">
+				<Set name="host">
+					<SystemProperty name="127.0.0.1" />
+				</Set>
+
+				<Set name="port">
+					<SystemProperty name="jetty.port" default="8079" />
+				</Set>
+
+				<Set name="maxIdleTime">300000</Set>
+				<Set name="Acceptors">1</Set>
+				<Set name="statsOn">false</Set>
+			</New>
+		</Arg>
+	</Call>
 
 	<!-- set main handler -->
 	<Set name="handler">

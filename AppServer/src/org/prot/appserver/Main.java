@@ -17,6 +17,8 @@ public class Main {
 			Server server = (Server) config.configure();
 			server.start();
 
+			new Monitor();
+			
 		} catch (SAXException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
