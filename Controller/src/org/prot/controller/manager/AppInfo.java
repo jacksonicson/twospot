@@ -1,6 +1,5 @@
 package org.prot.controller.manager;
 
-import java.io.ByteArrayOutputStream;
 
 public class AppInfo {
 
@@ -11,11 +10,17 @@ public class AppInfo {
 
 	// runtime
 	private Process process;
-	private ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-	private ByteArrayOutputStream errStream = new ByteArrayOutputStream();
+	private ProcessManager manager = new ProcessManager(); 
+	
+	private boolean stale = false;
 
-	public AppInfo() {
-		// empty
+	public void stopProcessManager() {
+		manager.stop(); 
+	}
+	
+	public void startProcessManager(Process process) {
+		this.process = process; 
+		manager.start(process); 
 	}
 
 	public String getAppId() {
@@ -38,16 +43,11 @@ public class AppInfo {
 		return process;
 	}
 
-	public void setProcess(Process process) {
-		this.process = process;
+	public boolean isStale() {
+		return stale;
 	}
 
-	public ByteArrayOutputStream getOutStream() {
-		return outStream;
+	public void setStale(boolean stale) {
+		this.stale = stale;
 	}
-
-	public ByteArrayOutputStream getErrStream() {
-		return errStream;
-	}
-
 }

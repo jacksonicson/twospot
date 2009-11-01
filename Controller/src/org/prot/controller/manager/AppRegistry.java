@@ -33,13 +33,18 @@ public class AppRegistry {
 	}
 	
 	public AppInfo registerApp(String appId) throws DuplicatedAppException {
-		if(appInfos.containsKey(appId))
-			throw new DuplicatedAppException(appId); 
+		AppInfo appInfo = appInfos.get(appId);
+		if(appInfo != null)
+		{
+			if(appInfo.isStale() == false)
+				throw new DuplicatedAppException(appId);
+		} else {
+			appInfo = new AppInfo();
+			appInfo.setAppId(appId);
+			putApp(appInfo);
+		}
 		
-		AppInfo appInfo = new AppInfo();
-		appInfo.setAppId(appId);
 		appInfo.setPort(getPort());
-		putApp(appInfo);
 		
 		return appInfo; 
 	}

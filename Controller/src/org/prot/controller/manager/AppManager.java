@@ -6,9 +6,6 @@ public class AppManager {
 	
 	private AppStarter starter; 
 	
-	public AppManager() {
-	}
-	
 	public void setRegistry(AppRegistry registry) {
 		this.registry = registry;
 	}
@@ -26,6 +23,7 @@ public class AppManager {
 	}
 
 	public AppInfo startApp(String appId) throws DuplicatedAppException {
+		
 		AppInfo appInfo = registry.registerApp(appId);
 		starter.startApp(appInfo); 	
 		
