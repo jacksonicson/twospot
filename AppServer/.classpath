@@ -23,5 +23,6 @@
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-webapp-7.0.0.v20091005.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-xml-7.0.0.v20091005.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/servlet-api-2.5.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/apache-cli-1.2/commons-cli-1.2.jar" sourcepath="/Libs/lib/apache-cli-1.2/commons-cli-1.2-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
