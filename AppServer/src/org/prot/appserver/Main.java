@@ -13,6 +13,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.util.component.LifeCycle;
+import org.eclipse.jetty.util.component.LifeCycle.Listener;
 import org.eclipse.jetty.xml.XmlConfiguration;
 import org.xml.sax.SAXException;
 
@@ -31,6 +33,35 @@ public class Main
 			SelectChannelConnector connector = (SelectChannelConnector)config.getIdMap().get("SelectChannelConnector");
 			connector.setPort(Configuration.getInstance().getAppServerPort());
 			
+			
+			server.addLifeCycleListener(new Listener() {
+
+				@Override
+				public void lifeCycleFailure(LifeCycle arg0, Throwable arg1)
+				{
+				}
+
+				@Override
+				public void lifeCycleStarted(LifeCycle arg0)
+				{
+					System.out.println("server started"); 
+				}
+
+				@Override
+				public void lifeCycleStarting(LifeCycle arg0)
+				{
+				}
+
+				@Override
+				public void lifeCycleStopped(LifeCycle arg0)
+				{
+				}
+
+				@Override
+				public void lifeCycleStopping(LifeCycle arg0)
+				{
+				}
+			});
 			server.start();
 
 			new Monitor();
