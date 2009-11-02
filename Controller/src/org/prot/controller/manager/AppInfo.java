@@ -22,6 +22,10 @@ public class AppInfo {
 		this.process = process; 
 		manager.start(process); 
 	}
+	
+	public void waitForAppServer() {
+		this.manager.waitForAppServer(); 
+	}
 
 	public String getAppId() {
 		return appId;

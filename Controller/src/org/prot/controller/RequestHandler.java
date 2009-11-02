@@ -165,14 +165,16 @@ public class RequestHandler extends AbstractHandler
 		AppInfo info = this.appManager.startApp(appId);
 		System.out.println("App started or restarted: " + info.getPort());
 		
-		try
-		{
+//		try
+//		{
 			// TODO: Wait until ProcessManager gives a signal!
-			Thread.sleep(3000);
-		} catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		} 
+			// Thread.sleep(3000);
+			info.waitForAppServer(); 
+			
+//		} catch (InterruptedException e)
+//		{
+//			e.printStackTrace();
+//		} 
 		
 		return info;
 	}
