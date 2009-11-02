@@ -52,30 +52,33 @@ public class ProcessManager
 		outThr.start();
 	}
 
-
 	private Object lock = new Object();
-	private boolean hasSignal = false; 
+	private boolean hasSignal = false;
 
 	public void waitForAppServer()
 	{
-		synchronized(lock) {
-			if(hasSignal)
-				return; 
-			
-			try
+		synchronized (lock)
+		{
+			// use a spinlock
+			while (hasSignal == false)
 			{
-				lock.wait();
-				hasSignal = false; 
-			} catch (InterruptedException e)
-			{
-				e.printStackTrace();
+				try
+				{
+					lock.wait();
+				} catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
 			}
+
+			hasSignal = false;
 		}
 	}
-	
+
 	public void notifyAppServer()
 	{
-		synchronized(lock) {
+		synchronized (lock)
+		{
 			hasSignal = true;
 			lock.notify();
 		}
