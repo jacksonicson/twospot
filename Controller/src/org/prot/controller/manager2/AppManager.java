@@ -12,7 +12,7 @@ public class AppManager
 		registry = new AppRegistry();
 	}
 
-	public AppInfo requireApp(String appId) throws DuplicatedAppException, AppServerFailedException
+	public synchronized AppInfo requireApp(String appId) throws DuplicatedAppException, AppServerFailedException
 	{
 		// get app info
 		AppInfo appInfo = registry.getAppInfo(appId);
@@ -43,10 +43,9 @@ public class AppManager
 		return appInfo; 
 	}
 	
-	public void staleApp(String appId) {
+	public synchronized void reportStaleApp(String appId) {
 		AppInfo appInfo = registry.getAppInfo(appId); 
 		appInfo.setStatus(AppState.STALE); 
-		restartApp(appInfo);   
 	}
 
 	private void waitForAppServer(AppInfo appInfo)

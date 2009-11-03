@@ -1,75 +1,19 @@
 package org.prot.controller.manager2;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Hashtable;
+import java.util.Map;
 
-public class AppMonitor extends Thread
+public class AppMonitor
 {
-	private boolean stop = false;
+	private Map<AppInfo, AppProcess> processList = new Hashtable<AppInfo, AppProcess>();
 
-	private List<AppProcess> processList = new ArrayList<AppProcess>();
-
-	public AppMonitor() {
-		start(); 
-	}
-	
 	public void registerProcess(AppProcess process)
 	{
-		synchronized (processList)
-		{
-			this.processList.add(process);
-			processList.notify();
-		}
+		this.processList.put(process.getOwner(), process);
 	}
 
 	public AppProcess getProcess(AppInfo appInfo)
 	{
-		synchronized (processList)
-		{
-			for (AppProcess process : processList)
-			{
-				if (process.getOwner().equals(appInfo))
-					return process;
-			}
-		}
-		return null;
-	}
-
-	public void run()
-	{
-		int index = 0;
-		Runnable current = null;
-
-		while (stop == false)
-		{
-			synchronized (processList)
-			{
-				try
-				{
-					while (processList.isEmpty())
-						processList.wait();
-
-					if (index >= processList.size())
-						index = 0;
-
-					current = processList.get(index);
-					index++;
-
-				} catch (InterruptedException e)
-				{
-					e.printStackTrace();
-				}
-			}
-			
-			try
-			{
-				sleep(500);
-			} catch (InterruptedException e)
-			{
-				e.printStackTrace();
-			} 
-
-			current.run();
-		}
+		return processList.get(appInfo);
 	}
 }
