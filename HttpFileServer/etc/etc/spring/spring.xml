@@ -27,15 +27,16 @@
 		<property name="handler" ref="HandlerCollection" />
 	</bean>
 
-	<bean id="HandlerCollection" class="org.prot.controller.PortSelectionHandler">
+	<bean id="HandlerCollection" class="org.eclipse.jetty.server.handler.HandlerList">
 		<property name="handlers">
-			<list value-type="org.prot.controller.HandlerDecorator">
+			<list>
 				<ref bean="MyResourceHandler" />
 			</list>
 		</property>
 	</bean>
 
 	<bean id="MyResourceHandler" class="org.prot.httpfileserver.MyResourceHandler">
+		<property name="resourceBase" value="./files" />
 	</bean>
 </beans>
 
