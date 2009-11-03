@@ -14,7 +14,6 @@ public class AppProcess implements Runnable
 	private Process process;
 
 	private BufferedReader stdInStream;
-	private BufferedReader errInStream;
 
 	public AppInfo getOwner()
 	{
@@ -110,14 +109,13 @@ public class AppProcess implements Runnable
 			// create IO streams
 			stdInStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			
+			// read input
 			String line = "";
 			while ((line = stdInStream.readLine()) != null)
 			{
-				System.out.println(line); 
 				if (line.equals("server started"))
 				{
 					this.appInfo.setStatus(AppState.ONLINE); 
-					System.out.println("server started");
 					return; 
 				}
 			}
