@@ -4,14 +4,13 @@
 <beans>
 
 	<bean id="OutsideConnector" class="org.eclipse.jetty.server.nio.SelectChannelConnector">
-		<property name="host" value="app.mydomain" />
+		<property name="host" value="0.0.0.0" />
 		<property name="port" value="8080" />
 
 		<property name="acceptors" value="1" />
-		<property name="statsOn" value="false" />
 	</bean>
 
-	<bean id="InsideConnector" class="org.eclipse.jetty.server.nio.BlockingChannelConnector">
+	<bean id="InsideConnector" class="org.eclipse.jetty.server.nio.SelectChannelConnector">
 		<property name="host" value="127.0.0.1" />
 		<property name="port" value="8079" />
 
@@ -38,22 +37,37 @@
 		<property name="handler" ref="HandlerCollection" />
 	</bean>
 
-	<bean id="HandlerCollection" class="org.eclipse.jetty.server.handler.HandlerCollection">
+	<bean id="HandlerCollection" class="org.prot.controller.PortSelectionHandler">
 		<property name="handlers">
-			<list>
+			<list value-type="org.prot.controller.HandlerDecorator">
+				<ref bean="ProxyHandler" />
 				<ref bean="RequestHandler" />
 			</list>
 		</property>
 	</bean>
 
+
+	<bean id="ProxyHandler" class="org.prot.controller.HandlerDecorator">
+		<property name="port" value="8079" />
+		<property name="handler">
+			<bean class="org.prot.controller.ControlHandler" />
+		</property>
+	</bean>
+
+	<bean id="RequestHandler" class="org.prot.controller.HandlerDecorator">
+		<property name="port" value="8080" />
+		<property name="handler">
+			<bean class="org.prot.controller.RequestHandler">
+				<property name="appManager" ref="AppManager" />
+			</bean>
+		</property>
+	</bean>
+
+
 	<bean id="Controller" class="org.prot.controller.Controller">
 		<property name="server" ref="Server" />
 	</bean>
-
-	<bean id="RequestHandler" class="org.prot.controller.RequestHandler">
-		<property name="appManager" ref="AppManager" />
-	</bean>
-
+	
 	<bean id="AppRegistry" class="org.prot.controller.manager.AppRegistry">
 	</bean>
 
