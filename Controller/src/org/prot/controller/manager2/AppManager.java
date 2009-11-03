@@ -51,7 +51,8 @@ public class AppManager
 
 	private void waitForAppServer(AppInfo appInfo)
 	{
-		System.out.println("Wait for app not implemented"); 
+		AppProcess process = monitor.getProcess(appInfo);
+		process.waitForAppServer();
 	}
 
 	private void restartApp(AppInfo appInfo)
@@ -69,5 +70,6 @@ public class AppManager
 		}
 
 		process.startOrRestart();
+		waitForAppServer(appInfo);  
 	}
 }

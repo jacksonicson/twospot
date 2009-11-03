@@ -1,12 +1,9 @@
 package org.prot.controller.manager2;
 
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,16 +13,14 @@ public class AppProcess implements Runnable
 
 	private Process process;
 
-	private ByteArrayOutputStream stdOutStream;
-	private ByteArrayOutputStream errOutStream;
+	private BufferedReader stdInStream;
+	private BufferedReader errInStream;
 
-	private InputStream stdInStream;
-	private InputStream errInStream;
-
-	public AppInfo getOwner() {
-		return this.appInfo; 
+	public AppInfo getOwner()
+	{
+		return this.appInfo;
 	}
-	
+
 	public void startOrRestart()
 	{
 		// if the AppServer is marked as stale shutdown the process
@@ -52,7 +47,7 @@ public class AppProcess implements Runnable
 		ProcessBuilder procBuilder = new ProcessBuilder();
 		procBuilder.directory(new File("../AppServer/"));
 		procBuilder.command(command);
-		procBuilder.redirectErrorStream(false);
+		procBuilder.redirectErrorStream(true);
 
 		try
 		{
@@ -60,11 +55,10 @@ public class AppProcess implements Runnable
 			this.process = procBuilder.start();
 
 			// update status
-			this.appInfo.setStatus(AppState.STARTING); 
-			
+			this.appInfo.setStatus(AppState.STARTING);
+
 		} catch (IOException e)
 		{
-			this.appInfo.setStatus(AppState.FAILED); 
 			e.printStackTrace();
 		}
 	}
@@ -107,27 +101,89 @@ public class AppProcess implements Runnable
 	public void stopAndClean()
 	{
 		this.process.destroy();
-		this.stdOutStream = null;
-		this.errOutStream = null;
+	}
+
+	public void waitForAppServer()
+	{
+		try
+		{
+			// create IO streams
+			stdInStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			
+			String line = "";
+			while ((line = stdInStream.readLine()) != null)
+			{
+				System.out.println(line); 
+				if (line.equals("server started"))
+				{
+					this.appInfo.setStatus(AppState.ONLINE); 
+					System.out.println("server started");
+					return; 
+				}
+			}
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public AppProcess(AppInfo appInfo)
 	{
 		this.appInfo = appInfo;
-
-		stdOutStream = new ByteArrayOutputStream();
-		errOutStream = new ByteArrayOutputStream();
-
-		stdInStream = this.process.getInputStream();
-		errInStream = this.process.getErrorStream();
 	}
+
+	String line = "";
 
 	@Override
 	public void run()
 	{
-		System.out.println("Running..."); 
-		
-		if(appInfo.getStatus() == AppState.STARTING)
-			appInfo.setStatus(AppState.ONLINE); 
+		System.out.println("Running...");
+
+		// try
+		// {
+		// // read bytes
+		// int len;
+		// byte[] buffer = new byte[1024];
+		// len = stdInStream.read(buffer);
+		//			
+		// line += new String(buffer);
+		// while(line.indexOf('\n') > -1) {
+		// int index = line.indexOf('\n');
+		// String subline = line.substring(0, index);
+		// line = line.substring(index + 1);
+		//				
+		// if(subline.equals("server started")) {
+		// synchronized(appInfo) {
+		// appInfo.setStatus(AppState.ONLINE);
+		// appInfo.notify();
+		// }
+		// }
+		// }
+		//			
+		// // output bytes
+		// System.out.write(buffer, 0, len);
+		//			
+		// } catch (IOException e1)
+		// {
+		// // TODO Auto-generated catch block
+		// e1.printStackTrace();
+		// }
+
+		// if(appInfo.getStatus() == AppState.STARTING) {
+		// synchronized(appInfo) {
+		//				
+		// try
+		// {
+		// Thread.sleep(5000);
+		// } catch (InterruptedException e)
+		// {
+		// e.printStackTrace();
+		// }
+		//				
+		// appInfo.setStatus(AppState.ONLINE);
+		// appInfo.notifyAll();
+		// }
+		// }
+
 	}
 }

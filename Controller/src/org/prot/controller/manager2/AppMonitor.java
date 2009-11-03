@@ -9,6 +9,10 @@ public class AppMonitor extends Thread
 
 	private List<AppProcess> processList = new ArrayList<AppProcess>();
 
+	public AppMonitor() {
+		start(); 
+	}
+	
 	public void registerProcess(AppProcess process)
 	{
 		synchronized (processList)
@@ -43,9 +47,9 @@ public class AppMonitor extends Thread
 				try
 				{
 					while (processList.isEmpty())
-						wait();
+						processList.wait();
 
-					if (index > processList.size())
+					if (index >= processList.size())
 						index = 0;
 
 					current = processList.get(index);
@@ -56,9 +60,16 @@ public class AppMonitor extends Thread
 					e.printStackTrace();
 				}
 			}
+			
+			try
+			{
+				sleep(500);
+			} catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			} 
 
 			current.run();
 		}
 	}
-
 }
