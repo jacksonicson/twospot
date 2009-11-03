@@ -2,37 +2,24 @@ package org.prot.controller;
 
 import org.eclipse.jetty.server.Server;
 
-public class Controller {
+public class Controller
+{
+	private Server server;
 
-	private Server server; 
-	
-	public void setServer(Server server) {
+	public void setServer(Server server)
+	{
 		this.server = server;
 	}
-	
-	public void start() {
 
-		try {
+	public void start()
+	{
+		try
+		{
 			server.start();
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			e.printStackTrace();
-		} 
-		
-		
-		/* try {
-
-			InputStream configFile = Main.class.getResourceAsStream("/etc/jetty/configuration.xml");
-			XmlConfiguration config = new XmlConfiguration(configFile);
-			Server server = (Server) config.configure();
-			server.start();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} */
+		}
 	}
 
 }

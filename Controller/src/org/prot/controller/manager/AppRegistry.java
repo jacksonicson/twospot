@@ -1,4 +1,4 @@
-package org.prot.controller.manager2;
+package org.prot.controller.manager;
 
 import java.util.Hashtable;
 import java.util.Map;

@@ -15,10 +15,10 @@ import org.eclipse.jetty.http.HttpFields.Field;
 import org.eclipse.jetty.io.EofException;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.prot.controller.manager2.AppInfo;
-import org.prot.controller.manager2.AppManager;
-import org.prot.controller.manager2.AppServerFailedException;
-import org.prot.controller.manager2.DuplicatedAppException;
+import org.prot.controller.manager.AppInfo;
+import org.prot.controller.manager.AppManager;
+import org.prot.controller.manager.AppServerFailedException;
+import org.prot.controller.manager.DuplicatedAppException;
 
 public class RequestHandler extends AbstractHandler
 {
@@ -45,20 +45,14 @@ public class RequestHandler extends AbstractHandler
 		this.appManager = appManager;
 	}
 
-	private void appServerGoneStale(AppInfo appInfo) throws StaleAppServerException
-	{
-		appManager.staleApp(appInfo.getAppId());  
-		throw new StaleAppServerException(); 
-	}
-
-	private void forwardRequest(AppInfo appInfo, Request baseRequest, HttpServletRequest request,
-			HttpServletResponse response) throws StaleAppServerException
+	private boolean forwardRequest(AppInfo appInfo, Request baseRequest, HttpServletRequest request,
+			HttpServletResponse response)
 	{
 
 		// create request
 		int port = appInfo.getPort();
 		String url = "http://127.0.0.1:" + port + baseRequest.getUri();
-//		System.out.println("url: " + url);
+		// System.out.println("url: " + url);
 
 		ContentExchange exchange = new ContentExchange(true);
 		exchange.setMethod(baseRequest.getMethod());
@@ -81,10 +75,8 @@ public class RequestHandler extends AbstractHandler
 			}
 		}
 
-		// TODO: for testing purpose only
+		// use always localhost as request host
 		exchange.setRequestHeader("Host", "127.0.0.1:" + port);
-		// exchange.setRequestHeader("Referer",
-		// "http://www.hs-augsburg.de/");
 
 		if (baseRequest.getContentLength() > 0)
 		{
@@ -109,17 +101,19 @@ public class RequestHandler extends AbstractHandler
 			case HttpExchange.STATUS_EXPIRED:
 			case HttpExchange.STATUS_EXCEPTED:
 				appServerGoneStale(appInfo);
-				break;
+				return false;
 			}
 
 		} catch (InterruptedException e1)
 		{
 			e1.printStackTrace();
 			appServerGoneStale(appInfo);
+			return false;
 		} catch (IOException e)
 		{
 			e.printStackTrace();
 			appServerGoneStale(appInfo);
+			return false;
 		}
 
 		try
@@ -130,7 +124,7 @@ public class RequestHandler extends AbstractHandler
 			{
 				Field field = fields.getField(i);
 
-//				System.out.println(field.getName() + ":" + field.getValue());
+				// System.out.println(field.getName() + ":" + field.getValue());
 				response.addHeader(field.getName(), field.getValue());
 			}
 
@@ -152,26 +146,18 @@ public class RequestHandler extends AbstractHandler
 			// client closed
 		}
 
+		return true;
 	}
 
-	private AppInfo startApp(String appId) throws DuplicatedAppException, AppServerFailedException
+	private void appServerGoneStale(AppInfo appInfo)
 	{
-		return appManager.requireApp(appId);
+		this.appManager.reportStaleApp(appInfo.getAppId());
 	}
 
 	@Override
 	public void handle(String target, Request baseRequest, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException
 	{
-
-		// communication with existing AppServers
-		System.out.println("Port: " + baseRequest.getServerPort());
-		if (baseRequest.getServerPort() == 8079)
-		{
-			response.getOutputStream().close();
-			return;
-		}
-
 		// extract appId
 		String serverName = baseRequest.getServerName();
 		int index = serverName.indexOf(".");
@@ -185,20 +171,12 @@ public class RequestHandler extends AbstractHandler
 		String appId = serverName.substring(0, index);
 		try
 		{
-			AppInfo appInfo = startApp(appId);
-
-			// three tries until stale appservers cause an error
+			// three retries
 			for (int i = 0; i < 3; i++)
 			{
-				try
-				{
-					forwardRequest(appInfo, baseRequest, request, response);
+				AppInfo appInfo = this.appManager.requireApp(appId);
+				if (forwardRequest(appInfo, baseRequest, request, response))
 					break;
-
-				} catch (StaleAppServerException e)
-				{
-					appManager.staleApp(appInfo.getAppId());
-				}
 			}
 
 		} catch (DuplicatedAppException e)
