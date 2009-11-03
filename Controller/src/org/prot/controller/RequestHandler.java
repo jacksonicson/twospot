@@ -15,9 +15,10 @@ import org.eclipse.jetty.http.HttpFields.Field;
 import org.eclipse.jetty.io.EofException;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.prot.controller.manager.AppInfo;
-import org.prot.controller.manager.AppManager;
-import org.prot.controller.manager.DuplicatedAppException;
+import org.prot.controller.manager2.AppInfo;
+import org.prot.controller.manager2.AppManager;
+import org.prot.controller.manager2.AppServerFailedException;
+import org.prot.controller.manager2.DuplicatedAppException;
 
 public class RequestHandler extends AbstractHandler
 {
@@ -46,7 +47,7 @@ public class RequestHandler extends AbstractHandler
 
 	private void appServerGoneStale(AppInfo appInfo) throws StaleAppServerException
 	{
-		appInfo.setStale(true); 
+		appManager.staleApp(appInfo.getAppId());  
 		throw new StaleAppServerException(); 
 	}
 
@@ -153,30 +154,9 @@ public class RequestHandler extends AbstractHandler
 
 	}
 
-	private AppInfo startApp(String appId) throws DuplicatedAppException
+	private AppInfo startApp(String appId) throws DuplicatedAppException, AppServerFailedException
 	{
-		if (this.appManager.existsApp(appId))
-		{
-			AppInfo info = this.appManager.getAppInfo(appId);
-			if (info.isStale() == false)
-				return info;
-		}
-
-		AppInfo info = this.appManager.startApp(appId);
-		System.out.println("App started or restarted: " + info.getPort());
-		
-//		try
-//		{
-			// TODO: Wait until ProcessManager gives a signal!
-			// Thread.sleep(3000);
-			info.waitForAppServer(); 
-			
-//		} catch (InterruptedException e)
-//		{
-//			e.printStackTrace();
-//		} 
-		
-		return info;
+		return appManager.requireApp(appId);
 	}
 
 	@Override
@@ -205,27 +185,26 @@ public class RequestHandler extends AbstractHandler
 		String appId = serverName.substring(0, index);
 		try
 		{
-
-			AppInfo info = startApp(appId);
+			AppInfo appInfo = startApp(appId);
 
 			// three tries until stale appservers cause an error
 			for (int i = 0; i < 3; i++)
 			{
 				try
 				{
-					forwardRequest(info, baseRequest, request, response);
+					forwardRequest(appInfo, baseRequest, request, response);
 					break;
 
 				} catch (StaleAppServerException e)
 				{
-					// e.printStackTrace();
-
-					// restart the app
-					startApp(appId);
+					appManager.staleApp(appInfo.getAppId());
 				}
 			}
 
 		} catch (DuplicatedAppException e)
+		{
+			e.printStackTrace();
+		} catch (AppServerFailedException e)
 		{
 			e.printStackTrace();
 		}
