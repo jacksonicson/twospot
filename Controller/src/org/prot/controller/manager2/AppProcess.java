@@ -127,21 +127,7 @@ public class AppProcess implements Runnable
 	{
 		System.out.println("Running..."); 
 		
-		/* ReadableByteChannel channel = Channels.newChannel(stdInStream);
-		ByteBuffer input = ByteBuffer.allocate(1024);
-		try
-		{
-			int number = channel.read(input);
-			stdOutStream.write(input.array(), 0, number);
-
-			if (number == -1)
-			{
-
-			}
-
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		} */
+		if(appInfo.getStatus() == AppState.STARTING)
+			appInfo.setStatus(AppState.ONLINE); 
 	}
 }

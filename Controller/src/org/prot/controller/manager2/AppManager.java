@@ -44,7 +44,9 @@ public class AppManager
 	}
 	
 	public void staleApp(String appId) {
-		System.out.println("Stale app not implemented"); 
+		AppInfo appInfo = registry.getAppInfo(appId); 
+		appInfo.setStatus(AppState.STALE); 
+		restartApp(appInfo);   
 	}
 
 	private void waitForAppServer(AppInfo appInfo)

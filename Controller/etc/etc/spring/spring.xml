@@ -63,20 +63,11 @@
 		</property>
 	</bean>
 
-
 	<bean id="Controller" class="org.prot.controller.Controller">
 		<property name="server" ref="Server" />
 	</bean>
-	
-	<bean id="AppRegistry" class="org.prot.controller.manager.AppRegistry">
-	</bean>
 
-	<bean id="AppStarter" class="org.prot.controller.manager.AppStarter">
-	</bean>
-
-	<bean id="AppManager" class="org.prot.controller.manager.AppManager">
-		<property name="registry" ref="AppRegistry" />
-		<property name="starter" ref="AppStarter" />
+	<bean id="AppManager" class="org.prot.controller.manager2.AppManager">
 	</bean>
 </beans>
 
