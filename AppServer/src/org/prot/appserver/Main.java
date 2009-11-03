@@ -1,8 +1,5 @@
 package org.prot.appserver;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
@@ -11,12 +8,13 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.eclipse.jetty.deploy.WebAppDeployer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.util.component.LifeCycle;
 import org.eclipse.jetty.util.component.LifeCycle.Listener;
-import org.eclipse.jetty.xml.XmlConfiguration;
-import org.xml.sax.SAXException;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.core.io.ClassPathResource;
 
 public class Main
 {
@@ -25,13 +23,21 @@ public class Main
 	{
 		try
 		{
-			InputStream configFile = Main.class.getResourceAsStream("/etc/jetty/configuration.xml");
-			XmlConfiguration config = new XmlConfiguration(configFile);
-			Server server = (Server) config.configure();
-			
-			// TODO: Move this into the spring configuration file!
-			SelectChannelConnector connector = (SelectChannelConnector)config.getIdMap().get("SelectChannelConnector");
+
+			XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring/spring.xml",
+					getClass()));
+
+			WebAppDeployer deployer = (WebAppDeployer) factory.getBean("WebAppDeployer");
+		
+//			deployer.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
+//					".*/jsp-api-[^/]*\\.jar$|.*/jsp-[^/]*\\.jar$");
+
+			Server server = (Server) factory.getBean("Server");
+			server.addBean(deployer);
+
+			SelectChannelConnector connector = (SelectChannelConnector) factory.getBean("InsideConnector");
 			connector.setPort(Configuration.getInstance().getAppServerPort());
+
 			
 			
 			server.addLifeCycleListener(new Listener() {
@@ -39,39 +45,74 @@ public class Main
 				@Override
 				public void lifeCycleFailure(LifeCycle arg0, Throwable arg1)
 				{
+					// TODO Auto-generated method stub
+					
 				}
 
 				@Override
 				public void lifeCycleStarted(LifeCycle arg0)
 				{
 					System.out.println("server started"); 
+					
 				}
 
 				@Override
 				public void lifeCycleStarting(LifeCycle arg0)
 				{
+					// TODO Auto-generated method stub
+					
 				}
 
 				@Override
 				public void lifeCycleStopped(LifeCycle arg0)
 				{
+					// TODO Auto-generated method stub
+					
 				}
 
 				@Override
 				public void lifeCycleStopping(LifeCycle arg0)
 				{
+					// TODO Auto-generated method stub
+					
 				}
+				
 			});
 			server.start();
-
 			new Monitor();
 
-		} catch (SAXException e)
-		{
-			e.printStackTrace();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
+			/*
+			 * InputStream configFile =
+			 * Main.class.getResourceAsStream("/etc/jetty/configuration.xml");
+			 * XmlConfiguration config = new XmlConfiguration(configFile);
+			 * Server server = (Server) config.configure();
+			 * 
+			 * // TODO: Move this into the spring configuration file!
+			 * SelectChannelConnector connector =
+			 * (SelectChannelConnector)config.
+			 * getIdMap().get("SelectChannelConnector");
+			 * connector.setPort(Configuration
+			 * .getInstance().getAppServerPort());
+			 * 
+			 * 
+			 * server.addLifeCycleListener(new Listener() {
+			 * 
+			 * @Override public void lifeCycleFailure(LifeCycle arg0, Throwable
+			 * arg1) { }
+			 * 
+			 * @Override public void lifeCycleStarted(LifeCycle arg0) {
+			 * System.out.println("server started"); }
+			 * 
+			 * @Override public void lifeCycleStarting(LifeCycle arg0) { }
+			 * 
+			 * @Override public void lifeCycleStopped(LifeCycle arg0) { }
+			 * 
+			 * @Override public void lifeCycleStopping(LifeCycle arg0) { } });
+			 * server.start();
+			 * 
+			 * new Monitor();
+			 */
+
 		} catch (Exception e)
 		{
 			e.printStackTrace();

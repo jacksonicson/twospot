@@ -7,7 +7,7 @@
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-annotations-7.0.0.v20091005.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-client-7.0.0.v20091005.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-continuation-7.0.0.v20091005.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-deploy-7.0.0.v20091005.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-deploy-7.0.0.v20091005.jar" sourcepath="D:/work/jetty7src/jetty-deploy/src"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-http-7.0.0.v20091005.jar" sourcepath="D:/work/jetty7src/jetty-http/src"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-io-7.0.0.v20091005.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-jmx-7.0.0.v20091005.jar"/>
@@ -24,5 +24,9 @@
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-xml-7.0.0.v20091005.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/servlet-api-2.5.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/apache-cli-1.2/commons-cli-1.2.jar" sourcepath="/Libs/lib/apache-cli-1.2/commons-cli-1.2-sources.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RC1/bin/org.springframework.core-3.0.0.RC1.jar" sourcepath="/Libs/lib/spring-framework-3.0.0.RC1/src/org.springframework.core-sources-3.0.0.RC1.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RC1/bin/org.springframework.beans-3.0.0.RC1.jar" sourcepath="/Libs/lib/spring-framework-3.0.0.RC1/src/org.springframework.beans-sources-3.0.0.RC1.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RC1/bin/org.springframework.context-3.0.0.RC1.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/apache_commons/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
