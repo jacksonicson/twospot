@@ -67,7 +67,7 @@
 		<property name="server" ref="Server" />
 	</bean>
 
-	<bean id="AppManager" class="org.prot.controller.manager2.AppManager">
+	<bean id="AppManager" class="org.prot.controller.manager.AppManager">
 	</bean>
 </beans>
 
