@@ -13,6 +13,8 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.util.component.LifeCycle;
 import org.eclipse.jetty.util.component.LifeCycle.Listener;
+import org.prot.appserver.app.AppInfo;
+import org.prot.appserver.appfetch.HttpAppFetcher;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 
@@ -23,14 +25,13 @@ public class Main
 	{
 		try
 		{
-
-			XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring/spring.xml",
+			XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring/spring_java.xml",
 					getClass()));
 
 			WebAppDeployer deployer = (WebAppDeployer) factory.getBean("WebAppDeployer");
-		
-//			deployer.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
-//					".*/jsp-api-[^/]*\\.jar$|.*/jsp-[^/]*\\.jar$");
+
+			// deployer.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
+			// ".*/jsp-api-[^/]*\\.jar$|.*/jsp-[^/]*\\.jar$");
 
 			Server server = (Server) factory.getBean("Server");
 			server.addBean(deployer);
@@ -38,80 +39,47 @@ public class Main
 			SelectChannelConnector connector = (SelectChannelConnector) factory.getBean("InsideConnector");
 			connector.setPort(Configuration.getInstance().getAppServerPort());
 
-			
-			
-			server.addLifeCycleListener(new Listener() {
+			server.addLifeCycleListener(new Listener()
+			{
 
 				@Override
 				public void lifeCycleFailure(LifeCycle arg0, Throwable arg1)
 				{
 					// TODO Auto-generated method stub
-					
+
 				}
 
 				@Override
 				public void lifeCycleStarted(LifeCycle arg0)
 				{
-					System.out.println("server started"); 
-					
+					System.out.println("server started");
+
 				}
 
 				@Override
 				public void lifeCycleStarting(LifeCycle arg0)
 				{
 					// TODO Auto-generated method stub
-					
+
 				}
 
 				@Override
 				public void lifeCycleStopped(LifeCycle arg0)
 				{
 					// TODO Auto-generated method stub
-					
+
 				}
 
 				@Override
 				public void lifeCycleStopping(LifeCycle arg0)
 				{
 					// TODO Auto-generated method stub
-					
+
 				}
-				
+
 			});
 			server.start();
 			new Monitor();
-
-			/*
-			 * InputStream configFile =
-			 * Main.class.getResourceAsStream("/etc/jetty/configuration.xml");
-			 * XmlConfiguration config = new XmlConfiguration(configFile);
-			 * Server server = (Server) config.configure();
-			 * 
-			 * // TODO: Move this into the spring configuration file!
-			 * SelectChannelConnector connector =
-			 * (SelectChannelConnector)config.
-			 * getIdMap().get("SelectChannelConnector");
-			 * connector.setPort(Configuration
-			 * .getInstance().getAppServerPort());
-			 * 
-			 * 
-			 * server.addLifeCycleListener(new Listener() {
-			 * 
-			 * @Override public void lifeCycleFailure(LifeCycle arg0, Throwable
-			 * arg1) { }
-			 * 
-			 * @Override public void lifeCycleStarted(LifeCycle arg0) {
-			 * System.out.println("server started"); }
-			 * 
-			 * @Override public void lifeCycleStarting(LifeCycle arg0) { }
-			 * 
-			 * @Override public void lifeCycleStopped(LifeCycle arg0) { }
-			 * 
-			 * @Override public void lifeCycleStopping(LifeCycle arg0) { } });
-			 * server.start();
-			 * 
-			 * new Monitor();
-			 */
 
 		} catch (Exception e)
 		{
@@ -162,9 +130,16 @@ public class Main
 	 */
 	public static void main(String[] args)
 	{
-		parseArguments(args);
+		// parseArguments(args);
 
 		// TODO: use spring ioc
-		new Main();
+		// new Main();
+		
+		AppInfo info = new AppInfo();
+		info.setAppId("helloworld"); 
+		
+		HttpAppFetcher fetcher = new HttpAppFetcher(); 
+		fetcher.fetchApp(info);
+		
 	}
 }
