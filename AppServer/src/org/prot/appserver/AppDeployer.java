@@ -36,7 +36,8 @@ public class AppDeployer extends AbstractLifeCycle
 	private void deploy() throws Exception
 	{
 		webAppContext = new WebAppContext();
-		webAppContext.setContextPath(Configuration.getInstance().getAppDirectory());
+		webAppContext.setWar(Configuration.getInstance().getAppDirectory());
+		webAppContext.setContextPath("/");
 		// context.setDefaultsDescriptor(defaultsDescriptor);
 		// context.setConfigurationClasses(configurations)
 		webAppContext.setExtractWAR(false);
