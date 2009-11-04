@@ -22,7 +22,6 @@ import org.prot.controller.manager.DuplicatedAppException;
 
 public class RequestHandler extends AbstractHandler
 {
-
 	private HttpClient httpClient;
 
 	private AppManager appManager;
