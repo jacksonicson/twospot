@@ -31,9 +31,6 @@ public class Main
 
 			WebAppDeployer deployer = (WebAppDeployer) factory.getBean("WebAppDeployer");
 
-			// deployer.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
-			// ".*/jsp-api-[^/]*\\.jar$|.*/jsp-[^/]*\\.jar$");
-
 			Server server = (Server) factory.getBean("Server");
 			server.addBean(deployer);
 
@@ -46,36 +43,27 @@ public class Main
 				@Override
 				public void lifeCycleFailure(LifeCycle arg0, Throwable arg1)
 				{
-					// TODO Auto-generated method stub
-
 				}
 
 				@Override
 				public void lifeCycleStarted(LifeCycle arg0)
 				{
 					System.out.println("server started");
-
 				}
 
 				@Override
 				public void lifeCycleStarting(LifeCycle arg0)
 				{
-					// TODO Auto-generated method stub
-
 				}
 
 				@Override
 				public void lifeCycleStopped(LifeCycle arg0)
 				{
-					// TODO Auto-generated method stub
-
 				}
 
 				@Override
 				public void lifeCycleStopping(LifeCycle arg0)
 				{
-					// TODO Auto-generated method stub
-
 				}
 
 			});
