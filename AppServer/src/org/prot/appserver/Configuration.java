@@ -13,7 +13,13 @@ public class Configuration
 
 	// Port which is used by the AppServer to publish the app
 	private int appServerPort;
-
+	
+	// Directory which is used to extract the application data (configuration)
+	private String workingDirectory = "C:/temp";
+	
+	// Directory which holds the current application data
+	private String appDirectory; 
+	
 	public static Configuration getInstance()
 	{
 		if (Configuration.configuration == null)
@@ -52,5 +58,25 @@ public class Configuration
 	public void setAppServerPort(int appServerPort)
 	{
 		this.appServerPort = appServerPort;
+	}
+
+	public String getWorkingDirectory()
+	{
+		return workingDirectory;
+	}
+
+	public void setWorkingDirectory(String workingDirectory)
+	{
+		this.workingDirectory = workingDirectory;
+	}
+
+	public String getAppDirectory()
+	{
+		return appDirectory;
+	}
+
+	public void setAppDirectory(String appDirectory)
+	{
+		this.appDirectory = appDirectory;
 	}
 }

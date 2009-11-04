@@ -9,7 +9,7 @@ public class AppInfo
 	private AppRuntime runtime;
 
 	private byte[] warFile;
-
+	
 	public String getAppId()
 	{
 		return appId;

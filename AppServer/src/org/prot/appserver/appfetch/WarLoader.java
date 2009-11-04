@@ -18,8 +18,6 @@ import org.yaml.snakeyaml.Yaml;
 
 public class WarLoader
 {
-	private String discLocation = "C:/temp";
-
 	public void handle(AppInfo appInfo)
 	{
 		try
@@ -44,7 +42,9 @@ public class WarLoader
 
 	private String createFolder(String appId) throws IOException
 	{
-		String folder = discLocation + "/" + appId;
+		String folder = Configuration.getInstance().getWorkingDirectory() + "/" + appId;
+		Configuration.getInstance().setAppDirectory(folder); 
+		
 		File file = new File(folder);
 		if (file.exists())
 			file.delete();
@@ -100,7 +100,7 @@ public class WarLoader
 	private void configure(AppInfo appInfo, Map<String, Object> yaml)
 	{
 		String appId = (String) yaml.get("appId");
-		assert (appId.equals(appInfo.getAppId()));
+		appInfo.setAppId(appId); 
 
 		String runtime = (String) yaml.get("runtime");
 		if (runtime.equals("java"))

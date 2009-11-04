@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
+import org.prot.appserver.Configuration;
 import org.prot.appserver.app.AppInfo;
 
 public class HttpAppFetcher implements AppFetcher
@@ -33,17 +34,23 @@ public class HttpAppFetcher implements AppFetcher
 	}
 	
 	@Override
-	public void fetchApp(AppInfo appInfo)
+	public AppInfo fetchApp(String appId)
 	{
+		AppInfo appInfo = new AppInfo(); 
+		
 		ContentExchange exchange = new ContentExchange(true);
 		exchange.setMethod("GET");
-		exchange.setURL("http://localhost:5050/app/" + appInfo.getAppId());
+		exchange.setURL("http://localhost:5050/app/" + appId);
 		try
 		{
 			startHttp(); 
+			
 			httpClient.send(exchange);
 			exchange.waitForDone();
+			
 			appInfo.setWarFile(exchange.getResponseContentBytes());
+			appInfo.setAppId(Configuration.getInstance().getAppId()); 
+			
 			stopHttp(); 
 			
 		} catch (IOException e)
@@ -53,5 +60,7 @@ public class HttpAppFetcher implements AppFetcher
 		{
 			e.printStackTrace();
 		}
+		
+		return appInfo; 
 	}
 }

@@ -8,11 +8,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.eclipse.jetty.deploy.WebAppDeployer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
-import org.eclipse.jetty.util.component.LifeCycle;
-import org.eclipse.jetty.util.component.LifeCycle.Listener;
 import org.prot.appserver.app.AppInfo;
 import org.prot.appserver.appfetch.HttpAppFetcher;
 import org.prot.appserver.appfetch.WarLoader;
@@ -22,58 +19,75 @@ import org.springframework.core.io.ClassPathResource;
 public class Main
 {
 
-	public Main()
+	private void startJava(AppInfo info) throws Exception
 	{
-		try
+		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring/spring_java.xml",
+				getClass()));
+
+		// Configure server port
+		SelectChannelConnector connector = (SelectChannelConnector) factory.getBean("Connector");
+		connector.setPort(Configuration.getInstance().getAppServerPort());
+
+		// Deployer
+		AppDeployer deployer = (AppDeployer) factory.getBean("AppDeployer");
+		
+		// Start server
+		Server server = (Server) factory.getBean("Server");
+		server.addBean(deployer); 
+		server.start();
+	}
+
+	public Main() throws UnknownRuntimeException, Exception
+	{
+		HttpAppFetcher fetcher = new HttpAppFetcher();
+		AppInfo appInfo = fetcher.fetchApp(Configuration.getInstance().getAppId());
+
+		WarLoader loader = new WarLoader();
+		loader.handle(appInfo);
+
+		switch (appInfo.getRuntime())
 		{
-			XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring/spring_java.xml",
-					getClass()));
-
-			WebAppDeployer deployer = (WebAppDeployer) factory.getBean("WebAppDeployer");
-
-			Server server = (Server) factory.getBean("Server");
-			server.addBean(deployer);
-
-			SelectChannelConnector connector = (SelectChannelConnector) factory.getBean("InsideConnector");
-			connector.setPort(Configuration.getInstance().getAppServerPort());
-
-			server.addLifeCycleListener(new Listener()
-			{
-
-				@Override
-				public void lifeCycleFailure(LifeCycle arg0, Throwable arg1)
-				{
-				}
-
-				@Override
-				public void lifeCycleStarted(LifeCycle arg0)
-				{
-					System.out.println("server started");
-				}
-
-				@Override
-				public void lifeCycleStarting(LifeCycle arg0)
-				{
-				}
-
-				@Override
-				public void lifeCycleStopped(LifeCycle arg0)
-				{
-				}
-
-				@Override
-				public void lifeCycleStopping(LifeCycle arg0)
-				{
-				}
-
-			});
-			server.start();
-			new Monitor();
-
-		} catch (Exception e)
-		{
-			e.printStackTrace();
+		case JAVA:
+			startJava(appInfo);
+			break;
+		case PYTHON:
+			throw new UnknownRuntimeException();
 		}
+
+		/*
+		 * try {
+		 * 
+		 * XmlBeanFactory factory = new XmlBeanFactory(new
+		 * ClassPathResource("/etc/spring/spring.xml", getClass()));
+		 * 
+		 * WebAppDeployer deployer = (WebAppDeployer)
+		 * factory.getBean("WebAppDeployer");
+		 * 
+		 * Server server = (Server) factory.getBean("Server");
+		 * server.addBean(deployer);
+		 * 
+		 * SelectChannelConnector connector = (SelectChannelConnector)
+		 * factory.getBean("InsideConnector");
+		 * connector.setPort(Configuration.getInstance().getAppServerPort());
+		 * 
+		 * server.addLifeCycleListener(new Listener() {
+		 * 
+		 * @Override public void lifeCycleFailure(LifeCycle arg0, Throwable
+		 * arg1) { }
+		 * 
+		 * @Override public void lifeCycleStarted(LifeCycle arg0) {
+		 * System.out.println("server started"); }
+		 * 
+		 * @Override public void lifeCycleStarting(LifeCycle arg0) { }
+		 * 
+		 * @Override public void lifeCycleStopped(LifeCycle arg0) { }
+		 * 
+		 * @Override public void lifeCycleStopping(LifeCycle arg0) { }
+		 * 
+		 * }); server.start(); new Monitor();
+		 * 
+		 * } catch (Exception e) { e.printStackTrace(); }
+		 */
 	}
 
 	private static void parseArguments(String[] args)
@@ -119,18 +133,17 @@ public class Main
 	 */
 	public static void main(String[] args)
 	{
-		// parseArguments(args);
+		parseArguments(args);
 
-		// TODO: use spring ioc
-		// new Main();
-		
-		AppInfo info = new AppInfo();
-		info.setAppId("helloworld"); 
-		
-		HttpAppFetcher fetcher = new HttpAppFetcher(); 
-		fetcher.fetchApp(info);
-		
-		WarLoader loader = new WarLoader();
-		loader.handle(info); 
+		try
+		{
+			new Main();
+		} catch (UnknownRuntimeException e)
+		{
+			e.printStackTrace();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
