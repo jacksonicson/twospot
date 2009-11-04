@@ -10,15 +10,17 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.util.component.LifeCycle;
+import org.eclipse.jetty.util.component.Container.Relationship;
+import org.eclipse.jetty.util.component.LifeCycle.Listener;
 import org.prot.appserver.app.AppInfo;
 import org.prot.appserver.appfetch.HttpAppFetcher;
 import org.prot.appserver.appfetch.WarLoader;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 
-public class Main
+public class Main implements Listener
 {
-
 	private void startJava(AppInfo info) throws Exception
 	{
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring/spring_java.xml",
@@ -33,7 +35,8 @@ public class Main
 		
 		// Start server
 		Server server = (Server) factory.getBean("Server");
-		server.addBean(deployer); 
+		server.addBean(deployer);
+		server.addLifeCycleListener(this); 
 		server.start();
 	}
 
@@ -53,41 +56,6 @@ public class Main
 		case PYTHON:
 			throw new UnknownRuntimeException();
 		}
-
-		/*
-		 * try {
-		 * 
-		 * XmlBeanFactory factory = new XmlBeanFactory(new
-		 * ClassPathResource("/etc/spring/spring.xml", getClass()));
-		 * 
-		 * WebAppDeployer deployer = (WebAppDeployer)
-		 * factory.getBean("WebAppDeployer");
-		 * 
-		 * Server server = (Server) factory.getBean("Server");
-		 * server.addBean(deployer);
-		 * 
-		 * SelectChannelConnector connector = (SelectChannelConnector)
-		 * factory.getBean("InsideConnector");
-		 * connector.setPort(Configuration.getInstance().getAppServerPort());
-		 * 
-		 * server.addLifeCycleListener(new Listener() {
-		 * 
-		 * @Override public void lifeCycleFailure(LifeCycle arg0, Throwable
-		 * arg1) { }
-		 * 
-		 * @Override public void lifeCycleStarted(LifeCycle arg0) {
-		 * System.out.println("server started"); }
-		 * 
-		 * @Override public void lifeCycleStarting(LifeCycle arg0) { }
-		 * 
-		 * @Override public void lifeCycleStopped(LifeCycle arg0) { }
-		 * 
-		 * @Override public void lifeCycleStopping(LifeCycle arg0) { }
-		 * 
-		 * }); server.start(); new Monitor();
-		 * 
-		 * } catch (Exception e) { e.printStackTrace(); }
-		 */
 	}
 
 	private static void parseArguments(String[] args)
@@ -145,5 +113,31 @@ public class Main
 		{
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void lifeCycleFailure(LifeCycle arg0, Throwable arg1)
+	{
+	}
+
+	@Override
+	public void lifeCycleStarted(LifeCycle arg0)
+	{
+		System.out.println("server started"); 
+	}
+
+	@Override
+	public void lifeCycleStarting(LifeCycle arg0)
+	{
+	}
+
+	@Override
+	public void lifeCycleStopped(LifeCycle arg0)
+	{
+	}
+
+	@Override
+	public void lifeCycleStopping(LifeCycle arg0)
+	{
 	}
 }
