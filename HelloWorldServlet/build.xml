@@ -50,14 +50,14 @@
 			<fileset dir="bin" />
 		</copy>
 
-		<war destfile="helloworldservlet.war" basedir="deploy" />
+		<war destfile="helloworld.war" basedir="deploy" />
 		
 		<delete dir="deploy" />
 	</target>
 
 	<target name="deploy" depends="war">
 		<copy todir="../AppServer/webapps">
-			<fileset file="helloworldservlet.war" />
+			<fileset file="helloworld.war" />
 		</copy>
 	</target>
 
