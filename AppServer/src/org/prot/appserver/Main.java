@@ -15,6 +15,7 @@ import org.eclipse.jetty.util.component.LifeCycle;
 import org.eclipse.jetty.util.component.LifeCycle.Listener;
 import org.prot.appserver.app.AppInfo;
 import org.prot.appserver.appfetch.HttpAppFetcher;
+import org.prot.appserver.appfetch.WarLoader;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 
@@ -141,5 +142,7 @@ public class Main
 		HttpAppFetcher fetcher = new HttpAppFetcher(); 
 		fetcher.fetchApp(info);
 		
+		WarLoader loader = new WarLoader();
+		loader.handle(info); 
 	}
 }
