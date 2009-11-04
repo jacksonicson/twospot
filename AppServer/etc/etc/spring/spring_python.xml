@@ -3,12 +3,8 @@
 
 <beans>
 
-	<bean id="Configurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="placeholderPrefix" value="#{" />
-		<property name="placeholderSuffix" value="}" />
-	</bean>
-
-	<bean id="InsideConnector" class="org.eclipse.jetty.server.nio.SelectChannelConnector">
+	<!-- Connector -->
+	<bean id="Connector" class="org.eclipse.jetty.server.nio.SelectChannelConnector">
 		<property name="host" value="127.0.0.1" />
 
 		<property name="port" value="9090" />
@@ -17,6 +13,7 @@
 		<property name="statsOn" value="false" />
 	</bean>
 
+	<!-- Server -->
 	<bean id="Server" class="org.eclipse.jetty.server.Server">
 		<property name="threadPool">
 			<bean class="org.eclipse.jetty.util.thread.QueuedThreadPool">
@@ -27,7 +24,7 @@
 
 		<property name="connectors">
 			<list>
-				<ref bean="InsideConnector" />
+				<ref bean="Connector" />
 			</list>
 		</property>
 
@@ -35,30 +32,21 @@
 
 	</bean>
 
+	<!-- Request handling -->
 	<bean id="HandlerCollection" class="org.eclipse.jetty.server.handler.HandlerCollection">
 		<property name="handlers">
 			<list>
-				<ref bean="ContextCollectionHandler" />
+				<ref bean="PythonHandler" />
 			</list>
 		</property>
 	</bean>
 
-	<bean id="ContextCollectionHandler"
-		class="org.eclipse.jetty.server.handler.ContextHandlerCollection">
+	<bean id="PythonHandler" class="org.prot.appserver.python.PythonHandler">
+		<property name="pythonEngine" ref="PythonEngine" />
 	</bean>
 
-
-	<bean id="WebAppDeployer" class="org.eclipse.jetty.deploy.WebAppDeployer">
-		<property name="contexts" ref="ContextCollectionHandler" />
-
-		<property name="webAppDir" value="./webapps" />
-
-		<property name="parentLoaderPriority" value="false" />
-
-		<property name="extract" value="true" />
-
-		<property name="allowDuplicates" value="false" />
-	</bean>
+	<!-- Python -->
+	<bean id="PythonEngine" class="org.prot.appserver.python.PythonEngine" init-method="start" />
 
 </beans>
 

@@ -32,11 +32,26 @@ public class Main implements Listener
 
 		// Deployer
 		AppDeployer deployer = (AppDeployer) factory.getBean("AppDeployer");
-		
+
 		// Start server
 		Server server = (Server) factory.getBean("Server");
 		server.addBean(deployer);
-		server.addLifeCycleListener(this); 
+		server.addLifeCycleListener(this);
+		server.start();
+	}
+
+	private void startPython(AppInfo info) throws Exception
+	{
+		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring/spring_python.xml",
+				getClass()));
+
+		// Configure server port
+		SelectChannelConnector connector = (SelectChannelConnector) factory.getBean("Connector");
+		connector.setPort(Configuration.getInstance().getAppServerPort());
+
+		// Start server
+		Server server = (Server) factory.getBean("Server");
+		server.addLifeCycleListener(this);
 		server.start();
 	}
 
@@ -48,13 +63,16 @@ public class Main implements Listener
 		WarLoader loader = new WarLoader();
 		loader.handle(appInfo);
 
+		// TODO
+		appInfo.setRuntime(AppRuntime.PYTHON);
+
 		switch (appInfo.getRuntime())
 		{
 		case JAVA:
 			startJava(appInfo);
 			break;
 		case PYTHON:
-			throw new UnknownRuntimeException();
+			startPython(appInfo);
 		}
 	}
 
@@ -123,7 +141,7 @@ public class Main implements Listener
 	@Override
 	public void lifeCycleStarted(LifeCycle arg0)
 	{
-		System.out.println("server started"); 
+		System.out.println("server started");
 	}
 
 	@Override

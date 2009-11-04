@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="etc"/>
+	<classpathentry kind="src" path="jsrc"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-ajp-7.0.0.v20091005.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-annotations-7.0.0.v20091005.jar"/>
@@ -29,5 +30,6 @@
 	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RC1/bin/org.springframework.context-3.0.0.RC1.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/apache_commons/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/snakeyaml-1.5/snakeyaml-1.5.jar" sourcepath="/Libs/lib/snakeyaml-1.5/snakeyaml-1.5-sources.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/jython-2.5.1/jython.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
