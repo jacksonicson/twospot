@@ -76,9 +76,17 @@ public class RequestAdapter
 		return baseRequest.isSecure();
 	}
 
-	public String getArgs()
+	public PyDictionary getArgs()
 	{
-		return "";
+		PyDictionary dict = new PyDictionary(); 
+		for(Enumeration<String> names = baseRequest.getAttributeNames(); names.hasMoreElements(); )
+		{
+			String name = names.nextElement(); 
+			String value = (String)baseRequest.getAttribute(name); 
+			dict.put(name, value); 
+		}
+		
+		return dict; 
 	}
 
 	public PyDictionary getHeaders()

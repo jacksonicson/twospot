@@ -135,7 +135,7 @@ class JettyRequest(http.HttpRequest):
         return http.parse_cookie('');
 
     def _set_cookies(self, cookies):
-        self._cookies = ''; 
+        self._cookies = cookies; 
 
     def _get_files(self):
         if not hasattr(self, '_files'):
