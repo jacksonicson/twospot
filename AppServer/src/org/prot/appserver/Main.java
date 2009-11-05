@@ -63,9 +63,6 @@ public class Main implements Listener
 		WarLoader loader = new WarLoader();
 		loader.handle(appInfo);
 
-		// TODO
-		appInfo.setRuntime(AppRuntime.PYTHON);
-
 		switch (appInfo.getRuntime())
 		{
 		case JAVA:
