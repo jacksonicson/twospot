@@ -1,5 +1,6 @@
 package org.prot.controller;
 
+import org.apache.log4j.xml.DOMConfigurator;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 
@@ -7,12 +8,14 @@ public class Main
 {
 	public Main()
 	{
+		// Configure logger
+		DOMConfigurator.configure(Main.class.getResource("/etc/log4j/controller.xml"));
 
-		// start spring ioc container
+		// Start spring ioc container
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring/spring.xml",
 				getClass()));
 
-		// start the controller
+		// Start the controller
 		Controller controller = (Controller) factory.getBean("Controller");
 		controller.start();
 	}
