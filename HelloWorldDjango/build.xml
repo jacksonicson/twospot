@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="war" name="HelloWorldDjango">
+
+	<target name="war">
+		<mkdir dir="deploy" />
+		
+		<copy todir="deploy">
+			<fileset dir="war" />
+		</copy>
+
+		<mkdir dir="deploy/WEB-INF/python" />
+		<copy todir="deploy/WEB-INF/python">
+			<fileset dir="src" />
+		</copy>
+
+		<jar destfile="hellopython.war" basedir="deploy" />
+		
+		<delete dir="deploy" />
+	</target>
+	
+</project>
