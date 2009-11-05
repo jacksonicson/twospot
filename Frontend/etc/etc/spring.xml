@@ -33,12 +33,21 @@
 	<bean id="HandlerCollection" class="org.eclipse.jetty.server.handler.HandlerCollection">
 		<property name="handlers">
 			<list>
-				<ref bean="RequestHandler" />
+				<ref bean="FlowHandler" />
 			</list>
 		</property>
 	</bean>
 
-	<bean id="RequestHandler" class="org.prot.frontend.handlers.FlowHandler">
+	<bean id="FlowHandler" class="org.prot.frontend.handlers.FlowHandler">
+		<property name="frontendService" ref="FrontendService" />
+	</bean>
+
+	<!--  Application beans -->
+
+	<!-- Remote -->
+	<bean id="FrontendService" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">
+		<property name="serviceUrl" value="rmi://localhost:1199/frontendService" />
+		<property name="serviceInterface" value="org.prot.manager.service.frontend.FrontendService" />
 	</bean>
 
 </beans>
