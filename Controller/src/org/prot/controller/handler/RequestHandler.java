@@ -12,6 +12,7 @@ import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.HttpExchange;
 import org.eclipse.jetty.http.HttpFields;
+import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.http.HttpFields.Field;
 import org.eclipse.jetty.io.EofException;
 import org.eclipse.jetty.server.Request;
@@ -48,10 +49,16 @@ public class RequestHandler extends AbstractHandler
 		this.appManager = appManager;
 	}
 
+	
+	
 	private boolean forwardRequest(AppInfo appInfo, Request baseRequest, HttpServletRequest request,
 			HttpServletResponse response)
 	{
-
+		// TODO: check if scheme is http
+		// TODO: check if this is a connect request
+		// TODO: check other invalid headers
+		// TODO: set proxy flag
+		
 		// create request
 		int port = appInfo.getPort();
 		String url = "http://127.0.0.1:" + port + baseRequest.getUri();
