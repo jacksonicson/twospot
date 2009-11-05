@@ -199,12 +199,7 @@ class JettyHandler(BaseHandler):
 
     def __call__(self, req):
         # mod_python fakes the environ, and thus doesn't process SetEnv.  This fixes that
-        #os.putenv('DJANGO_SETTINGS_MODULE', 'blub.settings') 
-        #os.environ['DJANGO_SETTINGS_MODULE'] = 'blub.settings'
-        #os.environ.update({'DJANGO_SETTINGS_MODULE':'blub.settings'})
-        #print os.getenv('DJANGO_SETTINGS_MODULE')
-        print "asdfasfasfasdf"
-        print "env: " + os.environ['DJANGO_SETTINGS_MODULE']
+        os.environ['DJANGO_SETTINGS_MODULE'] = req.getEnvironment();
         
         # now that the environ works we can see the correct settings, so imports
         # that use settings now can work
@@ -253,7 +248,6 @@ class JettyHandler(BaseHandler):
 
         return 0 # mod_python.apache.OK
 
+# Is called for every request
 def handler(req):
-    # mod_python hooks into this function.
-    print sys.path
     return JettyHandler()(req)
