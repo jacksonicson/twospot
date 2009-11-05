@@ -18,7 +18,11 @@ public class Configuration
 	private String workingDirectory = "C:/temp";
 	
 	// Directory which holds the current application data
-	private String appDirectory; 
+	private String appDirectory;
+	
+	// Directories with the python libs
+	private String pythonLibs = "C:/jython2.5.1/Lib"; 
+	private String djangoLibs = "C:/jython2.5.1/Lib/site-packages"; 
 	
 	public static Configuration getInstance()
 	{
@@ -78,5 +82,25 @@ public class Configuration
 	public void setAppDirectory(String appDirectory)
 	{
 		this.appDirectory = appDirectory;
+	}
+
+	public String getPythonLibs()
+	{
+		return pythonLibs;
+	}
+
+	public void setPythonLibs(String pythonLibs)
+	{
+		this.pythonLibs = pythonLibs;
+	}
+
+	public String getDjangoLibs()
+	{
+		return djangoLibs;
+	}
+
+	public void setDjangoLibs(String djangoLibs)
+	{
+		this.djangoLibs = djangoLibs;
 	}
 }

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Request;
+import org.prot.appserver.Configuration;
 import org.python.core.PyDictionary;
 
 public class RequestAdapter
@@ -28,7 +29,7 @@ public class RequestAdapter
 
 	public String getEnvironment()
 	{
-		return "blub.settings";
+		return Configuration.getInstance().getAppId() + ".settings";
 	}
 
 	public String getUri()
@@ -90,7 +91,6 @@ public class RequestAdapter
 			String value = baseRequest.getHeader(name);
 			if (value != null)
 			{
-				System.out.println("Name: " + name + " value: " + value);
 				dict.put(name, value);
 			}
 		}

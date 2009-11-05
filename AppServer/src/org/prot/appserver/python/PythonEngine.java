@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
+import org.prot.appserver.Configuration;
 import org.python.core.Py;
 import org.python.core.PySystemState;
 
@@ -26,11 +27,12 @@ public class PythonEngine
 		// System state must be set before creating the engine
 		// The SystemState can be passed as a parameter if the
 		// PythonInterpreter-Class is used
-		// TODO: use system independent path values
+		Configuration config = Configuration.getInstance(); 
+		
 		PySystemState engineSys = new PySystemState();
-		engineSys.path.append(Py.newString("C:/jython2.5.1/Lib"));
-		engineSys.path.append(Py.newString("C:/jython2.5.1/Lib/site-packages"));
-		engineSys.path.append(Py.newString("D:/work/django"));
+		engineSys.path.append(Py.newString(config.getPythonLibs()));
+		engineSys.path.append(Py.newString(config.getDjangoLibs()));
+		engineSys.path.append(Py.newString(config.getAppDirectory() + "/WEB-INF/python"));
 		Py.setSystemState(engineSys);
 
 		// Create a new engine
