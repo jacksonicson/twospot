@@ -7,13 +7,20 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 
-public class AppProcess implements Runnable
+import org.apache.log4j.Logger;
+
+class AppProcess implements Runnable
 {
+	private static final Logger logger = Logger.getLogger(AppProcess.class);
+
 	private AppInfo appInfo;
 
 	private Process process;
 
-	private BufferedReader stdInStream;
+	public AppProcess(AppInfo appInfo)
+	{
+		this.appInfo = appInfo;
+	}
 
 	public AppInfo getOwner()
 	{
@@ -50,15 +57,20 @@ public class AppProcess implements Runnable
 
 		try
 		{
-			// start the process
-			this.process = procBuilder.start();
-
-			// update status
+			// Update status
 			this.appInfo.setStatus(AppState.STARTING);
+
+			// Start the process
+			this.process = procBuilder.start();
 
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			// Update status
+			this.appInfo.setStatus(AppState.FAILED);
+
+			// Log the error
+			logger.error("Could not start a new server process - AppId: " + appInfo.getAppId() + " Command: "
+					+ command.toString(), e);
 		}
 	}
 
@@ -102,86 +114,41 @@ public class AppProcess implements Runnable
 		this.process.destroy();
 	}
 
+	// TODO: Inperformant und geht nicht mit mehreren Warte-Threads
 	public void waitForAppServer()
 	{
 		try
 		{
 			// create IO streams
-			stdInStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			
+			BufferedReader stdInStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
 			// read input
 			String line = "";
 			while ((line = stdInStream.readLine()) != null)
 			{
 				if (line.equals("server started"))
 				{
-					this.appInfo.setStatus(AppState.ONLINE); 
-					return; 
+					this.appInfo.setStatus(AppState.ONLINE);
+					return;
 				}
 			}
+			
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			// Could not verify if server is online so kill it
+			stopAndClean();
+			
+			// Update status
+			this.appInfo.setStatus(AppState.FAILED);
+			
+			// Log the error
+			logger.error("Could not start a new server process - AppId: " + appInfo.getAppId(), e);
 		}
 	}
-
-	public AppProcess(AppInfo appInfo)
-	{
-		this.appInfo = appInfo;
-	}
-
-	String line = "";
 
 	@Override
 	public void run()
 	{
 		System.out.println("Running...");
-
-		// try
-		// {
-		// // read bytes
-		// int len;
-		// byte[] buffer = new byte[1024];
-		// len = stdInStream.read(buffer);
-		//			
-		// line += new String(buffer);
-		// while(line.indexOf('\n') > -1) {
-		// int index = line.indexOf('\n');
-		// String subline = line.substring(0, index);
-		// line = line.substring(index + 1);
-		//				
-		// if(subline.equals("server started")) {
-		// synchronized(appInfo) {
-		// appInfo.setStatus(AppState.ONLINE);
-		// appInfo.notify();
-		// }
-		// }
-		// }
-		//			
-		// // output bytes
-		// System.out.write(buffer, 0, len);
-		//			
-		// } catch (IOException e1)
-		// {
-		// // TODO Auto-generated catch block
-		// e1.printStackTrace();
-		// }
-
-		// if(appInfo.getStatus() == AppState.STARTING) {
-		// synchronized(appInfo) {
-		//				
-		// try
-		// {
-		// Thread.sleep(5000);
-		// } catch (InterruptedException e)
-		// {
-		// e.printStackTrace();
-		// }
-		//				
-		// appInfo.setStatus(AppState.ONLINE);
-		// appInfo.notifyAll();
-		// }
-		// }
-
 	}
 }

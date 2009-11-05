@@ -3,7 +3,7 @@ package org.prot.controller.manager;
 import java.util.Hashtable;
 import java.util.Map;
 
-public class AppMonitor
+class AppMonitor
 {
 	private Map<AppInfo, AppProcess> processList = new Hashtable<AppInfo, AppProcess>();
 

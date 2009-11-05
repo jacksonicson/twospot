@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.HttpExchange;
@@ -17,11 +18,13 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.prot.controller.manager.AppInfo;
 import org.prot.controller.manager.AppManager;
-import org.prot.controller.manager.AppServerFailedException;
-import org.prot.controller.manager.DuplicatedAppException;
+import org.prot.controller.manager.exceptions.AppServerFailedException;
+import org.prot.controller.manager.exceptions.DuplicatedAppException;
 
 public class RequestHandler extends AbstractHandler
 {
+	private static final Logger logger = Logger.getLogger(RequestHandler.class);
+
 	private HttpClient httpClient;
 
 	private AppManager appManager;
@@ -35,7 +38,8 @@ public class RequestHandler extends AbstractHandler
 			httpClient.start();
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			logger.error("Could not initialize the HTTPClient", e);
+			System.exit(1);
 		}
 	}
 
@@ -105,12 +109,13 @@ public class RequestHandler extends AbstractHandler
 
 		} catch (InterruptedException e1)
 		{
-			e1.printStackTrace();
+			logger.error("reporting a stale appserver");
 			appServerGoneStale(appInfo);
 			return false;
+
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			logger.error("reporting a stale appserver");
 			appServerGoneStale(appInfo);
 			return false;
 		}
@@ -134,15 +139,12 @@ public class RequestHandler extends AbstractHandler
 
 			response.getOutputStream().close();
 
-		} catch (NullPointerException e)
-		{
-			e.printStackTrace();
 		} catch (EofException e)
 		{
-			// client closed
+			// Client closed the connection
 		} catch (IOException e)
 		{
-			// client closed
+			// Client closed the connection
 		}
 
 		return true;
@@ -168,23 +170,28 @@ public class RequestHandler extends AbstractHandler
 		}
 
 		String appId = serverName.substring(0, index);
+		
+		// forward the request to the AppServer
 		try
 		{
-			// three retries
+			// three retries if forward fails
 			for (int i = 0; i < 3; i++)
 			{
+				// inform the AppManager
 				AppInfo appInfo = this.appManager.requireApp(appId);
+				
+				// forward the request
 				if (forwardRequest(appInfo, baseRequest, request, response))
 					break;
 			}
 
 		} catch (DuplicatedAppException e)
 		{
-			e.printStackTrace();
+			logger.error("Duplicated application", e);
+			System.exit(1); 
 		} catch (AppServerFailedException e)
 		{
-			e.printStackTrace();
+			logger.error("AppServer failed", e); 
 		}
-
 	}
 }

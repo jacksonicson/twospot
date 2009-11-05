@@ -1,4 +1,6 @@
-package org.prot.controller.manager;
+package org.prot.controller.manager.exceptions;
+
+import org.prot.controller.manager.AppInfo;
 
 public class DuplicatedAppException extends Exception
 {

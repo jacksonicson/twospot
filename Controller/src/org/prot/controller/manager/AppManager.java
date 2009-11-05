@@ -1,5 +1,8 @@
 package org.prot.controller.manager;
 
+import org.prot.controller.manager.exceptions.AppServerFailedException;
+import org.prot.controller.manager.exceptions.DuplicatedAppException;
+
 public class AppManager
 {
 	private AppRegistry registry;
@@ -8,11 +11,26 @@ public class AppManager
 
 	public AppManager()
 	{
+		// Initialize
 		monitor = new AppMonitor();
 		registry = new AppRegistry();
 	}
 
-	public synchronized AppInfo requireApp(String appId) throws DuplicatedAppException, AppServerFailedException
+	/**
+	 * Is executed whenever a process/server with the specified appId is needed.
+	 * If there is already a running server-process the method will do nothing.
+	 * If there is no server, a existing server has crashed or a server is
+	 * unreachable the method will start a new server.
+	 * 
+	 * @param appId
+	 * @return
+	 * @throws DuplicatedAppException
+	 * @throws AppServerFailedException
+	 */
+	// TODO: synchronized weg - bei laufenden prozessen bremst das aus!
+	// Alle Prozesse müssen warten wenn ein Server gestartet wird
+	public synchronized AppInfo requireApp(String appId) throws DuplicatedAppException,
+			AppServerFailedException
 	{
 		// get app info
 		AppInfo appInfo = registry.getAppInfo(appId);
@@ -26,11 +44,12 @@ public class AppManager
 		// action depends on app status
 		switch (appInfo.getStatus())
 		{
-		case STARTING:
-			waitForAppServer(appInfo);
 		case ONLINE:
 			return appInfo;
+		case STARTING:
+			waitForAppServer(appInfo);
 		case FAILED:
+			// TODO: Wait some time or until new app revision
 			throw new AppServerFailedException();
 		case OFFLINE:
 			startApp(appInfo);
@@ -40,14 +59,25 @@ public class AppManager
 			break;
 		}
 
-		return appInfo; 
-	}
-	
-	public synchronized void reportStaleApp(String appId) {
-		AppInfo appInfo = registry.getAppInfo(appId); 
-		appInfo.setStatus(AppState.STALE); 
+		return appInfo;
 	}
 
+	/**
+	 * If an application server is not reachable this method is used to report
+	 * it as stale
+	 * 
+	 * @param appId
+	 */
+	public synchronized void reportStaleApp(String appId)
+	{
+		AppInfo appInfo = registry.getAppInfo(appId);
+		appInfo.setStatus(AppState.STALE);
+	}
+
+	/**
+	 * Blocks until the application server is ready 
+	 * @param appInfo
+	 */
 	private void waitForAppServer(AppInfo appInfo)
 	{
 		AppProcess process = monitor.getProcess(appInfo);
@@ -69,6 +99,6 @@ public class AppManager
 		}
 
 		process.startOrRestart();
-		waitForAppServer(appInfo);  
+		waitForAppServer(appInfo);
 	}
 }

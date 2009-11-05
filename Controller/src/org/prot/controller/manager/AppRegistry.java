@@ -4,7 +4,9 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Stack;
 
-public class AppRegistry
+import org.prot.controller.manager.exceptions.DuplicatedAppException;
+
+class AppRegistry
 {
 	private final int startPort = 9090;
 	private int currentPort = startPort;

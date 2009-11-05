@@ -29,13 +29,13 @@ public class AppInfo
 		this.port = port;
 	}
 
-	public AppState getStatus()
+	public synchronized AppState getStatus()
 	{
 		return status;
 	}
 
 
-	public void setStatus(AppState status)
+	public synchronized void setStatus(AppState status)
 	{
 		this.status = status;
 	}
