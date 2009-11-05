@@ -1,0 +1,17 @@
+<?xml-stylesheet type="text/xsl" ?>
+<!DOCTYPE beans SYSTEM "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<beans>
+
+	<bean id="FrontendService" class="org.prot.manager.service.frontend.FrontendServiceImpl" />
+
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<property name="serviceName" value="FrontendService2" />
+		<property name="service" ref="FrontendService" />
+		<property name="serviceInterface" value="org.prot.manager.service.frontend.FrontendService" />
+		
+		<property name="registryPort" value="1199" />
+	</bean>
+
+</beans>
+
