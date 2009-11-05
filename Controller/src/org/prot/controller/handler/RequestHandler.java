@@ -1,4 +1,4 @@
-package org.prot.controller;
+package org.prot.controller.handler;
 
 import java.io.IOException;
 import java.util.Enumeration;
