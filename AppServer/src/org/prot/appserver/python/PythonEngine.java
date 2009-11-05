@@ -4,9 +4,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import javax.script.Invocable;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 
 import org.python.core.Py;
 import org.python.core.PySystemState;
@@ -14,47 +14,60 @@ import org.python.core.PySystemState;
 public class PythonEngine
 {
 	private ScriptEngine engine;
-	private Invocable invocable; 
 
-	public Invocable getInvocable() {
-		return this.invocable; 
+
+	public ScriptEngine getEngine()
+	{
+		return this.engine;
 	}
-	
-	public ScriptEngine getEngine() {
-		return this.engine; 
-	}
-	
+
 	public void start()
 	{
 		ScriptEngineManager engineManager = new ScriptEngineManager();
-		engineManager.put("python.home", "C:/jython2.5.1/");
 
 		PySystemState engineSys = new PySystemState();
 		engineSys.path.append(Py.newString("C:/jython2.5.1/Lib"));
 		engineSys.path.append(Py.newString("C:/jython2.5.1/Lib/site-packages"));
-		engineSys.path.append(Py.newString("D:/work/jython/myproject"));
+		engineSys.path.append(Py.newString("D:/work/django"));
 		Py.setSystemState(engineSys);
 
-		System.out.println("starting jython...");
+		engineManager.put("DJANGO_SETTINGS_MODULE", "blub.settings");
+		engineManager.put("python.home", "C:/jython2.5.1/");
 		engine = engineManager.getEngineByName("jython");
-		invocable = (Invocable)engine; 
+
+		ScriptContext context = engine.getContext();
+		context.setAttribute("python.home", "C:/jython2.5.1/", ScriptContext.GLOBAL_SCOPE);
+		context.setAttribute("runserver", "", ScriptContext.ENGINE_SCOPE);
 		
+		context.setAttribute("DJANGO_SETTINGS_MODULE", "blub.settings", ScriptContext.GLOBAL_SCOPE);
+		context.setAttribute("DJANGO_SETTINGS_MODULE", "blub.settings", ScriptContext.ENGINE_SCOPE);
+		
+		
+		System.setProperty("python.home", "C:/jython2.5.1/");
+		System.setProperty("DJANGO_SETTINGS_MODULE", "blub.settings");
+
 		try
 		{
-			String[] scripts = { "/JettyHandler.py", "/Request.py" };
 
-			for (String script : scripts)
-			{
-				InputStream in = PythonEngine.class.getResourceAsStream(script);
-				engine.eval(new InputStreamReader(in));
+//			List<String> params = new ArrayList<String>();
+//			params.add("runserver");
+//			
+//			FileReader reader = new FileReader("D:/work/django/blub/manage.py");
+//
+//			engine.eval("import sys");
+//			engine.eval("sys.argv.append('runserver')");
+//
+//			engine.eval(reader);
+			
+			String[] list = {"/Request.py", "/JettyHandler.py"};
+			for(String file : list) {
+				InputStream in = PythonEngine.class.getResourceAsStream(file); 
+				engine.eval(new InputStreamReader(in)); 
 			}
 			
-			invocable.invokeFunction("sayHello");
-			
-		} catch (ScriptException e)
-		{
-			e.printStackTrace();
-		} catch (NoSuchMethodException e)
+			System.out.println("done)");
+
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}

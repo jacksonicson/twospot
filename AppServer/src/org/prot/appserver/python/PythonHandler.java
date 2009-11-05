@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.python.core.Py;
+import org.python.core.PySystemState;
 
 public class PythonHandler extends AbstractHandler
 {
@@ -26,21 +28,19 @@ public class PythonHandler extends AbstractHandler
 	{
 		System.out.println("Handling request"); 
 	
-		Invocable invocable = pythonEngine.getInvocable();
 		ScriptEngine engine = pythonEngine.getEngine(); 
 		
 		try
 		{
-			invocable.invokeFunction("sayHello");
-			// engine.eval("")
-			engine.eval("currentRequest = ModPythonRequest('')\n");
-			Object o = engine.get("currentRequest");
-			System.out.println("O: " + o); 
+			RequestWrapper transfer = new RequestWrapper(baseRequest, request, response);
+			engine.eval("os.environ['DJANGO_SETTINGS_MODULE'] = 'blub.settings'");
+			engine.put("transfer", transfer);
+			engine.eval("handler(transfer)");
+			
+			System.out.println("hm");
+			transfer.close(); 
 			
 		} catch (ScriptException e)
-		{
-			e.printStackTrace();
-		} catch (NoSuchMethodException e)
 		{
 			e.printStackTrace();
 		} 
