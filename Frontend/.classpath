@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="/Libs/lib/apache_commons/commons-logging-1.1.1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Manager"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-continuation-7.0.0.v20091005.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Util"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
