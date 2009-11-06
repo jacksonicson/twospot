@@ -1,3 +1,11 @@
+import os
+
+
+def test():
+    print "test runs ok"
+
+
+
 def add_wsgi_middleware(application):
   # return _config_handle.add_wsgi_middleware(application) TODO
   return application
@@ -8,9 +16,15 @@ def run_wsgi_app(application):
     wrappedApplication = add_wsgi_middleware(application) 
     run_bare_wsgi_app(wrappedApplication)
      
-    
+
+wsgio = None
+def set(wsgio_in):
+    global wsgio
+    wsgio = wsgio    
 
 def run_bare_wsgi_app(application):
+    
+    global wsgio
     
     # Create environment
     env = dict(os.environ)    
@@ -30,8 +44,8 @@ def run_bare_wsgi_app(application):
     # WSGI-defined variables 
     env["wsgi.version"] = (1, 0) # wsgi version
     env["wsgi.url_scheme"] = "http" # scheme portion of the url # TODO: determine the current value
-    env["wsgi.input"] = sys.stdin # input stream from which the HTTP request body can be read
-    env["wsgi.errors"] = sys.stderr # output stream to which error output can be written (server error log)
+    env["wsgi.input"] = wsgio # input stream from which the HTTP request body can be read
+    env["wsgi.errors"] = wsgio # output stream to which error output can be written (server error log)
     env["wsgi.multithread"] = True # The application object can be simultaneously invoked by another thread in the same process
     env["wsgi.multiprocess"] = False # The application object can be simultaneously invoked by another process
     env["wsgi.run_once"] = True # The application object will only be invoked one time during the life of its containing process
@@ -44,7 +58,7 @@ def run_bare_wsgi_app(application):
     if result is not None:
         # Write everything into the response
         for data in result:
-            sys.stdout.write(data) # TODO: pass this to jetty, send headers after the first write!
+            wsgio.write(data) # TODO: pass this to jetty, send headers after the first write!
 
     result.close(); # TODO: catch exception if close function does not exist! 
 
@@ -54,6 +68,8 @@ def run_bare_wsgi_app(application):
 # @arg resonse_headers is a list of (key, value) pairs
 # @arg exc_info is optional. If it exists, it contains the application error
 def start_response(status, response_headers, exc_info=None):
+    global wsgio
+    
     # Check if there are errors
     # TODO: Only if the headers have already been sent
     if exc_info is not None:
@@ -69,5 +85,5 @@ def start_response(status, response_headers, exc_info=None):
     # Return a writable object which can be used to write into the response content
     # This response-method is deprecated - the result iterabel from the application object should be used instead
     # After the first write -> send the headers
-    return sys.stdout.write
+    return wsgio.write
 

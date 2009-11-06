@@ -5,13 +5,18 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Set;
 
+import javax.script.Bindings;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
+import javax.script.SimpleScriptContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.server.HttpConnection;
 import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.prot.appserver.Configuration;
 import org.prot.appserver.app.AppInfo;
@@ -54,10 +59,20 @@ public class PythonHandler extends AbstractHandler
 		
 		try
 		{
+			// Establish an IO channel
+			HttpConnection httpConnection = HttpConnection.getCurrentConnection();
+			Request srcRequest = httpConnection.getRequest();
+			Response srcResponse = httpConnection.getResponse();
+			WsgIO io = new WsgIO(srcRequest, srcResponse);
+
+			
+			Bindings bindings = engine.getBindings(ScriptContext.GLOBAL_SCOPE);
+			bindings.put("wsgio_in", io); 
+			
+						
 			// Execute the choosen python-file
 			FileReader reader = new FileReader(new File(configuration.getAppDirectory() + "/WEB-INF/python/" + pythonFile)); 
 			engine.eval(reader);
-			
 			
 			
 			/*RequestAdapter adapter = new RequestAdapter(baseRequest, request, response);

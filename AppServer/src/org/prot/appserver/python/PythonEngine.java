@@ -1,7 +1,6 @@
 package org.prot.appserver.python;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.File;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -33,6 +32,9 @@ public class PythonEngine
 		engineSys.path.append(Py.newString(config.getPythonLibs()));
 		engineSys.path.append(Py.newString(config.getDjangoLibs()));
 		engineSys.path.append(Py.newString(config.getAppDirectory() + "/WEB-INF/python"));
+		
+		// Python file from the server
+		engineSys.path.append(Py.newString(new File("/bin").getAbsolutePath()));
 		Py.setSystemState(engineSys);
 
 		// Create a new engine
