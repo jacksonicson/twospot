@@ -6,7 +6,7 @@
 	<!-- Connectors -->
 	<bean id="OutsideConnector" class="org.eclipse.jetty.server.nio.SelectChannelConnector">
 		<property name="host" value="0.0.0.0" />
-		<property name="port" value="8080" />
+		<property name="port" value="6060" />
 
 		<property name="acceptors" value="1" />
 	</bean>

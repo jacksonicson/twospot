@@ -1,21 +1,22 @@
 package org.prot.frontend.handlers;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.server.Request;
+import org.prot.manager.exceptions.MissingControllerException;
+import org.prot.manager.pojos.AppServerInfo;
 import org.prot.manager.service.frontend.FrontendService;
 import org.prot.util.handler.HttpProxyHandler;
 
 public class FlowHandler extends HttpProxyHandler
 {
 	private FrontendService frontendService; 
+
+	private ThreadLocal<AppServerInfo> info = new ThreadLocal<AppServerInfo>();
 	
 	public FlowHandler() {
 		setup(); 
@@ -26,8 +27,14 @@ public class FlowHandler extends HttpProxyHandler
 			HttpServletResponse response) throws IOException, ServletException
 	{
 
-//		System.out.println("Flow Handler"); 
-//		frontendService.chooseAppServer("helloworld"); 
+		try
+		{
+			AppServerInfo info = frontendService.chooseAppServer("TODO");
+			this.info.set(info); 
+		} catch (MissingControllerException e1)
+		{
+			e1.printStackTrace();
+		} 
 		
 		try
 		{
@@ -46,7 +53,7 @@ public class FlowHandler extends HttpProxyHandler
 	@Override
 	protected String getHost(Request request)
 	{
-		return "www.heise.de";
+		return this.info.get().getControllerAddress();
 	}
 
 	@Override
@@ -58,7 +65,7 @@ public class FlowHandler extends HttpProxyHandler
 	@Override
 	protected String getUrl(Request request)
 	{
-		return "http://www.heise.de";
+		return "http://" + this.info.get().getControllerAddress();
 	}
 
 
