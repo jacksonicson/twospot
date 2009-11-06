@@ -14,7 +14,7 @@ public class FrontendServiceImpl implements FrontendService
 		logger.debug("chooseAppServer"); 
 		
 		AppServerInfo info = new AppServerInfo(); 
-		info.setControllerAddress("127.0.0.1");
+		info.setControllerAddress("127.0.0.1:8080");
 		info.setControllerPort(8080); 
 		
 		return info;
