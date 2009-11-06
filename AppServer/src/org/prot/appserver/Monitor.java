@@ -5,6 +5,11 @@ import java.io.IOException;
 import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
 
+/**
+ * TODO: Use RMI to communicate with the Controller
+ * @author Andreas Wolke
+ *
+ */
 public class Monitor extends Thread {
 
 	private final int sleepTime = 10000;

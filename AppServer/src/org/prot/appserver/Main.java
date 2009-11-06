@@ -11,7 +11,6 @@ import org.apache.commons.cli.ParseException;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.util.component.LifeCycle;
-import org.eclipse.jetty.util.component.Container.Relationship;
 import org.eclipse.jetty.util.component.LifeCycle.Listener;
 import org.prot.appserver.app.AppInfo;
 import org.prot.appserver.appfetch.HttpAppFetcher;
@@ -21,7 +20,7 @@ import org.springframework.core.io.ClassPathResource;
 
 public class Main implements Listener
 {
-	private void startJava(AppInfo info) throws Exception
+	private void startJava() throws Exception
 	{
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring/spring_java.xml",
 				getClass()));
@@ -40,7 +39,7 @@ public class Main implements Listener
 		server.start();
 	}
 
-	private void startPython(AppInfo info) throws Exception
+	private void startPython() throws Exception
 	{
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring/spring_python.xml",
 				getClass()));
@@ -59,17 +58,18 @@ public class Main implements Listener
 	{
 		HttpAppFetcher fetcher = new HttpAppFetcher();
 		AppInfo appInfo = fetcher.fetchApp(Configuration.getInstance().getAppId());
-
+		Configuration.getInstance().setAppInfo(appInfo); 
+		
 		WarLoader loader = new WarLoader();
 		loader.handle(appInfo);
 
 		switch (appInfo.getRuntime())
 		{
 		case JAVA:
-			startJava(appInfo);
+			startJava();
 			break;
 		case PYTHON:
-			startPython(appInfo);
+			startPython();
 		}
 	}
 

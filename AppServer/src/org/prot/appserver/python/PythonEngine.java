@@ -41,12 +41,12 @@ public class PythonEngine
 		try
 		{
 			// Load scripts
-			String[] list = { "/JettyHandler.py" };
-			for (String file : list)
-			{
-				InputStream in = PythonEngine.class.getResourceAsStream(file);
-				engine.eval(new InputStreamReader(in));
-			}
+//			String[] list = { "/JettyHandler.py" };
+//			for (String file : list)
+//			{
+//				InputStream in = PythonEngine.class.getResourceAsStream(file);
+//				engine.eval(new InputStreamReader(in));
+//			}
 
 		} catch (Exception e)
 		{

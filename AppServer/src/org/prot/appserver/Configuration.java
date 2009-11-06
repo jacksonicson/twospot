@@ -1,5 +1,7 @@
 package org.prot.appserver;
 
+import org.prot.appserver.app.AppInfo;
+
 public class Configuration
 {
 
@@ -22,7 +24,10 @@ public class Configuration
 	
 	// Directories with the python libs
 	private String pythonLibs = "C:/jython2.5.1/Lib"; 
-	private String djangoLibs = "C:/jython2.5.1/Lib/site-packages"; 
+	private String djangoLibs = "C:/jython2.5.1/Lib/site-packages";
+	
+	// AppInfo
+	private AppInfo appInfo; 
 	
 	public static Configuration getInstance()
 	{
@@ -102,5 +107,15 @@ public class Configuration
 	public void setDjangoLibs(String djangoLibs)
 	{
 		this.djangoLibs = djangoLibs;
+	}
+
+	public AppInfo getAppInfo()
+	{
+		return appInfo;
+	}
+
+	public void setAppInfo(AppInfo appInfo)
+	{
+		this.appInfo = appInfo;
 	}
 }
