@@ -8,8 +8,6 @@ from wsgiAdapter import set
 
 
 
-
-
 # Must set this env var before importing any part of Django
 # 'project' is the name of the project created with django-admin.py
 os.environ['DJANGO_SETTINGS_MODULE'] = 'hellopython.settings'
