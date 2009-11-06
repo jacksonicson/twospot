@@ -1,2 +1,6 @@
 appId: hellopython
 runtime: python
+
+handlers:
+- regUrl: /
+  file: hellopython/test.py

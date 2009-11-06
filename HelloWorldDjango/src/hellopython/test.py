@@ -1,0 +1,1 @@
+print "TODO: use the new wsgiAdapter to start django here!!!"
