@@ -20,33 +20,44 @@ def run_wsgi_app(application):
 wsgio = None
 def set(wsgio_in):
     global wsgio
-    wsgio = wsgio    
+    
+    if wsgio_in is None:
+        print "input is none"
+    else:
+        print "ok this is NOT noen"
+    
+    wsgio = wsgio_in    
 
 def run_bare_wsgi_app(application):
     
     global wsgio
     
+    if wsgio is None:
+        print "is none"
+    else:
+        print "is not none"
+    
     # Create environment
     env = dict(os.environ)    
     
     # Environ variables
-    env["REQUEST_METHOD"] = "TODO"
-    env["SCRIPT_NAME"] = "Optional"
-    env["PATH_INFO"] = "Optional"
-    env["QUERY_STRING"] = "Opt"
-    env["CONTENT_TYPE"] = "Opt"
-    env["CONTENT_LENGTH"] = "Opt"
-    env["SERVER_NAME"] = "TODO"
-    env["SERVER_PORT"] = "TODO"
-    env["SERVER_PROTOCOL"] = "HTTP/1.1 TODO"
-    env["HTTP_..."] = "...TODO"
+#    env["REQUEST_METHOD"] = "TODO"
+#    env["SCRIPT_NAME"] = "Optional"
+#    env["PATH_INFO"] = "Optional"
+#    env["QUERY_STRING"] = "Opt"
+#    env["CONTENT_TYPE"] = "Opt"
+#    env["CONTENT_LENGTH"] = "Opt"
+#    env["SERVER_NAME"] = "TODO"
+#    env["SERVER_PORT"] = "TODO"
+#    env["SERVER_PROTOCOL"] = "HTTP/1.1 TODO"
+#    env["HTTP_..."] = "...TODO"
      
     # WSGI-defined variables 
     env["wsgi.version"] = (1, 0) # wsgi version
-    env["wsgi.url_scheme"] = "http" # scheme portion of the url # TODO: determine the current value
+    env["wsgi.url_scheme"] = wsgio.getScheme() # scheme portion of the url # TODO: determine the current value
     env["wsgi.input"] = wsgio # input stream from which the HTTP request body can be read
     env["wsgi.errors"] = wsgio # output stream to which error output can be written (server error log)
-    env["wsgi.multithread"] = True # The application object can be simultaneously invoked by another thread in the same process
+    env["wsgi.multithread"] = False # The application object can be simultaneously invoked by another thread in the same process
     env["wsgi.multiprocess"] = False # The application object can be simultaneously invoked by another process
     env["wsgi.run_once"] = True # The application object will only be invoked one time during the life of its containing process
 
@@ -57,7 +68,9 @@ def run_bare_wsgi_app(application):
     # check if result is None
     if result is not None:
         # Write everything into the response
+        print "writing"
         for data in result:
+            print "do write now"
             wsgio.write(data) # TODO: pass this to jetty, send headers after the first write!
 
     result.close(); # TODO: catch exception if close function does not exist! 
@@ -78,8 +91,12 @@ def start_response(status, response_headers, exc_info=None):
     # TODO: Does not replace currently set headers
     # Write the status header
     print "Status: %s" % status
+    wsgio.setHeader("Status", status);
+    #wsgio.setStatus(int(status))
+    
     # Write all other headers
     for name, val in response_headers:
+        wsgio.setHeader(name, status);
         print "%s: %s" % (name, val)
 
     # Return a writable object which can be used to write into the response content

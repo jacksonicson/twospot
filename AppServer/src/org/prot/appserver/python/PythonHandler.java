@@ -3,12 +3,13 @@ package org.prot.appserver.python;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.HttpRetryException;
+import java.util.Enumeration;
 import java.util.Set;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
-import javax.script.SimpleScriptContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +26,7 @@ import org.prot.appserver.app.WebConfiguration;
 public class PythonHandler extends AbstractHandler
 {
 	private static final Logger logger = Logger.getLogger(PythonHandler.class);
-	
+
 	private ScriptEngine engine;
 
 	public void setPythonEngine(PythonEngine pythonEngine)
@@ -65,6 +66,21 @@ public class PythonHandler extends AbstractHandler
 			Response srcResponse = httpConnection.getResponse();
 			WsgIO io = new WsgIO(srcRequest, srcResponse);
 
+			// Load all header fields into the os.environ
+			engine.eval("import os"); 
+			for(Enumeration<String> names = baseRequest.getHeaderNames(); names.hasMoreElements(); ) {
+				String name = names.nextElement();
+				String value = baseRequest.getHeader(name); 
+				
+				System.out.println("name: " + name + " value: " + value);
+				engine.eval("os.environ['" + name + "'] = '" + value + "'");
+			}
+			
+			engine.eval("os.environ['" + "REQUEST_METHOD" + "'] = '" + baseRequest.getMethod() + "'");
+			engine.eval("os.environ['" + "SERVER_NAME" + "'] = '" + baseRequest.getServerName() + "'");
+			engine.eval("os.environ['" + "SERVER_PORT" + "'] = '" + baseRequest.getServerPort() + "'");
+			engine.eval("os.environ['" + "PATH_INFO" + "'] = '" + baseRequest.getUri() + "'");
+			
 			
 			Bindings bindings = engine.getBindings(ScriptContext.GLOBAL_SCOPE);
 			bindings.put("wsgio_in", io); 
@@ -74,6 +90,9 @@ public class PythonHandler extends AbstractHandler
 			FileReader reader = new FileReader(new File(configuration.getAppDirectory() + "/WEB-INF/python/" + pythonFile)); 
 			engine.eval(reader);
 			
+			
+			response.getOutputStream().close();
+			baseRequest.setHandled(true); 
 			
 			/*RequestAdapter adapter = new RequestAdapter(baseRequest, request, response);
 			engine.put("transfer", adapter);

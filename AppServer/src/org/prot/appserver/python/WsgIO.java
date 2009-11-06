@@ -16,14 +16,15 @@ import org.python.core.PyString;
 
 public class WsgIO
 {
-	private Request request; 
-	private Response response; 
-	
-	public WsgIO(Request request, Response response) {
-		this.request = request; 
-		this.response = response; 
+	private Request request;
+	private Response response;
+
+	public WsgIO(Request request, Response response)
+	{
+		this.request = request;
+		this.response = response;
 	}
-	
+
 	public PyString read(PyInteger size)
 	{
 		try
@@ -31,14 +32,14 @@ public class WsgIO
 			InputStream in = request.getInputStream();
 			byte[] buffer = new byte[size.getValue()];
 			int len = in.read(buffer);
-			return new PyString(new String(buffer, 0, len)); 
-			
+			return new PyString(new String(buffer, 0, len));
+
 		} catch (IOException e)
 		{
 			e.printStackTrace();
 		}
-		
-		return null; 
+
+		return null;
 	}
 
 	public PyString readline()
@@ -46,18 +47,18 @@ public class WsgIO
 		try
 		{
 			BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
-			String line = in.readLine(); 
-			if(line == null)
-				return null; 
-			
+			String line = in.readLine();
+			if (line == null)
+				return null;
+
 			return new PyString(line);
-			
+
 		} catch (IOException e)
 		{
 			e.printStackTrace();
 		}
-		
-		return null; 
+
+		return null;
 	}
 
 	public PyList readlines(PyInteger sizeHint)
@@ -66,28 +67,31 @@ public class WsgIO
 		try
 		{
 			BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
-			String line = null; 
-			int counter = 0; 
-			while((line = in.readLine()) != null && counter <= sizeHint.getValue()) {
-				list.add(line); 
+			String line = null;
+			int counter = 0;
+			while ((line = in.readLine()) != null && counter <= sizeHint.getValue())
+			{
+				list.add(line);
 			}
-			
+
 		} catch (IOException e)
 		{
 			e.printStackTrace();
 		}
-		
-		
-		return list; 
+
+		return list;
 	}
 
-	class TestIter extends PyIterator {
+	class TestIter extends PyIterator
+	{
 
-		BufferedReader in; 
-		public TestIter(BufferedReader in) {
-			this.in = in; 
+		BufferedReader in;
+
+		public TestIter(BufferedReader in)
+		{
+			this.in = in;
 		}
-		
+
 		@Override
 		public PyObject __iternext__()
 		{
@@ -99,19 +103,19 @@ public class WsgIO
 			{
 				e.printStackTrace();
 			}
-			
-			if(line == null)
+
+			if (line == null)
 				return null;
-			
+
 			return new PyString(line);
 		}
 	}
-	
-	TestIter iter; 
-	
+
+	TestIter iter;
+
 	public PyIterator __iter__()
 	{
-		if(iter == null)
+		if (iter == null)
 		{
 			BufferedReader in;
 			try
@@ -123,8 +127,8 @@ public class WsgIO
 				e.printStackTrace();
 			}
 		}
-		
-		return iter; 
+
+		return iter;
 	}
 
 	public void flush()
@@ -135,31 +139,46 @@ public class WsgIO
 		} catch (IOException e)
 		{
 			e.printStackTrace();
-		} 
+		}
 	}
 
-	public void write(String string)
+	public void write(PyString string)
 	{
 		try
 		{
-			response.getOutputStream().write(string.getBytes()); 
+			response.getOutputStream().write(string.toBytes());
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public void writelines(PySequence sequence)
+	{
+		try
+		{
+			for (PyObject str : sequence.asIterable())
+			{
+				response.getOutputStream().write(str.toString().getBytes());
+			}
+
 		} catch (IOException e)
 		{
 			e.printStackTrace();
 		}
 	}
 	
-	public void writelines(PySequence sequence)
+	public void setStatus(int status)
 	{
-		try
-		{
-			for(PyObject str : sequence.asIterable()) {
-				response.getOutputStream().write(str.toString().getBytes());
-			}
-			 
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		response.setStatus(status); 
+	}
+
+	public void setHeader(String name, String value)
+	{
+		response.setHeader(name, value);
+	}
+	
+	public String getScheme() {
+		return request.getScheme(); 
 	}
 }
