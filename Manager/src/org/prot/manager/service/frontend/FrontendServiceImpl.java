@@ -1,6 +1,7 @@
 package org.prot.manager.service.frontend;
 
 import org.apache.log4j.Logger;
+import org.prot.manager.exceptions.MissingControllerException;
 import org.prot.manager.pojos.AppServerInfo;
 
 public class FrontendServiceImpl implements FrontendService
@@ -8,7 +9,7 @@ public class FrontendServiceImpl implements FrontendService
 	private static final Logger logger = Logger.getLogger(FrontendServiceImpl.class); 
 	
 	@Override
-	public AppServerInfo chooseAppServer(String appId)
+	public AppServerInfo chooseAppServer(String appId) throws MissingControllerException
 	{
 		logger.debug("chooseAppServer"); 
 		
