@@ -1,10 +1,8 @@
 package org.prot.controller.manager;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
-
-import org.prot.controller.manager.exceptions.DuplicatedAppException;
 
 class AppRegistry
 {
@@ -13,7 +11,7 @@ class AppRegistry
 
 	private Stack<Integer> freePorts = new Stack<Integer>();
 
-	private Map<String, AppInfo> appInfos = new Hashtable<String, AppInfo>();
+	private Map<String, AppInfo> appInfos = new HashMap<String, AppInfo>();
 
 	private int getPort()
 	{
@@ -30,23 +28,21 @@ class AppRegistry
 		this.appInfos.put(appInfo.getAppId(), appInfo);
 	}
 
-	public boolean hasApp(String appId)
+	public synchronized boolean hasApp(String appId)
 	{
 		return appInfos.containsKey(appId);
 	}
 
-	public AppInfo getAppInfo(String appId)
+	public synchronized AppInfo getAppInfo(String appId)
 	{
 		return appInfos.get(appId);
 	}
 
-	public AppInfo registerApp(String appId) throws DuplicatedAppException
+	public synchronized AppInfo registerApp(String appId)
 	{
 		AppInfo appInfo = appInfos.get(appId);
 		if (appInfo != null)
-		{
-			throw new DuplicatedAppException(appInfo);
-		}
+			return appInfo; 
 
 		appInfo = new AppInfo();
 		appInfo.setAppId(appId);

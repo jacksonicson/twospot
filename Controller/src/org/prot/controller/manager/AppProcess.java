@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-class AppProcess implements Runnable
+class AppProcess
 {
 	private static final Logger logger = Logger.getLogger(AppProcess.class);
 
@@ -27,10 +27,16 @@ class AppProcess implements Runnable
 		return this.appInfo;
 	}
 
+	private void stopAndClean()
+	{
+		process.destroy();
+		process = null;
+	}
+
 	public void startOrRestart()
 	{
-		// if the AppServer is marked as stale shutdown the process
-		if (appInfo.getStatus() == AppState.STALE)
+		// Kill the old process if exists
+		if (process != null)
 			stopAndClean();
 
 		// build command
@@ -57,11 +63,11 @@ class AppProcess implements Runnable
 
 		try
 		{
-			// Update status
-			this.appInfo.setStatus(AppState.STARTING);
-
 			// Start the process
 			this.process = procBuilder.start();
+
+			// Wait until the Server running
+			waitForAppServer();
 
 		} catch (IOException e)
 		{
@@ -109,13 +115,7 @@ class AppProcess implements Runnable
 		return jars;
 	}
 
-	public void stopAndClean()
-	{
-		this.process.destroy();
-	}
-
-	// TODO: Inperformant und geht nicht mit mehreren Warte-Threads
-	public void waitForAppServer()
+	private void waitForAppServer()
 	{
 		try
 		{
@@ -129,26 +129,21 @@ class AppProcess implements Runnable
 				if (line.equals("server started"))
 				{
 					this.appInfo.setStatus(AppState.ONLINE);
+					logger.info("AppServer started: " + this.appInfo.getAppId()); 
 					return;
 				}
 			}
-			
+
 		} catch (IOException e)
 		{
 			// Could not verify if server is online so kill it
 			stopAndClean();
-			
+
 			// Update status
 			this.appInfo.setStatus(AppState.FAILED);
-			
+
 			// Log the error
 			logger.error("Could not start a new server process - AppId: " + appInfo.getAppId(), e);
 		}
-	}
-
-	@Override
-	public void run()
-	{
-		System.out.println("Running...");
 	}
 }

@@ -19,7 +19,6 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.prot.controller.manager.AppInfo;
 import org.prot.controller.manager.AppManager;
 import org.prot.controller.manager.exceptions.AppServerFailedException;
-import org.prot.controller.manager.exceptions.DuplicatedAppException;
 
 public class RequestHandler extends AbstractHandler
 {
@@ -48,23 +47,14 @@ public class RequestHandler extends AbstractHandler
 		this.appManager = appManager;
 	}
 
-	
-	
 	private boolean forwardRequest(AppInfo appInfo, Request baseRequest, HttpServletRequest request,
 			HttpServletResponse response)
 	{
-		// TODO: check if scheme is http
-		// TODO: check if this is a connect request
-		// TODO: check other invalid headers
-		// TODO: set proxy flag
-		
 		// create request
 		int port = appInfo.getPort();
 		String uri = baseRequest.getUri().getCompletePath().substring(1);
 		uri = uri.substring(uri.indexOf("/"));
-		System.out.println("URI: " + uri); 
-		String url = "http://127.0.0.1:" + port + uri; 
-		// System.out.println("url: " + url);
+		String url = "http://127.0.0.1:" + port + uri;
 
 		ContentExchange exchange = new ContentExchange(true);
 		exchange.setMethod(baseRequest.getMethod());
@@ -80,9 +70,6 @@ public class RequestHandler extends AbstractHandler
 			while (headerValues.hasMoreElements())
 			{
 				String headerValue = headerValues.nextElement();
-
-				// System.out.println("request header: " + headerName + ":"
-				// + headerValue);
 				exchange.addRequestHeader(headerName, headerValue);
 			}
 		}
@@ -171,35 +158,30 @@ public class RequestHandler extends AbstractHandler
 		// extract appId
 		String uri = baseRequest.getUri().getPath().substring(1);
 		int index = uri.indexOf("/");
-		if(index < 0) {
+		if (index < 0)
+		{
 			response.getOutputStream().print("Error: Missing AppId");
 			response.getOutputStream().close();
 			return;
 		}
 		String appId = uri.substring(0, index);
-		
-		System.out.println("AppIdf: " + appId); 
-		
+
 		try
 		{
 			// retries if forward fails
-			for (int i = 0; i < 1; i++)
+			for (int i = 0; i < 3; i++)
 			{
 				// inform the AppManager
 				AppInfo appInfo = this.appManager.requireApp(appId);
-				
+
 				// forward the request
 				if (forwardRequest(appInfo, baseRequest, request, response))
 					break;
 			}
 
-		} catch (DuplicatedAppException e)
-		{
-			logger.error("Duplicated application", e);
-			System.exit(1); 
 		} catch (AppServerFailedException e)
 		{
-			logger.error("AppServer failed", e); 
+			logger.error("AppServer failed", e);
 		}
 	}
 }

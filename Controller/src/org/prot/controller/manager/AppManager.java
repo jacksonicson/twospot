@@ -1,7 +1,6 @@
 package org.prot.controller.manager;
 
 import org.prot.controller.manager.exceptions.AppServerFailedException;
-import org.prot.controller.manager.exceptions.DuplicatedAppException;
 
 public class AppManager
 {
@@ -27,35 +26,26 @@ public class AppManager
 	 * @throws DuplicatedAppException
 	 * @throws AppServerFailedException
 	 */
-	// TODO: synchronized weg - bei laufenden prozessen bremst das aus!
-	// Alle Prozesse müssen warten wenn ein Server gestartet wird
-	public synchronized AppInfo requireApp(String appId) throws DuplicatedAppException,
-			AppServerFailedException
+	public AppInfo requireApp(String appId) throws AppServerFailedException
 	{
-		// get app info
-		AppInfo appInfo = registry.getAppInfo(appId);
+		// Register or load existing AppInfo
+		AppInfo appInfo = registry.registerApp(appId);
 
-		// register a new app
-		if (appInfo == null)
-		{
-			appInfo = registry.registerApp(appId);
-		}
-
-		// action depends on app status
+		// Update status (this section is not synchronized and therefore the
+		// decisions made here could be wrong!
 		switch (appInfo.getStatus())
 		{
 		case ONLINE:
 			return appInfo;
 		case STARTING:
 			waitForAppServer(appInfo);
+			break;
 		case FAILED:
-			// TODO: Wait some time or until new app revision
 			throw new AppServerFailedException();
 		case OFFLINE:
-			startApp(appInfo);
-			break;
 		case STALE:
-			restartApp(appInfo);
+			appInfo.setStatus(AppState.STARTING);
+			startApp(appInfo);
 			break;
 		}
 
@@ -68,37 +58,32 @@ public class AppManager
 	 * 
 	 * @param appId
 	 */
-	public synchronized void reportStaleApp(String appId)
+	public void reportStaleApp(String appId)
 	{
 		AppInfo appInfo = registry.getAppInfo(appId);
 		appInfo.setStatus(AppState.STALE);
 	}
 
 	/**
-	 * Blocks until the application server is ready 
+	 * Blocks until the application server is ready
+	 * 
 	 * @param appInfo
 	 */
 	private void waitForAppServer(AppInfo appInfo)
 	{
-		AppProcess process = monitor.getProcess(appInfo);
-		process.waitForAppServer();
-	}
-
-	private void restartApp(AppInfo appInfo)
-	{
-		startApp(appInfo);
+		// The monitor contains the thread synchronization
+		monitor.waitForApplication(appInfo);
 	}
 
 	private void startApp(AppInfo appInfo)
 	{
+		// Get a process for this application
 		AppProcess process = monitor.getProcess(appInfo);
-		if (process == null)
-		{
-			process = new AppProcess(appInfo);
-			monitor.registerProcess(process);
-		}
-
-		process.startOrRestart();
+		
+		// Enqueue the process start 
+		monitor.startProcess(process);
+		
+		// Wait until the AppServer is online
 		waitForAppServer(appInfo);
 	}
 }
