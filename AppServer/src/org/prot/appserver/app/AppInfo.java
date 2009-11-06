@@ -1,5 +1,8 @@
 package org.prot.appserver.app;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.prot.appserver.AppRuntime;
 
 public class AppInfo
@@ -9,7 +12,19 @@ public class AppInfo
 	private AppRuntime runtime;
 
 	private byte[] warFile;
-	
+
+	private Set<WebConfiguration> webConfigurations = new HashSet<WebConfiguration>();
+
+	public void addWebConfiguration(WebConfiguration webConfiguration)
+	{
+		this.webConfigurations.add(webConfiguration);
+	}
+
+	public Set<WebConfiguration> getWebConfigurations()
+	{
+		return this.webConfigurations;
+	}
+
 	public String getAppId()
 	{
 		return appId;
