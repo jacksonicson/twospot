@@ -12,7 +12,6 @@ import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.HttpExchange;
 import org.eclipse.jetty.http.HttpFields;
-import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.http.HttpFields.Field;
 import org.eclipse.jetty.io.EofException;
 import org.eclipse.jetty.server.Request;
@@ -61,7 +60,10 @@ public class RequestHandler extends AbstractHandler
 		
 		// create request
 		int port = appInfo.getPort();
-		String url = "http://127.0.0.1:" + port + baseRequest.getUri();
+		String uri = baseRequest.getUri().getCompletePath().substring(1);
+		uri = uri.substring(uri.indexOf("/"));
+		System.out.println("URI: " + uri); 
+		String url = "http://127.0.0.1:" + port + uri; 
 		// System.out.println("url: " + url);
 
 		ContentExchange exchange = new ContentExchange(true);
@@ -167,22 +169,21 @@ public class RequestHandler extends AbstractHandler
 			HttpServletResponse response) throws IOException, ServletException
 	{
 		// extract appId
-		String serverName = baseRequest.getServerName();
-		int index = serverName.indexOf(".");
-		if (index < 0)
-		{
+		String uri = baseRequest.getUri().getPath().substring(1);
+		int index = uri.indexOf("/");
+		if(index < 0) {
 			response.getOutputStream().print("Error: Missing AppId");
 			response.getOutputStream().close();
 			return;
 		}
-
-		String appId = serverName.substring(0, index);
+		String appId = uri.substring(0, index);
 		
-		// forward the request to the AppServer
+		System.out.println("AppIdf: " + appId); 
+		
 		try
 		{
-			// three retries if forward fails
-			for (int i = 0; i < 3; i++)
+			// retries if forward fails
+			for (int i = 0; i < 1; i++)
 			{
 				// inform the AppManager
 				AppInfo appInfo = this.appManager.requireApp(appId);
