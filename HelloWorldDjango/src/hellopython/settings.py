@@ -1,6 +1,6 @@
 # Django settings for blub project.
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -66,14 +66,16 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'hellopython.urls'
 
 TEMPLATE_DIRS = (
+    "C:\jython2.5.1\Lib\site-packages\django\contrib\admin\templates\admin",
+    "C:\jython2.5.1\Lib\site-packages\django\contrib\admin\templates"
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
 
 INSTALLED_APPS = (
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
+    #'django.contrib.auth',
+    #'django.contrib.contenttypes',
+    #'django.contrib.sessions',
+    #'django.contrib.sites',
 )

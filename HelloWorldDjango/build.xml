@@ -16,6 +16,8 @@
 		<jar destfile="hellopython.war" basedir="deploy" />
 		
 		<delete dir="deploy" />
+		
+		<copyfile dest="../HttpFileServer/files/hellopython.war" src="hellopython.war"/>
 	</target>
 	
 </project>
