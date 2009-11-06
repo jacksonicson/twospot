@@ -11,15 +11,6 @@
 		<property name="acceptors" value="1" />
 	</bean>
 
-	<bean id="InsideConnector" class="org.eclipse.jetty.server.nio.SelectChannelConnector">
-		<property name="host" value="127.0.0.1" />
-		<property name="port" value="8079" />
-
-		<property name="maxIdleTime" value="300000" />
-		<property name="acceptors" value="1" />
-		<property name="statsOn" value="false" />
-	</bean>
-
 	<!-- Server -->
 	<bean id="Server" class="org.eclipse.jetty.server.Server">
 		<property name="threadPool">
@@ -32,7 +23,6 @@
 		<property name="connectors">
 			<list>
 				<ref bean="OutsideConnector" />
-				<ref bean="InsideConnector" />
 			</list>
 		</property>
 
