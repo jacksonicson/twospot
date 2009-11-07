@@ -5,14 +5,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Stack;
 
 import javax.script.Compilable;
 import javax.script.CompiledScript;
-import javax.script.Invocable;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import javax.script.SimpleScriptContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,20 +28,20 @@ import org.prot.appserver.Configuration;
 import org.python.core.Py;
 import org.python.core.PyDictionary;
 import org.python.core.PySystemState;
+import org.springframework.scripting.config.ScriptingDefaultsParser;
 
 public class PythonHandler extends AbstractHandler
 {
 	private static final Logger logger = Logger.getLogger(PythonHandler.class);
 
-	private ScriptEngine engine;
+	// private ScriptEngine engine;
 	ScriptEngineManager engineManager = new ScriptEngineManager();
 
 	PySystemState engineSys = new PySystemState();
-	
-	
+
 	public void setPythonEngine(PythonEngine pythonEngine)
 	{
-		//this.engine = // pythonEngine.getEngine();
+		// this.engine = // pythonEngine.getEngine();
 		Configuration config = Configuration.getInstance();
 		engineSys.path.append(Py.newString(config.getPythonLibs()));
 		engineSys.path.append(Py.newString(config.getDjangoLibs()));
@@ -47,19 +49,22 @@ public class PythonHandler extends AbstractHandler
 
 		// Python file from the server
 		engineSys.path.append(Py.newString(new File("/bin").getAbsolutePath()));
+
+		Py.setSystemState(engineSys);
 		
-		engine = engineManager.getEngineByName("jython");
-		
-		for(ScriptEngineFactory factory : engineManager.getEngineFactories()) {
+		ScriptEngine engine = engineManager.getEngineByName("jython");
+
+		for (ScriptEngineFactory factory : engineManager.getEngineFactories())
+		{
 			System.out.println("Engine: " + factory.getEngineName());
 		}
-//		
-//		try
-//		{
-//		} catch (ScriptException e1)
-//		{
-//			e1.printStackTrace();
-//		}
+		//		
+		// try
+		// {
+		// } catch (ScriptException e1)
+		// {
+		// e1.printStackTrace();
+		// }
 
 		String pythonFile = "hellopython/test.py";
 		Configuration configuration = Configuration.getInstance();
@@ -84,11 +89,49 @@ public class PythonHandler extends AbstractHandler
 	String file = "";
 
 	CompiledScript cs;
-	
+
+	Stack<ScriptEngine> engines = new Stack<ScriptEngine>();
+
+	public ScriptEngine giveRuntime()
+	{
+		synchronized (engines)
+		{
+			ScriptEngine e = null;
+			if (engines.isEmpty())
+			{
+				Py.setSystemState(engineSys);
+				e = engineManager.getEngineByName("jython");
+				try
+				{
+					e.eval("import os");
+				} catch (ScriptException e1)
+				{
+					e1.printStackTrace();
+				} 
+				System.out.println("Engine: " + e);
+			} else
+			{
+				e = engines.pop();
+			}
+
+			return e;
+		}
+	}
+
+	public void freeRuntime(ScriptEngine e)
+	{
+		synchronized(engines) {
+			engines.push(e); 
+		}
+	}
+
 	@Override
 	public void handle(String target, Request baseRequest, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException
 	{
+		
+		ScriptEngine engine = giveRuntime(); 
+		
 		// Get the URI
 		String uri = baseRequest.getUri().toString();
 
@@ -115,34 +158,29 @@ public class PythonHandler extends AbstractHandler
 
 		try
 		{
-			
+
 			long time = System.currentTimeMillis();
-			
+
 			// Py.setSystemState(engineSys);
 			// engine = engineManager.getEngineByName("jython");
 			// engine.eval("import os");
-			 
-			
 
 			time = System.currentTimeMillis() - time;
-//			System.out.println("TIME IMPORT: " + time);
+			// System.out.println("TIME IMPORT: " + time);
 			time = System.currentTimeMillis();
-			
+
 			// Establish an IO channel
 			HttpConnection httpConnection = HttpConnection.getCurrentConnection();
 			Request srcRequest = httpConnection.getRequest();
 			Response srcResponse = httpConnection.getResponse();
 			WsgIO io = new WsgIO(srcRequest, srcResponse);
 
-			
 			time = System.currentTimeMillis() - time;
-//			System.out.println("TIME 0: " + time);
+			// System.out.println("TIME 0: " + time);
 			time = System.currentTimeMillis();
-			
 
-			
-			String puffer = ""; 
-			PyDictionary dict = new PyDictionary(); 
+			String puffer = "";
+			PyDictionary dict = new PyDictionary();
 
 			for (Enumeration<String> names = baseRequest.getHeaderNames(); names.hasMoreElements();)
 			{
@@ -150,63 +188,70 @@ public class PythonHandler extends AbstractHandler
 				String value = baseRequest.getHeader(name);
 
 				// System.out.println("name: " + name + " value: " + value);
-				dict.put(name, value); 
-				// puffer += ("os.environ['" + name + "'] = '" + value + "'") + "\n";
+				dict.put(name, value);
+				// puffer += ("os.environ['" + name + "'] = '" + value + "'") +
+				// "\n";
 			}
-			
+
 			dict.put("REQUEST_METHOD", baseRequest.getMethod());
 			dict.put("SERVER_NAME", baseRequest.getServerName());
-			dict.put("SERVER_PORT",baseRequest.getServerPort());
+			dict.put("SERVER_PORT", baseRequest.getServerPort());
 			dict.put("PATH_INFO", baseRequest.getUri());
 
-//			puffer += ("os.environ['" + "REQUEST_METHOD" + "'] = '" + baseRequest.getMethod() + "'") + "\n";
-//			puffer += ("os.environ['" + "SERVER_NAME" + "'] = '" + baseRequest.getServerName() + "'") + "\n";
-//			puffer += ("os.environ['" + "SERVER_PORT" + "'] = '" + baseRequest.getServerPort() + "'") + "\n";
-//			puffer += ("os.environ['" + "PATH_INFO" + "'] = '" + baseRequest.getUri() + "'") + "\n";
+			// puffer += ("os.environ['" + "REQUEST_METHOD" + "'] = '" +
+			// baseRequest.getMethod() + "'") + "\n";
+			// puffer += ("os.environ['" + "SERVER_NAME" + "'] = '" +
+			// baseRequest.getServerName() + "'") + "\n";
+			// puffer += ("os.environ['" + "SERVER_PORT" + "'] = '" +
+			// baseRequest.getServerPort() + "'") + "\n";
+			// puffer += ("os.environ['" + "PATH_INFO" + "'] = '" +
+			// baseRequest.getUri() + "'") + "\n";
 
 			// engine.put("wsgio_in", io);
-			
+
 			// puffer += ("from wsgiAdapter import set") + "\n";
 			// puffer += ("set(wsgio_in)") + "\n";
-			
-			//Invocable in = ((Invocable)engine);
-			//in.invokeFunction("set", io, dict);
-			
-//			System.out.println("IO: " + io); 
-			
+
+			// Invocable in = ((Invocable)engine);
+			// in.invokeFunction("set", io, dict);
+
+			// System.out.println("IO: " + io);
+
 			engine.put("dict", dict);
 			engine.put("testin", io);
 			String name = Thread.currentThread().getName();
-			engine.put("name", name); 
+			engine.put("name", name);
 			System.out.println("Thread thr: " + name);
-			
-			// engine.eval(puffer); 
+
+			// engine.eval(puffer);
 
 			time = System.currentTimeMillis() - time;
-//			System.out.println("TIME 1: " + time);
+			// System.out.println("TIME 1: " + time);
 			time = System.currentTimeMillis();
-			
+
 			// Execute the choosen python-file
 			// FileReader reader = new FileReader(new
 			// File(configuration.getAppDirectory() + "/WEB-INF/python/" +
 			// pythonFile));
 
 			// engine.eval(reader);
-			
+
 			// Use compiled file version
-			if(cs == null)
+			if (cs == null)
 			{
-				Compilable c = (Compilable)engine;
+				Compilable c = (Compilable) engine;
 				cs = c.compile(file);
 			}
+			// Use Context of the ENGINE!!!
+			ScriptContext context = new SimpleScriptContext(); 
 			
-			cs.eval(); 
+			
 			// engine.eval(file);
 
 			time = System.currentTimeMillis() - time;
-//			System.out.println("TIME 2: " + time);
+			// System.out.println("TIME 2: " + time);
 			time = System.currentTimeMillis();
-			
+
 			response.getOutputStream().close();
 			baseRequest.setHandled(true);
 
@@ -222,5 +267,7 @@ public class PythonHandler extends AbstractHandler
 		{
 			e.printStackTrace();
 		}
+		
+		freeRuntime(engine);
 	}
 }
