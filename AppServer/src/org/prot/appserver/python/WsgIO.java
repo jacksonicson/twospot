@@ -15,8 +15,13 @@ import org.python.core.PyObject;
 import org.python.core.PySequence;
 import org.python.core.PyString;
 
-public class WsgIO
+public class WsgIO extends PyObject
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4379580145439172410L;
+	
 	private Request request;
 	private Response response;
 

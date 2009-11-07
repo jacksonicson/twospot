@@ -17,8 +17,8 @@
 	<bean id="Server" class="org.eclipse.jetty.server.Server">
 		<property name="threadPool">
 			<bean class="org.eclipse.jetty.util.thread.QueuedThreadPool">
-				<property name="minThreads" value="2" />
-				<property name="maxThreads" value="5" />
+				<property name="minThreads" value="3" />
+				<property name="maxThreads" value="8" />
 			</bean>
 		</property>
 

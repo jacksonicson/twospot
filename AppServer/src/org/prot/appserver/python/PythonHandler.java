@@ -10,6 +10,7 @@ import javax.script.Compilable;
 import javax.script.CompiledScript;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.servlet.ServletException;
@@ -49,14 +50,16 @@ public class PythonHandler extends AbstractHandler
 		
 		engine = engineManager.getEngineByName("jython");
 		
-		try
-		{
-			this.engine.eval("import os");
-			this.engine.eval("from wsgiAdapter import set");
-		} catch (ScriptException e1)
-		{
-			e1.printStackTrace();
+		for(ScriptEngineFactory factory : engineManager.getEngineFactories()) {
+			System.out.println("Engine: " + factory.getEngineName());
 		}
+//		
+//		try
+//		{
+//		} catch (ScriptException e1)
+//		{
+//			e1.printStackTrace();
+//		}
 
 		String pythonFile = "hellopython/test.py";
 		Configuration configuration = Configuration.getInstance();
@@ -166,8 +169,16 @@ public class PythonHandler extends AbstractHandler
 			// puffer += ("from wsgiAdapter import set") + "\n";
 			// puffer += ("set(wsgio_in)") + "\n";
 			
-			Invocable in = ((Invocable)engine);
-			in.invokeFunction("set", io, dict);
+			//Invocable in = ((Invocable)engine);
+			//in.invokeFunction("set", io, dict);
+			
+//			System.out.println("IO: " + io); 
+			
+			engine.put("dict", dict);
+			engine.put("testin", io);
+			String name = Thread.currentThread().getName();
+			engine.put("name", name); 
+			System.out.println("Thread thr: " + name);
 			
 			// engine.eval(puffer); 
 
