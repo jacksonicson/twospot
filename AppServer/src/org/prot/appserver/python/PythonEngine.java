@@ -26,33 +26,22 @@ public class PythonEngine
 		// System state must be set before creating the engine
 		// The SystemState can be passed as a parameter if the
 		// PythonInterpreter-Class is used
-		Configuration config = Configuration.getInstance(); 
-		
+		Configuration config = Configuration.getInstance();
+
 		PySystemState engineSys = new PySystemState();
 		engineSys.path.append(Py.newString(config.getPythonLibs()));
 		engineSys.path.append(Py.newString(config.getDjangoLibs()));
 		engineSys.path.append(Py.newString(config.getAppDirectory() + "/WEB-INF/python"));
-		
+
 		// Python file from the server
 		engineSys.path.append(Py.newString(new File("/bin").getAbsolutePath()));
 		Py.setSystemState(engineSys);
 
+		long time = System.currentTimeMillis();
 		// Create a new engine
-		engine = engineManager.getEngineByName("jython");
+		
+		time = System.currentTimeMillis() - time;
+		System.out.println("TIME: " + time);
 
-		try
-		{
-			// Load scripts
-//			String[] list = { "/JettyHandler.py" };
-//			for (String file : list)
-//			{
-//				InputStream in = PythonEngine.class.getResourceAsStream(file);
-//				engine.eval(new InputStreamReader(in));
-//			}
-
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
 	}
 }
