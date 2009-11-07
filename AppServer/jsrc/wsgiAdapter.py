@@ -1,6 +1,10 @@
 import os
 import threading
 
+def callback(target):
+    print "calling back"
+    target()
+    print "done"
 
 class MyApp:
 
@@ -11,7 +15,11 @@ class MyApp:
     def __init__(self, wsgio, dict, name):
         self._wsgio = wsgio
         self._dict = dict
-        self._name = name  
+        self._name = name
+        
+        from org.prot.appserver.python import Wsg
+        wsg = Wsg()
+        wsg.test(callback)
 
     def run_wsgi_app(self, application):
         self.run_bare_wsgi_app(application)

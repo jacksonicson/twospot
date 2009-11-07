@@ -86,12 +86,18 @@ public class PythonHandler extends AbstractHandler
 			PythonInterpreter e = null;
 			if (engines.isEmpty())
 			{
+				long time = System.currentTimeMillis();
+				
 				Py.setSystemState(engineSys);
 				e = new PythonInterpreter();
 				System.out.println("Engine: " + e);
+				
+				time = System.currentTimeMillis() - time;
+				System.out.println("Time used for engine creation: " + time);
 			} else
 			{
 				e = engines.pop();
+				// e = engines.peek(); 
 			}
 
 			return e;
@@ -200,6 +206,7 @@ public class PythonHandler extends AbstractHandler
 
 			engine.set("dict", dict);
 			engine.set("testin", io);
+			
 			String name = Thread.currentThread().getName();
 			engine.set("name", name);
 			
@@ -221,7 +228,6 @@ public class PythonHandler extends AbstractHandler
 			{
 				cs = engine.compile(file);
 			}
-			// Use Context of the ENGINE!!!
 			engine.exec(cs); 
 
 			// engine.eval(file);
