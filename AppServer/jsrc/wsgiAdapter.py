@@ -1,9 +1,6 @@
 import os
 
 
-def test():
-    print "test runs ok"
-
 
 
 def add_wsgi_middleware(application):
@@ -20,12 +17,6 @@ def run_wsgi_app(application):
 wsgio = None
 def set(wsgio_in):
     global wsgio
-    
-    if wsgio_in is None:
-        print "input is none"
-    else:
-        print "ok this is NOT noen"
-    
     wsgio = wsgio_in    
 
 def run_bare_wsgi_app(application):

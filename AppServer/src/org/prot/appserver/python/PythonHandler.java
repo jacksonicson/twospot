@@ -82,14 +82,17 @@ public class PythonHandler extends AbstractHandler
 			engine.eval("os.environ['" + "PATH_INFO" + "'] = '" + baseRequest.getUri() + "'");
 			
 			
-			Bindings bindings = engine.getBindings(ScriptContext.GLOBAL_SCOPE);
+			Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+			
 			bindings.put("wsgio_in", io); 
+			engine.eval("from wsgiAdapter import run_wsgi_app");
+			engine.eval("from wsgiAdapter import set");
+			engine.eval("set(wsgio_in)");
 			
 						
 			// Execute the choosen python-file
 			FileReader reader = new FileReader(new File(configuration.getAppDirectory() + "/WEB-INF/python/" + pythonFile)); 
 			engine.eval(reader);
-			
 			
 			response.getOutputStream().close();
 			baseRequest.setHandled(true); 
