@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Enumeration;
 
+import javax.script.Compilable;
+import javax.script.CompiledScript;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -78,6 +80,8 @@ public class PythonHandler extends AbstractHandler
 
 	String file = "";
 
+	CompiledScript cs;
+	
 	@Override
 	public void handle(String target, Request baseRequest, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException
@@ -177,7 +181,16 @@ public class PythonHandler extends AbstractHandler
 			// pythonFile));
 
 			// engine.eval(reader);
-			engine.eval(file);
+			
+			// Use compiled file version
+			if(cs == null)
+			{
+				Compilable c = (Compilable)engine;
+				cs = c.compile(file);
+			}
+			
+			cs.eval(); 
+			// engine.eval(file);
 
 			time = System.currentTimeMillis() - time;
 //			System.out.println("TIME 2: " + time);
