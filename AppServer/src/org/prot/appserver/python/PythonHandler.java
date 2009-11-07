@@ -160,7 +160,7 @@ public class PythonHandler extends AbstractHandler
 			HttpConnection httpConnection = HttpConnection.getCurrentConnection();
 			Request srcRequest = httpConnection.getRequest();
 			Response srcResponse = httpConnection.getResponse();
-			WsgIO io = new WsgIO(srcRequest, srcResponse);
+			WsgiChannel io = new WsgiChannel(srcRequest, srcResponse);
 
 			time = System.currentTimeMillis() - time;
 			// System.out.println("TIME 0: " + time);
@@ -204,11 +204,9 @@ public class PythonHandler extends AbstractHandler
 
 			// System.out.println("IO: " + io);
 
-			engine.set("dict", dict);
-			engine.set("testin", io);
-			
-			String name = Thread.currentThread().getName();
-			engine.set("name", name);
+			engine.set("headers", dict);
+			engine.set("wsgiChannel", io);
+			engine.set("threadName", Thread.currentThread().getName());
 			
 			// engine.eval(puffer);
 

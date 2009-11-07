@@ -1,36 +1,31 @@
 import os
 import threading
 
-def callback(target):
-    print "calling back"
-    target()
-    print "done"
+class WsgiApp:
 
-class MyApp:
-
+    # private attributes
     _wsgio = None
     _dict = None
     _name = None
+
 
     def __init__(self, wsgio, dict, name):
         self._wsgio = wsgio
         self._dict = dict
         self._name = name
         
-        from org.prot.appserver.python import Wsg
-        wsg = Wsg()
-        wsg.test(callback)
+
+    def _checkThreadname(self, function):
+        if not (self._name == threading.currentThread().getName()):
+            print "ERROR in %s" % function.__name__
+
 
     def run_wsgi_app(self, application):
-        self.run_bare_wsgi_app(application)
-         
-    def run_bare_wsgi_app(self, application):
         wsgio = self._wsgio
         env = self._dict
-         
-        # thread safety
-        if not (self._name == threading.currentThread().getName()):
-            print "ERROR in run_bare_wsgi_app"
+
+        # Thread safety
+        self._checkThreadname(self.run_wsgi_app)
          
         # WSGI-defined variables 
         env["wsgi.version"] = (1, 0) # wsgi version
@@ -54,7 +49,9 @@ class MyApp:
         try:
             result.close();
         except AttributeException:
+            # Do nothing
             pass 
+    
     
     # Function is used to begin the HTTP response. It is called before the first iterator call of the result object from the application object
     # or befor the first write to the returned stream from this method
@@ -64,21 +61,18 @@ class MyApp:
     def start_response(self, status, response_headers, exc_info=None):
         wsgio = self._wsgio
         
-        # thread safety
-        if not (self._name == threading.currentThread().getName()):
-            print "ERROR in start_response"
+        # Thread safety
+        self._checkThreadname(self.start_response)
         
         # Check if there are errors
-        # TODO: Only if the headers have already been sent
+        # TODO: PEP-333 exceptions if the headers have already been sent to the client 
         if exc_info is not None:
             raise exc_info[0], exc_info[1], exc_info[2]
         
-        # TODO: Does not replace currently set headers
-        # Write the status header
-        wsgio.setHeader("Status", status);
-        #wsgio.setStatus(int(status))
+        # Set the response status
+        wsgio.setStatus(status)
         
-        # Write all other headers
+        # Updata the response headers
         for name, val in response_headers:
             wsgio.setHeader(name, status);
     
