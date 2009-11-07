@@ -7,14 +7,7 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Stack;
 
-import javax.script.Compilable;
-import javax.script.CompiledScript;
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-import javax.script.SimpleScriptContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,9 +19,10 @@ import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.prot.appserver.Configuration;
 import org.python.core.Py;
+import org.python.core.PyCode;
 import org.python.core.PyDictionary;
 import org.python.core.PySystemState;
-import org.springframework.scripting.config.ScriptingDefaultsParser;
+import org.python.util.PythonInterpreter;
 
 public class PythonHandler extends AbstractHandler
 {
@@ -51,13 +45,7 @@ public class PythonHandler extends AbstractHandler
 		engineSys.path.append(Py.newString(new File("/bin").getAbsolutePath()));
 
 		Py.setSystemState(engineSys);
-		
-		ScriptEngine engine = engineManager.getEngineByName("jython");
 
-		for (ScriptEngineFactory factory : engineManager.getEngineFactories())
-		{
-			System.out.println("Engine: " + factory.getEngineName());
-		}
 		//		
 		// try
 		// {
@@ -77,7 +65,6 @@ public class PythonHandler extends AbstractHandler
 			while ((line = reader.readLine()) != null)
 				file += line + "\n";
 
-			System.out.println("file:_ " + file);
 
 		} catch (Exception e)
 		{
@@ -88,26 +75,19 @@ public class PythonHandler extends AbstractHandler
 
 	String file = "";
 
-	CompiledScript cs;
+	PyCode cs;
 
-	Stack<ScriptEngine> engines = new Stack<ScriptEngine>();
+	Stack<PythonInterpreter> engines = new Stack<PythonInterpreter>();
 
-	public ScriptEngine giveRuntime()
+	public PythonInterpreter giveRuntime()
 	{
 		synchronized (engines)
 		{
-			ScriptEngine e = null;
+			PythonInterpreter e = null;
 			if (engines.isEmpty())
 			{
 				Py.setSystemState(engineSys);
-				e = engineManager.getEngineByName("jython");
-				try
-				{
-					e.eval("import os");
-				} catch (ScriptException e1)
-				{
-					e1.printStackTrace();
-				} 
+				e = new PythonInterpreter();
 				System.out.println("Engine: " + e);
 			} else
 			{
@@ -118,10 +98,11 @@ public class PythonHandler extends AbstractHandler
 		}
 	}
 
-	public void freeRuntime(ScriptEngine e)
+	public void freeRuntime(PythonInterpreter e)
 	{
-		synchronized(engines) {
-			engines.push(e); 
+		synchronized (engines)
+		{
+			engines.push(e);
 		}
 	}
 
@@ -129,9 +110,9 @@ public class PythonHandler extends AbstractHandler
 	public void handle(String target, Request baseRequest, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException
 	{
-		
-		ScriptEngine engine = giveRuntime(); 
-		
+
+		PythonInterpreter engine = giveRuntime();
+
 		// Get the URI
 		String uri = baseRequest.getUri().toString();
 
@@ -217,12 +198,11 @@ public class PythonHandler extends AbstractHandler
 
 			// System.out.println("IO: " + io);
 
-			engine.put("dict", dict);
-			engine.put("testin", io);
+			engine.set("dict", dict);
+			engine.set("testin", io);
 			String name = Thread.currentThread().getName();
-			engine.put("name", name);
-			System.out.println("Thread thr: " + name);
-
+			engine.set("name", name);
+			
 			// engine.eval(puffer);
 
 			time = System.currentTimeMillis() - time;
@@ -239,13 +219,11 @@ public class PythonHandler extends AbstractHandler
 			// Use compiled file version
 			if (cs == null)
 			{
-				Compilable c = (Compilable) engine;
-				cs = c.compile(file);
+				cs = engine.compile(file);
 			}
 			// Use Context of the ENGINE!!!
-			ScriptContext context = new SimpleScriptContext(); 
-			
-			
+			engine.exec(cs); 
+
 			// engine.eval(file);
 
 			time = System.currentTimeMillis() - time;
@@ -267,7 +245,7 @@ public class PythonHandler extends AbstractHandler
 		{
 			e.printStackTrace();
 		}
-		
+
 		freeRuntime(engine);
 	}
 }
