@@ -2,8 +2,8 @@ print "TODO: use the new wsgiAdapter to start django here!!!"
 
 import os
 
-from wsgiAdapter import run_wsgi_app
-from wsgiAdapter import set
+#from wsgiAdapter import run_wsgi_app
+#from wsgiAdapter import set
 
 
 
@@ -23,6 +23,6 @@ import django.dispatch.dispatcher
 
 app = django.core.handlers.wsgi.WSGIHandler()
 
-set(wsgio_in)
+#set(wsgio_in)
 
 run_wsgi_app(app)
