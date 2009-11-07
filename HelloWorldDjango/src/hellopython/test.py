@@ -1,8 +1,8 @@
-print "TODO: use the new wsgiAdapter to start django here!!!"
+# print "TODO: use the new wsgiAdapter to start django here!!!"
 
 import os
 
-#from wsgiAdapter import run_wsgi_app
+from wsgiAdapter import run_wsgi_app
 #from wsgiAdapter import set
 
 
