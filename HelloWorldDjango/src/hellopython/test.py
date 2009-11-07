@@ -1,28 +1,23 @@
-# print "TODO: use the new wsgiAdapter to start django here!!!"
-
 import os
-
-from wsgiAdapter import run_wsgi_app
-#from wsgiAdapter import set
+from wsgi_adapter import WsgiApp
 
 
-
-
-# Must set this env var before importing any part of Django
-# 'project' is the name of the project created with django-admin.py
+# Tells django where to find the project settings
 os.environ['DJANGO_SETTINGS_MODULE'] = 'hellopython.settings'
 
-# Force Django to reload its settings.
+# Import django settings and reloads the application settings
 from django.conf import settings
 settings._target = None
 
+# Import django libraries
 import django.core.handlers.wsgi
 import django.core.signals
 import django.db
 import django.dispatch.dispatcher
 
+# Create a new wsgi handler from the django framework
 app = django.core.handlers.wsgi.WSGIHandler()
 
-#set(wsgio_in)
-
-run_wsgi_app(app)
+# Start wsgi application
+myApp = WsgiApp(wsgiChannel, headers, threadName)
+myApp.run_wsgi_app(app)
