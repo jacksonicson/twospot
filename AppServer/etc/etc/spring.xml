@@ -26,12 +26,14 @@
 		<property name="runtimes">
 			<list>
 				<ref bean="PythonRuntime" />
+				<ref bean="JavaRuntime" />
 			</list>
 		</property>
 	</bean>
 
 	<!-- Runtimes -->
 	<bean id="PythonRuntime" class="org.prot.appserver.runtime.jython.JythonRuntime" />
+	<bean id="JavaRuntime" class="org.prot.appserver.runtime.java.JavaRuntime" />
 
 </beans>
 

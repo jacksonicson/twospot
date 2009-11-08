@@ -47,7 +47,7 @@
 
 
 	<!-- Deployment -->
-	<bean id="AppDeployer" class="org.prot.appserver.AppDeployer">
+	<bean id="AppDeployer" class="org.prot.appserver.runtime.java.AppDeployer">
 		<property name="contexts" ref="ContextCollectionHandler" />
 	</bean>
 
