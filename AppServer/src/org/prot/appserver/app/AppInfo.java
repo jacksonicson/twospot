@@ -3,13 +3,13 @@ package org.prot.appserver.app;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.prot.appserver.AppRuntime;
+import org.prot.appserver.AppRuntimeType;
 
 public class AppInfo
 {
 	private String appId;
 
-	private AppRuntime runtime;
+	private AppRuntimeType runtime;
 
 	private byte[] warFile;
 
@@ -45,12 +45,12 @@ public class AppInfo
 		this.warFile = warFile;
 	}
 
-	public AppRuntime getRuntime()
+	public AppRuntimeType getRuntime()
 	{
 		return runtime;
 	}
 
-	public void setRuntime(AppRuntime runtime)
+	public void setRuntime(AppRuntimeType runtime)
 	{
 		this.runtime = runtime;
 	}

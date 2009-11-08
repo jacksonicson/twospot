@@ -1,20 +1,11 @@
 package org.prot.appserver;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import org.apache.log4j.xml.DOMConfigurator;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.util.component.LifeCycle;
 import org.eclipse.jetty.util.component.LifeCycle.Listener;
-import org.prot.appserver.app.AppInfo;
-import org.prot.appserver.appfetch.HttpAppFetcher;
-import org.prot.appserver.appfetch.WarLoader;
+import org.prot.appserver.config.Configuration;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 
@@ -54,61 +45,41 @@ public class Main implements Listener
 		server.start();
 	}
 
-	public Main() throws UnknownRuntimeException, Exception
+	public Main()
 	{
-		HttpAppFetcher fetcher = new HttpAppFetcher();
-		AppInfo appInfo = fetcher.fetchApp(Configuration.getInstance().getAppId());
-		Configuration.getInstance().setAppInfo(appInfo); 
+		// Configure logger
+		DOMConfigurator.configure(Main.class.getResource("/etc/log4j.xml"));
 		
-		WarLoader loader = new WarLoader();
-		loader.handle(appInfo);
-
-		switch (appInfo.getRuntime())
-		{
-		case JAVA:
-			startJava();
-			break;
-		case PYTHON:
-			startPython();
-		}
-	}
-
-	private static void parseArguments(String[] args)
-	{
-		Options options = new Options();
-
-		Option appId = OptionBuilder.withArgName("application id").hasArg().isRequired().create("appId");
-		options.addOption(appId);
-
-		Option controlPort = OptionBuilder.withArgName("control port").hasArg().isRequired().create(
-				"ctrlPort");
-		options.addOption(controlPort);
-
-		Option appServerPort = OptionBuilder.withArgName("appServer port").hasArg().isRequired().create(
-				"appSrvPort");
-		options.addOption(appServerPort);
-
-		try
-		{
-			CommandLineParser parser = new GnuParser();
-			CommandLine cmd = parser.parse(options, args);
-
-			Configuration config = Configuration.getInstance();
-			config.setAppId(cmd.getOptionValue("appId"));
-			config.setControlPort(new Integer(cmd.getOptionValue("ctrlPort")));
-			config.setAppServerPort(new Integer(cmd.getOptionValue("appSrvPort")));
-
-		} catch (ParseException e)
-		{
-			HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp("AppServer", options);
-			System.exit(0);
-		} catch (NumberFormatException e)
-		{
-			HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp("AppServer", options);
-			System.exit(0);
-		}
+		// Create beans
+		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring.xml",
+				getClass()));
+		
+		factory.getBean("Lifecycle");
+		
+//		
+//		
+//
+//		AppFetcher fetcher = (AppFetcher) factory.getBean("AppFetcher");
+//
+//		AppInfo appInfo = fetcher.fetchApp(Configuration.getInstance().getAppId());
+//		Configuration.getInstance().setAppInfo(appInfo);
+//
+//		WarLoader loader = new WarLoader();
+//		loader.handle(appInfo);
+//
+//		try
+//		{
+//			switch (appInfo.getRuntime())
+//			{
+//			case JAVA:
+//				startJava();
+//				break;
+//			case PYTHON:
+//				startPython();
+//			}
+//		} catch (Exception e)
+//		{
+//		}
 	}
 
 	/**
@@ -116,18 +87,11 @@ public class Main implements Listener
 	 */
 	public static void main(String[] args)
 	{
-		parseArguments(args);
+		// Parse command line arguments
+		ArgumentParser.parseArguments(args);
 
-		try
-		{
-			new Main();
-		} catch (UnknownRuntimeException e)
-		{
-			e.printStackTrace();
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		// Launch
+		new Main();
 	}
 
 	@Override

@@ -17,7 +17,7 @@ import org.eclipse.jetty.server.HttpConnection;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.prot.appserver.Configuration;
+import org.prot.appserver.config.Configuration;
 import org.python.core.Py;
 import org.python.core.PyCode;
 import org.python.core.PyDictionary;

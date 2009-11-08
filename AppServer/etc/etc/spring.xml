@@ -1,0 +1,31 @@
+<?xml-stylesheet type="text/xsl" ?>
+<!DOCTYPE beans SYSTEM "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<beans>
+	<!-- Configuration -->
+	<bean id="Configuration" class="org.prot.appserver.Configuration" />
+
+	<!-- Lifecycle manager -->
+	<bean id="Lifecycle" class="org.prot.appserver.ServerLifecycle" init-method="start">
+		<property name="appFetcher" ref="AppFetcher" />
+		<property name="appExtractor" ref="AppExtractor" />
+		<property name="runtimeRegistry" ref="RuntimeRegistry" />		
+	</bean>
+	
+	<bean id="AppFetcher" class="org.prot.appserver.appfetch.HttpAppFetcher" />
+	
+	<bean id="AppExtractor" class="org.prot.appserver.extract.WarExtractor" />
+
+	<bean id="RuntimeRegistry" class="org.prot.appserver.runtime.RuntimeRegistry">
+		<property name="runtimes">
+			<list>
+				<ref bean="PythonRuntime"/>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Runtimes -->
+	<bean id="PythonRuntime" class="org.prot.appserver.runtime.jython.JythonRuntime" />
+
+</beans>
+

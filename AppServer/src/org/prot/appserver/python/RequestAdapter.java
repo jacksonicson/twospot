@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Request;
-import org.prot.appserver.Configuration;
+import org.prot.appserver.config.Configuration;
 import org.python.core.PyDictionary;
 
 public class RequestAdapter

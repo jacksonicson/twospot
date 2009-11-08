@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
-import org.prot.appserver.Configuration;
 import org.prot.appserver.app.AppInfo;
+import org.prot.appserver.config.Configuration;
 
 public class HttpAppFetcher implements AppFetcher
 {

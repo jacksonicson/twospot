@@ -1,4 +1,4 @@
-package org.prot.appserver;
+package org.prot.appserver.config;
 
 import org.prot.appserver.app.AppInfo;
 

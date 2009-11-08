@@ -1,6 +1,6 @@
 package org.prot.appserver;
 
-public enum AppRuntime
+public enum AppRuntimeType
 {
 	JAVA, PYTHON
 }

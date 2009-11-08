@@ -12,10 +12,10 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.prot.appserver.AppRuntime;
-import org.prot.appserver.Configuration;
+import org.prot.appserver.AppRuntimeType;
 import org.prot.appserver.app.AppInfo;
 import org.prot.appserver.app.WebConfiguration;
+import org.prot.appserver.config.Configuration;
 import org.yaml.snakeyaml.Yaml;
 
 public class WarLoader
@@ -107,9 +107,9 @@ public class WarLoader
 
 		String runtime = (String) yaml.get("runtime");
 		if (runtime.equals("java"))
-			appInfo.setRuntime(AppRuntime.JAVA);
+			appInfo.setRuntime(AppRuntimeType.JAVA);
 		else if (runtime.equals("python"))
-			appInfo.setRuntime(AppRuntime.PYTHON);
+			appInfo.setRuntime(AppRuntimeType.PYTHON);
 
 		// TODO: The following depends on the application code (use something
 		// like a plugin infrastructure)

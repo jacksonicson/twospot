@@ -4,6 +4,7 @@ import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.util.component.AbstractLifeCycle;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.prot.appserver.app.AppInfo;
+import org.prot.appserver.config.Configuration;
 
 public class AppDeployer extends AbstractLifeCycle
 {

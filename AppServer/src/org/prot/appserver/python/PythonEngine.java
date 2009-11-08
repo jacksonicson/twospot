@@ -5,7 +5,7 @@ import java.io.File;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
-import org.prot.appserver.Configuration;
+import org.prot.appserver.config.Configuration;
 import org.python.core.Py;
 import org.python.core.PySystemState;
 
