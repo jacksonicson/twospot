@@ -11,6 +11,7 @@ import org.prot.appserver.app.AppInfo;
 import org.prot.appserver.appfetch.InvalidYamlFileException;
 import org.prot.appserver.runtime.AppRuntime;
 import org.prot.appserver.runtime.NoSuchRuntimeException;
+import org.prot.appserver.runtime.RuntimeConfigurer;
 import org.prot.appserver.runtime.RuntimeRegistry;
 import org.yaml.snakeyaml.Yaml;
 

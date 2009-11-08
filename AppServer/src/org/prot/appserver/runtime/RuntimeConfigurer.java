@@ -1,4 +1,4 @@
-package org.prot.appserver.config;
+package org.prot.appserver.runtime;
 
 import java.util.Map;
 
