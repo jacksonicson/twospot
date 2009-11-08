@@ -45,7 +45,7 @@ public class PythonHandler extends AbstractHandler
 		String uri = baseRequest.getUri().toString();
 
 		// Get the python-file
-		JythonConfiguration rtConfig = (JythonConfiguration) appInfo.getRuntimeConfiguration();
+		PythonConfiguration rtConfig = (PythonConfiguration) appInfo.getRuntimeConfiguration();
 		Set<WebConfiguration> webConfigs = rtConfig.getWebConfigs();
 		String script = null;
 		for (WebConfiguration config : webConfigs)

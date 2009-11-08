@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.prot.appserver.app.RuntimeConfiguration;
 
-public class JythonConfiguration implements RuntimeConfiguration
+public class PythonConfiguration implements RuntimeConfiguration
 {
 	private Set<WebConfiguration> webConfigs = new HashSet<WebConfiguration>();
 

@@ -12,9 +12,9 @@ import org.prot.appserver.runtime.AppRuntime;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 
-public class JythonRuntime implements AppRuntime
+public class PythonRuntime implements AppRuntime
 {
-	private static final Logger logger = Logger.getLogger(JythonRuntime.class);
+	private static final Logger logger = Logger.getLogger(PythonRuntime.class);
 
 	private static final String IDENTIFIER = "PYTHON";
 
@@ -54,7 +54,7 @@ public class JythonRuntime implements AppRuntime
 	@Override
 	public void loadConfiguration(AppInfo appInfo, Map yaml)
 	{
-		JythonConfiguration config = new JythonConfiguration();
+		PythonConfiguration config = new PythonConfiguration();
 		appInfo.setRuntimeConfiguration(config); 
 		
 		List<Map<String, String>> handlers = (List<Map<String, String>>) yaml.get("handlers");
