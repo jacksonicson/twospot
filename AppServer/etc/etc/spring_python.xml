@@ -41,12 +41,13 @@
 		</property>
 	</bean>
 
-	<bean id="PythonHandler" class="org.prot.appserver.python.PythonHandler">
+	<bean id="PythonHandler" class="org.prot.appserver.runtime.jython.PythonHandler">
 		<property name="pythonEngine" ref="PythonEngine" />
 	</bean>
 
 	<!-- Python -->
-	<bean id="PythonEngine" class="org.prot.appserver.python.PythonEngine" init-method="start" />
+	<bean id="PythonEngine" class="org.prot.appserver.runtime.jython.PythonEngine"
+		init-method="start" />
 
 </beans>
 
