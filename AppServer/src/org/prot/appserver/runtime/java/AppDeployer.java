@@ -1,4 +1,4 @@
-package org.prot.appserver;
+package org.prot.appserver.runtime.java;
 
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.util.component.AbstractLifeCycle;

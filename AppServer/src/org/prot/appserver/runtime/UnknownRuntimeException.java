@@ -1,4 +1,4 @@
-package org.prot.appserver;
+package org.prot.appserver.runtime;
 
 public class UnknownRuntimeException extends Exception
 {
