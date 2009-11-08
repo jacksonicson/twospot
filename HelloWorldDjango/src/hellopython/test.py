@@ -1,5 +1,5 @@
 import os
-from wsgi_adapter import WsgiApp
+from prot.wsgi_adapter import WsgiApp 
 
 
 # Tells django where to find the project settings
