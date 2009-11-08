@@ -24,7 +24,6 @@ public class ServerLifecycle
 	private RuntimeRegistry runtimeRegistry;
 
 	private AppInfo appInfo = null;
-	private AppRuntime runtime = null;
 
 	public void start()
 	{
