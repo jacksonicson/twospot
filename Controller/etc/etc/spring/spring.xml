@@ -50,7 +50,7 @@
 	<bean id="RequestHandler" class="org.prot.controller.handler.HandlerDecorator">
 		<property name="port" value="8080" />
 		<property name="handler">
-			<bean class="org.prot.controller.handler.RequestHandler">
+			<bean class="org.prot.controller.handler.RequestHandler" init-method="setup">
 				<property name="appManager" ref="AppManager" />
 			</bean>
 		</property>

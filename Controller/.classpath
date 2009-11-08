@@ -33,5 +33,6 @@
 	<classpathentry kind="lib" path="/Libs/lib/apache-xmlrpc-3.1.2/xmlrpc-common-3.1.2.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/apache-xmlrpc-3.1.2/xmlrpc-server-3.1.2.jar" sourcepath="D:/work/mscWolke/trunk/dev/3party/apache-xmlrpc-3.1.2/apache-xmlrpc-3.1.2-src/server/src"/>
 	<classpathentry kind="lib" path="/Libs/lib/log4j-1.2.15/log4j-1.2.15.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Util"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
