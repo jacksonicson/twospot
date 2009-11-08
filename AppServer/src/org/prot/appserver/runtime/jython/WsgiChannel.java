@@ -1,4 +1,4 @@
-package org.prot.appserver.python;
+package org.prot.appserver.runtime.jython;
 
 import java.io.BufferedReader;
 import java.io.IOException;
