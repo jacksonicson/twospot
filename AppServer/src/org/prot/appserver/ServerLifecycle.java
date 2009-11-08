@@ -83,6 +83,9 @@ public class ServerLifecycle
 		{
 			logger.error("Could not find the runtime configured in the YAML file", e);
 		}
+		
+		// Use the stdio to tell the controller that the server is running
+		System.out.println("server started");
 	}
 
 	public void setAppFetcher(AppFetcher appFetcher)

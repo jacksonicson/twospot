@@ -1,6 +1,8 @@
-package org.prot.appserver.app;
+package org.prot.appserver.runtime.jython;
 
-public class WebConfiguration 
+import org.prot.appserver.app.RuntimeConfiguration;
+
+public class WebConfiguration
 {
 	private String regExp;
 	private String pythonFile; 

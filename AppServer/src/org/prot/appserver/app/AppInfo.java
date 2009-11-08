@@ -1,30 +1,19 @@
 package org.prot.appserver.app;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
-
-import org.prot.appserver.AppRuntimeType;
 
 public class AppInfo
 {
 	private byte[] warFile;
-	
+
 	private String appId;
 
-	private String runtime; 
+	private String runtime;
 
-	private Set<WebConfiguration> webConfigurations = new HashSet<WebConfiguration>();
-	
-
-	public void addWebConfiguration(WebConfiguration webConfiguration)
-	{
-		this.webConfigurations.add(webConfiguration);
-	}
-
-	public Set<WebConfiguration> getWebConfigurations()
-	{
-		return this.webConfigurations;
-	}
+	private RuntimeConfiguration runtimeConfiguration; 
 
 	public String getAppId()
 	{
@@ -54,5 +43,15 @@ public class AppInfo
 	public void setRuntime(String runtime)
 	{
 		this.runtime = runtime;
+	}
+
+	public RuntimeConfiguration getRuntimeConfiguration()
+	{
+		return runtimeConfiguration;
+	}
+
+	public void setRuntimeConfiguration(RuntimeConfiguration runtimeConfiguration)
+	{
+		this.runtimeConfiguration = runtimeConfiguration;
 	}
 }
