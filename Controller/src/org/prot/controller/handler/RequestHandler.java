@@ -17,8 +17,6 @@ public class RequestHandler extends HttpProxyHandler
 	private static final Logger logger = Logger.getLogger(RequestHandler.class);
 
 	private AppManager appManager;
-	
-	private ThreadLocal<AppInfo> appInfo = new ThreadLocal<AppInfo>(); 
 
 	public void setAppManager(AppManager appManager)
 	{
@@ -36,14 +34,13 @@ public class RequestHandler extends HttpProxyHandler
 	{
 		String uri = request.getUri().toString().substring(1);
 		uri = uri.substring(uri.indexOf("/"));
-		return uri; 
+		return uri;
 	}
 
-	@Override
-	protected String getUrl(Request request)
+	protected String getUrl(Request request, AppInfo appInfo)
 	{
 		String scheme = request.getScheme();
-		int port = appInfo.get().getPort();
+		int port = appInfo.getPort();
 		String url = scheme + "://" + "localhost" + ":" + port;
 		return url;
 	}
@@ -70,12 +67,16 @@ public class RequestHandler extends HttpProxyHandler
 			{
 				// inform the AppManager
 				AppInfo appInfo = this.appManager.requireApp(appId);
-				this.appInfo.set(appInfo);
+				
+				// Generate the URL to the destination Server
+				String url = getUrl(baseRequest, appInfo);
+				String host = getHost(baseRequest);
+				uri = getUri(baseRequest);
 
 				// forward the request
-				forwardRequest(baseRequest, request, response);
-				break; 
-				
+				forwardRequest(baseRequest, request, response, url, uri, host);
+				break;
+
 			} catch (Exception e)
 			{
 				logger.error("AppServer failed", e);
