@@ -25,9 +25,9 @@ public abstract class HttpProxyHandler extends AbstractHandler
 	private static final Logger logger = Logger.getLogger(HttpProxyHandler.class);
 
 	private HttpClient httpClient;
-	
+
 	private Set<String> invalidHeaders = new HashSet<String>();
-	private Set<String> invalidTempHeaders = new HashSet<String>(); 
+	private Set<String> invalidTempHeaders = new HashSet<String>();
 
 	public void setup()
 	{
@@ -43,18 +43,28 @@ public abstract class HttpProxyHandler extends AbstractHandler
 			logger.fatal("could not start the HttpClient", e);
 			System.exit(1);
 		}
-		
+
 		// Setup the list of invalid headers
-		setupInvalidHeaders(); 
+		setupInvalidHeaders();
 	}
-	
 
-	protected abstract String getUrl(Request request);
-	protected abstract String getUri(Request request); 
-	protected abstract String getHost(Request request); 
+	protected String getUrl(Request request)
+	{
+		return null;
+	}
 
-	
-	protected void setupInvalidHeaders() {
+	protected String getUri(Request request)
+	{
+		return null;
+	}
+
+	protected String getHost(Request request)
+	{
+		return null;
+	}
+
+	protected void setupInvalidHeaders()
+	{
 		invalidHeaders.add("Connection");
 		invalidHeaders.add("Host");
 		invalidHeaders.add("KeepAlive");
@@ -68,7 +78,7 @@ public abstract class HttpProxyHandler extends AbstractHandler
 
 	protected boolean isFilteredHeader(String header)
 	{
-		return invalidHeaders.contains(header) || invalidTempHeaders.contains(header);  
+		return invalidHeaders.contains(header) || invalidTempHeaders.contains(header);
 	}
 
 	protected void onConnectionFailure()
@@ -78,50 +88,57 @@ public abstract class HttpProxyHandler extends AbstractHandler
 
 	private void preProcess()
 	{
-		invalidTempHeaders.clear(); 
+		invalidTempHeaders.clear();
 	}
-	
+
 	protected void forwardRequest(Request baseRequest, HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse) throws Exception
 	{
+		HttpConnection httpConnection = HttpConnection.getCurrentConnection();
+		Request srcRequest = httpConnection.getRequest();
+
+		// Generate the URL to the destination Server
+		String url = getUrl(srcRequest);
+		String uri = getUri(srcRequest);
+		String host = getHost(srcRequest);
+
+		forwardRequest(baseRequest, httpRequest, httpResponse, url, uri, host);
+	}
+
+	protected void forwardRequest(Request baseRequest, HttpServletRequest httpRequest,
+			HttpServletResponse httpResponse, String url, String uri, String host) throws Exception
+	{
 		// TODO: Handle Connect-Requests
-		
+
 		// Prepare object state for processing this request
-		preProcess(); 
-		
+		preProcess();
+
 		// Get original request and response objects
 		HttpConnection httpConnection = HttpConnection.getCurrentConnection();
 		Request srcRequest = httpConnection.getRequest();
 		Response srcResponse = httpConnection.getResponse();
 
-		// Generate the URL to the destination Server
-		String url = getUrl(srcRequest);
-		String uri = getUri(srcRequest); 
-		String host = getHost(srcRequest);
-
 		// Generate the new request
 		ContentExchange exchange = new ContentExchange(true);
 		exchange.setRetryStatus(false);
 		exchange.setMethod(srcRequest.getMethod());
-		exchange.setURL(url); 
-		exchange.setURI(uri); 
-//		exchange.setRequestContentType(srcRequest.getContentType());
+		exchange.setURL(url);
+		exchange.setURI(uri);
+		// exchange.setRequestContentType(srcRequest.getContentType());
 
 		// Fill specific headers
 		exchange.setRequestHeader("Host", host);
-		
+
 		// Handle specific requests
 		// Connection request
-		String connectionToken = srcRequest.getHeader("Connection"); 
-		if(connectionToken == null)
-			connectionToken = null; 
-		else
-			if(connectionToken.equalsIgnoreCase("keepalive") || connectionToken.equalsIgnoreCase("close"))
-				connectionToken = null;
-		
-		if(connectionToken != null)
-			invalidTempHeaders.add(connectionToken); 
-		
+		String connectionToken = srcRequest.getHeader("Connection");
+		if (connectionToken == null)
+			connectionToken = null;
+		else if (connectionToken.equalsIgnoreCase("keepalive") || connectionToken.equalsIgnoreCase("close"))
+			connectionToken = null;
+
+		if (connectionToken != null)
+			invalidTempHeaders.add(connectionToken);
 
 		// Copy all headers to the exchange
 		for (Enumeration<String> headers = srcRequest.getHeaderNames(); headers.hasMoreElements();)
@@ -135,7 +152,7 @@ public abstract class HttpProxyHandler extends AbstractHandler
 
 			exchange.setRequestHeader(name, value);
 		}
-		
+
 		// Copy the request content
 		try
 		{
@@ -146,7 +163,6 @@ public abstract class HttpProxyHandler extends AbstractHandler
 			throw e;
 		}
 
-		
 		// Request generation done
 		try
 		{
@@ -168,7 +184,6 @@ public abstract class HttpProxyHandler extends AbstractHandler
 			onConnectionFailure();
 			throw e;
 		}
-		
 
 		// Handle response status
 		switch (exchange.getStatus())
@@ -179,7 +194,6 @@ public abstract class HttpProxyHandler extends AbstractHandler
 			onConnectionFailure();
 			return; // TODO: Throw an exception
 		}
-		
 
 		// Create the response
 		try
@@ -196,12 +210,13 @@ public abstract class HttpProxyHandler extends AbstractHandler
 
 				logger.debug(field.getName() + ":" + field.getValue());
 			}
-			
+
 			// Add additional headers
 			srcResponse.setHeader("Via", "0.0 TODO");
 
-			if (exchange.getResponseContentBytes() != null) {
-				srcResponse.getOutputStream().write(exchange.getResponseContentBytes()); 
+			if (exchange.getResponseContentBytes() != null)
+			{
+				srcResponse.getOutputStream().write(exchange.getResponseContentBytes());
 				srcResponse.getOutputStream().close();
 			}
 
