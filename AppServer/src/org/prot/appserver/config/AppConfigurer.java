@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.prot.appserver.app.AppInfo;
-import org.prot.appserver.appfetch.InvalidYamlFileException;
 import org.prot.appserver.runtime.AppRuntime;
 import org.prot.appserver.runtime.NoSuchRuntimeException;
 import org.prot.appserver.runtime.RuntimeConfigurer;
