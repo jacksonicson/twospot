@@ -7,13 +7,14 @@ import org.prot.appserver.AppRuntimeType;
 
 public class AppInfo
 {
+	private byte[] warFile;
+	
 	private String appId;
 
-	private AppRuntimeType runtime;
-
-	private byte[] warFile;
+	private String runtime; 
 
 	private Set<WebConfiguration> webConfigurations = new HashSet<WebConfiguration>();
+	
 
 	public void addWebConfiguration(WebConfiguration webConfiguration)
 	{
@@ -45,12 +46,12 @@ public class AppInfo
 		this.warFile = warFile;
 	}
 
-	public AppRuntimeType getRuntime()
+	public String getRuntime()
 	{
 		return runtime;
 	}
 
-	public void setRuntime(AppRuntimeType runtime)
+	public void setRuntime(String runtime)
 	{
 		this.runtime = runtime;
 	}

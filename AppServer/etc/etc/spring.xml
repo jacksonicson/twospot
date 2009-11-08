@@ -6,20 +6,26 @@
 	<bean id="Configuration" class="org.prot.appserver.Configuration" />
 
 	<!-- Lifecycle manager -->
-	<bean id="Lifecycle" class="org.prot.appserver.ServerLifecycle" init-method="start">
+	<bean id="Lifecycle" class="org.prot.appserver.ServerLifecycle"
+		init-method="start">
 		<property name="appFetcher" ref="AppFetcher" />
 		<property name="appExtractor" ref="AppExtractor" />
-		<property name="runtimeRegistry" ref="RuntimeRegistry" />		
+		<property name="appConfigurer" ref="AppConfigurer" />
+		<property name="runtimeRegistry" ref="RuntimeRegistry" />
 	</bean>
-	
+
 	<bean id="AppFetcher" class="org.prot.appserver.appfetch.HttpAppFetcher" />
-	
+
 	<bean id="AppExtractor" class="org.prot.appserver.extract.WarExtractor" />
+
+	<bean id="AppConfigurer" class="org.prot.appserver.config.AppConfigurer">
+		<property name="runtimeRegistry" ref="RuntimeRegistry" />
+	</bean>
 
 	<bean id="RuntimeRegistry" class="org.prot.appserver.runtime.RuntimeRegistry">
 		<property name="runtimes">
 			<list>
-				<ref bean="PythonRuntime"/>
+				<ref bean="PythonRuntime" />
 			</list>
 		</property>
 	</bean>

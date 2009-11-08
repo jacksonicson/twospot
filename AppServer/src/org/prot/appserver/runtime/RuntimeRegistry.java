@@ -6,9 +6,14 @@ public class RuntimeRegistry
 {
 	private List<AppRuntime> runtimes = null;
 
-	public AppRuntime getRuntime()
+	public AppRuntime getRuntime(String runtimeIdentifier) throws NoSuchRuntimeException
 	{
-		return null;
+		for(AppRuntime runtime : runtimes) {
+			if(runtime.getIdentifier().equalsIgnoreCase(runtimeIdentifier))
+				return runtime;
+		}
+		
+		throw new NoSuchRuntimeException(); 
 	}
 
 	public void setRuntimes(List<AppRuntime> runtimes)

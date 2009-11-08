@@ -1,27 +1,29 @@
 package org.prot.appserver.runtime.jython;
 
+import java.util.Map;
+
 import org.prot.appserver.app.AppInfo;
 import org.prot.appserver.runtime.AppRuntime;
 
 public class JythonRuntime implements AppRuntime
 {
+	private static final String IDENTIFIER = "PYTHON";
+	
 	@Override
 	public String getIdentifier()
 	{
-		return "PYTHON";
+		return IDENTIFIER; 
 	}
 
 	@Override
 	public void launch()
 	{
-		// TODO Auto-generated method stub
-		
+		System.out.println("Launching python runtime"); 
 	}
 
 	@Override
-	public void loadConfiguration(AppInfo appInfo)
+	public void loadConfiguration(AppInfo appInfo, Map yaml)
 	{
-		// TODO Auto-generated method stub
-		
+		System.out.println("Loading python configuration"); 
 	}
 }
