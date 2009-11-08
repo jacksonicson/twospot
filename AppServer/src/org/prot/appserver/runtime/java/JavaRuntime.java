@@ -1,6 +1,5 @@
 package org.prot.appserver.runtime.java;
 
-import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -25,7 +24,7 @@ public class JavaRuntime implements AppRuntime
 	}
 
 	@Override
-	public void launch()
+	public void launch(AppInfo appInfo)
 	{
 		logger.debug("Launching java runtime");
 

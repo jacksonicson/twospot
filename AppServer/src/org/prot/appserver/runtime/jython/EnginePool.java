@@ -17,14 +17,14 @@ public class EnginePool
 	public EnginePool()
 	{
 		Configuration config = Configuration.getInstance();
-		
+
 		// Environment
 		engineSys.path.append(Py.newString(config.getPythonLibs()));
 		engineSys.path.append(Py.newString(config.getDjangoLibs()));
-		
+
 		// Server
 		engineSys.path.append(Py.newString(new File("/bin").getAbsolutePath()));
-		
+
 		// Application
 		engineSys.path.append(Py.newString(config.getAppDirectory() + "/WEB-INF/python"));
 	}
@@ -33,14 +33,14 @@ public class EnginePool
 	{
 		synchronized (interpreters)
 		{
-			PythonInterpreter interpreter = interpreters.pop();
-			if (interpreter == null)
+			if (interpreters.isEmpty())
 			{
 				Py.setSystemState(engineSys);
-				interpreter = new PythonInterpreter();
+				PythonInterpreter interpreter = new PythonInterpreter();
+				return interpreter;
 			}
 
-			return interpreter;
+			return interpreters.pop();
 		}
 	}
 

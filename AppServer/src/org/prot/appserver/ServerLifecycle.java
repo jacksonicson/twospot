@@ -77,7 +77,7 @@ public class ServerLifecycle
 		try
 		{
 			AppRuntime runtime = runtimeRegistry.getRuntime(appInfo.getRuntime());
-			runtime.launch(); 
+			runtime.launch(this.appInfo); 
 			
 		} catch (NoSuchRuntimeException e)
 		{

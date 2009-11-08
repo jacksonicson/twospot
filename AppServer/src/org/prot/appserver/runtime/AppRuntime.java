@@ -10,5 +10,5 @@ public interface AppRuntime
 	
 	public void loadConfiguration(AppInfo appInfo, Map yaml);
 	
-	public void launch(); 
+	public void launch(AppInfo appInfo); 
 }

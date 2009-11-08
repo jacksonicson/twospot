@@ -25,7 +25,7 @@ public class JythonRuntime implements AppRuntime
 	}
 
 	@Override
-	public void launch()
+	public void launch(AppInfo appInfo)
 	{
 		logger.debug("Launching jython runtime");
 
@@ -36,6 +36,10 @@ public class JythonRuntime implements AppRuntime
 		SelectChannelConnector connector = (SelectChannelConnector) factory.getBean("Connector");
 		connector.setPort(Configuration.getInstance().getAppServerPort());
 
+		// Configure the Handler
+		PythonHandler handler = (PythonHandler)factory.getBean("PythonHandler");
+		handler.setAppInfo(appInfo);
+		
 		// Start server
 		Server server = (Server) factory.getBean("Server");
 		try
