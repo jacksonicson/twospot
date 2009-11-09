@@ -9,16 +9,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.HttpExchange;
-import org.eclipse.jetty.http.HttpFields;
-import org.eclipse.jetty.http.HttpFields.Field;
-import org.eclipse.jetty.io.EofException;
+import org.eclipse.jetty.io.Buffer;
 import org.eclipse.jetty.server.HttpConnection;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.util.thread.ThreadPool;
 
 public abstract class HttpProxyHandler extends AbstractHandler
 {
@@ -27,13 +25,21 @@ public abstract class HttpProxyHandler extends AbstractHandler
 	private HttpClient httpClient;
 
 	private Set<String> invalidHeaders = new HashSet<String>();
+
 	private Set<String> invalidTempHeaders = new HashSet<String>();
+
+	private ThreadPool threadPool = null;
+
+	public void setThreadPool(ThreadPool threadPool)
+	{
+		this.threadPool = threadPool;
+	}
 
 	public void setup()
 	{
 		// Setup the httpClient
 		httpClient = new HttpClient();
-		httpClient = new HttpClient();
+		httpClient.setThreadPool(threadPool);
 		httpClient.setConnectorType(HttpClient.CONNECTOR_SELECT_CHANNEL);
 		try
 		{
@@ -105,25 +111,115 @@ public abstract class HttpProxyHandler extends AbstractHandler
 		forwardRequest(baseRequest, httpRequest, httpResponse, url, uri, host);
 	}
 
+	class MyExchange extends HttpExchange
+	{
+		private HttpServletResponse response;
+
+		public MyExchange(HttpServletResponse response)
+		{
+			this.response = response;
+		}
+
+		@Override
+		public void onConnectionFailed(Throwable ex)
+		{
+			ex.printStackTrace();
+		}
+
+		@Override
+		public void onException(Throwable ex)
+		{
+			// TODO Auto-generated method stub
+			ex.printStackTrace();
+		}
+
+		@Override
+		public void onExpire()
+		{
+			// TODO Auto-generated method stub
+			System.out.println("expired");
+		}
+
+		@Override
+		public void onRequestCommitted() throws IOException
+		{
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void onRequestComplete() throws IOException
+		{
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void onResponseComplete() throws IOException
+		{
+			// TODO Auto-generated method stub
+			response.flushBuffer();
+			// response.getOutputStream().close();
+			// System.out.println("close");
+		}
+
+		@Override
+		public void onResponseContent(Buffer b) throws IOException
+		{
+			// System.out.println("content: " + content.toString());
+			// String content = b.toString();
+			// System.out.println("Content: " + content);
+			// response.getOutputStream().write(content.getBytes());
+			b.writeTo(response.getOutputStream());
+		}
+
+		@Override
+		public void onResponseHeader(Buffer name, Buffer value) throws IOException
+		{
+			// System.out.println("header: " + name + " value: " + value);
+			response.addHeader(name.toString(), value.toString());
+		}
+
+		@Override
+		public void onResponseHeaderComplete() throws IOException
+		{
+			// System.out.println("header complete");
+
+		}
+
+		@Override
+		public void onResponseStatus(Buffer version, int status, Buffer reason) throws IOException
+		{
+			// System.out.println("status: " + status);
+			response.setStatus(status, reason.toString());
+		}
+
+		@Override
+		public void onRetry()
+		{
+			// System.out.println("retry");
+		}
+	}
+
 	protected void forwardRequest(Request baseRequest, HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse, String url, String uri, String host) throws Exception
 	{
-		// TODO: Handle Connect-Requests
-
 		// Prepare object state for processing this request
 		preProcess();
 
 		// Get original request and response objects
 		HttpConnection httpConnection = HttpConnection.getCurrentConnection();
 		Request srcRequest = httpConnection.getRequest();
-		Response srcResponse = httpConnection.getResponse();
+		Response response = httpConnection.getResponse();
 
 		// Generate the new request
-		ContentExchange exchange = new ContentExchange(true);
+		MyExchange exchange = new MyExchange(httpResponse);
 		exchange.setRetryStatus(false);
 		exchange.setMethod(srcRequest.getMethod());
 		exchange.setURL(url);
 		exchange.setURI(uri);
+
+		// System.out.println("url: " + url);
+		// System.out.println("uri: " + uri);
+
 		// exchange.setRequestContentType(srcRequest.getContentType());
 
 		// Fill specific headers
@@ -146,6 +242,8 @@ public abstract class HttpProxyHandler extends AbstractHandler
 			String name = headers.nextElement();
 			String value = srcRequest.getHeader(name);
 
+			// System.out.println("-> name: " + name + " value: " + value);
+
 			// Filter all invalid headers
 			if (isFilteredHeader(name))
 				continue;
@@ -153,10 +251,15 @@ public abstract class HttpProxyHandler extends AbstractHandler
 			exchange.setRequestHeader(name, value);
 		}
 
+		// System.out.println("Content Length: " +
+		// srcRequest.getContentLength());
+
 		// Copy the request content
 		try
 		{
-			exchange.setRequestContentSource(srcRequest.getInputStream());
+			// Only!!! if there is content to write!
+			if (srcRequest.getContentLength() > 0)
+				exchange.setRequestContentSource(srcRequest.getInputStream());
 		} catch (IOException e)
 		{
 			logger.error("cannot copy request content", e);
@@ -167,10 +270,14 @@ public abstract class HttpProxyHandler extends AbstractHandler
 		try
 		{
 			// send the request
+			// System.out.println("sending");
 			httpClient.send(exchange);
 
 			// wait until response is complete
 			exchange.waitForDone();
+			// System.out.println("its done");
+
+			// TODO: Handle errors
 
 		} catch (InterruptedException e)
 		{
@@ -185,47 +292,49 @@ public abstract class HttpProxyHandler extends AbstractHandler
 			throw e;
 		}
 
-		// Handle response status
-		switch (exchange.getStatus())
-		{
-		case HttpExchange.STATUS_EXPIRED:
-		case HttpExchange.STATUS_EXCEPTED:
-			logger.error("reporting a stale appserver");
-			onConnectionFailure();
-			return; // TODO: Throw an exception
-		}
+		// response.getOutputStream().print("FLKJDSFKDSLFJ");
 
-		// Create the response
-		try
-		{
-			// fill response
-			srcResponse.setStatus(exchange.getResponseStatus());
-
-			// Copy all headers
-			HttpFields fields = exchange.getResponseFields();
-			for (int i = 0; i < fields.size(); i++)
-			{
-				Field field = fields.getField(i);
-				srcResponse.setHeader(field.getName(), field.getValue());
-
-				logger.debug(field.getName() + ":" + field.getValue());
-			}
-
-			// Add additional headers
-			srcResponse.setHeader("Via", "0.0 TODO");
-
-			if (exchange.getResponseContentBytes() != null)
-			{
-				srcResponse.getOutputStream().write(exchange.getResponseContentBytes());
-				srcResponse.getOutputStream().close();
-			}
-
-		} catch (EofException e)
-		{
-			// Client closed the connection
-		} catch (IOException e)
-		{
-			// Client closed the connection
-		}
+		// // Handle response status
+		// switch (exchange.getStatus())
+		// {
+		// case HttpExchange.STATUS_EXPIRED:
+		// case HttpExchange.STATUS_EXCEPTED:
+		// logger.error("reporting a stale appserver");
+		// onConnectionFailure();
+		// return; // TODO: Throw an exception
+		// }
+		//
+		// // Create the response
+		// try
+		// {
+		// // fill response
+		// srcResponse.setStatus(exchange.getResponseStatus());
+		//
+		// // Copy all headers
+		// HttpFields fields = exchange.getResponseFields();
+		// for (int i = 0; i < fields.size(); i++)
+		// {
+		// Field field = fields.getField(i);
+		// srcResponse.setHeader(field.getName(), field.getValue());
+		//
+		// logger.debug(field.getName() + ":" + field.getValue());
+		// }
+		//
+		// // Add additional headers
+		// srcResponse.setHeader("Via", "0.0 TODO");
+		//
+		// if (exchange.getResponseContentBytes() != null)
+		// {
+		// srcResponse.getOutputStream().write(exchange.getResponseContentBytes());
+		// srcResponse.getOutputStream().close();
+		// }
+		//
+		// } catch (EofException e)
+		// {
+		// // Client closed the connection
+		// } catch (IOException e)
+		// {
+		// // Client closed the connection
+		// }
 	}
 }
