@@ -31,6 +31,31 @@ public class WsgiChannel
 	// Output
 	private OutputStream out;
 
+	private RequestContentIterator getRequestContentIterator() throws IOException
+	{
+		requestContentIterator = new RequestContentIterator();
+		return requestContentIterator;
+	}
+
+	private OutputStream getOutputStream() throws IOException
+	{
+		// Create output streams
+		out = this.response.getOutputStream();
+		return out;
+	}
+
+	private InputStream getInputStream() throws IOException
+	{
+		in = this.request.getInputStream();
+		return in;
+	}
+
+	private BufferedReader getBufferedReader() throws IOException
+	{
+		inReader = new BufferedReader(new InputStreamReader(in));
+		return inReader;
+	}
+
 	class RequestContentIterator extends PyIterator
 	{
 		@Override
@@ -38,7 +63,11 @@ public class WsgiChannel
 		{
 			try
 			{
+				if (WsgiChannel.this.inReader == null)
+					getBufferedReader();
+
 				return new PyString(WsgiChannel.this.inReader.readLine());
+
 			} catch (IOException e)
 			{
 				return null;
@@ -50,24 +79,13 @@ public class WsgiChannel
 	{
 		this.request = request;
 		this.response = response;
-
-		try
-		{
-			// Create input streams
-			in = this.request.getInputStream();
-			inReader = new BufferedReader(new InputStreamReader(in));
-			requestContentIterator = new RequestContentIterator();
-
-			// Create output streams
-			out = this.response.getOutputStream();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
 	}
 
 	public String read(int size) throws IOException
 	{
+		if (in == null)
+			getInputStream();
+
 		byte[] buffer = new byte[size];
 		int len = in.read(buffer);
 		return new String(buffer, 0, len);
@@ -75,6 +93,9 @@ public class WsgiChannel
 
 	public String readline() throws IOException
 	{
+		if (inReader == null)
+			getBufferedReader();
+
 		String line = inReader.readLine();
 		if (line == null)
 			return null;
@@ -84,6 +105,9 @@ public class WsgiChannel
 
 	public PyList readlines(PyInteger sizeHint) throws IOException
 	{
+		if (inReader == null)
+			getBufferedReader();
+
 		PyList list = new PyList();
 
 		String line = null;
@@ -101,16 +125,25 @@ public class WsgiChannel
 
 	public void flush() throws IOException
 	{
+		if (out == null)
+			getOutputStream();
+
 		out.flush();
 	}
 
 	public void write(String string) throws IOException
 	{
+		if (out == null)
+			getOutputStream();
+
 		out.write(string.getBytes());
 	}
 
 	public void writelines(PySequence sequence) throws IOException
 	{
+		if (out == null)
+			getOutputStream();
+
 		for (PyObject str : sequence.asIterable())
 		{
 			out.write(str.toString().getBytes());
