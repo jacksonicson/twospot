@@ -162,10 +162,12 @@ def main(args):
     # Check for command line errors
     if options.projectName and not options.projectType:
         parser.error("--createProject requires --type")
+        return
     
     if options.dir:
         if not os.path.isdir(options.dir):
             parser.error(options.dir + " is not a directory")
+            return
     else:
         options.dir = os.getcwd()
     
@@ -173,8 +175,11 @@ def main(args):
     if options.projectName:
         createProject(options.dir, options.projectType, options.projectName)
     
-    if options.deploy:
+    elif options.deploy:
         deploy(options.dir)
+        
+    else:
+        parser.error("Invalid operation")
     
 
 if __name__ == "__main__":
