@@ -14,6 +14,7 @@ public class FrontendServiceImpl implements FrontendService
 	@Override
 	public ControllerInfo chooseAppServer(String appId) throws MissingControllerException
 	{
+		logger.info("frontend requests an appserver info"); 
 		return (ControllerInfo)configuration.getControllers().toArray()[0];
 	}
 
