@@ -36,7 +36,7 @@ public class Monitor extends Thread {
 			try {
 				ContentExchange exchange = new ContentExchange();
 				exchange.setRetryStatus(false);
-				exchange.setURL("http://127.0.0.1:8079");
+				exchange.setURL("http://127.0.0.1:8080");
 
 				this.httpClient.send(exchange);
 				exchange.waitForDone();
