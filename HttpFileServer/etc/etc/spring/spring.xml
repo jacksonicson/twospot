@@ -3,7 +3,7 @@
 
 <beans>
 
-	<bean id="OutsideConnector" class="org.eclipse.jetty.server.nio.SelectChannelConnector">
+	<bean id="OutsideConnector" class="org.eclipse.jetty.server.bio.SocketConnector">
 		<property name="host" value="0.0.0.0" />
 		<property name="port" value="5050" />
 
@@ -30,7 +30,16 @@
 	<bean id="HandlerCollection" class="org.eclipse.jetty.server.handler.HandlerList">
 		<property name="handlers">
 			<list>
+				<ref bean="HandlerCollectiong" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="HandlerCollectiong" class="org.eclipse.jetty.server.handler.HandlerCollection">
+		<property name="handlers">
+			<list>
 				<ref bean="MyResourceHandler" />
+				<ref bean="UploadHandler" />
 			</list>
 		</property>
 	</bean>
@@ -38,5 +47,7 @@
 	<bean id="MyResourceHandler" class="org.prot.httpfileserver.MyResourceHandler">
 		<property name="resourceBase" value="./files" />
 	</bean>
+
+	<bean id="UploadHandler" class="org.prot.httpfileserver.UploadResourceHandler" />
 </beans>
 
