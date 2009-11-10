@@ -40,15 +40,16 @@
 	<bean id="FlowHandler" class="org.prot.frontend.handlers.FlowHandler">
 		<property name="frontendService" ref="FrontendService" />
 		<property name="threadPool" ref="ThreadPool" />
+		<property name="appCache" ref="AppCache" />
 	</bean>
 
 	<!--  Application beans -->
+	<bean id="AppCache" class="org.prot.frontend.cache.TimeoutAppCache" />
 
 	<!-- Remote -->
 	<bean id="FrontendService" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">
 		<property name="serviceUrl" value="rmi://localhost:2299/frontendService" />
-		<property name="serviceInterface"
-			value="org.prot.manager.services.FrontendService" />
+		<property name="serviceInterface" value="org.prot.manager.services.FrontendService" />
 	</bean>
 
 </beans>

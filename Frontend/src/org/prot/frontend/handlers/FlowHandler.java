@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jetty.http.HttpHeaders;
 import org.eclipse.jetty.server.Request;
+import org.prot.frontend.cache.AppCache;
 import org.prot.manager.config.ControllerInfo;
 import org.prot.manager.services.FrontendService;
 import org.prot.util.handler.HttpProxyHandler;
@@ -19,6 +19,8 @@ public class FlowHandler extends HttpProxyHandler
 	private static final Logger logger = Logger.getLogger(FlowHandler.class);
 
 	private FrontendService frontendService;
+
+	private AppCache appCache;
 
 	public FlowHandler()
 	{
@@ -32,12 +34,13 @@ public class FlowHandler extends HttpProxyHandler
 
 		// Extract the appid from the url
 		String appId = null;
-		
+
 		URL url = new URL(request.getRequestURL().toString());
-		String host = url.getHost(); 
-		if(host.indexOf(".") != -1) {
-			appId = host.substring(0, host.indexOf(".")); 
-			logger.debug("appid = " + appId); 
+		String host = url.getHost();
+		if (host.indexOf(".") != -1)
+		{
+			appId = host.substring(0, host.indexOf("."));
+			logger.debug("appid = " + appId);
 		}
 
 		if (appId == null)
@@ -50,14 +53,24 @@ public class FlowHandler extends HttpProxyHandler
 
 		try
 		{
-			ControllerInfo info = frontendService.chooseAppServer("");
+			// Check cache
+			ControllerInfo info = appCache.getController(appId);
+			if (info == null)
+			{
+				// Ask the manager and cache the results
+				info = frontendService.chooseAppServer("");
+				appCache.cacheController(appId, info);
+			} else
+			{
+				logger.info("Using cached entry"); 
+			}
 
 			String fUrl = request.getRequestURL().toString();
-			fUrl = "http://" + info.getAddress() + ":" + info.getPort(); 
-			
+			fUrl = "http://" + info.getAddress() + ":" + info.getPort();
+
 			String fUri = "/" + appId + request.getRequestURI();
 			String fHost = info.getAddress() + ":" + info.getPort();
-			
+
 			forwardRequest(baseRequest, request, response, fUrl, fUri, fHost);
 
 			baseRequest.setHandled(true);
@@ -71,5 +84,10 @@ public class FlowHandler extends HttpProxyHandler
 	public void setFrontendService(FrontendService frontendService)
 	{
 		this.frontendService = frontendService;
+	}
+
+	public void setAppCache(AppCache appCache)
+	{
+		this.appCache = appCache;
 	}
 }
