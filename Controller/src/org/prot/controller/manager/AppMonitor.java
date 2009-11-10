@@ -1,7 +1,6 @@
 package org.prot.controller.manager;
 
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
