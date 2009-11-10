@@ -10,6 +10,7 @@ public class AppInfo
 	
 	private AppState status = AppState.OFFLINE; 
 	
+	private long lastInteraction; 
 	
 	public String getAppId()
 	{
@@ -63,5 +64,15 @@ public class AppInfo
 	public void setManagementPort(int managementPort)
 	{
 		this.managementPort = managementPort;
+	}
+
+	public long getLastInteraction()
+	{
+		return lastInteraction;
+	}
+
+	public void setLastInteraction(long lastInteraction)
+	{
+		this.lastInteraction = lastInteraction;
 	}
 }

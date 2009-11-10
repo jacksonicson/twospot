@@ -33,6 +33,12 @@ class AppProcess
 		process = null;
 	}
 
+	public void kill()
+	{
+		this.appInfo.setStatus(AppState.OFFLINE);
+		stopAndClean();
+	}
+	
 	public void startOrRestart()
 	{
 		// Kill the old process if exists

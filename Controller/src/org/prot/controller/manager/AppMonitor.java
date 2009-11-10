@@ -42,7 +42,7 @@ class AppMonitor extends Thread
 
 		return process;
 	}
-
+	
 	public void startProcess(AppProcess process)
 	{
 		// Enqueue the AppProcess for starting
@@ -85,11 +85,27 @@ class AppMonitor extends Thread
 		}
 	}
 
+	private void shutdownIdleProcesses()
+	{
+		long currentTime = System.currentTimeMillis();
+		long maxTime = 60 * 1000; 
+		for(AppProcess process : processList.values()) 
+		{
+			long lastInteraction = process.getOwner().getLastInteraction();
+			long difference = currentTime - lastInteraction;
+			if(difference > maxTime)
+				process.kill();
+		}
+	}
+	
 	public void run()
 	{
 		// Run forever (Controller doesn't have a shutdown sequence)
 		while (true)
 		{
+			// Shutdown all idle AppServers
+			shutdownIdleProcesses();
+			
 			// References the process to be started
 			AppProcess toStart = null;
 

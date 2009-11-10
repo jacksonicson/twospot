@@ -31,6 +31,9 @@ public class AppManager
 		// Register or load existing AppInfo
 		AppInfo appInfo = registry.registerApp(appId);
 
+		// Update the interaction time
+		appInfo.setLastInteraction(System.currentTimeMillis()); 
+		
 		// Update status (this section is not synchronized and therefore the
 		// decisions made here could be wrong!
 		switch (appInfo.getStatus())
