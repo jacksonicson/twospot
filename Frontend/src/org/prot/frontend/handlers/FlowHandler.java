@@ -40,7 +40,6 @@ public class FlowHandler extends HttpProxyHandler
 		if (host.indexOf(".") != -1)
 		{
 			appId = host.substring(0, host.indexOf("."));
-			logger.debug("appid = " + appId);
 		}
 
 		if (appId == null)
@@ -54,15 +53,13 @@ public class FlowHandler extends HttpProxyHandler
 		try
 		{
 			// Check cache
+			appCache.updateCache(); 
 			ControllerInfo info = appCache.getController(appId);
 			if (info == null)
 			{
 				// Ask the manager and cache the results
 				info = frontendService.chooseAppServer("");
 				appCache.cacheController(appId, info);
-			} else
-			{
-				logger.info("Using cached entry"); 
 			}
 
 			String fUrl = request.getRequestURL().toString();

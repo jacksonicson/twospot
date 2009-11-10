@@ -44,7 +44,7 @@
 	</bean>
 
 	<!--  Application beans -->
-	<bean id="AppCache" class="org.prot.frontend.cache.TimeoutAppCache" />
+	<bean id="AppCache" class="org.prot.frontend.cache.timeout.TimeoutAppCache" />
 
 	<!-- Remote -->
 	<bean id="FrontendService" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">

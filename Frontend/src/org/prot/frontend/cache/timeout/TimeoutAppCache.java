@@ -1,19 +1,22 @@
-package org.prot.frontend.cache;
+package org.prot.frontend.cache.timeout;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+import org.prot.frontend.cache.AppCache;
 import org.prot.manager.config.ControllerInfo;
 
 public class TimeoutAppCache implements AppCache
 {
+	private static final Logger logger = Logger.getLogger(TimeoutAppCache.class); 
+	
 	private Map<String, CacheEntry> cache = new HashMap<String, CacheEntry>();
 
 	@Override
 	public void cacheController(String appId, ControllerInfo controller)
 	{
 		CacheEntry entry = new CacheEntry();
-		entry.setTimestamp(System.currentTimeMillis());
 		entry.addController(controller);
 		entry.setAppId(appId);
 
@@ -33,6 +36,10 @@ public class TimeoutAppCache implements AppCache
 	@Override
 	public void updateCache()
 	{
-		// TODO: Delete old cache entries
+		for(CacheEntry entry : cache.values())
+		{
+			// Remove all Controller entries which are older than the given treshold
+			entry.removeOlderThan(5 * 60 * 1000); 
+		}
 	}
 }

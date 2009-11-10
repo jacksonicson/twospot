@@ -16,8 +16,7 @@ public class Main
 		DOMConfigurator.configure(Main.class.getResource("/etc/log4j.xml"));
 
 		// Start spring ioc container
-		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring.xml",
-				getClass()));
+		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring.xml", getClass()));
 
 		// Start the server
 		Server server = (Server) factory.getBean("Server");
@@ -26,7 +25,7 @@ public class Main
 			server.start();
 		} catch (Exception e)
 		{
-			logger.fatal("could not start server", e); 
+			logger.fatal("could not start server", e);
 		}
 	}
 
