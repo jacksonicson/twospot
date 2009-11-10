@@ -8,17 +8,16 @@
 		<property name="host" value="0.0.0.0" />
 		<property name="port" value="6060" />
 
-		<property name="acceptors" value="1" />
+		<property name="acceptors" value="30" />
 	</bean>
 
-	<!-- Server -->
+	<bean id="ThreadPool" class="org.eclipse.jetty.util.thread.QueuedThreadPool">
+		<property name="minThreads" value="30" />
+		<property name="maxThreads" value="40" />
+	</bean>
+
 	<bean id="Server" class="org.eclipse.jetty.server.Server">
-		<property name="threadPool">
-			<bean class="org.eclipse.jetty.util.thread.QueuedThreadPool">
-				<property name="minThreads" value="5" />
-				<property name="maxThreads" value="20" />
-			</bean>
-		</property>
+		<property name="threadPool" ref="ThreadPool" />
 
 		<property name="connectors">
 			<list>
@@ -40,14 +39,16 @@
 
 	<bean id="FlowHandler" class="org.prot.frontend.handlers.FlowHandler">
 		<property name="frontendService" ref="FrontendService" />
+		<property name="threadPool" ref="ThreadPool" />
 	</bean>
 
 	<!--  Application beans -->
 
 	<!-- Remote -->
 	<bean id="FrontendService" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">
-		<property name="serviceUrl" value="rmi://localhost:1199/frontendService" />
-		<property name="serviceInterface" value="org.prot.manager.service.frontend.FrontendService" />
+		<property name="serviceUrl" value="rmi://localhost:2299/frontendService" />
+		<property name="serviceInterface"
+			value="org.prot.manager.services.FrontendService" />
 	</bean>
 
 </beans>
