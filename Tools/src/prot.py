@@ -1,4 +1,3 @@
-from repr import Repr
 import sys
 import httplib
 from optparse import OptionParser
@@ -151,17 +150,6 @@ def createProject(directory, projectType, projectName):
     
 
 def main(args):
-#    args.append("--dir")
-#    args.append("C:/temp")
-#    args.append("--createProject")
-#    args.append("blabla")
-#    args.append("--type") 
-#    args.append("python")
-
-    args.append("--dir")
-    args.append("C:/temp/blabla")
-    args.append("--deploy")
-    
     parser = OptionParser()
     parser.add_option("--dir", action="store", type="string", )
     parser.add_option("--createProject", action="store", dest="projectName")
