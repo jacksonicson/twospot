@@ -3,14 +3,17 @@
 
 <beans>
 
+
+	<!-- Services -->
 	<bean id="FrontendService" class="org.prot.manager.service.frontend.FrontendServiceImpl" />
 
 	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
 		<property name="serviceName" value="frontendService" />
 		<property name="service" ref="FrontendService" />
-		<property name="serviceInterface" value="org.prot.manager.service.frontend.FrontendService" />
-		
-		<property name="registryPort" value="1199" />
+		<property name="serviceInterface"
+			value="org.prot.manager.service.frontend.FrontendService" />
+
+		<property name="registryPort" value="2299" />
 	</bean>
 
 </beans>
