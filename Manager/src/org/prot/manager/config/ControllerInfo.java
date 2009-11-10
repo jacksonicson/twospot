@@ -1,6 +1,8 @@
 package org.prot.manager.config;
 
-public class ControllerInfo
+import java.io.Serializable;
+
+public class ControllerInfo implements Serializable
 {
 	private String address; 
 	

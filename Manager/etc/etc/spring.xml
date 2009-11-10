@@ -5,13 +5,13 @@
 
 
 	<!-- Services -->
-	<bean id="FrontendService" class="org.prot.manager.service.frontend.FrontendServiceImpl" />
+	<bean id="FrontendService" class="org.prot.manager.services.FrontendServiceImpl" />
 
 	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
 		<property name="serviceName" value="frontendService" />
 		<property name="service" ref="FrontendService" />
 		<property name="serviceInterface"
-			value="org.prot.manager.service.frontend.FrontendService" />
+			value="org.prot.manager.services.FrontendService" />
 
 		<property name="registryPort" value="2299" />
 	</bean>

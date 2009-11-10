@@ -8,10 +8,12 @@ public class StaticConfiguration
 	private Set<ControllerInfo> controllers = new HashSet<ControllerInfo>();
 
 	{
-		ControllerInfo info; 
+		ControllerInfo info;
+		
 		info = new ControllerInfo(); 
 		info.setAddress("localhost");
 		info.setPort(8080);
+		controllers.add(info); 
 	}
 	
 	public Set<ControllerInfo> getControllers()
