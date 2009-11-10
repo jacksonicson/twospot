@@ -75,6 +75,7 @@ public class RequestHandler extends HttpProxyHandler
 
 				// forward the request
 				forwardRequest(baseRequest, request, response, url, uri, host);
+				baseRequest.setHandled(true); 
 				break;
 
 			} catch (Exception e)

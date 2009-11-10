@@ -8,13 +8,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
 public class PortSelectionHandler extends AbstractHandler
 {
-
+	private static final Logger logger = Logger.getLogger(PortSelectionHandler.class);
+	
 	private Hashtable<Integer, Handler> handlers = new Hashtable<Integer, Handler>();
 
 	@Override
@@ -33,6 +35,7 @@ public class PortSelectionHandler extends AbstractHandler
 		}
 		
 		// error
+		logger.error("Accessing Controller on an invalid port"); 
 		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 		response.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
