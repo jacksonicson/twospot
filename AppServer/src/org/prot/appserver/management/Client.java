@@ -24,7 +24,7 @@ public class Client
 			System.out.println("Name: " + info.getClassName());
 			
 			ServerStatusMXBean proxy = JMX.newMBeanProxy(servercon, name, ServerStatusMXBean.class);
-			System.out.println("Value: " + proxy.getValue());
+//			System.out.println("Value: " + proxy.getValue());
 			
 			connector.close(); 
 			

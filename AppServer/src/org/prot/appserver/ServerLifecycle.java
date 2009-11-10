@@ -34,6 +34,7 @@ public class ServerLifecycle
 		loadApp();
 		extractApp();
 		configure();
+		startManagement();
 		launchRuntime();
 	}
 
@@ -69,6 +70,11 @@ public class ServerLifecycle
 
 		// Configure
 		this.appInfo = appConfigurer.configure(configuration.getAppDirectory(), null);
+	}
+	
+	public void startManagement()
+	{
+		// TODO: 
 	}
 
 	public void launchRuntime()

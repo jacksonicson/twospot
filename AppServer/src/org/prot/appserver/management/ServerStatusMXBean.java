@@ -5,7 +5,7 @@ import javax.management.MXBean;
 @MXBean
 public interface ServerStatusMXBean
 {
-	public int getValue();
+	public boolean getState();
 	
 	public String getName();
 }
