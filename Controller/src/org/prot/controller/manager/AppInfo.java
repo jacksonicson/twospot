@@ -6,6 +6,8 @@ public class AppInfo
 	
 	private int port;
 	
+	private int managementPort; 
+	
 	private AppState status = AppState.OFFLINE; 
 	
 	
@@ -51,5 +53,15 @@ public class AppInfo
 		
 		AppInfo cmp = (AppInfo)o;
 		return cmp.getAppId().equals(this.appId); 
+	}
+
+	public int getManagementPort()
+	{
+		return managementPort;
+	}
+
+	public void setManagementPort(int managementPort)
+	{
+		this.managementPort = managementPort;
 	}
 }

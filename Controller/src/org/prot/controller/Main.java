@@ -15,7 +15,7 @@ public class Main
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring/spring.xml",
 				getClass()));
 
-		// Start the controller
+		factory.getBean("test");
 		Controller controller = (Controller) factory.getBean("Controller");
 		controller.start();
 	}

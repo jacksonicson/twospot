@@ -44,6 +44,11 @@ class AppProcess
 		command.add("java");
 		command.add("-classpath");
 		command.add(loadClasspath());
+		
+		command.add("-Dcom.sun.management.jmxremote.port=" + appInfo.getManagementPort());
+		command.add("-Dcom.sun.management.jmxremote.authenticate=" + false);
+		command.add("-Dcom.sun.management.jmxremote.ssl=" + false);
+		
 		command.add("org.prot.appserver.Main");
 
 		command.add("-appId");
@@ -131,6 +136,8 @@ class AppProcess
 					this.appInfo.setStatus(AppState.ONLINE);
 					logger.info("AppServer started: " + this.appInfo.getAppId()); 
 					return;
+				} else {
+					System.out.println(line);
 				}
 			}
 

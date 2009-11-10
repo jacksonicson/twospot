@@ -48,6 +48,7 @@ class AppRegistry
 		appInfo.setAppId(appId);
 		putApp(appInfo);
 		appInfo.setPort(getPort());
+		appInfo.setManagementPort(getPort());
 
 		return appInfo;
 	}
