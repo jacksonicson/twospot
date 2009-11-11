@@ -12,6 +12,7 @@ import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.http.HttpMethods;
 import org.eclipse.jetty.server.Request;
 import org.prot.frontend.deploy.AppDeployer;
+import org.prot.manager.services.FrontendService;
 
 public class FilterHandler extends ProxyHandler
 {
@@ -35,6 +36,10 @@ public class FilterHandler extends ProxyHandler
 
 		deployer = new AppDeployer();
 		deployer.setHttpClient(httpClient);
+	}
+	
+	public void init() {
+		deployer.setFrontendService(frontendService);
 	}
 
 	@Override

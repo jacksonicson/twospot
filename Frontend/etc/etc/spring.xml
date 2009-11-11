@@ -37,7 +37,7 @@
 		</property>
 	</bean>
 
-	<bean id="FilterHandler" class="org.prot.frontend.handlers.FilterHandler">
+	<bean id="FilterHandler" class="org.prot.frontend.handlers.FilterHandler" init-method="init">
 		<property name="frontendService" ref="FrontendService" />
 		<property name="threadPool" ref="ThreadPool" />
 		<property name="appCache" ref="AppCache" />

@@ -18,7 +18,7 @@ public class ProxyHandler extends HttpProxyHandler
 {
 	private static final Logger logger = Logger.getLogger(ProxyHandler.class);
 
-	private FrontendService frontendService;
+	protected FrontendService frontendService;
 
 	private AppCache appCache;
 

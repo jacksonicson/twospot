@@ -9,21 +9,24 @@ import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.http.HttpMethods;
 import org.eclipse.jetty.http.HttpSchemes;
 import org.eclipse.jetty.server.Request;
+import org.prot.manager.services.FrontendService;
 
 public class AppDeployer
 {
 	private static final Logger logger = Logger.getLogger(AppDeployer.class);
 	
 	private HttpClient httpClient;
+	
+	private FrontendService frontendService; 
 
 	public void deployApplication(String appId, Request request)
 	{
-		// Write everything into the FileServer
+		// Write everything to the FileServer
 		ContentExchange exchange = new ContentExchange();
 		exchange.setMethod(HttpMethods.POST);
 		exchange.setScheme(HttpSchemes.HTTP_BUFFER);
 		exchange.setAddress(new Address("localhost", 5050)); // TODO: Configure
-		exchange.setURI("/" + appId); // TODO: Configure
+		exchange.setURI("/" + appId + "/null"); // TODO: Configure
 		try
 		{
 			exchange.setRequestContentSource(request.getInputStream());
@@ -33,28 +36,34 @@ public class AppDeployer
 			e.printStackTrace();
 		}
 		
+		int status = 0; 
 		try
 		{
 			httpClient.send(exchange);
-			int status = exchange.waitForDone(); 
-			logger.info("Deployment status: " + exchange.getResponseStatus()); 
-			
+			status = exchange.waitForDone();
+			status = exchange.getResponseStatus(); 
 		} catch (IOException e)
 		{
+			// TODO: Error handling
 			e.printStackTrace(); 
 		} catch (InterruptedException e)
 		{
+			// TODO: Error handling
 			e.printStackTrace();
-		} 
-
-		// Register or update Application in the manager
-
-		// Register Application
-
+		}
+		
+		logger.info("calling manager"); 
+		frontendService.newAppOrVersion(appId);
 	}
 
+	
 	public void setHttpClient(HttpClient httpClient)
 	{
 		this.httpClient = httpClient;
+	}
+
+	public void setFrontendService(FrontendService frontendService)
+	{
+		this.frontendService = frontendService;
 	}
 }
