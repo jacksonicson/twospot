@@ -19,7 +19,7 @@
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-server-7.0.0.v20091005.jar" sourcepath="D:/work/jetty7src/jetty-server/src"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-servlet-7.0.0.v20091005.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-servlets-7.0.0.v20091005.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-util-7.0.0.v20091005.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-util-7.0.0.v20091005.jar" sourcepath="D:/work/jetty7src/jetty-util/src"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-webapp-7.0.0.v20091005.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-xml-7.0.0.v20091005.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/servlet-api-2.5.jar"/>
@@ -27,5 +27,6 @@
 	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RC1/bin/org.springframework.context-3.0.0.RC1.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RC1/bin/org.springframework.core-3.0.0.RC1.jar" sourcepath="/Libs/lib/spring-framework-3.0.0.RC1/src/org.springframework.core-sources-3.0.0.RC1.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/apache_commons/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/log4j-1.2.15/log4j-1.2.15.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

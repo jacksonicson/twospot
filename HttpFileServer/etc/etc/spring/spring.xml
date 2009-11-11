@@ -38,16 +38,18 @@
 	<bean id="HandlerCollectiong" class="org.eclipse.jetty.server.handler.HandlerCollection">
 		<property name="handlers">
 			<list>
-				<ref bean="MyResourceHandler" />
-				<ref bean="UploadHandler" />
+				<ref bean="DownloadResourceHandler" />
+				<ref bean="UploadResourceHandler" />
 			</list>
 		</property>
 	</bean>
 
-	<bean id="MyResourceHandler" class="org.prot.httpfileserver.MyResourceHandler">
+	<bean id="DownloadResourceHandler" class="org.prot.httpfileserver.handlers.DownloadResourceHandler">
 		<property name="resourceBase" value="./files" />
 	</bean>
 
-	<bean id="UploadHandler" class="org.prot.httpfileserver.UploadResourceHandler" />
+	<bean id="UploadResourceHandler" class="org.prot.httpfileserver.handlers.UploadResourceHandler">
+		<property name="resourceBase" value="./files" />
+	</bean>
 </beans>
 

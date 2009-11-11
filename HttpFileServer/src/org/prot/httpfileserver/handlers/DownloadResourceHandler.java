@@ -1,4 +1,4 @@
-package org.prot.httpfileserver;
+package org.prot.httpfileserver.handlers;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -9,12 +9,10 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.resource.Resource;
 
-public class MyResourceHandler extends ResourceHandler
+public class DownloadResourceHandler extends ResourceHandler
 {
 	protected Resource getResource(HttpServletRequest request) throws MalformedURLException
 	{
-		System.out.println("get resource"); 
-		
 		String path_info = request.getPathInfo();
 		String[] components = path_info.split("/");
 
