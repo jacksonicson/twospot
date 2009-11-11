@@ -1,50 +1,73 @@
 package org.prot.httpfileserver.handlers;
 
-import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.resource.Resource;
 
 public class DownloadResourceHandler extends ResourceHandler
 {
-	protected Resource getResource(HttpServletRequest request) throws MalformedURLException
-	{
-		String path_info = request.getPathInfo();
-		String[] components = path_info.split("/");
-
-		System.out.println("length: " + components.length);
-		for (String s : components)
-			System.out.println("S: " + s);
-
-		if (components.length == 3 && components[1].equals("app"))
-		{
-			String appId = components[2];
-			String file = "/" + appId + ".war";
-			System.out.println("loading: " + file);
-			return getResource(file);
-		}
-
-		return getResource("/failed.txt");
-	}
+	private static final Logger logger = Logger.getLogger(DownloadResourceHandler.class);
 
 	public void setResourceBase(String resourceBase)
 	{
+		Resource res;
 		try
 		{
-			File file = new File(resourceBase);
-			if (file.exists())
-				setBaseResource(Resource.newResource(file.getAbsolutePath()));
-			else
-				throw new IllegalArgumentException(resourceBase);
-		} catch (Exception e)
+			res = Resource.newResource(resourceBase);
+			super.setBaseResource(res);
+
+		} catch (MalformedURLException e)
 		{
-			Log.warn(e.toString());
-			Log.debug(e);
-			throw new IllegalArgumentException(resourceBase);
+			logger.error("Could not set base resource", e);
+		} catch (IOException e)
+		{
+			logger.error("Could not set base resource", e);
 		}
+	}
+
+	protected Resource getResource(HttpServletRequest request) throws MalformedURLException
+	{
+		String uri = request.getRequestURI();
+		
+		// Kill the first slash
+		if(uri.startsWith("/"))
+			uri = uri.substring(1); 
+		
+		String appId = null; 
+		String version = null;
+		int index = uri.indexOf('/'); 
+
+		// Check if there is a version information
+		// URL: http://host:port/appId/version/*
+		if(index >= 0) 
+		{
+			appId = uri.substring(0, index); 
+			uri = uri.substring(index + 1);
+			
+			index = uri.indexOf('/');
+			if(index >= 0)
+				uri = uri.substring(0, index); 
+			
+			if(uri == "")
+				version = "nulL";
+			else
+				version = uri; 
+			
+		} else {
+			appId = uri; 
+			version = "null"; 
+		}
+		
+		// Debug
+		logger.debug("Resource with AppId: " + appId + " Version: " + version);
+		
+		// Create file
+		String file = appId + version + ".war"; 
+		return getResource("/" + file);
 	}
 }
