@@ -18,4 +18,9 @@ public class FrontendServiceImpl implements FrontendService
 		return (ControllerInfo)configuration.getControllers().toArray()[0];
 	}
 
+	@Override
+	public void newAppOrVersion(String appId)
+	{
+		logger.info("new app or version: " + appId); 
+	}
 }
