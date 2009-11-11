@@ -15,6 +15,9 @@ public class Main
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring/spring.xml",
 				getClass()));
 
+		// Start the RMI-Services
+		factory.getBean("ControllerServiceExporter");
+		
 		Controller controller = (Controller) factory.getBean("Controller");
 		controller.start();
 	}

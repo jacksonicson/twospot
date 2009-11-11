@@ -32,8 +32,8 @@ public class AppManager
 		AppInfo appInfo = registry.registerApp(appId);
 
 		// Update the interaction time
-		appInfo.setLastInteraction(System.currentTimeMillis()); 
-		
+		appInfo.setLastInteraction(System.currentTimeMillis());
+
 		// Update status (this section is not synchronized and therefore the
 		// decisions made here could be wrong!
 		switch (appInfo.getStatus())
@@ -64,7 +64,8 @@ public class AppManager
 	public void reportStaleApp(String appId)
 	{
 		AppInfo appInfo = registry.getAppInfo(appId);
-		appInfo.setStatus(AppState.STALE);
+		if (appInfo != null)
+			appInfo.setStatus(AppState.STALE);
 	}
 
 	/**
@@ -82,10 +83,10 @@ public class AppManager
 	{
 		// Get a process for this application
 		AppProcess process = monitor.getProcess(appInfo);
-		
-		// Enqueue the process start 
+
+		// Enqueue the process start
 		monitor.startProcess(process);
-		
+
 		// Wait until the AppServer is online
 		waitForAppServer(appInfo);
 	}

@@ -67,9 +67,11 @@
 	</bean>
 
 	<!-- Services -->
-	<bean id="ControllerService" class="org.prot.controller.services.ControllerServiceImpl" />
+	<bean id="ControllerService" class="org.prot.controller.services.ControllerServiceImpl">
+		<property name="manager" ref="AppManager" />
+	</bean>
 
-	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+	<bean id="ControllerServiceExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
 		<property name="serviceName" value="ControllerService" />
 		<property name="service" ref="ControllerService" />
 		<property name="serviceInterface"
