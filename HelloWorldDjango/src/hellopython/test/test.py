@@ -7,6 +7,9 @@ from django.http import HttpResponse
 
 def test(request):
     # print "Hello World Django"
+    value = ""
+    for i in range(0,100):
+        value += "test \n"
     
-    response = HttpResponse("test")
+    response = HttpResponse(value)
     return response 

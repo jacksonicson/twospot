@@ -3,6 +3,7 @@
 	<name>HelloWorldDjango</name>
 	<comment></comment>
 	<projects>
+		<project>AppServer</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
