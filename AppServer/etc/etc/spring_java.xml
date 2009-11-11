@@ -36,8 +36,16 @@
 	<bean id="HandlerCollection" class="org.eclipse.jetty.server.handler.HandlerCollection">
 		<property name="handlers">
 			<list>
-				<ref bean="ContextCollectionHandler" />
+				<ref bean="ManagementWrapper" />
 			</list>
+		</property>
+	</bean>
+
+
+	<bean id="ManagementWrapper" class="org.prot.appserver.management.ManagementHandler">
+		<property name="handler" ref="ContextCollectionHandler" />
+		<property name="management">
+			<bean class="org.prot.appserver.management.Management" init-method="init" />
 		</property>
 	</bean>
 
@@ -48,7 +56,7 @@
 
 	<!-- Deployment -->
 	<bean id="AppDeployer" class="org.prot.appserver.runtime.java.AppDeployer">
-		<property name="contexts" ref="ContextCollectionHandler" />
+		<property name="contexts" ref="ManagementWrapper" />
 	</bean>
 
 </beans>

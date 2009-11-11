@@ -35,8 +35,5 @@
 	<bean id="PythonRuntime" class="org.prot.appserver.runtime.jython.PythonRuntime" />
 	<bean id="JavaRuntime" class="org.prot.appserver.runtime.java.JavaRuntime" />
 	
-	<!-- Management -->
-	<bean id="Management" class="org.prot.appserver.management.Management" init-method="init" />
-	
 </beans>
 

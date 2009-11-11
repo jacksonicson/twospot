@@ -7,5 +7,7 @@ public interface ServerStatusMXBean
 {
 	public boolean getState();
 	
+	public int getRequests();
+	
 	public String getName();
 }

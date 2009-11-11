@@ -18,7 +18,6 @@ public class Main
 		// Create beans
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring.xml", getClass()));
 
-		factory.getBean("Management");
 		factory.getBean("Lifecycle");
 	}
 
