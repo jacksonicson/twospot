@@ -48,12 +48,11 @@ public class UploadResourceHandler extends AbstractHandler
 			return;
 		}
 
-		String path_info = request.getPathInfo();
-		String[] components = path_info.split("/");
-
-		if (components.length == 3 && components[1].equals("app"))
+		String uri = request.getRequestURI().substring(1);
+		uri.replace("/", "");
 		{
-			String appId = components[2];
+			System.out.println("AppId: " + uri); 
+			String appId = uri;
 			String fileName = appId + ".war";
 
 			String file = createFile(fileName);
