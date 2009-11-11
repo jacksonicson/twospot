@@ -31,10 +31,14 @@ def parseAppYaml(pathToYaml):
     file = open(pathToYaml, "r")
     result = yaml.load(file)
     return result; 
- 
- 
- 
-SERVER = 'localhost:5050'
+
+
+
+# Properties 
+SERVER = 'localhost:6060'
+
+
+
 def upload(warFile, appId):
     # Reading (r) a binary file (b)
     file = open(warFile, mode='rb')
@@ -42,8 +46,9 @@ def upload(warFile, appId):
     # Create a new connection and send the request (file)
     con = httplib.HTTPConnection(SERVER)
     print "Uploading..."
-    response = con.request('POST', '/app/' + appId, file)
+    response = con.request('POST', '/deploy/' + appId, file)
     print "Done"
+
 
 
 def testApp(directory):
@@ -62,6 +67,7 @@ def testApp(directory):
     print "App-Configuration: %s" % yaml
     
     return yaml 
+
 
 
 def deploy(directory):
@@ -149,12 +155,20 @@ def createProject(directory, projectType, projectName):
     file.close; 
     
 
+
 def main(args):
+    
+    # Tests
+    args.append("--dir")
+    args.append("C:/temp/blabla")
+    args.append("--deploy")
+    
     parser = OptionParser()
     parser.add_option("--dir", action="store", type="string", )
     parser.add_option("--createProject", action="store", dest="projectName")
     parser.add_option("--type", action="store", type="string", dest="projectType")
     parser.add_option("--deploy", action="store_true", dest="deploy")
+    parser.add_option("--server", action="store", dest="server")
     
     # Parse the command line 
     (options, args) = parser.parse_args(args)
@@ -171,6 +185,11 @@ def main(args):
     else:
         options.dir = os.getcwd()
     
+    # Set properties
+    if options.server:
+        global SERVER
+        SERVER = options.server
+    
     # Call functions
     if options.projectName:
         createProject(options.dir, options.projectType, options.projectName)
@@ -181,6 +200,7 @@ def main(args):
     else:
         parser.error("Invalid operation")
     
+
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
