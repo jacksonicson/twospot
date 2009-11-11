@@ -32,12 +32,18 @@
 	<bean id="HandlerCollection" class="org.eclipse.jetty.server.handler.HandlerCollection">
 		<property name="handlers">
 			<list>
-				<ref bean="FlowHandler" />
+				<ref bean="FilterHandler" />
 			</list>
 		</property>
 	</bean>
 
-	<bean id="FlowHandler" class="org.prot.frontend.handlers.FlowHandler">
+	<bean id="FilterHandler" class="org.prot.frontend.handlers.FilterHandler">
+		<property name="frontendService" ref="FrontendService" />
+		<property name="threadPool" ref="ThreadPool" />
+		<property name="appCache" ref="AppCache" />
+	</bean>
+
+	<bean id="ProxyHandler" class="org.prot.frontend.handlers.ProxyHandler">
 		<property name="frontendService" ref="FrontendService" />
 		<property name="threadPool" ref="ThreadPool" />
 		<property name="appCache" ref="AppCache" />

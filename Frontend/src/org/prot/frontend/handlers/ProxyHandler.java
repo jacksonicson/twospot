@@ -14,15 +14,15 @@ import org.prot.manager.config.ControllerInfo;
 import org.prot.manager.services.FrontendService;
 import org.prot.util.handler.HttpProxyHandler;
 
-public class FlowHandler extends HttpProxyHandler
+public class ProxyHandler extends HttpProxyHandler
 {
-	private static final Logger logger = Logger.getLogger(FlowHandler.class);
+	private static final Logger logger = Logger.getLogger(ProxyHandler.class);
 
 	private FrontendService frontendService;
 
 	private AppCache appCache;
 
-	public FlowHandler()
+	public ProxyHandler()
 	{
 		setup();
 	}
