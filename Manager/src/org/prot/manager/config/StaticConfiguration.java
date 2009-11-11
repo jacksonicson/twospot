@@ -13,6 +13,8 @@ public class StaticConfiguration
 		info = new ControllerInfo(); 
 		info.setAddress("localhost");
 		info.setPort(8080);
+		info.setServiceName("ControllerService");
+		info.setServicePort(2299);
 		controllers.add(info); 
 	}
 	
