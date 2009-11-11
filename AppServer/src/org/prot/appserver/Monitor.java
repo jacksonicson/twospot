@@ -6,7 +6,6 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jetty.client.HttpClient;
 
 /**
  * TODO: Use RMI to communicate with the Controller
@@ -24,7 +23,6 @@ public class Monitor extends Thread
 
 	private final int CONTROLLER_PORT = 8080;
 
-	private HttpClient httpClient;
 
 	public Monitor()
 	{
