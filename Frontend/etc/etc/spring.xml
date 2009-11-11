@@ -37,20 +37,26 @@
 		</property>
 	</bean>
 
-	<bean id="FilterHandler" class="org.prot.frontend.handlers.FilterHandler" init-method="init">
+	<bean id="FilterHandler" class="org.prot.frontend.handlers.FilterHandler">
 		<property name="frontendService" ref="FrontendService" />
 		<property name="threadPool" ref="ThreadPool" />
 		<property name="appCache" ref="AppCache" />
-	</bean>
-
-	<bean id="ProxyHandler" class="org.prot.frontend.handlers.ProxyHandler">
-		<property name="frontendService" ref="FrontendService" />
-		<property name="threadPool" ref="ThreadPool" />
-		<property name="appCache" ref="AppCache" />
+		<property name="deployer" ref="AppDeployer" />
 	</bean>
 
 	<!--  Application beans -->
 	<bean id="AppCache" class="org.prot.frontend.cache.timeout.TimeoutAppCache" />
+	
+	<bean id="AppDeployer" class="org.prot.frontend.deploy.AppDeployer">
+		<property name="frontendService" ref="FrontendService" />
+		<property name="httpClient" ref="HttpClient" />
+	</bean>
+	
+	<!-- HTTP Client -->
+	<bean id="HttpClient" class="org.eclipse.jetty.client.HttpClient" init-method="start">
+		<property name="threadPool" ref="ThreadPool" />
+		<!-- <property name="connectorType" ref="2" /> -->
+	</bean>
 
 	<!-- Remote -->
 	<bean id="FrontendService" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">
@@ -59,4 +65,3 @@
 	</bean>
 
 </beans>
-

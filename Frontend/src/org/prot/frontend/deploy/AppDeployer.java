@@ -14,14 +14,14 @@ import org.prot.manager.services.FrontendService;
 public class AppDeployer
 {
 	private static final Logger logger = Logger.getLogger(AppDeployer.class);
-	
+
 	private HttpClient httpClient;
-	
-	private FrontendService frontendService; 
+
+	private FrontendService frontendService;
 
 	public void deployApplication(String appId, Request request)
 	{
-		// Write everything to the FileServer
+		// Prepare HTTP-Message
 		ContentExchange exchange = new ContentExchange();
 		exchange.setMethod(HttpMethods.POST);
 		exchange.setScheme(HttpSchemes.HTTP_BUFFER);
@@ -32,31 +32,27 @@ public class AppDeployer
 			exchange.setRequestContentSource(request.getInputStream());
 		} catch (IOException e)
 		{
-			// TODO: Error handling
-			e.printStackTrace();
+			logger.error("Could not connect input stream with output stream", e);
 		}
-		
-		int status = 0; 
+
 		try
 		{
+			// Send everything to the fileserver
 			httpClient.send(exchange);
-			status = exchange.waitForDone();
-			status = exchange.getResponseStatus(); 
+			exchange.waitForDone();
+			exchange.getResponseStatus();
 		} catch (IOException e)
 		{
-			// TODO: Error handling
-			e.printStackTrace(); 
+			logger.error("Error while sending HTTP-request to the fileserver", e);
 		} catch (InterruptedException e)
 		{
-			// TODO: Error handling
-			e.printStackTrace();
+			logger.error("Error while sending HTTP-request to the fileserver", e);
 		}
-		
-		logger.info("calling manager"); 
+
+		// Tell the manager about the new deployment
 		frontendService.newAppOrVersion(appId);
 	}
 
-	
 	public void setHttpClient(HttpClient httpClient)
 	{
 		this.httpClient = httpClient;

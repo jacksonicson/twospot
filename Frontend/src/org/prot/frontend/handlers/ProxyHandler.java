@@ -22,11 +22,6 @@ public class ProxyHandler extends HttpProxyHandler
 
 	private AppCache appCache;
 
-	public ProxyHandler()
-	{
-		setup();
-	}
-
 	@Override
 	public void handle(String target, Request baseRequest, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException
