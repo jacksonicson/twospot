@@ -1,65 +1,68 @@
 package org.prot.appserver;
 
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 
-import org.eclipse.jetty.client.ContentExchange;
+import org.apache.log4j.Logger;
 import org.eclipse.jetty.client.HttpClient;
 
 /**
  * TODO: Use RMI to communicate with the Controller
+ * 
  * @author Andreas Wolke
- *
+ * 
  */
-public class Monitor extends Thread {
+public class Monitor extends Thread
+{
+	private static final Logger logger = Logger.getLogger(Monitor.class);
 
 	private final int sleepTime = 10000;
 
+	private final String CONTROLLER_HOST = "127.0.0.1";
+
+	private final int CONTROLLER_PORT = 8080;
+
 	private HttpClient httpClient;
 
-	public Monitor() {
-
-		try {
-			this.httpClient = new HttpClient();
-			this.httpClient.start();
-
+	public Monitor()
+	{
+		try
+		{
 			this.start();
-
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			e.printStackTrace();
 			System.exit(1);
 		}
 	}
 
-	public void run() {
-		while (true) {
+	public void run()
+	{
+		while (true)
+		{
+			try
+			{
+				URL controller = new URL("HTTP", CONTROLLER_HOST, CONTROLLER_PORT, "");
+				URLConnection connection = controller.openConnection();
 
-			try {
-				ContentExchange exchange = new ContentExchange();
-				exchange.setRetryStatus(false);
-				exchange.setURL("http://127.0.0.1:8080");
+				DataInputStream in = new DataInputStream(connection.getInputStream());
+				int inByte = in.read();
+				in.close();
 
-				this.httpClient.send(exchange);
-				exchange.waitForDone();
-				int status = exchange.getStatus();
-				switch (status) {
-				case ContentExchange.STATUS_EXCEPTED:
-					System.exit(0);
-					break;
-				case ContentExchange.STATUS_EXPIRED:
-					System.exit(0);
-					break;
-				}
-
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (IOException e)
+			{
+				logger.error(e);
+				System.exit(1);
 			}
 
-			try {
+			try
+			{
 				sleep(sleepTime);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			} catch (InterruptedException e)
+			{
+				logger.error(e);
 			}
 		}
 	}
