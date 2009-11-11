@@ -23,20 +23,6 @@ public class RequestHandler extends HttpProxyHandler
 		this.appManager = appManager;
 	}
 
-	@Override
-	protected String getHost(Request request)
-	{
-		return "localhost";
-	}
-
-	@Override
-	protected String getUri(Request request)
-	{
-		String uri = request.getUri().toString().substring(1);
-		uri = uri.substring(uri.indexOf("/"));
-		return uri;
-	}
-
 	protected String getUrl(Request request, AppInfo appInfo)
 	{
 		String scheme = request.getScheme();

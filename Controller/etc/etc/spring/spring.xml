@@ -3,6 +3,12 @@
 
 <beans>
 
+	<!-- ThreadPool -->
+	<bean id="ThreadPool" class="org.eclipse.jetty.util.thread.QueuedThreadPool">
+		<property name="minThreads" value="2" />
+		<property name="maxThreads" value="5" />
+	</bean>
+
 	<!-- Connectors -->
 	<bean id="OutsideConnector" class="org.eclipse.jetty.server.nio.SelectChannelConnector">
 		<property name="host" value="0.0.0.0" />
@@ -13,12 +19,7 @@
 
 	<!-- Server -->
 	<bean id="Server" class="org.eclipse.jetty.server.Server">
-		<property name="threadPool">
-			<bean class="org.eclipse.jetty.util.thread.QueuedThreadPool">
-				<property name="minThreads" value="2" />
-				<property name="maxThreads" value="5" />
-			</bean>
-		</property>
+		<property name="threadPool" ref="ThreadPool" />
 
 		<property name="connectors">
 			<list>
@@ -50,9 +51,9 @@
 	<bean id="RequestHandler" class="org.prot.controller.handler.HandlerDecorator">
 		<property name="port" value="8080" />
 		<property name="handler">
-			<bean class="org.prot.controller.handler.RequestHandler"
-				init-method="setup">
+			<bean class="org.prot.controller.handler.RequestHandler">
 				<property name="appManager" ref="AppManager" />
+				<property name="httpClient" ref="HttpClient" />
 			</bean>
 		</property>
 	</bean>
@@ -68,13 +69,19 @@
 	<!-- Services -->
 	<bean id="ControllerService" class="org.prot.controller.services.ControllerServiceImpl" />
 
-	<bean id="test" class="org.springframework.remoting.rmi.RmiServiceExporter">
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
 		<property name="serviceName" value="ControllerService" />
 		<property name="service" ref="ControllerService" />
 		<property name="serviceInterface"
 			value="org.prot.controller.services.ControllerService" />
 
 		<property name="registryPort" value="2299" />
+	</bean>
+
+	<!-- HTTP-Client -->
+	<bean id="HttpClient" class="org.eclipse.jetty.client.HttpClient"
+		init-method="start">
+		<property name="threadPool" ref="ThreadPool" />
 	</bean>
 
 </beans>
