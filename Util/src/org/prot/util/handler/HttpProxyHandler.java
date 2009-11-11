@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.client.HttpClient;
-import org.eclipse.jetty.client.HttpDestination;
 import org.eclipse.jetty.client.HttpExchange;
 import org.eclipse.jetty.http.HttpHeaders;
 import org.eclipse.jetty.io.Buffer;
@@ -35,25 +34,6 @@ public abstract class HttpProxyHandler extends AbstractHandler
 	public void setThreadPool(ThreadPool threadPool)
 	{
 		this.threadPool = threadPool;
-	}
-
-	public void setup()
-	{
-		// Setup the httpClient
-		httpClient = new HttpClient();
-		httpClient.setThreadPool(threadPool);
-		httpClient.setConnectorType(HttpClient.CONNECTOR_SELECT_CHANNEL);
-		try
-		{
-			httpClient.start();
-		} catch (Exception e)
-		{
-			logger.fatal("could not start the HttpClient", e);
-			System.exit(1);
-		}
-
-		// Setup the list of invalid headers
-		setupInvalidHeaders();
 	}
 
 	protected String getUrl(Request request)
@@ -231,6 +211,9 @@ public abstract class HttpProxyHandler extends AbstractHandler
 			exchange.setRequestHeader(name, value);
 		}
 
+		// Changed headers
+		exchange.setRequestHeader(HttpHeaders.HOST, host);
+
 		// Copy the request content
 		if (srcRequest.getContentLength() > 0)
 			exchange.setRequestContentSource(srcRequest.getInputStream());
@@ -258,5 +241,10 @@ public abstract class HttpProxyHandler extends AbstractHandler
 			onConnectionFailure();
 			throw e;
 		}
+	}
+
+	public void setHttpClient(HttpClient httpClient)
+	{
+		this.httpClient = httpClient;
 	}
 }
