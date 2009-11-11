@@ -2,6 +2,23 @@
 <!DOCTYPE beans SYSTEM "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 
 <beans>
+	<!-- Properties -->
+	<bean id="PropertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>classpath:/etc/config.properties</value>
+		</property>
+	</bean>
+
+
+
+	<!-- HTTP-Client -->
+	<bean id="HttpClient" class="org.eclipse.jetty.client.HttpClient"
+		init-method="start">
+		<property name="threadPool" ref="ThreadPool" />
+	</bean>
+
+
 
 	<!-- ThreadPool -->
 	<bean id="ThreadPool" class="org.eclipse.jetty.util.thread.QueuedThreadPool">
@@ -9,13 +26,16 @@
 		<property name="maxThreads" value="5" />
 	</bean>
 
-	<!-- Connectors -->
-	<bean id="OutsideConnector" class="org.eclipse.jetty.server.nio.SelectChannelConnector">
-		<property name="host" value="0.0.0.0" />
-		<property name="port" value="8080" />
 
+
+	<!-- Connector -->
+	<bean id="OutsideConnector" class="org.eclipse.jetty.server.nio.SelectChannelConnector">
+		<property name="host" value="${http.server.interface}" />
+		<property name="port" value="${http.server.port}" />
 		<property name="acceptors" value="1" />
 	</bean>
+
+
 
 	<!-- Server -->
 	<bean id="Server" class="org.eclipse.jetty.server.Server">
@@ -30,26 +50,20 @@
 		<property name="handler" ref="HandlerCollection" />
 	</bean>
 
+
+
 	<!-- Request handling -->
 	<bean id="HandlerCollection" class="org.prot.controller.handler.PortSelectionHandler">
 		<property name="handlers">
 			<list value-type="org.prot.controller.handler.HandlerDecorator">
-				<ref bean="ProxyHandler" />
 				<ref bean="RequestHandler" />
 			</list>
 		</property>
 	</bean>
 
 
-	<bean id="ProxyHandler" class="org.prot.controller.handler.HandlerDecorator">
-		<property name="port" value="8079" />
-		<property name="handler">
-			<bean class="org.prot.controller.handler.ControlHandler" />
-		</property>
-	</bean>
-
 	<bean id="RequestHandler" class="org.prot.controller.handler.HandlerDecorator">
-		<property name="port" value="8080" />
+		<property name="port" value="${http.server.port}" />
 		<property name="handler">
 			<bean class="org.prot.controller.handler.RequestHandler">
 				<property name="appManager" ref="AppManager" />
@@ -58,18 +72,24 @@
 		</property>
 	</bean>
 
+
+
 	<!-- Application beans -->
 	<bean id="Controller" class="org.prot.controller.Controller">
 		<property name="server" ref="Server" />
 	</bean>
 
+
 	<bean id="AppManager" class="org.prot.controller.manager.AppManager">
 	</bean>
+
+
 
 	<!-- Services -->
 	<bean id="ControllerService" class="org.prot.controller.services.ControllerServiceImpl">
 		<property name="manager" ref="AppManager" />
 	</bean>
+
 
 	<bean id="ControllerServiceExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
 		<property name="serviceName" value="ControllerService" />
@@ -77,13 +97,7 @@
 		<property name="serviceInterface"
 			value="org.prot.controller.services.ControllerService" />
 
-		<property name="registryPort" value="2299" />
-	</bean>
-
-	<!-- HTTP-Client -->
-	<bean id="HttpClient" class="org.eclipse.jetty.client.HttpClient"
-		init-method="start">
-		<property name="threadPool" ref="ThreadPool" />
+		<property name="registryPort" value="${rmi.registry.port}" />
 	</bean>
 
 </beans>

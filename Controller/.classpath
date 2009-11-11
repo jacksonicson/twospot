@@ -29,7 +29,7 @@
 	<classpathentry kind="lib" path="/Libs/lib/apache_commons/ws-commons-util-1.0.2.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/log4j-1.2.15/log4j-1.2.15.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Util"/>
-	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-beans.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-beans.jar" sourcepath="/Libs/lib/spring-framework-2.5.6.SEC01/spring-sources.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-context.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-core.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-jms.jar"/>

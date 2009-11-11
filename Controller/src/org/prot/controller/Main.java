@@ -1,6 +1,7 @@
 package org.prot.controller;
 
 import org.apache.log4j.xml.DOMConfigurator;
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 
@@ -15,6 +16,10 @@ public class Main
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring/spring.xml",
 				getClass()));
 
+		// Postprocess the factory
+		PropertyPlaceholderConfigurer conf = (PropertyPlaceholderConfigurer)factory.getBean("PropertyConfigurer");
+		conf.postProcessBeanFactory(factory);
+		
 		// Start the RMI-Services
 		factory.getBean("ControllerServiceExporter");
 		
