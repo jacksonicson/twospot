@@ -1,10 +1,16 @@
 package org.prot.appserver.config;
 
+import java.io.IOException;
+import java.util.Properties;
+
+import org.apache.log4j.Logger;
 import org.prot.appserver.app.AppInfo;
 
 public class Configuration
 {
-
+	private static Logger logger = Logger.getLogger(Configuration.class);
+	
+	// Singleton
 	private static Configuration configuration;
 
 	// Application identifier
@@ -17,14 +23,14 @@ public class Configuration
 	private int appServerPort;
 	
 	// Directory which is used to extract the application data (configuration)
-	private String workingDirectory = "C:/temp";
+	private String workingDirectory;
 	
 	// Directory which holds the current application data
 	private String appDirectory;
 	
 	// Directories with the python libs
-	private String pythonLibs = "C:/jython2.5.1/Lib"; 
-	private String djangoLibs = "C:/jython2.5.1/Lib/site-packages";
+	private String pythonLibs; 
+	private String djangoLibs;
 	
 	// AppInfo
 	private AppInfo appInfo; 
@@ -34,9 +40,26 @@ public class Configuration
 		if (Configuration.configuration == null)
 		{
 			Configuration.configuration = new Configuration();
+			loadConfiguration(Configuration.configuration); 
 		}
 
 		return Configuration.configuration;
+	}
+	
+	private static void loadConfiguration(Configuration configuration)
+	{
+		Properties props = new Properties(); 
+		try
+		{
+			props.load(Configuration.class.getResourceAsStream("/etc/config.properties"));
+			configuration.workingDirectory = props.getProperty("working.dir");
+			configuration.pythonLibs = props.getProperty("python.lib");
+			configuration.djangoLibs = props.getProperty("python.lib.site-packages");
+		} catch (IOException e)
+		{
+			logger.error(e); 
+		}
+		
 	}
 
 	public String getAppId()
