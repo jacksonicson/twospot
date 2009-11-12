@@ -7,43 +7,37 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jetty.continuation.Continuation;
+import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.prot.controller.manager.AppInfo;
 import org.prot.controller.manager.AppManager;
-import org.prot.util.handler.HttpProxyHandler;
+import org.prot.util.handler.HttpProxyHelper;
 
-public class RequestHandler extends HttpProxyHandler
+public class RequestHandler extends AbstractHandler
 {
 	private static final Logger logger = Logger.getLogger(RequestHandler.class);
 
 	private AppManager appManager;
 
-	public void setAppManager(AppManager appManager)
-	{
-		this.appManager = appManager;
-	}
+	private HttpProxyHelper proxyHelper;
 
-	@Override
-	protected String getHost(Request request)
-	{
-		return "localhost";
-	}
 
-	@Override
-	protected String getUri(Request request)
-	{
-		String uri = request.getUri().toString().substring(1);
-		uri = uri.substring(uri.indexOf("/"));
-		return uri;
-	}
 
-	protected String getUrl(Request request, AppInfo appInfo)
+	HttpURI getUrl(Request request, AppInfo appInfo)
 	{
 		String scheme = request.getScheme();
 		int port = appInfo.getPort();
-		String url = scheme + "://" + "localhost" + ":" + port;
-		return url;
+		String uri = request.getUri().toString();  
+		
+		if(uri.startsWith("/"))
+			uri = uri.substring(1);
+		uri = uri.substring(appInfo.getAppId().length());
+		
+		String url = scheme + "://" + "localhost" + ":" + port + uri;
+		logger.debug("Request URL: " + url);
+		
+		return new HttpURI(url);
 	}
 
 	@Override
@@ -67,32 +61,31 @@ public class RequestHandler extends HttpProxyHandler
 			try
 			{
 				// inform the AppManager
-				logger.info("require app");
 				AppInfo appInfo = this.appManager.requireApp(appId);
 				// the AppServer is not avialable jet - a continuation is used
 				// to restart this request when the AppServer is online
 				if (appInfo == null)
 					return; // Continues when the AppServer is available
 
-				// Generate the URL to the destination Server
-				String url = getUrl(baseRequest, appInfo);
-				String host = "localhost:" + appInfo.getPort();
-				uri = getUri(baseRequest);
-
 				// forward the request
-				forwardRequest(baseRequest, request, response, url, uri, host);
-				
-//				baseRequest.setHandled(true);
-//
-//				baseRequest.getInputStream().close();
-//				response.getOutputStream().close();
-
-				break;
+				HttpURI newurl = getUrl(baseRequest, appInfo);
+				proxyHelper.forwardRequest(baseRequest, request, response, newurl);
+				break; 
 
 			} catch (Exception e)
 			{
 				logger.error(e.getMessage(), e);
 			}
 		}
+	}
+	
+	public void setAppManager(AppManager appManager)
+	{
+		this.appManager = appManager;
+	}
+
+	public void setProxyHelper(HttpProxyHelper proxyHelper)
+	{
+		this.proxyHelper = proxyHelper;
 	}
 }
