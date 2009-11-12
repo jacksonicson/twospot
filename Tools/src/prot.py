@@ -5,6 +5,7 @@ import os
 import zipfile
 import yaml
 
+
 class InvalidDirectory(Exception):
     def __init__(self, value):
         self.value = value
@@ -159,9 +160,9 @@ def createProject(directory, projectType, projectName):
 def main(args):
     
     # Tests
-    args.append("--dir")
-    args.append("C:/temp/blabla")
-    args.append("--deploy")
+#    args.append("--dir")
+#    args.append("C:/temp/blabla")
+#    args.append("--deploy")
     
     parser = OptionParser()
     parser.add_option("--dir", action="store", type="string", )
