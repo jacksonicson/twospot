@@ -87,7 +87,6 @@ class AppMonitor implements Runnable
 					toStart = startQueue.poll();
 			}
 
-			logger.info("check"); 
 			if (toStart != null)
 			{
 				logger.info("Thread is starting a new AppServer"); 
@@ -104,18 +103,16 @@ class AppMonitor implements Runnable
 			}
 
 			// Fetching stdout from every process
-			for (AppProcess proc : processList.values())
-			{
-				try
-				{
-					proc.fetchStreams();
-				} catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
-			
-			logger.info("after fetch"); 
+//			for (AppProcess proc : processList.values())
+//			{
+//				try
+//				{
+//					proc.fetchStreams();
+//				} catch (Exception e)
+//				{
+//					e.printStackTrace();
+//				}
+//			}
 
 			// Sleep
 			try
