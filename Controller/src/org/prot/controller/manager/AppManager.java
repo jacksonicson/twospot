@@ -1,17 +1,20 @@
 package org.prot.controller.manager;
 
+import org.eclipse.jetty.util.thread.ThreadPool;
 import org.prot.controller.manager.exceptions.AppServerFailedException;
 
 public class AppManager
 {
+	private ThreadPool threadPool; 
+	
 	private AppRegistry registry;
 
 	private AppMonitor monitor;
 
-	public AppManager()
+	public void init()
 	{
 		// Initialize
-		monitor = new AppMonitor();
+		monitor = new AppMonitor(threadPool);
 		registry = new AppRegistry();
 	}
 
@@ -31,26 +34,31 @@ public class AppManager
 		// Register or load existing AppInfo
 		AppInfo appInfo = registry.registerApp(appId);
 
-		// Update the interaction time
-		appInfo.setLastInteraction(System.currentTimeMillis());
-
-		// Update status (this section is not synchronized and therefore the
-		// decisions made here could be wrong!
-		switch (appInfo.getStatus())
+		boolean wait = false;
+		boolean start = false; 
+		
+		synchronized(appInfo) 
 		{
-		case ONLINE:
-			return appInfo;
-		case STARTING:
-			waitForAppServer(appInfo);
-			break;
-		case FAILED:
-			throw new AppServerFailedException();
-		case OFFLINE:
-		case STALE:
-			appInfo.setStatus(AppState.STARTING);
-			startApp(appInfo);
-			break;
+			// Operations depends on app status
+			switch (appInfo.getStatus())
+			{
+			case ONLINE:
+				return appInfo;
+			case STARTING:
+				wait = true; 
+				break;
+			case OFFLINE:
+			case STALE:
+				appInfo.setStatus(AppState.STARTING); 
+				start = true; 
+				break;
+			}
 		}
+		
+		if(start)
+			startApp(appInfo);
+		if(wait)
+			waitForAppServer(appInfo);
 
 		return appInfo;
 	}
@@ -81,13 +89,17 @@ public class AppManager
 
 	private void startApp(AppInfo appInfo)
 	{
-		// Get a process for this application
-		AppProcess process = monitor.getProcess(appInfo);
-
+		appInfo.setStatus(AppState.STARTING);
+		
 		// Enqueue the process start
-		monitor.startProcess(process);
+		monitor.startProcess(appInfo);
 
 		// Wait until the AppServer is online
 		waitForAppServer(appInfo);
+	}
+
+	public void setThreadPool(ThreadPool threadPool)
+	{
+		this.threadPool = threadPool;
 	}
 }

@@ -7,12 +7,14 @@ import java.util.Stack;
 class AppRegistry
 {
 	private final int startPort = 9090;
+	
 	private int currentPort = startPort;
 
 	private Stack<Integer> freePorts = new Stack<Integer>();
 
 	private Map<String, AppInfo> appInfos = new HashMap<String, AppInfo>();
 
+	
 	private int getPort()
 	{
 		if (freePorts.isEmpty())

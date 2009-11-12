@@ -13,9 +13,8 @@
 
 
 	<!-- HTTP-Client -->
-	<bean id="HttpClient" class="org.eclipse.jetty.client.HttpClient"
-		init-method="start">
-		<property name="threadPool" ref="ThreadPool" />
+	<bean id="HttpClient" class="org.eclipse.jetty.client.HttpClient">
+		<!-- <property name="threadPool" ref="ThreadPool" /> -->
 	</bean>
 
 
@@ -23,7 +22,7 @@
 	<!-- ThreadPool -->
 	<bean id="ThreadPool" class="org.eclipse.jetty.util.thread.QueuedThreadPool">
 		<property name="minThreads" value="2" />
-		<property name="maxThreads" value="5" />
+		<property name="maxThreads" value="10" />
 	</bean>
 
 
@@ -53,23 +52,18 @@
 
 
 	<!-- Request handling -->
-	<bean id="HandlerCollection" class="org.prot.controller.handler.PortSelectionHandler">
+	<bean id="HandlerCollection" class="org.eclipse.jetty.server.handler.HandlerCollection">
 		<property name="handlers">
-			<list value-type="org.prot.controller.handler.HandlerDecorator">
+			<list>
 				<ref bean="RequestHandler" />
 			</list>
 		</property>
 	</bean>
 
 
-	<bean id="RequestHandler" class="org.prot.controller.handler.HandlerDecorator">
-		<property name="port" value="${http.server.port}" />
-		<property name="handler">
-			<bean class="org.prot.controller.handler.RequestHandler">
-				<property name="appManager" ref="AppManager" />
-				<property name="httpClient" ref="HttpClient" />
-			</bean>
-		</property>
+	<bean id="RequestHandler" class="org.prot.controller.handler.RequestHandler" init-method="init">
+		<property name="appManager" ref="AppManager" />
+		<property name="httpClient" ref="HttpClient" />
 	</bean>
 
 
@@ -80,7 +74,8 @@
 	</bean>
 
 
-	<bean id="AppManager" class="org.prot.controller.manager.AppManager">
+	<bean id="AppManager" class="org.prot.controller.manager.AppManager" init-method="init">
+		<property name="threadPool" ref="ThreadPool" />
 	</bean>
 
 
