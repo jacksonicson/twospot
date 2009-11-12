@@ -1,14 +1,13 @@
 package org.prot.appserver;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 
 import org.apache.log4j.Logger;
 import org.prot.appserver.app.AppInfo;
 import org.prot.appserver.appfetch.AppFetcher;
 import org.prot.appserver.config.AppConfigurer;
 import org.prot.appserver.config.Configuration;
+import org.prot.appserver.config.ConfigurationException;
 import org.prot.appserver.extract.AppExtractor;
 import org.prot.appserver.runtime.AppRuntime;
 import org.prot.appserver.runtime.NoSuchRuntimeException;
@@ -18,13 +17,15 @@ public class ServerLifecycle
 {
 	private static final Logger logger = Logger.getLogger(ServerLifecycle.class);
 
+	private static final String SERVER_ONLINE = "server online";
+
 	private Configuration configuration;
 
 	private AppFetcher appFetcher;
 	private AppExtractor appExtractor;
 	private AppConfigurer appConfigurer;
 	private RuntimeRegistry runtimeRegistry;
-	
+
 	private AppInfo appInfo = null;
 
 	public void start()
@@ -63,6 +64,7 @@ public class ServerLifecycle
 		} catch (IOException e)
 		{
 			logger.error("Error while extracting application package", e);
+			System.exit(1);
 		}
 	}
 
@@ -71,18 +73,25 @@ public class ServerLifecycle
 		logger.info("Loading app configuration");
 
 		// Configure
-		this.appInfo = appConfigurer.configure(configuration.getAppDirectory(), null);
+		try
+		{
+			this.appInfo = appConfigurer.configure(configuration.getAppDirectory(), null);
+		} catch (ConfigurationException e)
+		{
+			logger.error("Configuration failed", e);
+			System.exit(1);
+		}
 	}
 
 	public void startManagement()
 	{
-		// TODO:
+		// TODO: Start and register the JMX-Beans here
 	}
 
 	public void launchRuntime()
 	{
 		logger.info("Launching runtime");
-		
+
 		try
 		{
 			AppRuntime runtime = runtimeRegistry.getRuntime(appInfo.getRuntime());
@@ -90,11 +99,16 @@ public class ServerLifecycle
 
 		} catch (NoSuchRuntimeException e)
 		{
-			logger.error("Could not find the runtime configured in the YAML file", e);
+			logger.error("Failed launching the runtime", e);
+			System.exit(1);
+		} catch (Exception e)
+		{
+			logger.error("Failed launching the runtime", e);
+			System.exit(1);
 		}
 
 		// Use the original stdio to tell the controller
-		IODirector.getInstance().forcedStdOutPrintln("server started");
+		IODirector.getInstance().forcedStdOutPrintln(SERVER_ONLINE);
 	}
 
 	public void setAppFetcher(AppFetcher appFetcher)

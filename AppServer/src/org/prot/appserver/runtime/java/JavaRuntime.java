@@ -24,12 +24,11 @@ public class JavaRuntime implements AppRuntime
 	}
 
 	@Override
-	public void launch(AppInfo appInfo)
+	public void launch(AppInfo appInfo) throws Exception
 	{
 		logger.debug("Launching java runtime");
 
-		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring_java.xml",
-				getClass()));
+		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring_java.xml", getClass()));
 
 		// Configure server port
 		SelectChannelConnector connector = (SelectChannelConnector) factory.getBean("Connector");
@@ -37,7 +36,7 @@ public class JavaRuntime implements AppRuntime
 
 		// Deployer
 		AppDeployer deployer = (AppDeployer) factory.getBean("AppDeployer");
-		
+
 		// Start server
 		Server server = (Server) factory.getBean("Server");
 		server.addBean(deployer);
@@ -47,12 +46,13 @@ public class JavaRuntime implements AppRuntime
 		} catch (Exception e)
 		{
 			logger.error("Could not start the jetty server", e);
+			throw e;
 		}
 	}
 
 	@Override
-	public void loadConfiguration(AppInfo appInfo, Map yaml)
+	public void loadConfiguration(AppInfo appInfo, Map<?, ?> yaml)
 	{
-		
+		// Empty
 	}
 }

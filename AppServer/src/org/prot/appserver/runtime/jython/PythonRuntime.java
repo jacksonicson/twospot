@@ -25,7 +25,7 @@ public class PythonRuntime implements AppRuntime
 	}
 
 	@Override
-	public void launch(AppInfo appInfo)
+	public void launch(AppInfo appInfo) throws Exception
 	{
 		logger.debug("Launching jython runtime");
 
@@ -37,9 +37,9 @@ public class PythonRuntime implements AppRuntime
 		connector.setPort(Configuration.getInstance().getAppServerPort());
 
 		// Configure the Handler
-		PythonHandler handler = (PythonHandler)factory.getBean("PythonHandler");
+		PythonHandler handler = (PythonHandler) factory.getBean("PythonHandler");
 		handler.setAppInfo(appInfo);
-		
+
 		// Start server
 		Server server = (Server) factory.getBean("Server");
 		try
@@ -48,15 +48,17 @@ public class PythonRuntime implements AppRuntime
 		} catch (Exception e)
 		{
 			logger.error("Could not start the jetty server", e);
+			throw e;
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public void loadConfiguration(AppInfo appInfo, Map yaml)
+	public void loadConfiguration(AppInfo appInfo, Map<?, ?> yaml)
 	{
 		PythonConfiguration config = new PythonConfiguration();
-		appInfo.setRuntimeConfiguration(config); 
-		
+		appInfo.setRuntimeConfiguration(config);
+
 		List<Map<String, String>> handlers = (List<Map<String, String>>) yaml.get("handlers");
 		if (handlers != null)
 		{

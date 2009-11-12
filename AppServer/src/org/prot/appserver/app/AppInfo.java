@@ -1,19 +1,18 @@
 package org.prot.appserver.app;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 public class AppInfo
 {
+	// Binary WAR-file (downloaded from the fileserver)
 	private byte[] warFile;
 
+	// AppId
 	private String appId;
 
+	// Name of the runtime
 	private String runtime;
 
-	private RuntimeConfiguration runtimeConfiguration; 
+	// Object which contains runtime specific settings
+	private RuntimeConfiguration runtimeConfiguration;
 
 	public String getAppId()
 	{

@@ -60,7 +60,8 @@ public class Configuration
 			configuration.djangoLibs = props.getProperty("python.lib.site-packages");
 		} catch (IOException e)
 		{
-			logger.error(e); 
+			logger.error("Could not load the configuration properties", e);
+			System.exit(1);
 		}
 		
 	}

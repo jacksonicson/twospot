@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.server.HttpConnection;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Response;
@@ -42,7 +43,7 @@ public class PythonHandler extends AbstractHandler
 	{
 		try
 		{
-			logger.debug("start handle");
+			logger.debug("start python handle");
 
 			// Get the URI
 			String uri = baseRequest.getUri().toString();
@@ -61,12 +62,12 @@ public class PythonHandler extends AbstractHandler
 			if (script == null)
 			{
 				logger.debug("Request does not match a python file");
-				response.setStatus(404);
+				response.setStatus(HttpStatus.NOT_FOUND_404);
 				baseRequest.setHandled(true);
 				return;
 			}
 
-			// Establish an IO channel
+			// Create a new IO channel
 			HttpConnection httpConnection = HttpConnection.getCurrentConnection();
 			Request srcRequest = httpConnection.getRequest();
 			Response srcResponse = httpConnection.getResponse();
@@ -92,6 +93,15 @@ public class PythonHandler extends AbstractHandler
 			// Load the script
 			PyCode code = codeBuffer.loadScript(engine, script);
 
+			// If the script ist not available - NOT FOUND 404
+			if (code == null)
+			{
+				logger.error("Could not load python script");
+				response.setStatus(HttpStatus.NOT_FOUND_404);
+				baseRequest.setHandled(true);
+				return;
+			}
+
 			try
 			{
 				// Set engine environment
@@ -99,25 +109,20 @@ public class PythonHandler extends AbstractHandler
 				engine.set("wsgiChannel", io);
 				engine.set("threadName", Thread.currentThread().getName());
 
-				logger.debug("executing engine");
 				// Execute the script
 				engine.exec(code);
-				
-				logger.debug("done"); 
 
 			} catch (Exception e)
 			{
 				logger.error(e);
 			}
 
-			io.lock();
 			baseRequest.setHandled(true);
-			
-			logger.debug("request handled true"); 
-			
+
 		} catch (Exception e)
 		{
-			logger.error(e); 
+			logger.error("Error in the python handler", e);
+			System.exit(1);
 		}
 	}
 }

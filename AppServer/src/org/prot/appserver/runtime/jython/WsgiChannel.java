@@ -34,12 +34,6 @@ public class WsgiChannel
 	// Output
 	private OutputStream out;
 
-	boolean locked = false; 
-	public void lock()
-	{
-		locked = true; 
-	}
-	
 	private RequestContentIterator getRequestContentIterator() throws IOException
 	{
 		requestContentIterator = new RequestContentIterator();
@@ -48,10 +42,6 @@ public class WsgiChannel
 
 	private OutputStream getOutputStream() throws IOException
 	{
-		logger.debug("get out");
-		if(locked)
-			logger.error("ERRRRRRROR");
-		
 		// Create output streams
 		out = this.response.getOutputStream();
 		return out;
@@ -59,20 +49,12 @@ public class WsgiChannel
 
 	private InputStream getInputStream() throws IOException
 	{
-		logger.debug("get in");
-		if(locked)
-			logger.error("ERRRRRRROR");
-		
 		in = this.request.getInputStream();
 		return in;
 	}
 
 	private BufferedReader getBufferedReader() throws IOException
 	{
-		logger.debug("get buffer read");
-		if(locked)
-			logger.error("ERRRRRRROR");
-		
 		inReader = new BufferedReader(new InputStreamReader(in));
 		return inReader;
 	}

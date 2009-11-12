@@ -8,6 +8,7 @@ import org.prot.appserver.config.Configuration;
 
 public class AppDeployer extends AbstractLifeCycle
 {
+	@SuppressWarnings("unused")
 	private AppInfo appInfo;
 
 	private HandlerCollection contexts;

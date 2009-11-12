@@ -25,7 +25,7 @@ public class EnginePool
 		// Server
 		engineSys.path.append(Py.newString(new File("/bin").getAbsolutePath()));
 
-		// Application
+		// Server specific python scripts
 		engineSys.path.append(Py.newString(config.getAppDirectory() + "/WEB-INF/python"));
 	}
 

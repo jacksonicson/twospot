@@ -23,7 +23,6 @@ public class Monitor extends Thread
 
 	private final int CONTROLLER_PORT = 8080;
 
-
 	public Monitor()
 	{
 		try
@@ -31,7 +30,7 @@ public class Monitor extends Thread
 			this.start();
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			logger.error("", e);
 			System.exit(1);
 		}
 	}
@@ -46,12 +45,12 @@ public class Monitor extends Thread
 				URLConnection connection = controller.openConnection();
 
 				DataInputStream in = new DataInputStream(connection.getInputStream());
-				int inByte = in.read();
+				in.read();
 				in.close();
 
 			} catch (IOException e)
 			{
-				logger.error(e);
+				logger.error("", e);
 				System.exit(1);
 			}
 
@@ -60,7 +59,8 @@ public class Monitor extends Thread
 				sleep(sleepTime);
 			} catch (InterruptedException e)
 			{
-				logger.error(e);
+				logger.error("", e);
+				System.exit(1);
 			}
 		}
 	}

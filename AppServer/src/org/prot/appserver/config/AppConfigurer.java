@@ -22,35 +22,36 @@ public class AppConfigurer
 
 	private RuntimeRegistry runtimeRegistry;
 
-	public AppInfo configure(String appDirectory, RuntimeConfigurer rtConfig)
+	public AppInfo configure(String appDirectory, RuntimeConfigurer rtConfig) throws ConfigurationException
 	{
 		try
 		{
 			// Do the general configuration
-			Map yamlObj = loadFile(appDirectory);
+			Map<?, ?> yamlObj = loadFile(appDirectory);
 			AppInfo appInfo = loadBasicConfiguration(yamlObj);
-			
+
 			// Do the runtime specific configuration
 			AppRuntime runtime = runtimeRegistry.getRuntime(appInfo.getRuntime());
 			runtime.loadConfiguration(appInfo, yamlObj);
-			
-			return appInfo; 
+
+			return appInfo;
 
 		} catch (InvalidYamlFileException e)
 		{
 			logger.error("Invalid YAML application configuration", e);
+			throw new ConfigurationException();
 		} catch (IOException e)
 		{
 			logger.error("Error while reading the YAML application configuration", e);
+			throw new ConfigurationException();
 		} catch (NoSuchRuntimeException e)
 		{
 			logger.error("Could not find the runtime configured in the YAML file", e);
+			throw new ConfigurationException();
 		}
-		
-		return null; 
 	}
 
-	private AppInfo loadBasicConfiguration(Map yaml)
+	private AppInfo loadBasicConfiguration(Map<?, ?> yaml)
 	{
 		AppInfo appInfo = new AppInfo();
 
@@ -59,11 +60,11 @@ public class AppConfigurer
 
 		String runtime = (String) yaml.get("runtime");
 		appInfo.setRuntime(runtime);
-		
+
 		return appInfo;
 	}
 
-	private Map loadFile(String appDirectory) throws InvalidYamlFileException, IOException
+	private Map<?, ?> loadFile(String appDirectory) throws InvalidYamlFileException, IOException
 	{
 		File yamlFile = new File(appDirectory + "/" + CONFIG_FILE);
 		InputStream in = new FileInputStream(yamlFile);
@@ -71,10 +72,10 @@ public class AppConfigurer
 		Yaml yaml = new Yaml();
 		Object yamlObj = yaml.load(in);
 
-		if (yamlObj instanceof Map == false)
+		if (yamlObj instanceof Map<?, ?> == false)
 			throw new InvalidYamlFileException();
 
-		return (Map) yamlObj;
+		return (Map<?, ?>) yamlObj;
 	}
 
 	public void setRuntimeRegistry(RuntimeRegistry runtimeRegistry)

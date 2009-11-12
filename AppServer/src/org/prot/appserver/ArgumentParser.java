@@ -47,11 +47,15 @@ public class ArgumentParser
 		{
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("AppServer", options);
+		
+			// Exit process
 			System.exit(0);
 		} catch (NumberFormatException e)
 		{
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("AppServer", options);
+			
+			// Exit process
 			System.exit(0);
 		}
 	}
