@@ -40,7 +40,7 @@ public class HttpAppFetcher implements AppFetcher
 		
 		ContentExchange exchange = new ContentExchange(true);
 		exchange.setMethod("GET");
-		exchange.setURL("http://localhost:5050/app/" + appId);
+		exchange.setURL("http://localhost:5050/" + appId); // TODO: Configuration!!!
 		try
 		{
 			startHttp(); 

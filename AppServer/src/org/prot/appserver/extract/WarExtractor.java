@@ -39,6 +39,9 @@ public class WarExtractor implements AppExtractor
 	{
 		ZipInputStream zipIn = new ZipInputStream(new ByteArrayInputStream(warFile));
 		ZipEntry entry;
+		
+		logger.debug("Reading zip entries");
+		int fileCounter = 0; 
 		while ((entry = zipIn.getNextEntry()) != null)
 		{
 			logger.debug("zip entry: " + entry.isDirectory() + " - " + entry.getName());
@@ -48,6 +51,7 @@ public class WarExtractor implements AppExtractor
 				dir.mkdir();
 			} else
 			{
+				fileCounter++; 
 				FileOutputStream fos = new FileOutputStream(folder + "/" + entry.getName());
 				BufferedOutputStream fo = new BufferedOutputStream(fos);
 
@@ -62,6 +66,6 @@ public class WarExtractor implements AppExtractor
 				fo.close();
 			}
 		}
-
+		logger.debug(fileCounter + " files extracted");
 	}
 }

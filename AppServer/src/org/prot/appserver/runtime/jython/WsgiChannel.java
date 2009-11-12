@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Response;
 import org.python.core.PyInteger;
@@ -18,6 +19,8 @@ import org.python.core.PyString;
 public class WsgiChannel
 {
 	private static final long serialVersionUID = -4379580145439172410L;
+	
+	private static final Logger logger = Logger.getLogger(WsgiChannel.class);
 
 	// Request & Response
 	private Request request;
@@ -31,6 +34,12 @@ public class WsgiChannel
 	// Output
 	private OutputStream out;
 
+	boolean locked = false; 
+	public void lock()
+	{
+		locked = true; 
+	}
+	
 	private RequestContentIterator getRequestContentIterator() throws IOException
 	{
 		requestContentIterator = new RequestContentIterator();
@@ -39,6 +48,10 @@ public class WsgiChannel
 
 	private OutputStream getOutputStream() throws IOException
 	{
+		logger.debug("get out");
+		if(locked)
+			logger.error("ERRRRRRROR");
+		
 		// Create output streams
 		out = this.response.getOutputStream();
 		return out;
@@ -46,12 +59,20 @@ public class WsgiChannel
 
 	private InputStream getInputStream() throws IOException
 	{
+		logger.debug("get in");
+		if(locked)
+			logger.error("ERRRRRRROR");
+		
 		in = this.request.getInputStream();
 		return in;
 	}
 
 	private BufferedReader getBufferedReader() throws IOException
 	{
+		logger.debug("get buffer read");
+		if(locked)
+			logger.error("ERRRRRRROR");
+		
 		inReader = new BufferedReader(new InputStreamReader(in));
 		return inReader;
 	}

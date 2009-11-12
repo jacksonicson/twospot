@@ -17,7 +17,7 @@ public class Monitor extends Thread
 {
 	private static final Logger logger = Logger.getLogger(Monitor.class);
 
-	private final int sleepTime = 10000;
+	private final int sleepTime = 3000;
 
 	private final String CONTROLLER_HOST = "127.0.0.1";
 

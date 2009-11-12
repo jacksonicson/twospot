@@ -40,71 +40,84 @@ public class PythonHandler extends AbstractHandler
 	public void handle(String target, Request baseRequest, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException
 	{
-
-		// Get the URI
-		String uri = baseRequest.getUri().toString();
-
-		// Get the python-file
-		PythonConfiguration rtConfig = (PythonConfiguration) appInfo.getRuntimeConfiguration();
-		Set<WebConfiguration> webConfigs = rtConfig.getWebConfigs();
-		String script = null;
-		for (WebConfiguration config : webConfigs)
-		{
-			if ((script = config.matches(uri)) != null)
-				break;
-		}
-
-		// Error-Handling if no python-file found
-		if (script == null)
-		{
-			logger.debug("Request does not match a python file");
-			response.setStatus(404);
-			baseRequest.setHandled(true);
-			return;
-		}
-
-		// Establish an IO channel
-		HttpConnection httpConnection = HttpConnection.getCurrentConnection();
-		Request srcRequest = httpConnection.getRequest();
-		Response srcResponse = httpConnection.getResponse();
-		WsgiChannel io = new WsgiChannel(srcRequest, srcResponse);
-
-		// Dictionary which contains the request header
-		PyDictionary dict = new PyDictionary();
-		for (Enumeration<String> names = baseRequest.getHeaderNames(); names.hasMoreElements();)
-		{
-			String name = names.nextElement();
-			String value = baseRequest.getHeader(name);
-			dict.put(name, value);
-		}
-
-		dict.put("REQUEST_METHOD", baseRequest.getMethod());
-		dict.put("SERVER_NAME", baseRequest.getServerName());
-		dict.put("SERVER_PORT", baseRequest.getServerPort());
-		dict.put("PATH_INFO", baseRequest.getUri());
-
-		// Acquire an engine
-		PythonInterpreter engine = enginePool.acquireInterpreter();
-
-		// Load the script
-		PyCode code = codeBuffer.loadScript(engine, script);
-
 		try
 		{
-			// Set engine environment
-			engine.set("headers", dict);
-			engine.set("wsgiChannel", io);
-			engine.set("threadName", Thread.currentThread().getName());
+			logger.debug("start handle");
 
-			// Execute the script
-			engine.exec(code);
+			// Get the URI
+			String uri = baseRequest.getUri().toString();
 
+			// Get the python-file
+			PythonConfiguration rtConfig = (PythonConfiguration) appInfo.getRuntimeConfiguration();
+			Set<WebConfiguration> webConfigs = rtConfig.getWebConfigs();
+			String script = null;
+			for (WebConfiguration config : webConfigs)
+			{
+				if ((script = config.matches(uri)) != null)
+					break;
+			}
+
+			// Error-Handling if no python-file found
+			if (script == null)
+			{
+				logger.debug("Request does not match a python file");
+				response.setStatus(404);
+				baseRequest.setHandled(true);
+				return;
+			}
+
+			// Establish an IO channel
+			HttpConnection httpConnection = HttpConnection.getCurrentConnection();
+			Request srcRequest = httpConnection.getRequest();
+			Response srcResponse = httpConnection.getResponse();
+			WsgiChannel io = new WsgiChannel(srcRequest, srcResponse);
+
+			// Dictionary which contains the request header
+			PyDictionary dict = new PyDictionary();
+			for (Enumeration<String> names = baseRequest.getHeaderNames(); names.hasMoreElements();)
+			{
+				String name = names.nextElement();
+				String value = baseRequest.getHeader(name);
+				dict.put(name, value);
+			}
+
+			dict.put("REQUEST_METHOD", baseRequest.getMethod());
+			dict.put("SERVER_NAME", baseRequest.getServerName());
+			dict.put("SERVER_PORT", baseRequest.getServerPort());
+			dict.put("PATH_INFO", baseRequest.getUri());
+
+			// Acquire an engine
+			PythonInterpreter engine = enginePool.acquireInterpreter();
+
+			// Load the script
+			PyCode code = codeBuffer.loadScript(engine, script);
+
+			try
+			{
+				// Set engine environment
+				engine.set("headers", dict);
+				engine.set("wsgiChannel", io);
+				engine.set("threadName", Thread.currentThread().getName());
+
+				logger.debug("executing engine");
+				// Execute the script
+				engine.exec(code);
+				
+				logger.debug("done"); 
+
+			} catch (Exception e)
+			{
+				logger.error(e);
+			}
+
+			io.lock();
+			baseRequest.setHandled(true);
+			
+			logger.debug("request handled true"); 
+			
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			logger.error(e); 
 		}
-
-		response.getOutputStream().close();
-		baseRequest.setHandled(true);
 	}
 }

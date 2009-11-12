@@ -9,7 +9,7 @@
 
 		<property name="port" value="9090" />
 
-		<property name="acceptors" value="1" />
+		<property name="acceptors" value="3" />
 		<property name="statsOn" value="false" />
 	</bean>
 
@@ -18,7 +18,7 @@
 		<property name="threadPool">
 			<bean class="org.eclipse.jetty.util.thread.QueuedThreadPool">
 				<property name="minThreads" value="3" />
-				<property name="maxThreads" value="8" />
+				<property name="maxThreads" value="20" />
 			</bean>
 		</property>
 

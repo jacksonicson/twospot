@@ -48,11 +48,11 @@ public class ServerLifecycle
 
 	public void extractApp()
 	{
-		logger.info("Extracting app archive");
-
 		byte[] archive = appInfo.getWarFile();
 		String destPath = configuration.getWorkingDirectory();
 		String destDir = appInfo.getAppId();
+
+		logger.info("Extracting app archive to: " + destPath + " dir:" + destDir);
 
 		try
 		{
@@ -71,10 +71,10 @@ public class ServerLifecycle
 		// Configure
 		this.appInfo = appConfigurer.configure(configuration.getAppDirectory(), null);
 	}
-	
+
 	public void startManagement()
 	{
-		// TODO: 
+		// TODO:
 	}
 
 	public void launchRuntime()
@@ -83,13 +83,13 @@ public class ServerLifecycle
 		try
 		{
 			AppRuntime runtime = runtimeRegistry.getRuntime(appInfo.getRuntime());
-			runtime.launch(this.appInfo); 
-			
+			runtime.launch(this.appInfo);
+
 		} catch (NoSuchRuntimeException e)
 		{
 			logger.error("Could not find the runtime configured in the YAML file", e);
 		}
-		
+
 		// Use the stdio to tell the controller that the server is running
 		System.out.println("server started");
 	}
