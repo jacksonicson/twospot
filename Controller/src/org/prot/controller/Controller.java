@@ -22,7 +22,8 @@ public class Controller
 			server.start();
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			logger.error("Could not start the server", e);
+			System.exit(1);
 		}
 	}
 
