@@ -8,19 +8,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.prot.frontend.cache.AppCache;
 import org.prot.manager.config.ControllerInfo;
 import org.prot.manager.services.FrontendService;
-import org.prot.util.handler.HttpProxyHandler;
+import org.prot.util.handler.HttpProxyHelper;
 
-public class ProxyHandler extends HttpProxyHandler
+public class ProxyHandler extends AbstractHandler
 {
 	private static final Logger logger = Logger.getLogger(ProxyHandler.class);
 
 	protected FrontendService frontendService;
 
 	private AppCache appCache;
+	
+	private HttpProxyHelper proxyHelper;
 
 	@Override
 	public void handle(String target, Request baseRequest, HttpServletRequest request,
@@ -59,11 +63,13 @@ public class ProxyHandler extends HttpProxyHandler
 
 			String fUrl = request.getRequestURL().toString();
 			fUrl = "http://" + info.getAddress() + ":" + info.getPort();
-
 			String fUri = "/" + appId + request.getRequestURI();
-			String fHost = info.getAddress() + ":" + info.getPort();
+			fUrl = fUrl + fUri; 
 
-			forwardRequest(baseRequest, request, response, fUrl, fUri, fHost);
+			logger.debug("Forarding to URL: " + fUrl);
+			
+			HttpURI uri = new HttpURI(fUrl);
+			proxyHelper.forwardRequest(baseRequest, request, response, uri);
 
 		} catch (Exception e)
 		{
@@ -79,5 +85,10 @@ public class ProxyHandler extends HttpProxyHandler
 	public void setAppCache(AppCache appCache)
 	{
 		this.appCache = appCache;
+	}
+
+	public void setProxyHelper(HttpProxyHelper proxyHelper)
+	{
+		this.proxyHelper = proxyHelper;
 	}
 }
