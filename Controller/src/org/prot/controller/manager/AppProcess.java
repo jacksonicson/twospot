@@ -1,15 +1,9 @@
 package org.prot.controller.manager;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.channels.WritableByteChannel;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -86,7 +80,6 @@ class AppProcess
 
 			// Wait until the Server running
 			waitForAppServer();
-			this.appInfo.setStatus(AppState.ONLINE);
 
 		} catch (IOException e)
 		{
@@ -175,7 +168,9 @@ class AppProcess
 			{
 				if (line.equals("server started"))
 				{
+					System.out.println(">>>" + line);
 					logger.info("AppServer is online: " + this.appInfo.getAppId());
+					this.appInfo.setStatus(AppState.ONLINE); 
 					return;
 				} else
 				{

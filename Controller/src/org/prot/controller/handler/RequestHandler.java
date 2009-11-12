@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.continuation.Continuation;
 import org.eclipse.jetty.server.Request;
 import org.prot.controller.manager.AppInfo;
 import org.prot.controller.manager.AppManager;
@@ -66,32 +67,26 @@ public class RequestHandler extends HttpProxyHandler
 			try
 			{
 				// inform the AppManager
-				logger.info("require app"); 
+				logger.info("require app");
 				AppInfo appInfo = this.appManager.requireApp(appId);
-				if(appInfo == null) // TODO: Proper continuation handling
-				{
-					System.out.println("EXIT HANDLE WITH CONTINUATION"); 
-					return;
-				}
-				
-				logger.debug("got appinfo"); 
+				// the AppServer is not avialable jet - a continuation is used
+				// to restart this request when the AppServer is online
+				if (appInfo == null)
+					return; // Continues when the AppServer is available
 
 				// Generate the URL to the destination Server
 				String url = getUrl(baseRequest, appInfo);
-				String host = "localhost:" + appInfo.getPort(); 
+				String host = "localhost:" + appInfo.getPort();
 				uri = getUri(baseRequest);
 
 				// forward the request
-				logger.info("start forwarding");
 				forwardRequest(baseRequest, request, response, url, uri, host);
-				logger.info("forward done"); 
-				baseRequest.setHandled(true);
 				
-				baseRequest.getInputStream().close();
-				response.getOutputStream().close();
-				
-				logger.info("closed");
-				
+//				baseRequest.setHandled(true);
+//
+//				baseRequest.getInputStream().close();
+//				response.getOutputStream().close();
+
 				break;
 
 			} catch (Exception e)
