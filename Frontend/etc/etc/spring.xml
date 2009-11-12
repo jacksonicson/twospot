@@ -55,9 +55,9 @@
 
 	<bean id="FilterHandler" class="org.prot.frontend.handlers.FilterHandler">
 		<property name="frontendService" ref="FrontendService" />
-		<property name="threadPool" ref="ThreadPool" />
 		<property name="appCache" ref="AppCache" />
 		<property name="deployer" ref="AppDeployer" />
+		<property name="httpClient" ref="HttpClient" />
 	</bean>
 
 

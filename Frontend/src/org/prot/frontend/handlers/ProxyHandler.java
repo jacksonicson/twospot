@@ -65,8 +65,6 @@ public class ProxyHandler extends HttpProxyHandler
 
 			forwardRequest(baseRequest, request, response, fUrl, fUri, fHost);
 
-			baseRequest.setHandled(true);
-
 		} catch (Exception e)
 		{
 			e.printStackTrace();
