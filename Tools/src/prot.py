@@ -139,8 +139,8 @@ def createProject(directory, projectType, projectName):
         raise InvalidProjectType("Valid project types are java, python")
     
     # Create the YAML-file
-    yaml = ["appId: %s \n" % projectName,
-            "runtime: %s \n" % projectType,
+    yaml = ["appId: %s\n" % projectName,
+            "runtime: %s\n" % projectType,
             "\n"
             ]
     
