@@ -25,7 +25,7 @@ class AppMonitor implements Runnable
 	private Map<AppInfo, AppProcess> processList = new HashMap<AppInfo, AppProcess>();
 
 	// Worker queue
-	private Queue<AppProcess> startQueue = new LinkedBlockingQueue<AppProcess>();
+	private Queue<AppProcess> jobQueue = new LinkedBlockingQueue<AppProcess>();
 
 	public AppMonitor(ThreadPool threadPool)
 	{
@@ -34,10 +34,10 @@ class AppMonitor implements Runnable
 
 	public void startProcess(AppInfo info)
 	{
-		synchronized (startQueue)
+		synchronized (jobQueue)
 		{
-			logger.info("Starting new AppServer: " + info.getAppId());
-			
+			logger.debug("New AppServer-Job: " + info.getAppId());
+
 			AppProcess process = this.processList.get(info);
 			if (process == null)
 			{
@@ -45,7 +45,8 @@ class AppMonitor implements Runnable
 				this.processList.put(info, process);
 			}
 
-			startQueue.add(process);
+			jobQueue.add(process);
+			jobQueue.notifyAll();
 		}
 
 		synchronized (this)
@@ -64,10 +65,11 @@ class AppMonitor implements Runnable
 
 			HttpConnection con = HttpConnection.getCurrentConnection();
 			Continuation continuation = ContinuationSupport.getContinuation(con.getRequest());
-			System.out.println("SUSPENDING !!!!");
-			appInfo.conts.add(continuation);
+
+			logger.debug("Suspending the request");
+			appInfo.addContinuation(continuation);
 			continuation.suspend();
-			System.out.println("AFTER SUSPEND");
+
 			return true;
 		}
 	}
@@ -81,46 +83,31 @@ class AppMonitor implements Runnable
 			AppProcess toStart = null;
 
 			// Get the next process from the worker queue
-			synchronized (startQueue)
+			synchronized (jobQueue)
 			{
-				if (!startQueue.isEmpty())
-					toStart = startQueue.poll();
+				while (jobQueue.isEmpty())
+				{
+					try
+					{
+						jobQueue.wait();
+					} catch (InterruptedException e)
+					{
+						logger.error("Interruption in AppStarter-Thread", e);
+					}
+				}
+				
+				toStart = jobQueue.poll();
 			}
 
 			if (toStart != null)
 			{
-				logger.info("Thread is starting a new AppServer"); 
-				
+				logger.debug("Starting new AppServer");
+
+				// Start
 				toStart.startOrRestart();
 
-				for (Continuation cont : toStart.getAppInfo().conts)
-				{
-					synchronized (toStart.getAppInfo())
-					{
-						cont.resume();
-					}
-				}
-			}
-
-			// Fetching stdout from every process
-//			for (AppProcess proc : processList.values())
-//			{
-//				try
-//				{
-//					proc.fetchStreams();
-//				} catch (Exception e)
-//				{
-//					e.printStackTrace();
-//				}
-//			}
-
-			// Sleep
-			try
-			{
-				Thread.sleep(500);
-			} catch (InterruptedException e)
-			{
-				e.printStackTrace();
+				// Resume all Continuations 
+				toStart.getAppInfo().resume(); 
 			}
 		}
 	}

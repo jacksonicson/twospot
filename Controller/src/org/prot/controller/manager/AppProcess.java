@@ -162,42 +162,6 @@ class AppProcess
 		return jars;
 	}
 
-	// Process-IO
-	private ReadableByteChannel source;
-	private WritableByteChannel destination;
-	private ByteArrayOutputStream outstream;
-	private ByteBuffer buffer = ByteBuffer.allocateDirect(128 * 1024);
-
-	void fetchStreams() throws Exception
-	{
-//		if (process == null)
-//			return;
-//
-//		if (source == null)
-//		{
-//			InputStream in = process.getInputStream();
-//			source = Channels.newChannel(in);
-//			outstream = new ByteArrayOutputStream(5 * 1024);
-//			destination = Channels.newChannel(System.out);
-//		}
-
-//		while (source.isOpen())
-//		{
-//			source.
-//			if (source.read(buffer) == -1)
-//				break;
-//
-//			buffer.flip();
-//
-//			logger.info("-- stdio from: " + appInfo.getAppId() + "----");
-//			while (buffer.hasRemaining())
-//				destination.write(buffer);
-//			logger.info("-- end ----");
-//
-//			buffer.clear();
-//		}
-	}
-
 	private void waitForAppServer()
 	{
 		try

@@ -17,7 +17,17 @@ public class AppInfo
 	
 	private long lastInteraction; 
 	
-	List<Continuation> conts = new ArrayList<Continuation>();
+	private List<Continuation> continuations = new ArrayList<Continuation>();
+	
+	public synchronized void addContinuation(Continuation continuation) {
+		this.continuations.add(continuation); 
+	}
+	
+	public synchronized void resume()
+	{
+		for(Continuation continuation : continuations)
+			continuation.resume(); 
+	}
 	
 	public String getAppId()
 	{

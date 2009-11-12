@@ -21,7 +21,7 @@ public class AppManager
 	{
 		AppInfo appInfo = registry.registerApp(appId);
 
-		AppState tmpState = null;
+		AppState todo = null;
 
 		synchronized (appInfo)
 		{
@@ -31,17 +31,17 @@ public class AppManager
 			case ONLINE:
 				return appInfo;
 			case STARTING:
-				tmpState = AppState.STARTING;
+				todo = AppState.STARTING;
 				break;
 			case OFFLINE:
 			case STALE:
 				appInfo.setStatus(AppState.STARTING);
-				tmpState = AppState.OFFLINE;
+				todo = AppState.OFFLINE;
 				break;
 			}
 		}
 
-		switch (tmpState)
+		switch (todo)
 		{
 		case OFFLINE:
 			if (startApp(appInfo))
@@ -59,9 +59,6 @@ public class AppManager
 	public void reportStaleApp(String appId)
 	{
 		AppInfo appInfo = registry.getAppInfo(appId);
-		if (appInfo == null)
-			return;
-
 		appInfo.setStatus(AppState.STALE);
 	}
 
