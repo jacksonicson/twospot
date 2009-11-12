@@ -13,6 +13,9 @@ public class Configuration
 	// Singleton
 	private static Configuration configuration;
 
+	// Enable stdout
+	private boolean enableStdOut; 
+	
 	// Application identifier
 	private String appId;
 
@@ -140,5 +143,15 @@ public class Configuration
 	public void setAppInfo(AppInfo appInfo)
 	{
 		this.appInfo = appInfo;
+	}
+
+	public boolean isEnableStdOut()
+	{
+		return enableStdOut;
+	}
+
+	public void setEnableStdOut(boolean enableStdOut)
+	{
+		this.enableStdOut = enableStdOut;
 	}
 }

@@ -24,7 +24,7 @@ public class ServerLifecycle
 	private AppExtractor appExtractor;
 	private AppConfigurer appConfigurer;
 	private RuntimeRegistry runtimeRegistry;
-
+	
 	private AppInfo appInfo = null;
 
 	public void start()
@@ -83,24 +83,6 @@ public class ServerLifecycle
 	{
 		logger.info("Launching runtime");
 		
-		// Creat a backuo of the System.out
-		PrintStream outBackup = System.out;
-		
-		// A new Stream which drops everything
-		PrintStream devNull = new PrintStream(new OutputStream() {
-			@Override
-			public void write(int b) throws IOException
-			{
-				// Do nothing
-			}
-		});
-		
-		// Redirect the err and out streams
-		// INFO: The Log4j streams are *not* redirected
-		System.setOut(devNull);
-		System.setErr(devNull);
-		
-		// Finally launch the server with the new streams
 		try
 		{
 			AppRuntime runtime = runtimeRegistry.getRuntime(appInfo.getRuntime());
@@ -112,7 +94,7 @@ public class ServerLifecycle
 		}
 
 		// Use the original stdio to tell the controller
-		outBackup.println("server started");
+		IODirector.getInstance().forcedStdOutPrintln("server started");
 	}
 
 	public void setAppFetcher(AppFetcher appFetcher)

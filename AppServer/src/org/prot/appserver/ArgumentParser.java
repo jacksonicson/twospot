@@ -27,6 +27,9 @@ public class ArgumentParser
 				"appSrvPort");
 		options.addOption(appServerPort);
 
+		Option stdio = OptionBuilder.withArgName("write sdtout messages").hasArg().create("stdio");
+		options.addOption(stdio);
+
 		try
 		{
 			CommandLineParser parser = new GnuParser();
@@ -36,6 +39,9 @@ public class ArgumentParser
 			config.setAppId(cmd.getOptionValue("appId"));
 			config.setControlPort(new Integer(cmd.getOptionValue("ctrlPort")));
 			config.setAppServerPort(new Integer(cmd.getOptionValue("appSrvPort")));
+
+			if (cmd.hasOption("stdio"))
+				config.setEnableStdOut(Boolean.parseBoolean(cmd.getOptionValue("stdio")));
 
 		} catch (ParseException e)
 		{
