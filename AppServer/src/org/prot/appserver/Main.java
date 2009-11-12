@@ -9,11 +9,15 @@ public class Main
 
 	public Main()
 	{
+		// Start the IODirector
+		IODirector director = new IODirector();
+		
+		
 		// Configure logger
 		DOMConfigurator.configure(Main.class.getResource("/etc/log4j.xml"));
-
+		
 		// Start the Monitor
-		new Monitor(); 
+//		new Monitor(); 
 		
 		// Create beans
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring.xml", getClass()));
