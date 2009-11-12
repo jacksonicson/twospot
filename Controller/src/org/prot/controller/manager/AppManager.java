@@ -48,7 +48,7 @@ public class AppManager
 				return null;
 			break;
 		case STARTING:
-			if (waitForAppServer(appInfo))
+			if (monitor.waitForApplication(appInfo))
 				return null;
 			break;
 		}
@@ -62,18 +62,13 @@ public class AppManager
 		appInfo.setStatus(AppState.STALE);
 	}
 
-	private boolean waitForAppServer(AppInfo appInfo)
-	{
-		return monitor.waitForApplication(appInfo);
-	}
-
 	private boolean startApp(AppInfo appInfo)
 	{
 		// Enqueue the process start
 		monitor.startProcess(appInfo);
 
 		// Wait until the AppServer is online
-		return waitForAppServer(appInfo);
+		return monitor.waitForApplication(appInfo);
 	}
 
 	public void setThreadPool(ThreadPool threadPool)

@@ -42,7 +42,7 @@ class AppProcess
 		stopAndClean();
 	}
 
-	public void startOrRestart()
+	public void startOrRestart() throws IOException
 	{
 		// Kill the old process if exists
 		if (process != null)
@@ -87,36 +87,11 @@ class AppProcess
 			this.appInfo.setStatus(AppState.FAILED);
 
 			// Log the error
-			logger.error("Could not start a new server process - AppId: " + appInfo.getAppId() + " Command: "
-					+ command.toString(), e);
+			logger.error("Could not start a new server process (AppId: " + appInfo.getAppId() + " Command: "
+					+ command.toString() + ")", e);
+			
+			throw e; 
 		}
-
-	}
-
-	private String loadClasspath2()
-	{
-		String lib = "../Libs";
-		String a = "" + lib + "/lib/jetty-7.0.0/servlet-api-2.5.jar;" + lib
-				+ "/lib/apache_commons/commons-logging-1.1.1.jar;" + lib
-				+ "/lib/snakeyaml-1.5/snakeyaml-1.5.jar;" + lib + "/lib/jython-2.5.1/jython.jar;" + lib
-				+ "/lib/log4j-1.2.15/log4j-1.2.15.jar;" + lib
-				+ "/lib/spring-framework-2.5.6.SEC01/modules/spring-core.jar;" + lib
-				+ "/lib/spring-framework-2.5.6.SEC01/spring.jar;" + lib
-				+ "/lib/jetty-7.0.0/jetty-deploy-7.0.0.v20091005.jar;" + lib
-				+ "/lib/jetty-7.0.0/jetty-http-7.0.0.v20091005.jar;" + lib
-				+ "/lib/jetty-7.0.0/jetty-io-7.0.0.v20091005.jar;" + lib
-				+ "/lib/jetty-7.0.0/jetty-server-7.0.0.v20091005.jar;" + lib
-				+ "/lib/jetty-7.0.0/jetty-servlet-7.0.0.v20091005.jar;" + lib
-				+ "/lib/jetty-7.0.0/jetty-servlets-7.0.0.v20091005.jar;" + lib
-				+ "/lib/jetty-7.0.0/jetty-util-7.0.0.v20091005.jar;" + lib
-				+ "/lib/apache-cli-1.2/commons-cli-1.2.jar;" + lib
-				+ "/lib/jetty-7.0.0/jetty-client-7.0.0.v20091005.jar;" + lib
-				+ "/lib/jetty-7.0.0/jetty-webapp-7.0.0.v20091005.jar;" + lib
-				+ "/lib/jetty-7.0.0/jetty-continuation-7.0.0.v20091005.jar;";
-
-		a += "bin";
-
-		return a;
 
 	}
 
@@ -155,13 +130,13 @@ class AppProcess
 		return jars;
 	}
 
-	private void waitForAppServer()
+	private void waitForAppServer() throws IOException
 	{
+		// create IO streams
+		BufferedReader stdInStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
 		try
 		{
-			// create IO streams
-			BufferedReader stdInStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
 			// read input
 			String line = "";
 			while ((line = stdInStream.readLine()) != null)
@@ -170,7 +145,6 @@ class AppProcess
 				{
 					System.out.println(">>>" + line);
 					logger.info("AppServer is online: " + this.appInfo.getAppId());
-					this.appInfo.setStatus(AppState.ONLINE); 
 					return;
 				} else
 				{
@@ -183,11 +157,13 @@ class AppProcess
 			// Log the error
 			logger.error("Could not start a new server process - AppId: " + appInfo.getAppId(), e);
 
-			// Update status
-			this.appInfo.setStatus(AppState.FAILED);
-
 			// Could not verify if server is online so kill it
 			stopAndClean();
+
+			throw e;
+		} finally
+		{
+			stdInStream.close();
 		}
 	}
 }

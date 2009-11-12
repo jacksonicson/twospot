@@ -46,11 +46,8 @@ class AppRegistry
 		if (appInfo != null)
 			return appInfo; 
 
-		appInfo = new AppInfo();
-		appInfo.setAppId(appId);
+		appInfo = new AppInfo(appId, getPort());
 		putApp(appInfo);
-		appInfo.setPort(getPort());
-		appInfo.setManagementPort(getPort());
 
 		return appInfo;
 	}

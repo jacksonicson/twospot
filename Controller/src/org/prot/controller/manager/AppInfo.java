@@ -7,36 +7,40 @@ import org.eclipse.jetty.continuation.Continuation;
 
 public class AppInfo
 {
-	private String appId; 
-	
-	private int port;
-	
-	private int managementPort; 
-	
-	private AppState status = AppState.OFFLINE; 
-	
-	private long lastInteraction; 
-	
+	// AppId
+	private final String appId;
+
+	// Port under which the appserver runs
+	private final int port;
+
+	// State of the appserver
+	private AppState status = AppState.OFFLINE;
+
+	// Continuations for requests which are waiting for this appserver
 	private List<Continuation> continuations = new ArrayList<Continuation>();
-	
-	public synchronized void addContinuation(Continuation continuation) {
-		this.continuations.add(continuation); 
+
+	public AppInfo(String appId, int port)
+	{
+		this.appId = appId;
+		this.port = port;
 	}
-	
+
+	public synchronized void addContinuation(Continuation continuation)
+	{
+		this.continuations.add(continuation);
+	}
+
 	public synchronized void resume()
 	{
-		for(Continuation continuation : continuations)
-			continuation.resume(); 
+		for (Continuation continuation : continuations)
+			continuation.resume();
+
+		continuations.clear();
 	}
-	
+
 	public String getAppId()
 	{
 		return appId;
-	}
-
-	public void setAppId(String appId)
-	{
-		this.appId = appId;
 	}
 
 	public int getPort()
@@ -44,52 +48,27 @@ public class AppInfo
 		return port;
 	}
 
-	public void setPort(int port)
-	{
-		this.port = port;
-	}
-
 	public synchronized AppState getStatus()
 	{
 		return status;
 	}
 
-
 	public synchronized void setStatus(AppState status)
 	{
 		this.status = status;
 	}
-	
 
-	public int hashCode() {
-		return appId.hashCode(); 
-	}
-	
-	public boolean equals(Object o) {
-		if(!(o instanceof AppInfo))
-			return false; 
-		
-		AppInfo cmp = (AppInfo)o;
-		return cmp.getAppId().equals(this.appId); 
-	}
-
-	public int getManagementPort()
+	public int hashCode()
 	{
-		return managementPort;
+		return appId.hashCode();
 	}
 
-	public void setManagementPort(int managementPort)
+	public boolean equals(Object o)
 	{
-		this.managementPort = managementPort;
-	}
+		if (!(o instanceof AppInfo))
+			return false;
 
-	public long getLastInteraction()
-	{
-		return lastInteraction;
-	}
-
-	public void setLastInteraction(long lastInteraction)
-	{
-		this.lastInteraction = lastInteraction;
+		AppInfo cmp = (AppInfo) o;
+		return cmp.getAppId().equals(this.appId);
 	}
 }

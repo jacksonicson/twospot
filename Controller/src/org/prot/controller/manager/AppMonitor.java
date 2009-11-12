@@ -1,5 +1,6 @@
 package org.prot.controller.manager;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
@@ -104,7 +105,13 @@ class AppMonitor implements Runnable
 				logger.debug("Starting new AppServer");
 
 				// Start
-				toStart.startOrRestart();
+				try
+				{
+					toStart.startOrRestart();
+				} catch (IOException e)
+				{
+					toStart.getAppInfo().setStatus(AppState.FAILED);
+				}
 
 				// Resume all Continuations 
 				toStart.getAppInfo().resume(); 

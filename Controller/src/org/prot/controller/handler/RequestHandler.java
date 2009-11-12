@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -22,21 +23,19 @@ public class RequestHandler extends AbstractHandler
 
 	private HttpProxyHelper proxyHelper;
 
-
-
-	HttpURI getUrl(Request request, AppInfo appInfo)
+	private HttpURI getUrl(Request request, AppInfo appInfo)
 	{
 		String scheme = request.getScheme();
 		int port = appInfo.getPort();
-		String uri = request.getUri().toString();  
-		
-		if(uri.startsWith("/"))
+		String uri = request.getUri().toString();
+
+		if (uri.startsWith("/"))
 			uri = uri.substring(1);
 		uri = uri.substring(appInfo.getAppId().length());
-		
+
 		String url = scheme + "://" + "localhost" + ":" + port + uri;
 		logger.debug("Request URL: " + url);
-		
+
 		return new HttpURI(url);
 	}
 
@@ -49,8 +48,8 @@ public class RequestHandler extends AbstractHandler
 		int index = uri.indexOf("/");
 		if (index < 0)
 		{
-			response.getOutputStream().print("Error: Missing AppId");
-			response.getOutputStream().close();
+			response.sendError(HttpStatus.NOT_FOUND_404, "Missing AppId");
+			baseRequest.setHandled(true);
 			return;
 		}
 		String appId = uri.substring(0, index);
@@ -70,15 +69,15 @@ public class RequestHandler extends AbstractHandler
 				// forward the request
 				HttpURI newurl = getUrl(baseRequest, appInfo);
 				proxyHelper.forwardRequest(baseRequest, request, response, newurl);
-				break; 
+				break;
 
 			} catch (Exception e)
 			{
-				logger.error(e.getMessage(), e);
+				logger.error("Error while handling the request (tried: " + i + ")", e);
 			}
 		}
 	}
-	
+
 	public void setAppManager(AppManager appManager)
 	{
 		this.appManager = appManager;
