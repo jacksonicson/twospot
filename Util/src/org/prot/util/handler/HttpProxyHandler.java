@@ -11,13 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.HttpExchange;
+import org.eclipse.jetty.continuation.Continuation;
+import org.eclipse.jetty.continuation.ContinuationSupport;
 import org.eclipse.jetty.http.HttpHeaders;
 import org.eclipse.jetty.io.Buffer;
 import org.eclipse.jetty.server.HttpConnection;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.eclipse.jetty.util.thread.ThreadPool;
 
 public abstract class HttpProxyHandler extends AbstractHandler
 {
@@ -27,13 +28,19 @@ public abstract class HttpProxyHandler extends AbstractHandler
 
 	private Set<String> invalidHeaders = new HashSet<String>();
 
-	private Set<String> invalidTempHeaders = new HashSet<String>();
-
-	private ThreadPool threadPool = null;
-
-	public void setThreadPool(ThreadPool threadPool)
+	public void init()
 	{
-		this.threadPool = threadPool;
+
+		try
+		{
+			httpClient.setConnectorType(HttpClient.CONNECTOR_SELECT_CHANNEL);
+			httpClient.setMaxRetries(0);
+			httpClient.setMaxConnectionsPerAddress(1);
+			httpClient.start();
+		} catch (Exception e)
+		{
+			logger.error(e);
+		}
 	}
 
 	protected String getUrl(Request request)
@@ -59,19 +66,9 @@ public abstract class HttpProxyHandler extends AbstractHandler
 		invalidHeaders.add(HttpHeaders.FORWARDED);
 	}
 
-	protected boolean isFilteredHeader(String header)
+	protected boolean isFilteredHeader(String header, Set<String> invalidTempHeaders)
 	{
 		return invalidHeaders.contains(header) || invalidTempHeaders.contains(header);
-	}
-
-	protected void onConnectionFailure()
-	{
-		// do nothing
-	}
-
-	private void preProcess()
-	{
-		invalidTempHeaders.clear();
 	}
 
 	protected void forwardRequest(Request baseRequest, HttpServletRequest httpRequest,
@@ -91,10 +88,12 @@ public abstract class HttpProxyHandler extends AbstractHandler
 	class MyExchange extends HttpExchange
 	{
 		private HttpServletResponse response;
+		private HttpServletRequest request; 
 
-		public MyExchange(HttpServletResponse response)
+		public MyExchange(HttpServletResponse response, HttpServletRequest request)
 		{
 			this.response = response;
+			this.request = request;
 		}
 
 		@Override
@@ -105,14 +104,14 @@ public abstract class HttpProxyHandler extends AbstractHandler
 				response.sendError(503, "connection failed");
 			} catch (IOException e)
 			{
-				e.printStackTrace();
+				logger.error(e);
 			}
 		}
 
 		@Override
 		public void onException(Throwable ex)
 		{
-			ex.printStackTrace();
+			logger.error(ex);
 		}
 
 		@Override
@@ -123,7 +122,7 @@ public abstract class HttpProxyHandler extends AbstractHandler
 				response.sendError(404, "Expired");
 			} catch (IOException e)
 			{
-				e.printStackTrace();
+				logger.error(e);
 			}
 		}
 
@@ -132,6 +131,10 @@ public abstract class HttpProxyHandler extends AbstractHandler
 		{
 			// response.flushBuffer();
 			// response.getOutputStream().close();
+			((Request)request).setHandled(true);
+			System.out.println("resume the continuation");
+			Continuation cont = ContinuationSupport.getContinuation(request);
+			cont.complete(); 
 		}
 
 		@Override
@@ -167,8 +170,8 @@ public abstract class HttpProxyHandler extends AbstractHandler
 	protected void forwardRequest(Request baseRequest, HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse, String url, String uri, String host) throws Exception
 	{
-		// Prepare object state for processing this request
-		preProcess();
+		// Temporary invalid headers
+		Set<String> invalidTempHeaders = new HashSet<String>();
 
 		// Get original request and response objects
 		HttpConnection httpConnection = HttpConnection.getCurrentConnection();
@@ -176,9 +179,8 @@ public abstract class HttpProxyHandler extends AbstractHandler
 		Response response = httpConnection.getResponse();
 
 		// Generate the new request
-		MyExchange exchange = new MyExchange(httpResponse);
+		MyExchange exchange = new MyExchange(httpResponse, httpRequest);
 		exchange.setRetryStatus(false);
-
 		exchange.setMethod(srcRequest.getMethod());
 
 		exchange.setURL(url);
@@ -189,14 +191,12 @@ public abstract class HttpProxyHandler extends AbstractHandler
 
 		// Handle specific requests
 		// Connection request
-		String connectionToken = srcRequest.getHeader("Connection");
-		if (connectionToken == null)
-			connectionToken = null;
-		else if (connectionToken.equalsIgnoreCase("keepalive") || connectionToken.equalsIgnoreCase("close"))
-			connectionToken = null;
 
+		String connectionToken = srcRequest.getHeader("Connection");
 		if (connectionToken != null)
+		{
 			invalidTempHeaders.add(connectionToken);
+		}
 
 		// Copy all headers to the exchange
 		for (Enumeration<String> headers = srcRequest.getHeaderNames(); headers.hasMoreElements();)
@@ -205,7 +205,7 @@ public abstract class HttpProxyHandler extends AbstractHandler
 			String value = srcRequest.getHeader(name);
 
 			// Filter all invalid headers
-			if (isFilteredHeader(name))
+			if (isFilteredHeader(name, invalidTempHeaders))
 				continue;
 
 			exchange.setRequestHeader(name, value);
@@ -218,28 +218,17 @@ public abstract class HttpProxyHandler extends AbstractHandler
 		if (srcRequest.getContentLength() > 0)
 			exchange.setRequestContentSource(srcRequest.getInputStream());
 
-		// Request generation done
+		// send the request
 		try
 		{
-			// send the request
+			Continuation continuation = ContinuationSupport.getContinuation(srcRequest);
+			continuation.suspend();
+
 			httpClient.send(exchange);
 
-			// wait until response is complete
-			int status = exchange.waitForDone();
-
-			// TODO: Handle status
-
-		} catch (InterruptedException e)
+		} catch (Exception e)
 		{
-			logger.info("reporting a stale appserver");
-			onConnectionFailure();
-			throw e;
-
-		} catch (IOException e)
-		{
-			logger.error("reporting a stale appserver");
-			onConnectionFailure();
-			throw e;
+			logger.error("Error while sending proxy request", e);
 		}
 	}
 
