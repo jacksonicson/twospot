@@ -97,8 +97,8 @@ public class ServerLifecycle
 		
 		// Redirect the err and out streams
 		// INFO: The Log4j streams are *not* redirected
-//		System.setOut(devNull);
-//		System.setErr(devNull);
+		System.setOut(devNull);
+		System.setErr(devNull);
 		
 		// Finally launch the server with the new streams
 		try
