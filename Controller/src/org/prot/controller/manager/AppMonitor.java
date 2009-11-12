@@ -36,6 +36,8 @@ class AppMonitor implements Runnable
 	{
 		synchronized (startQueue)
 		{
+			logger.info("Starting new AppServer: " + info.getAppId());
+			
 			AppProcess process = this.processList.get(info);
 			if (process == null)
 			{
@@ -85,13 +87,16 @@ class AppMonitor implements Runnable
 					toStart = startQueue.poll();
 			}
 
+			logger.info("check"); 
 			if (toStart != null)
 			{
+				logger.info("Thread is starting a new AppServer"); 
+				
 				toStart.startOrRestart();
 
-				for (Continuation cont : toStart.getOwner().conts)
+				for (Continuation cont : toStart.getAppInfo().conts)
 				{
-					synchronized (toStart.getOwner())
+					synchronized (toStart.getAppInfo())
 					{
 						cont.resume();
 					}
@@ -109,12 +114,13 @@ class AppMonitor implements Runnable
 					e.printStackTrace();
 				}
 			}
+			
+			logger.info("after fetch"); 
 
 			// Sleep
 			try
 			{
 				Thread.sleep(500);
-				Thread.yield();
 			} catch (InterruptedException e)
 			{
 				e.printStackTrace();

@@ -44,11 +44,11 @@ public class AppManager
 		switch (tmpState)
 		{
 		case OFFLINE:
-			if(startApp(appInfo))
-				return null; 
+			if (startApp(appInfo))
+				return null;
 			break;
 		case STARTING:
-			if(waitForAppServer(appInfo))
+			if (waitForAppServer(appInfo))
 				return null;
 			break;
 		}
@@ -59,14 +59,10 @@ public class AppManager
 	public void reportStaleApp(String appId)
 	{
 		AppInfo appInfo = registry.getAppInfo(appId);
-		if(appInfo == null)
+		if (appInfo == null)
 			return;
-		
-		synchronized (appInfo)
-		{
-			if (appInfo != null)
-				appInfo.setStatus(AppState.STALE);
-		}
+
+		appInfo.setStatus(AppState.STALE);
 	}
 
 	private boolean waitForAppServer(AppInfo appInfo)
@@ -83,7 +79,6 @@ public class AppManager
 		return waitForAppServer(appInfo);
 	}
 
-	
 	public void setThreadPool(ThreadPool threadPool)
 	{
 		this.threadPool = threadPool;

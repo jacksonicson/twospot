@@ -8,13 +8,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
-import java.nio.channels.Pipe;
 import java.nio.channels.ReadableByteChannel;
-import java.nio.channels.SelectableChannel;
-import java.nio.channels.Selector;
 import java.nio.channels.WritableByteChannel;
-import java.nio.channels.Pipe.SinkChannel;
-import java.nio.channels.spi.SelectorProvider;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,10 +17,13 @@ import org.apache.log4j.Logger;
 
 class AppProcess
 {
+	// Logger
 	private static final Logger logger = Logger.getLogger(AppProcess.class);
 
+	// AppInfo which belongs to this process
 	private AppInfo appInfo;
 
+	// Connection to the process
 	private Process process;
 
 	public AppProcess(AppInfo appInfo)
@@ -33,7 +31,7 @@ class AppProcess
 		this.appInfo = appInfo;
 	}
 
-	public AppInfo getOwner()
+	public AppInfo getAppInfo()
 	{
 		return this.appInfo;
 	}
@@ -60,7 +58,7 @@ class AppProcess
 		List<String> command = new LinkedList<String>();
 		command.add("java");
 		command.add("-classpath");
-		command.add(loadClasspath2());
+		command.add(loadClasspath());
 
 		command.add("org.prot.appserver.Main");
 
@@ -164,41 +162,40 @@ class AppProcess
 		return jars;
 	}
 
-	ReadableByteChannel source;
-	WritableByteChannel destination;
+	// Process-IO
+	private ReadableByteChannel source;
+	private WritableByteChannel destination;
+	private ByteArrayOutputStream outstream;
+	private ByteBuffer buffer = ByteBuffer.allocateDirect(128 * 1024);
 
-	ByteArrayOutputStream outstream;
-	ByteBuffer buffer = ByteBuffer.allocateDirect(128 * 1024);
-	
 	void fetchStreams() throws Exception
 	{
-		System.out.println("FETCH"); 
-		if (process == null)
-			return;
-		
-		if (source == null)
-		{
-			InputStream in = process.getInputStream();
-			
-			source = Channels.newChannel(in);
-			
-			outstream = new ByteArrayOutputStream(5 * 1024);
-			destination = Channels.newChannel(System.out);
-		}
-		
-		
-		while (source.read(buffer) != -1)
-		{
-			
-			buffer.flip();
-			
-			while(buffer.hasRemaining())
-			{
-				destination.write(buffer); 
-			}
-			
-			buffer.clear();
-		}
+//		if (process == null)
+//			return;
+//
+//		if (source == null)
+//		{
+//			InputStream in = process.getInputStream();
+//			source = Channels.newChannel(in);
+//			outstream = new ByteArrayOutputStream(5 * 1024);
+//			destination = Channels.newChannel(System.out);
+//		}
+
+//		while (source.isOpen())
+//		{
+//			source.
+//			if (source.read(buffer) == -1)
+//				break;
+//
+//			buffer.flip();
+//
+//			logger.info("-- stdio from: " + appInfo.getAppId() + "----");
+//			while (buffer.hasRemaining())
+//				destination.write(buffer);
+//			logger.info("-- end ----");
+//
+//			buffer.clear();
+//		}
 	}
 
 	private void waitForAppServer()
@@ -214,8 +211,7 @@ class AppProcess
 			{
 				if (line.equals("server started"))
 				{
-					System.out.println(">>>" + line);
-					logger.info("AppServer started: " + this.appInfo.getAppId());
+					logger.info("AppServer is online: " + this.appInfo.getAppId());
 					return;
 				} else
 				{
@@ -228,11 +224,11 @@ class AppProcess
 			// Log the error
 			logger.error("Could not start a new server process - AppId: " + appInfo.getAppId(), e);
 
-			// Could not verify if server is online so kill it
-			stopAndClean();
-
 			// Update status
 			this.appInfo.setStatus(AppState.FAILED);
+
+			// Could not verify if server is online so kill it
+			stopAndClean();
 		}
 	}
 }
