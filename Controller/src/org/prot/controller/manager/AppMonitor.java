@@ -6,6 +6,9 @@ import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.continuation.Continuation;
+import org.eclipse.jetty.continuation.ContinuationSupport;
+import org.eclipse.jetty.server.HttpConnection;
 import org.eclipse.jetty.util.thread.ThreadPool;
 
 class AppMonitor implements Runnable
@@ -15,92 +18,55 @@ class AppMonitor implements Runnable
 	// Thread pool
 	private ThreadPool threadPool;
 
+	// State of the monitor thread
+	boolean running = false;
+
 	// Manages all AppProcess-Objects
 	private Map<AppInfo, AppProcess> processList = new HashMap<AppInfo, AppProcess>();
 
 	// Worker queue
 	private Queue<AppProcess> startQueue = new LinkedBlockingQueue<AppProcess>();
 
-	// Lock is used to communicated between the worker thread and the
-	// request-threads
-	private Object startLock = new Object();
-
 	public AppMonitor(ThreadPool threadPool)
 	{
 		this.threadPool = threadPool;
 	}
 
-	private void registerProcess(AppProcess process)
-	{
-		this.processList.put(process.getOwner(), process);
-	}
-
-	public synchronized AppProcess getProcess(AppInfo appInfo)
-	{
-		AppProcess process = this.processList.get(appInfo);
-
-		if (process == null)
-		{
-			process = new AppProcess(appInfo);
-			registerProcess(process);
-		}
-
-		return process;
-	}
-
-	boolean running = false; 
-	
 	public void startProcess(AppInfo info)
 	{
-		AppProcess process = null;
-		if (this.processList.containsKey(info) == false)
+		synchronized (startQueue)
 		{
-			process = new AppProcess(info);
-			this.processList.put(info, process);
-		} else
-		{
-			process = this.processList.get(info);
-		}
-
-		startQueue.add(process);
-		
-		if(!running)
-			running = threadPool.dispatch(this); 
-	}
-
-	public void waitForApplication(AppInfo appInfo)
-	{
-		logger.info("Waiting for AppServer: " + appInfo.getAppId());
-		synchronized (startLock)
-		{
-			// Wait until the application state is not STARTING
-			while (appInfo.getStatus() == AppState.STARTING)
+			AppProcess process = this.processList.get(info);
+			if (process == null)
 			{
-				try
-				{
-					// Wait until notified
-					startLock.wait();
-
-				} catch (InterruptedException e)
-				{
-					logger.error("Interrupted while waiting for AppServer", e);
-				}
-
-				logger.info("Notified that AppServer is online");
+				process = new AppProcess(info);
+				this.processList.put(info, process);
 			}
+
+			startQueue.add(process);
+		}
+
+		synchronized (this)
+		{
+			if (!running)
+				running = threadPool.dispatch(this);
 		}
 	}
 
-	private void shutdownIdleProcesses()
+	public boolean waitForApplication(AppInfo appInfo)
 	{
-		long currentTime = System.currentTimeMillis();
-		long maxTime = 60 * 1000;
-		for (AppProcess process : processList.values())
+		synchronized (appInfo)
 		{
-			long lastInteraction = process.getOwner().getLastInteraction();
-			long difference = currentTime - lastInteraction;
-			if (difference > maxTime)
-				process.kill();
+			if (appInfo.getStatus() == AppState.ONLINE)
+				return false;
+
+			HttpConnection con = HttpConnection.getCurrentConnection();
+			Continuation continuation = ContinuationSupport.getContinuation(con.getRequest());
+			System.out.println("SUSPENDING !!!!");
+			appInfo.conts.add(continuation);
+			continuation.suspend();
+			System.out.println("AFTER SUSPEND");
+			return true;
 		}
 	}
 
@@ -109,35 +75,30 @@ class AppMonitor implements Runnable
 		// Run forever (Controller doesn't have a shutdown sequence)
 		while (true)
 		{
-			// Shutdown all idle AppServers
-			// shutdownIdleProcesses();
-
 			// References the process to be started
 			AppProcess toStart = null;
 
 			// Get the next process from the worker queue
 			synchronized (startQueue)
 			{
-				if (startQueue.isEmpty() == false)
-				{
-					// Get the next item in the queue and delete this item
+				if (!startQueue.isEmpty())
 					toStart = startQueue.poll();
-				}
 			}
-			logger.info("polling"); 
+
 			if (toStart != null)
 			{
-				logger.info("starting"); 
 				toStart.startOrRestart();
 
-				synchronized (startLock)
+				for (Continuation cont : toStart.getOwner().conts)
 				{
-					startLock.notifyAll();
+					synchronized (toStart.getOwner())
+					{
+						cont.resume();
+					}
 				}
 			}
-			
-			logger.info("done"); 
 
+			// Fetching stdout from every process
 			for (AppProcess proc : processList.values())
 			{
 				try
@@ -148,18 +109,16 @@ class AppMonitor implements Runnable
 					e.printStackTrace();
 				}
 			}
-			
-			logger.info("yield"); 
 
+			// Sleep
 			try
 			{
 				Thread.sleep(500);
+				Thread.yield();
 			} catch (InterruptedException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} 
-			Thread.yield();
+			}
 		}
 	}
 }

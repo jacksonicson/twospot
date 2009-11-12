@@ -8,8 +8,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
+import java.nio.channels.Pipe;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.SelectableChannel;
+import java.nio.channels.Selector;
 import java.nio.channels.WritableByteChannel;
+import java.nio.channels.Pipe.SinkChannel;
+import java.nio.channels.spi.SelectorProvider;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -164,6 +169,7 @@ class AppProcess
 
 	ByteArrayOutputStream outstream;
 	ByteBuffer buffer = ByteBuffer.allocateDirect(128 * 1024);
+	
 	void fetchStreams() throws Exception
 	{
 		System.out.println("FETCH"); 
@@ -172,8 +178,8 @@ class AppProcess
 		
 		if (source == null)
 		{
-			System.out.println("CREATING CHANNELS");
 			InputStream in = process.getInputStream();
+			
 			source = Channels.newChannel(in);
 			
 			outstream = new ByteArrayOutputStream(5 * 1024);
@@ -183,7 +189,6 @@ class AppProcess
 		
 		while (source.read(buffer) != -1)
 		{
-			System.out.println("READ-----------------------------");
 			
 			buffer.flip();
 			
@@ -192,17 +197,6 @@ class AppProcess
 				destination.write(buffer); 
 			}
 			
-			System.out.println("D>OON-----------------------------"); 
-			
-//			while (buffer.hasRemaining())
-//			{
-////				destination.write(buffer);
-//				buffer.clear();
-//				System.out.println("Reading the buffer"); 
-////				System.out.println("+++" + new String(outstream.toByteArray()));
-//				
-////				System.out.println("+++"+new String(buffer.compact().array()));
-//			}
 			buffer.clear();
 		}
 	}

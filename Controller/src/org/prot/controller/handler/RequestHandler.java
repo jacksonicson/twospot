@@ -68,6 +68,12 @@ public class RequestHandler extends HttpProxyHandler
 				// inform the AppManager
 				logger.info("require app"); 
 				AppInfo appInfo = this.appManager.requireApp(appId);
+				if(appInfo == null) // TODO: Proper continuation handling
+				{
+					System.out.println("EXIT HANDLE WITH CONTINUATION"); 
+					return;
+				}
+				
 				logger.debug("got appinfo"); 
 
 				// Generate the URL to the destination Server

@@ -1,5 +1,10 @@
 package org.prot.controller.manager;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jetty.continuation.Continuation;
+
 public class AppInfo
 {
 	private String appId; 
@@ -11,6 +16,8 @@ public class AppInfo
 	private AppState status = AppState.OFFLINE; 
 	
 	private long lastInteraction; 
+	
+	List<Continuation> conts = new ArrayList<Continuation>();
 	
 	public String getAppId()
 	{
