@@ -4,15 +4,16 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jetty.client.Address;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.HttpExchange;
 import org.eclipse.jetty.continuation.Continuation;
@@ -34,6 +35,8 @@ public class HttpProxyHelper
 
 	private final Set<String> invalidHeaders = new HashSet<String>();
 
+	private final List<ExceptionListener> exceptionListeners = new ArrayList<ExceptionListener>();
+
 	protected void setupInvalidHeaders()
 	{
 		invalidHeaders.add(HttpHeaders.PROXY_CONNECTION);
@@ -47,6 +50,26 @@ public class HttpProxyHelper
 		invalidHeaders.add(HttpHeaders.UPGRADE);
 	}
 
+	public void addExceptionListener(ExceptionListener listener)
+	{
+		synchronized (exceptionListeners)
+		{
+			exceptionListeners.add(listener);
+		}
+	}
+
+	private void fireException(Throwable e, Object obj)
+	{
+		List<ExceptionListener> copy = new ArrayList<ExceptionListener>();
+		synchronized (exceptionListeners)
+		{
+			copy.addAll(exceptionListeners);
+		}
+
+		for (ExceptionListener listener : copy)
+			listener.onException(e, obj);
+	}
+
 	protected boolean isFilteredHeader(String header)
 	{
 		return invalidHeaders.contains(header);
@@ -55,9 +78,15 @@ public class HttpProxyHelper
 	public void forwardRequest(final Request jetRequest, final HttpServletRequest request,
 			final HttpServletResponse response, final HttpURI url) throws Exception
 	{
-		if(url == null)
+		forwardRequest(jetRequest, request, response, url, null);
+	}
+
+	public void forwardRequest(final Request jetRequest, final HttpServletRequest request,
+			final HttpServletResponse response, final HttpURI url, final Object obj) throws Exception
+	{
+		if (url == null)
 			throw new NullPointerException("URL must not be null");
-		
+
 		// Check if its a CONNECT request
 		if (request.getMethod().equalsIgnoreCase("CONNECT"))
 		{
@@ -124,8 +153,10 @@ public class HttpProxyHelper
 				if (response.isCommitted() == false)
 					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
+				fireException(ex, obj);
+
 				logger.error("exception", ex);
-				jetRequest.setHandled(true); 
+				jetRequest.setHandled(true);
 				continuation.complete();
 			}
 
@@ -135,7 +166,7 @@ public class HttpProxyHelper
 				if (response.isCommitted() == false)
 					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
-				jetRequest.setHandled(true); 
+				jetRequest.setHandled(true);
 				continuation.complete();
 			}
 		};
