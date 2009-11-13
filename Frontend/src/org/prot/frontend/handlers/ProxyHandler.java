@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -23,7 +24,7 @@ public class ProxyHandler extends AbstractHandler
 	protected FrontendService frontendService;
 
 	private AppCache appCache;
-	
+
 	private HttpProxyHelper proxyHelper;
 
 	@Override
@@ -34,6 +35,7 @@ public class ProxyHandler extends AbstractHandler
 		// Extract the appid from the url
 		String appId = null;
 
+		// Get the URL
 		URL url = new URL(request.getRequestURL().toString());
 		String host = url.getHost();
 		if (host.indexOf(".") != -1)
@@ -44,7 +46,7 @@ public class ProxyHandler extends AbstractHandler
 		if (appId == null)
 		{
 			logger.debug("no application id found");
-			response.sendError(404);
+			response.sendError(HttpStatus.NOT_FOUND_404);
 			baseRequest.setHandled(true);
 			return;
 		}
@@ -52,7 +54,7 @@ public class ProxyHandler extends AbstractHandler
 		try
 		{
 			// Check cache
-			appCache.updateCache(); 
+			appCache.updateCache();
 			ControllerInfo info = appCache.getController(appId);
 			if (info == null)
 			{
@@ -64,16 +66,19 @@ public class ProxyHandler extends AbstractHandler
 			String fUrl = request.getRequestURL().toString();
 			fUrl = "http://" + info.getAddress() + ":" + info.getPort();
 			String fUri = "/" + appId + request.getRequestURI();
-			fUrl = fUrl + fUri; 
+			fUrl = fUrl + fUri;
 
 			logger.debug("Forarding to URL: " + fUrl);
-			
+
 			HttpURI uri = new HttpURI(fUrl);
 			proxyHelper.forwardRequest(baseRequest, request, response, uri);
 
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			logger.error("Erro while handling the request", e); 
+			response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500); 
+			baseRequest.setHandled(true);
+			return;
 		}
 	}
 

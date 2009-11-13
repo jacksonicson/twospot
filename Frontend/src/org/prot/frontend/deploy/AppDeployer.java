@@ -19,7 +19,7 @@ public class AppDeployer
 
 	private FrontendService frontendService;
 
-	public void deployApplication(String appId, Request request)
+	public void deployApplication(String appId, Request request) throws IOException, InterruptedException
 	{
 		// Prepare HTTP-Message
 		ContentExchange exchange = new ContentExchange();
@@ -33,6 +33,7 @@ public class AppDeployer
 		} catch (IOException e)
 		{
 			logger.error("Could not connect input stream with output stream", e);
+			throw e;
 		}
 
 		try
@@ -44,9 +45,11 @@ public class AppDeployer
 		} catch (IOException e)
 		{
 			logger.error("Error while sending HTTP-request to the fileserver", e);
+			throw e;
 		} catch (InterruptedException e)
 		{
 			logger.error("Error while sending HTTP-request to the fileserver", e);
+			throw e;
 		}
 
 		// Tell the manager about the new deployment

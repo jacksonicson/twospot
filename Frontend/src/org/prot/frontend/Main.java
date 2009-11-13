@@ -31,6 +31,7 @@ public class Main
 		} catch (Exception e)
 		{
 			logger.fatal("could not start server", e);
+			System.exit(1); 
 		}
 	}
 

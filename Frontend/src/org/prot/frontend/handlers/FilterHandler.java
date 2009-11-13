@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.http.HttpMethods;
+import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.server.Request;
 import org.prot.frontend.deploy.AppDeployer;
 
@@ -41,7 +42,19 @@ public class FilterHandler extends ProxyHandler
 				if (!uri.equals(""))
 				{
 					logger.debug("Deploying appId: " + uri);
-					this.deployer.deployApplication(uri, baseRequest);
+					try
+					{
+						this.deployer.deployApplication(uri, baseRequest);
+						response.setStatus(HttpStatus.OK_200);
+						baseRequest.setHandled(true); 
+						
+					} catch (InterruptedException e)
+					{
+						response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500); 
+						baseRequest.setHandled(true); 
+						return; 
+					}
+					
 					return;
 				}
 			}
