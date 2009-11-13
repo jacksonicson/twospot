@@ -1,11 +1,14 @@
 package org.prot.appserver;
 
-import java.io.DataInputStream;
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLConnection;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.http.HttpMethods;
 
 /**
  * TODO: Use RMI to communicate with the Controller
@@ -39,18 +42,39 @@ public class Monitor extends Thread
 	{
 		while (true)
 		{
+			URL url;
 			try
 			{
-				URL controller = new URL("HTTP", CONTROLLER_HOST, CONTROLLER_PORT, "");
-				URLConnection connection = controller.openConnection();
+				url = new URL("http://" + CONTROLLER_HOST + ":" + CONTROLLER_PORT);
 
-				DataInputStream in = new DataInputStream(connection.getInputStream());
-				in.read();
-				in.close();
+				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
+				connection.setRequestMethod(HttpMethods.GET);
+				connection.setUseCaches(false);
+
+				connection.connect();
+
+				if (connection.getResponseCode() != HttpURLConnection.HTTP_NOT_FOUND)
+				{
+					logger.error("AppServer could not connect with the controller");
+					System.exit(1);
+				}
+
+			} catch (MalformedURLException e)
+			{
+				logger.error("MaleformedURLException", e);
+				System.exit(1);
+			} catch (ProtocolException e)
+			{
+				logger.error("Protocol exception", e);
+				System.exit(1);
+			} catch (ConnectException e)
+			{
+				logger.error("Could not connect to the controller");
+				System.exit(1);
 			} catch (IOException e)
 			{
-				logger.error("", e);
+				logger.error("IOException", e);
 				System.exit(1);
 			}
 
