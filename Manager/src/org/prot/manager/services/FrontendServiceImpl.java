@@ -29,13 +29,19 @@ public class FrontendServiceImpl implements FrontendService
 		for (ControllerInfo info : configuration.getControllers())
 		{
 			logger.info("Informing controller: " + info.getServicePort());
-			
-			RmiProxyFactoryBean proxy = new RmiProxyFactoryBean(); 
-			proxy.setServiceInterface(ControllerService.class); 
-			proxy.setServiceUrl("rmi://localhost:" + info.getServicePort() + "/" + info.getServiceName());
-			proxy.afterPropertiesSet(); 
-			ControllerService service = (ControllerService)proxy.getObject();
-			service.updateApp(appId); 
+
+			try
+			{
+				RmiProxyFactoryBean proxy = new RmiProxyFactoryBean();
+				proxy.setServiceInterface(ControllerService.class);
+				proxy.setServiceUrl("rmi://localhost:" + info.getServicePort() + "/" + info.getServiceName());
+				proxy.afterPropertiesSet();
+				ControllerService service = (ControllerService) proxy.getObject();
+				service.updateApp(appId);
+			} catch (Exception e)
+			{
+				logger.error("could not connect to the controller - controller is dead?" + e.getMessage());
+			}
 		}
 	}
 }
