@@ -2,5 +2,5 @@ package org.prot.util.handler;
 
 public interface ExceptionListener
 {
-	public void onException(Throwable e, Object obj);
+	public boolean onException(Throwable e, Object obj);
 }

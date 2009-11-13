@@ -58,16 +58,19 @@ public class HttpProxyHelper
 		}
 	}
 
-	private void fireException(Throwable e, Object obj)
+	private boolean fireException(Throwable e, Object obj)
 	{
 		List<ExceptionListener> copy = new ArrayList<ExceptionListener>();
 		synchronized (exceptionListeners)
 		{
 			copy.addAll(exceptionListeners);
 		}
-
+		
+		boolean handled = false; 
 		for (ExceptionListener listener : copy)
-			listener.onException(e, obj);
+			handled |= listener.onException(e, obj);
+		
+		return handled; 
 	}
 
 	protected boolean isFilteredHeader(String header)
@@ -153,9 +156,11 @@ public class HttpProxyHelper
 				if (response.isCommitted() == false)
 					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
-				fireException(ex, obj);
+				boolean handled = fireException(ex, obj);
 
-				logger.error("exception", ex);
+				if (!handled)
+					logger.error("exception", ex);
+
 				jetRequest.setHandled(true);
 				continuation.complete();
 			}
