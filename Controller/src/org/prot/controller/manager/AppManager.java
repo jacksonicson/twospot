@@ -58,6 +58,11 @@ public class AppManager
 	public void reportStaleApp(String appId)
 	{
 		AppInfo appInfo = registry.getAppInfo(appId);
+		
+		// Cannot change the state for an unexisting application
+		if (appInfo == null)
+			return;
+
 		synchronized (appInfo)
 		{
 			appInfo.setStatus(AppState.STALE);

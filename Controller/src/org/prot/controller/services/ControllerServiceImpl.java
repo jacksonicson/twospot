@@ -1,9 +1,12 @@
 package org.prot.controller.services;
 
+import org.apache.log4j.Logger;
 import org.prot.controller.manager.AppManager;
 
 public class ControllerServiceImpl implements ControllerService
 {
+	private static final Logger logger = Logger.getLogger(ControllerServiceImpl.class);
+	
 	private AppManager manager; 
 	
 	@Override
@@ -22,14 +25,13 @@ public class ControllerServiceImpl implements ControllerService
 	@Override
 	public void ping()
 	{
-		// TODO Auto-generated method stub
-		
+		// TODO: Return some status informations
 	}
 
 	@Override
 	public void updateApp(String appId)
 	{
-		System.out.println("Updating application!!!!!!!!"); 
+		logger.debug("Manager is reporting a stale AppServer: " + appId);
 		manager.reportStaleApp(appId); 
 	}
 

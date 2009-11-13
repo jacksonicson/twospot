@@ -21,7 +21,7 @@ public class Main
 		conf.postProcessBeanFactory(factory);
 		
 		// Start the RMI-Services
-		// factory.getBean("ControllerServiceExporter");
+		factory.getBean("ControllerServiceExporter");
 		
 		Controller controller = (Controller) factory.getBean("Controller");
 		controller.start();
