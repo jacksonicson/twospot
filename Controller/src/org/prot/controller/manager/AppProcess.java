@@ -14,6 +14,9 @@ class AppProcess
 	// Logger
 	private static final Logger logger = Logger.getLogger(AppProcess.class);
 
+	// Info sent by appserver
+	private static final String SERVER_ONLINE = "server online";
+	
 	// AppInfo which belongs to this process
 	private AppInfo appInfo;
 
@@ -141,7 +144,7 @@ class AppProcess
 			String line = "";
 			while ((line = stdInStream.readLine()) != null)
 			{
-				if (line.equals("server started"))
+				if (line.equalsIgnoreCase(SERVER_ONLINE))
 				{
 					System.out.println(">>>" + line);
 					logger.info("AppServer is online: " + this.appInfo.getAppId());

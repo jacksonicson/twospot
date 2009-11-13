@@ -108,6 +108,7 @@ class AppMonitor implements Runnable
 				try
 				{
 					toStart.startOrRestart();
+					toStart.getAppInfo().setStatus(AppState.ONLINE);
 				} catch (IOException e)
 				{
 					toStart.getAppInfo().setStatus(AppState.FAILED);
