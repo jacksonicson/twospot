@@ -59,7 +59,7 @@ public class ProxyHandler extends AbstractHandler
 			if (info == null)
 			{
 				// Ask the manager and cache the results
-				info = frontendService.chooseAppServer("");
+				info = frontendService.chooseAppServer(appId);
 				appCache.cacheController(appId, info);
 			}
 

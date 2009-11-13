@@ -9,7 +9,9 @@ import org.prot.manager.config.ControllerInfo;
 
 public class TimeoutAppCache implements AppCache
 {
-	private static final Logger logger = Logger.getLogger(TimeoutAppCache.class); 
+	private static final Logger logger = Logger.getLogger(TimeoutAppCache.class);
+	
+	private static final int CONTROLLER_LIFETIME = 5 * 1000; 
 	
 	private Map<String, CacheEntry> cache = new HashMap<String, CacheEntry>();
 
@@ -39,7 +41,7 @@ public class TimeoutAppCache implements AppCache
 		for(CacheEntry entry : cache.values())
 		{
 			// Remove all Controller entries which are older than the given treshold
-			entry.removeOlderThan(5 * 60 * 1000); 
+			entry.removeOlderThan(CONTROLLER_LIFETIME); 
 		}
 	}
 }
