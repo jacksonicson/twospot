@@ -52,7 +52,7 @@
 
 
 	<!-- Request handling -->
-	<bean id="RequestHandler" class="org.prot.controller.handler.RequestHandler">
+	<bean id="RequestHandler" class="org.prot.controller.handler.RequestHandler" init-method="init">
 		<property name="appManager" ref="AppManager" />
 		<property name="proxyHelper" ref="ProxyHelper" />
 	</bean>

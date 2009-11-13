@@ -1,7 +1,6 @@
 package org.prot.controller.manager;
 
 import org.eclipse.jetty.util.thread.ThreadPool;
-import org.prot.controller.manager.exceptions.AppServerFailedException;
 
 public class AppManager
 {
@@ -17,7 +16,7 @@ public class AppManager
 		registry = new AppRegistry();
 	}
 
-	public AppInfo requireApp(String appId) throws AppServerFailedException
+	public AppInfo requireApp(String appId)
 	{
 		AppInfo appInfo = registry.registerApp(appId);
 
@@ -59,7 +58,10 @@ public class AppManager
 	public void reportStaleApp(String appId)
 	{
 		AppInfo appInfo = registry.getAppInfo(appId);
-		appInfo.setStatus(AppState.STALE);
+		synchronized (appInfo)
+		{
+			appInfo.setStatus(AppState.STALE);
+		}
 	}
 
 	private boolean startApp(AppInfo appInfo)

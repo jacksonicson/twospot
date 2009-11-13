@@ -1,6 +1,7 @@
 package org.prot.controller.handler;
 
 import java.io.IOException;
+import java.net.ConnectException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,15 +14,21 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.prot.controller.manager.AppInfo;
 import org.prot.controller.manager.AppManager;
+import org.prot.util.handler.ExceptionListener;
 import org.prot.util.handler.HttpProxyHelper;
 
-public class RequestHandler extends AbstractHandler
+public class RequestHandler extends AbstractHandler implements ExceptionListener
 {
 	private static final Logger logger = Logger.getLogger(RequestHandler.class);
 
 	private AppManager appManager;
 
 	private HttpProxyHelper proxyHelper;
+
+	public void init()
+	{
+		proxyHelper.addExceptionListener(this);
+	}
 
 	private HttpURI getUrl(Request request, AppInfo appInfo)
 	{
@@ -43,7 +50,7 @@ public class RequestHandler extends AbstractHandler
 	public void handle(String target, Request baseRequest, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException
 	{
-		// extract appId
+		// extract appId (if appId is missing return NOT FOUND 404)
 		String uri = baseRequest.getUri().getPath().substring(1);
 		int index = uri.indexOf("/");
 		if (index < 0)
@@ -54,27 +61,26 @@ public class RequestHandler extends AbstractHandler
 		}
 		String appId = uri.substring(0, index);
 
-		// retries if forward fails
-		for (int i = 0; i < 3; i++)
+		// Inform the AppManager
+		AppInfo appInfo = null;
+		appInfo = this.appManager.requireApp(appId);
+
+		// the AppServer is not avialable jet - a continuation is used
+		// to restart this request when the AppServer is online
+		if (appInfo == null)
+			return; // Continues when the AppServer is available
+
+		try
 		{
-			try
-			{
-				// inform the AppManager
-				AppInfo appInfo = this.appManager.requireApp(appId);
-				// the AppServer is not avialable jet - a continuation is used
-				// to restart this request when the AppServer is online
-				if (appInfo == null)
-					return; // Continues when the AppServer is available
+			// forward the request
+			HttpURI newurl = getUrl(baseRequest, appInfo);
+			proxyHelper.forwardRequest(baseRequest, request, response, newurl, appId);
+			return;
 
-				// forward the request
-				HttpURI newurl = getUrl(baseRequest, appInfo);
-				proxyHelper.forwardRequest(baseRequest, request, response, newurl);
-				break;
-
-			} catch (Exception e)
-			{
-				logger.error("Error while handling the request (tried: " + i + ")", e);
-			}
+		} catch (Exception e)
+		{
+			// Unknown exception
+			logger.error("Unknown error while handling the request", e);
 		}
 	}
 
@@ -86,5 +92,17 @@ public class RequestHandler extends AbstractHandler
 	public void setProxyHelper(HttpProxyHelper proxyHelper)
 	{
 		this.proxyHelper = proxyHelper;
+	}
+
+	@Override
+	public void onException(Throwable e, Object obj)
+	{
+		logger.debug("Exception"); 
+		String appId = (String) obj;
+		if (e instanceof ConnectException)
+		{
+			logger.debug("Reporting stale AppServer " + appId);
+			appManager.reportStaleApp(appId);
+		}
 	}
 }
