@@ -95,7 +95,7 @@ public class RequestHandler extends AbstractHandler implements ExceptionListener
 	}
 
 	@Override
-	public void onException(Throwable e, Object obj)
+	public boolean onException(Throwable e, Object obj)
 	{
 		logger.debug("Exception"); 
 		String appId = (String) obj;
@@ -103,6 +103,9 @@ public class RequestHandler extends AbstractHandler implements ExceptionListener
 		{
 			logger.debug("Reporting stale AppServer " + appId);
 			appManager.reportStaleApp(appId);
+			return true;
 		}
+		
+		return false; 
 	}
 }
