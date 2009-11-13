@@ -57,12 +57,17 @@
 		<property name="frontendService" ref="FrontendService" />
 		<property name="appCache" ref="AppCache" />
 		<property name="deployer" ref="AppDeployer" />
-		<property name="httpClient" ref="HttpClient" />
+		<property name="proxyHelper" ref="ProxyHelper" />
 	</bean>
 
 
 
 	<!--  Application beans -->
+	<bean id="ProxyHelper" class="org.prot.util.handler.HttpProxyHelper">
+		<property name="httpClient" ref="HttpClient" />
+	</bean>
+	
+	
 	<bean id="AppCache" class="org.prot.frontend.cache.timeout.TimeoutAppCache" />
 
 
