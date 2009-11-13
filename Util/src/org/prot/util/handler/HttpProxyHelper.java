@@ -148,7 +148,6 @@ public class HttpProxyHelper
 
 		exchange.setMethod(request.getMethod());
 		exchange.setURL(url.toString());
-		exchange.setAddress(new Address("localhost", 9090));
 		exchange.setVersion(request.getProtocol());
 
 		// Check the connection Header
