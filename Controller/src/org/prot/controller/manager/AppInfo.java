@@ -25,7 +25,7 @@ public class AppInfo
 		this.port = port;
 	}
 
-	public synchronized void addContinuation(Continuation continuation)
+	public void addContinuation(Continuation continuation)
 	{
 		this.continuations.add(continuation);
 	}

@@ -33,8 +33,17 @@ class AppMonitor implements Runnable
 		this.threadPool = threadPool;
 	}
 
+	private synchronized void startWorkerThread()
+	{
+		// Start the thread only if it is not running right now
+		if (!running)
+			running = threadPool.dispatch(this);
+	}
+
 	public void startProcess(AppInfo info)
 	{
+		startWorkerThread();
+
 		synchronized (jobQueue)
 		{
 			logger.debug("New AppServer-Job: " + info.getAppId());
@@ -49,28 +58,26 @@ class AppMonitor implements Runnable
 			jobQueue.add(process);
 			jobQueue.notifyAll();
 		}
-
-		synchronized (this)
-		{
-			if (!running)
-				running = threadPool.dispatch(this);
-		}
 	}
 
 	public boolean waitForApplication(AppInfo appInfo)
 	{
 		synchronized (appInfo)
 		{
+			// If the AppServer is online - don't use a Continuation
 			if (appInfo.getStatus() == AppState.ONLINE)
 				return false;
 
+			// Get the continuation
 			HttpConnection con = HttpConnection.getCurrentConnection();
 			Continuation continuation = ContinuationSupport.getContinuation(con.getRequest());
 
-			logger.debug("Suspending the request");
+			// Register the continuation
+			logger.debug("suspending the request for: " + appInfo.getAppId());
 			appInfo.addContinuation(continuation);
 			continuation.suspend();
 
+			// Continuation used
 			return true;
 		}
 	}
@@ -81,11 +88,12 @@ class AppMonitor implements Runnable
 		while (true)
 		{
 			// References the process to be started
-			AppProcess toStart = null;
+			AppProcess toProcess = null;
 
 			// Get the next process from the worker queue
 			synchronized (jobQueue)
 			{
+				// Spin lock until the jobQueue is not empty
 				while (jobQueue.isEmpty())
 				{
 					try
@@ -96,27 +104,27 @@ class AppMonitor implements Runnable
 						logger.error("Interruption in AppStarter-Thread", e);
 					}
 				}
-				
-				toStart = jobQueue.poll();
+
+				// Get and remove the next job from the queue
+				toProcess = jobQueue.poll();
 			}
 
-			if (toStart != null)
+			
+			logger.debug("monitor processes job");
+
+			// Start
+			try
 			{
-				logger.debug("Starting new AppServer");
-
-				// Start
-				try
-				{
-					toStart.startOrRestart();
-					toStart.getAppInfo().setStatus(AppState.ONLINE);
-				} catch (IOException e)
-				{
-					toStart.getAppInfo().setStatus(AppState.FAILED);
-				}
-
-				// Resume all Continuations 
-				toStart.getAppInfo().resume(); 
+				// Start the process
+				toProcess.startOrRestart();
+			} catch (IOException e)
+			{
+				// Update the AppServer state
+				toProcess.getAppInfo().setStatus(AppState.FAILED);
 			}
+
+			// Resume all Continuations
+			toProcess.getAppInfo().resume();
 		}
 	}
 }

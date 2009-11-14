@@ -35,6 +35,8 @@ class AppProcess
 
 	private void stopAndClean()
 	{
+		logger.info("killing the AppServer-process: " + appInfo.getAppId());
+		
 		process.destroy();
 		process = null;
 	}
@@ -84,11 +86,11 @@ class AppProcess
 			// Wait until the Server running
 			waitForAppServer();
 
+			// Update the AppServer state
+			this.appInfo.setStatus(AppState.ONLINE);
+			
 		} catch (IOException e)
 		{
-			// Update status
-			this.appInfo.setStatus(AppState.FAILED);
-
 			// Log the error
 			logger.error("Could not start a new server process (AppId: " + appInfo.getAppId() + " Command: "
 					+ command.toString() + ")", e);
@@ -140,18 +142,16 @@ class AppProcess
 
 		try
 		{
-			// read input
+			// read the input stream until SERVER_ONLINE sequence is found
 			String line = "";
 			while ((line = stdInStream.readLine()) != null)
 			{
+				logger.debug("from: " + appInfo.getAppId() + ">" + line); 
+				
 				if (line.equalsIgnoreCase(SERVER_ONLINE))
 				{
-					System.out.println(">>>" + line);
 					logger.info("AppServer is online: " + this.appInfo.getAppId());
 					return;
-				} else
-				{
-					System.out.println(">>>" + line);
 				}
 			}
 
@@ -166,6 +166,7 @@ class AppProcess
 			throw e;
 		} finally
 		{
+			// Close the input stream
 			stdInStream.close();
 		}
 	}

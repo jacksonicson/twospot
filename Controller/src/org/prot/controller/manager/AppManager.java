@@ -16,37 +16,51 @@ public class AppManager
 		registry = new AppRegistry();
 	}
 
+	private enum Todo
+	{
+		START, WAIT
+	};
+
 	public AppInfo requireApp(String appId)
 	{
-		AppInfo appInfo = registry.registerApp(appId);
 
-		AppState todo = null;
+		registry.tick();
+		AppInfo appInfo = registry.getOrRegisterApp(appId);
+		Todo todo = null;
 
+		// Simple state machine for managing the AppServer lifecycle
 		synchronized (appInfo)
 		{
 			// Operations depends on app status
 			switch (appInfo.getStatus())
 			{
 			case ONLINE:
+				// Don't change the state
 				return appInfo;
 			case STARTING:
-				todo = AppState.STARTING;
+				// Don't change the state
+				todo = Todo.WAIT;
 				break;
 			case OFFLINE:
 			case STALE:
+				// Change the state to STARTING
 				appInfo.setStatus(AppState.STARTING);
-				todo = AppState.OFFLINE;
+				todo = Todo.START;
 				break;
 			}
 		}
 
+		// Is indirectly synchronized by the previous state selection
 		switch (todo)
 		{
-		case OFFLINE:
+		case START:
+			// Start the application. Returns true if a continuation is used
 			if (startApp(appInfo))
 				return null;
 			break;
-		case STARTING:
+		case WAIT:
+			// Waits until the application is ONLINE. Returns true if a
+			// continuation is used
 			if (monitor.waitForApplication(appInfo))
 				return null;
 			break;
@@ -58,15 +72,12 @@ public class AppManager
 	public void reportStaleApp(String appId)
 	{
 		AppInfo appInfo = registry.getAppInfo(appId);
-		
+
 		// Cannot change the state for an unexisting application
 		if (appInfo == null)
 			return;
 
-		synchronized (appInfo)
-		{
-			appInfo.setStatus(AppState.STALE);
-		}
+		appInfo.setStatus(AppState.STALE);
 	}
 
 	private boolean startApp(AppInfo appInfo)
