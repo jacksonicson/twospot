@@ -27,6 +27,14 @@
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-xml-7.0.0.v20091005.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/core-2.0.0-m3/datanucleus-core-2.0.0-m3.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/hbase-1.0.4-SNAPSHOT/datanucleus-hbase-1.0.4-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/datanucleus/jdo2-api-2.3-ea/jdo2-api-2.3-ea.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/datanucleus/core-2.0.0-m3/datanucleus-cache-2.0.0-m2.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/datanucleus/core-2.0.0-m3/datanucleus-connectionpool-2.0.0-m1.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/datanucleus/core-2.0.0-m3/datanucleus-core-2.0.0-m3-sources.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/datanucleus/core-2.0.0-m3/datanucleus-enhancer-2.0.0-m3.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/datanucleus/core-2.0.0-m3/datanucleus-management-1.0.2.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/datanucleus/core-2.0.0-m3/datanucleus-rdbms-2.0.0-m3.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/datanucleus/jdo2-api-2.3-ea/jdo2-api-2.3-eb.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/datanucleus/dep/asm-3.1.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/datanucleus/dep/hsqldb-1.8.0.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
