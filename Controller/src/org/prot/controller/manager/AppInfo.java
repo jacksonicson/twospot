@@ -7,6 +7,9 @@ import org.eclipse.jetty.continuation.Continuation;
 
 public class AppInfo
 {
+	// Maximum time until the AppServer is idle
+	private static final int MAX_TIME_TO_IDLE = 120 * 1000;
+
 	// AppId
 	private final String appId;
 
@@ -16,8 +19,21 @@ public class AppInfo
 	// State of the appserver
 	private AppState status = AppState.OFFLINE;
 
+	// Timestamp which tells last usage
+	private long lastUsed;
+
 	// Continuations for requests which are waiting for this appserver
 	private List<Continuation> continuations = new ArrayList<Continuation>();
+
+	void tick()
+	{
+		this.lastUsed = System.currentTimeMillis();
+	}
+
+	boolean isIdle()
+	{
+		return (System.currentTimeMillis() - this.lastUsed) > MAX_TIME_TO_IDLE;
+	}
 
 	public AppInfo(String appId, int port)
 	{

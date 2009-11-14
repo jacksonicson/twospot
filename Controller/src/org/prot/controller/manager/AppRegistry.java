@@ -1,7 +1,9 @@
 package org.prot.controller.manager;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 
 class AppRegistry
@@ -46,16 +48,38 @@ class AppRegistry
 	{
 		AppInfo appInfo = appInfos.get(appId);
 		if (appInfo != null)
+		{
+			appInfo.tick();
 			return appInfo;
+		}
 
 		appInfo = new AppInfo(appId, getPort());
+		appInfo.tick();
 		putApp(appInfo);
 
 		return appInfo;
 	}
-	
-	public void tick()
+
+	public Set<AppInfo> tick()
 	{
-		
+		Set<AppInfo> idleApps = null;
+		for (AppInfo info : appInfos.values())
+		{
+			if (info.isIdle())
+			{
+				if (idleApps == null)
+					idleApps = new HashSet<AppInfo>();
+
+				info.setStatus(AppState.KILLED);
+				
+				synchronized (this)
+				{
+					appInfos.remove(info.getAppId());
+					idleApps.add(info);
+				}
+			}
+		}
+
+		return idleApps;
 	}
 }

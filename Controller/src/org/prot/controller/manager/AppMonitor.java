@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
@@ -38,6 +39,26 @@ class AppMonitor implements Runnable
 		// Start the thread only if it is not running right now
 		if (!running)
 			running = threadPool.dispatch(this);
+	}
+
+	public void killProcess(Set<AppInfo> idleApps)
+	{
+		synchronized (jobQueue)
+		{
+			for (AppInfo info : idleApps)
+			{
+				logger.debug("Kill AppServer-Job: " + info.getAppId());
+
+				AppProcess process = this.processList.get(info);
+				if (process != null)
+				{
+					this.processList.remove(process);
+					jobQueue.add(process);
+				}
+			}
+			
+			jobQueue.notifyAll();
+		}
 	}
 
 	public void startProcess(AppInfo info)
@@ -109,7 +130,6 @@ class AppMonitor implements Runnable
 				toProcess = jobQueue.poll();
 			}
 
-			
 			logger.debug("monitor processes job");
 
 			// Start

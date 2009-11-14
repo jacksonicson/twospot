@@ -1,5 +1,7 @@
 package org.prot.controller.manager;
 
+import java.util.Set;
+
 import org.eclipse.jetty.util.thread.ThreadPool;
 
 public class AppManager
@@ -23,9 +25,15 @@ public class AppManager
 
 	public AppInfo requireApp(String appId)
 	{
-
-		registry.tick();
+		// Get or register the AppServer
 		AppInfo appInfo = registry.getOrRegisterApp(appId);
+
+		// Find and kill all idle AppServers
+		Set<AppInfo> killed = registry.tick();
+		if (killed != null)
+			monitor.killProcess(killed);
+
+		// Todo-Information
 		Todo todo = null;
 
 		// Simple state machine for managing the AppServer lifecycle

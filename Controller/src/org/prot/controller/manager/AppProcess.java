@@ -49,6 +49,13 @@ class AppProcess
 
 	public void startOrRestart() throws IOException
 	{
+		// Check if the process should be killed
+		if(appInfo.getStatus() == AppState.KILLED)
+		{
+			stopAndClean();
+			return; 
+		}
+		
 		// Kill the old process if exists
 		if (process != null)
 			stopAndClean();
