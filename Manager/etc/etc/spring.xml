@@ -11,18 +11,33 @@
 	</bean>
 
 
+	<!-- Application beans -->
+	<bean id="ZooHelper" class="org.prot.util.zookeeper.ZooHelper"
+		init-method="init">
+		<property name="host" value="127.0.0.1" />
+		<property name="port" value="2181" />
+	</bean>
+
+	<bean id="ManagementService" class="org.prot.manager.zookeeper.ManagementService"
+	init-method="init">
+		<property name="zooHelper" ref="ZooHelper" />
+		
+		<property name="host" value="localhost" />
+		<property name="port" value="${rmi.registry.port}" />
+	</bean>
+
 
 	<!-- Services -->
 	<bean id="FrontendService" class="org.prot.manager.services.FrontendServiceImpl" />
-
 
 	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
 		<property name="serviceName" value="frontendService" />
 		<property name="service" ref="FrontendService" />
 		<property name="serviceInterface" value="org.prot.manager.services.FrontendService" />
-		
+
 		<property name="registryPort" value="${rmi.registry.port}" />
 	</bean>
 
 </beans>
+
 
