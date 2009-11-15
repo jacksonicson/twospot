@@ -23,6 +23,9 @@ public class Main
 		PropertyPlaceholderConfigurer conf = (PropertyPlaceholderConfigurer)factory.getBean("PropertyConfigurer");
 		conf.postProcessBeanFactory(factory);
 		
+		// Load the beans
+		factory.getBean("ManagementService"); 
+		
 		// Start the server
 		Server server = (Server) factory.getBean("Server");
 		try

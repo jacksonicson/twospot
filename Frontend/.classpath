@@ -17,5 +17,6 @@
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-continuation-7.0.0.v20091005.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Util"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-client-7.0.0.v20091005.jar" sourcepath="D:/work/jetty7src/jetty-client/src"/>
+	<classpathentry kind="lib" path="/Libs/lib/zookeeper-3.2.1/zookeeper-3.2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -53,7 +53,7 @@
 		</property>
 	</bean>
 
-	<bean id="FilterHandler" class="org.prot.frontend.handlers.FilterHandler">
+	<bean id="FilterHandler" class="org.prot.frontend.handlers.FilterHandler" init-method="init">
 		<property name="frontendService" ref="FrontendService" />
 		<property name="appCache" ref="AppCache" />
 		<property name="deployer" ref="AppDeployer" />
@@ -66,8 +66,8 @@
 	<bean id="ProxyHelper" class="org.prot.util.handler.HttpProxyHelper">
 		<property name="httpClient" ref="HttpClient" />
 	</bean>
-	
-	
+
+
 	<bean id="AppCache" class="org.prot.frontend.cache.timeout.TimeoutAppCache" />
 
 
@@ -76,6 +76,17 @@
 		<property name="httpClient" ref="HttpClient" />
 	</bean>
 
+
+	<bean id="ZooHelper" class="org.prot.util.zookeeper.ZooHelper"
+		init-method="init">
+		<property name="host" value="127.0.0.1" />
+		<property name="port" value="2181" />
+	</bean>
+
+	<bean id="ManagementService" class="org.prot.frontend.zookeeper.ManagementService"
+		init-method="init">
+		<property name="zooHelper" ref="ZooHelper" />
+	</bean>
 
 
 	<!-- HTTP Client -->
@@ -87,10 +98,14 @@
 
 
 	<!-- Remote -->
-	<bean id="FrontendService" class="org.springframework.remoting.rmi.RmiProxyFactoryBean" >
-		<property name="serviceUrl" value="rmi://${manager.host}:${rmi.registry.port}/frontendService" />
+	<bean id="FrontendService" class="org.prot.frontend.Manager">
+	</bean>
+	
+	<!--<bean id="FrontendServiceProxy" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">
+		<property name="serviceUrl"
+			value="rmi://${manager.host}:${rmi.registry.port}/frontendService" />
 		<property name="serviceInterface" value="org.prot.manager.services.FrontendService" />
-		<property name="refreshStubOnConnectFailure" value="true" /> 
+		<property name="refreshStubOnConnectFailure" value="true" />
 	</bean>
 
-</beans>
+--></beans>

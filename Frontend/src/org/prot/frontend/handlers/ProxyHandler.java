@@ -1,6 +1,7 @@
 package org.prot.frontend.handlers;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.URL;
 
 import javax.servlet.ServletException;
@@ -15,9 +16,10 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.prot.frontend.cache.AppCache;
 import org.prot.manager.config.ControllerInfo;
 import org.prot.manager.services.FrontendService;
+import org.prot.util.handler.ExceptionListener;
 import org.prot.util.handler.HttpProxyHelper;
 
-public class ProxyHandler extends AbstractHandler
+public class ProxyHandler extends AbstractHandler implements ExceptionListener
 {
 	private static final Logger logger = Logger.getLogger(ProxyHandler.class);
 
@@ -26,6 +28,11 @@ public class ProxyHandler extends AbstractHandler
 	private AppCache appCache;
 
 	private HttpProxyHelper proxyHelper;
+
+	public void init()
+	{
+		proxyHelper.addExceptionListener(this);
+	}
 
 	@Override
 	public void handle(String target, Request baseRequest, HttpServletRequest request,
@@ -60,7 +67,14 @@ public class ProxyHandler extends AbstractHandler
 			{
 				// Ask the manager and cache the results
 				info = frontendService.chooseAppServer(appId);
-				appCache.cacheController(appId, info);
+				if (info != null)
+					appCache.cacheController(appId, info);
+				else
+				{
+					response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500, "Cannot find a Controller");
+					baseRequest.setHandled(true);
+					return;
+				}
 			}
 
 			String fUrl = request.getRequestURL().toString();
@@ -71,15 +85,35 @@ public class ProxyHandler extends AbstractHandler
 			logger.debug("Forarding to URL: " + fUrl);
 
 			HttpURI uri = new HttpURI(fUrl);
-			proxyHelper.forwardRequest(baseRequest, request, response, uri);
+			proxyHelper.forwardRequest(baseRequest, request, response, uri, response);
 
 		} catch (Exception e)
 		{
-			logger.error("Erro while handling the request", e); 
-			response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500); 
+			logger.error("Erro while handling the request", e);
+			response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
 			baseRequest.setHandled(true);
 			return;
 		}
+	}
+
+	@Override
+	public boolean onException(Throwable e, Object obj)
+	{
+		if (e instanceof ConnectException)
+		{
+			HttpServletResponse response = (HttpServletResponse)obj;
+			try
+			{
+				response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500, "Could not connect with a Controller");
+			} catch (IOException e1)
+			{
+				return false; 
+			}
+			
+			return true;
+		}
+
+		return false;
 	}
 
 	public void setFrontendService(FrontendService frontendService)
