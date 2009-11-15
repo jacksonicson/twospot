@@ -1,6 +1,6 @@
 package org.prot.manager.services;
 
-import org.prot.manager.config.ControllerInfo;
+import org.prot.manager.data.ControllerInfo;
 import org.prot.manager.exceptions.MissingControllerException;
 
 public interface FrontendService

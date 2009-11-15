@@ -1,9 +1,11 @@
-package org.prot.manager.config;
+package org.prot.manager.data;
 
 import java.io.Serializable;
 
 public class ControllerInfo implements Serializable
 {
+	private static final long serialVersionUID = -4036981762748417669L;
+
 	private String address;
 
 	private int port;

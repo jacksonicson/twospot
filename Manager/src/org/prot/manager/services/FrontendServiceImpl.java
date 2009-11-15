@@ -2,8 +2,8 @@ package org.prot.manager.services;
 
 import org.apache.log4j.Logger;
 import org.prot.controller.services.ControllerService;
-import org.prot.manager.config.ControllerInfo;
 import org.prot.manager.config.StaticConfiguration;
+import org.prot.manager.data.ControllerInfo;
 import org.prot.manager.exceptions.MissingControllerException;
 import org.springframework.remoting.rmi.RmiProxyFactoryBean;
 

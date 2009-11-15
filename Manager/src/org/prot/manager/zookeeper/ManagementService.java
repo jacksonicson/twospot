@@ -33,6 +33,9 @@ public class ManagementService
 		{
 			e.printStackTrace();
 		}
+		
+		ControllerWatcher watcher = new ControllerWatcher(zooHelper); 
+		zooHelper.addWatcher(watcher);
 	}
 
 	private void registerMaster() throws KeeperException, InterruptedException
