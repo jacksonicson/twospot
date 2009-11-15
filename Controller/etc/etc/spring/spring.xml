@@ -13,7 +13,8 @@
 
 
 	<!-- HTTP-Client -->
-	<bean id="HttpClient" class="org.eclipse.jetty.client.HttpClient" init-method="start">
+	<bean id="HttpClient" class="org.eclipse.jetty.client.HttpClient"
+		init-method="start">
 		<property name="threadPool" ref="ThreadPool" />
 	</bean>
 
@@ -52,14 +53,29 @@
 
 
 	<!-- Request handling -->
-	<bean id="RequestHandler" class="org.prot.controller.handler.RequestHandler" init-method="init">
+	<bean id="RequestHandler" class="org.prot.controller.handler.RequestHandler"
+		init-method="init">
 		<property name="appManager" ref="AppManager" />
 		<property name="proxyHelper" ref="ProxyHelper" />
 	</bean>
 
 
 
+
 	<!-- Application beans -->
+	<bean id="ManagementService" class="org.prot.controller.zookeeper.ManagementService" init-method="init">
+		<property name="zooHelper" ref="ZooHelper" />
+		<property name="host" value="localhost" />
+		<property name="name" value="controller0" />
+	</bean>
+
+	<bean id="ZooHelper" class="org.prot.util.zookeeper.ZooHelper"
+		init-method="init">
+		<property name="host" value="127.0.0.1" />
+		<property name="port" value="2181" />
+	</bean>
+
+
 	<bean id="ProxyHelper" class="org.prot.util.handler.HttpProxyHelper">
 		<property name="httpClient" ref="HttpClient" />
 	</bean>

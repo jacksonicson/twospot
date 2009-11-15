@@ -20,6 +20,9 @@ public class Main
 		PropertyPlaceholderConfigurer conf = (PropertyPlaceholderConfigurer)factory.getBean("PropertyConfigurer");
 		conf.postProcessBeanFactory(factory);
 		
+		// ZooKeeper
+		factory.getBean("ManagementService");
+		
 		// Start the RMI-Services
 		factory.getBean("ControllerServiceExporter");
 		
