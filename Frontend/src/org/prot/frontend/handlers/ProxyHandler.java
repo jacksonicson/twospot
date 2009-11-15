@@ -14,7 +14,7 @@ import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.prot.frontend.cache.AppCache;
-import org.prot.manager.config.ControllerInfo;
+import org.prot.manager.data.ControllerInfo;
 import org.prot.manager.services.FrontendService;
 import org.prot.util.handler.ExceptionListener;
 import org.prot.util.handler.HttpProxyHelper;

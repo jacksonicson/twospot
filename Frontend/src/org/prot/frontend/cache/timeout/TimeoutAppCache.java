@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.prot.frontend.cache.AppCache;
-import org.prot.manager.config.ControllerInfo;
+import org.prot.manager.data.ControllerInfo;
 
 public class TimeoutAppCache implements AppCache
 {

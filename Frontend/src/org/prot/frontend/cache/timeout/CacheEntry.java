@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.prot.manager.config.ControllerInfo;
+import org.prot.manager.data.ControllerInfo;
 
 public class CacheEntry
 {

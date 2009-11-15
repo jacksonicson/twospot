@@ -1,7 +1,7 @@
 package org.prot.frontend;
 
 import org.apache.log4j.Logger;
-import org.prot.manager.config.ControllerInfo;
+import org.prot.manager.data.ControllerInfo;
 import org.prot.manager.exceptions.MissingControllerException;
 import org.prot.manager.services.FrontendService;
 import org.springframework.remoting.RemoteConnectFailureException;

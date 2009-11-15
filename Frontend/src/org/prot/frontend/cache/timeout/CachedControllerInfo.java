@@ -1,6 +1,6 @@
 package org.prot.frontend.cache.timeout;
 
-import org.prot.manager.config.ControllerInfo;
+import org.prot.manager.data.ControllerInfo;
 
 public class CachedControllerInfo extends ControllerInfo
 {
