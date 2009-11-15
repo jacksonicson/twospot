@@ -58,7 +58,7 @@ public class ZooHelper
 
 		try
 		{
-			zooKeeper.create(ZNodes.ZNODE_APPS, new byte[] {}, getACL(), CreateMode.PERSISTENT);
+			zooKeeper.create(ZNodes.ZNODE_CONTROLLER, new byte[] {}, getACL(), CreateMode.PERSISTENT);
 		} catch (NodeExistsException e)
 		{
 			// Do nothing
