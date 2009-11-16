@@ -2,25 +2,45 @@ package org.prot.appserver.management;
 
 public class ServerStatus implements ServerStatusMXBean
 {
-	public boolean getState()
+	@Override
+	public String getAppId()
 	{
-		return false;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	private int requests = 0;
-	
-	public int getRequests()
+	@Override
+	public long getCpuCycles()
 	{
-		return this.requests; 
+		// TODO Auto-generated method stub
+		return 0;
 	}
-	
+
+	@Override
+	public long getMemoryUsage()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
 	public String getName()
 	{
-		return "MxServerStatus";
+		// TODO Auto-generated method stub
+		return null;
 	}
-	
-	public void incrementRequests()
+
+	@Override
+	public int getRequestNumber()
 	{
-		this.requests++; 
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean isOnline()
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

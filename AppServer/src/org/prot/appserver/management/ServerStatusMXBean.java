@@ -5,9 +5,15 @@ import javax.management.MXBean;
 @MXBean
 public interface ServerStatusMXBean
 {
-	public boolean getState();
-	
-	public int getRequests();
-	
 	public String getName();
+	
+	public String getAppId();
+
+	public boolean isOnline();
+
+	public int getRequestNumber();
+
+	public long getCpuCycles();
+
+	public long getMemoryUsage();
 }

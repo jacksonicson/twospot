@@ -55,7 +55,7 @@ public class Configuration
 		try
 		{
 			props.load(Configuration.class.getResourceAsStream("/etc/config.properties"));
-			configuration.workingDirectory = props.getProperty("working.dir");
+			configuration.workingDirectory = props.getProperty("appserver.working.dir");
 			configuration.pythonLibs = props.getProperty("python.lib");
 			configuration.djangoLibs = props.getProperty("python.lib.site-packages");
 		} catch (IOException e)
