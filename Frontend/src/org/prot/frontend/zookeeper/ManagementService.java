@@ -14,21 +14,21 @@ public class ManagementService
 
 	public void init()
 	{
-		MasterWatcher masterWatcher = new MasterWatcher(zooHelper);
-		zooHelper.addWatcher(masterWatcher);
-		try
-		{
-			masterWatcher.lookupMaster();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		} catch (KeeperException e)
-		{
-			e.printStackTrace();
-		} catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		} 
+//		MasterWatcher masterWatcher = new MasterWatcher(zooHelper);
+//		zooHelper.addWatcher(masterWatcher);
+//		try
+//		{
+//			masterWatcher.lookupMaster();
+//		} catch (IOException e)
+//		{
+//			e.printStackTrace();
+//		} catch (KeeperException e)
+//		{
+//			e.printStackTrace();
+//		} catch (InterruptedException e)
+//		{
+//			e.printStackTrace();
+//		} 
 	}
 
 	public void setZooHelper(ZooHelper zooHelper)
