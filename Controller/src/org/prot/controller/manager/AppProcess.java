@@ -110,11 +110,16 @@ class AppProcess
 	private String loadClasspath()
 	{
 		File libs = new File("../Libs/");
-		String classpath = crawlDir(libs);
+		String classpath = crawlDir(libs) + ";";
 
 		File appServer = new File("../AppServer/bin");
-		classpath += appServer.getAbsolutePath();
-
+		classpath += appServer.getAbsolutePath() + ";";
+		
+		File utils = new File("../Util/bin");
+		classpath += utils.getAbsolutePath() + ";";
+		
+		System.out.println("Classpath: " + classpath);
+		
 		return classpath;
 	}
 
