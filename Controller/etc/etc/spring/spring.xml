@@ -2,6 +2,9 @@
 <!DOCTYPE beans SYSTEM "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 
 <beans>
+	<!-- Import other Spring-Configurations -->
+	<import resource="zookeeper.xml" />
+
 	<!-- Properties -->
 	<bean id="PropertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -63,17 +66,12 @@
 
 
 	<!-- Application beans -->
-	<bean id="ManagementService" class="org.prot.controller.zookeeper.ManagementService" init-method="init">
+	<bean id="ManagementService" class="org.prot.controller.zookeeper.ManagementService"
+		init-method="init">
 		<property name="zooHelper" ref="ZooHelper" />
 		<property name="host" value="http://localhost" />
 		<property name="name" value="controller0" />
 	</bean>
-
-	<bean id="ZooHelper" class="org.prot.util.zookeeper.ZooHelper">
-		<constructor-arg index="0" value="127.0.0.1" />
-		<constructor-arg index="1" value="2181" />
-	</bean>
-
 
 	<bean id="ProxyHelper" class="org.prot.util.handler.HttpProxyHelper">
 		<property name="httpClient" ref="HttpClient" />
