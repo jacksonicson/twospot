@@ -71,14 +71,15 @@ public class ProxyHandler extends AbstractHandler implements ExceptionListener
 					appCache.cacheController(appId, info);
 				else
 				{
-					response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500, "Cannot find a Controller");
+					response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
+							"Manager unreachable or did not give a Controller");
 					baseRequest.setHandled(true);
 					return;
 				}
 			}
 
 			String fUrl = request.getRequestURL().toString();
-			fUrl = "http://" + info.getAddress() + ":" + info.getPort();
+			fUrl = info.getAddress() + ":" + info.getPort();
 			String fUri = "/" + appId + request.getRequestURI();
 			fUrl = fUrl + fUri;
 
@@ -101,15 +102,16 @@ public class ProxyHandler extends AbstractHandler implements ExceptionListener
 	{
 		if (e instanceof ConnectException)
 		{
-			HttpServletResponse response = (HttpServletResponse)obj;
+			HttpServletResponse response = (HttpServletResponse) obj;
 			try
 			{
-				response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500, "Could not connect with a Controller");
+				response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
+						"Could not connect with a Controller");
 			} catch (IOException e1)
 			{
-				return false; 
+				return false;
 			}
-			
+
 			return true;
 		}
 

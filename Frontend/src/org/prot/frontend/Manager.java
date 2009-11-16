@@ -2,9 +2,7 @@ package org.prot.frontend;
 
 import org.apache.log4j.Logger;
 import org.prot.manager.data.ControllerInfo;
-import org.prot.manager.exceptions.MissingControllerException;
 import org.prot.manager.services.FrontendService;
-import org.springframework.remoting.RemoteConnectFailureException;
 import org.springframework.remoting.rmi.RmiProxyFactoryBean;
 
 public class Manager implements FrontendService
@@ -42,7 +40,7 @@ public class Manager implements FrontendService
 		return true;
 	}
 
-	public ControllerInfo chooseAppServer(String appId) throws MissingControllerException
+	public ControllerInfo chooseAppServer(String appId)
 	{
 		if (!connect())
 			return null;
@@ -50,7 +48,7 @@ public class Manager implements FrontendService
 		try
 		{
 			return frontendService.chooseAppServer(appId);
-		} catch (RemoteConnectFailureException e)
+		} catch (Exception e)
 		{
 			logger.error("Connection to manager lost");
 			frontendService = null;
@@ -67,7 +65,7 @@ public class Manager implements FrontendService
 		try
 		{
 			frontendService.newAppOrVersion(appId);
-		} catch (RemoteConnectFailureException e)
+		} catch (Exception e)
 		{
 			logger.error("Connection to manager lost");
 			frontendService = null;

@@ -22,6 +22,7 @@ public class WatchMaster implements Watcher, Job
 	@Override
 	public void process(WatchedEvent event)
 	{
+		logger.info("Processing Watcher: " + event.getPath()); 
 		zooHelper.getQueue().insert(this);
 	}
 
@@ -39,8 +40,10 @@ public class WatchMaster implements Watcher, Job
 			Configuration.get().setManagerAddress(null);
 		} else
 		{
+			logger.info("Updating configuration with the Manager"); 
+			
 			// Update the configuration
-			byte[] data = zk.getData(ZNodes.ZNODE_MASTER, true, statMaster);
+			byte[] data = zk.getData(ZNodes.ZNODE_MASTER, this, statMaster);
 			Configuration.get().setManagerAddress(new String(data));
 		}
 

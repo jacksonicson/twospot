@@ -23,8 +23,10 @@ public class FilterHandler extends ProxyHandler
 	public void handle(String target, Request baseRequest, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException
 	{
+		// Check the request type
 		if (baseRequest.getMethod().equals(HttpMethods.POST))
 		{
+			// TODO: There are multiple code duplicates of this -> make it more general 
 			String uri = request.getRequestURI();
 			if (uri.startsWith("/"))
 				uri = uri.substring(1);
@@ -60,6 +62,7 @@ public class FilterHandler extends ProxyHandler
 			}
 		}
 
+		// Could not handle the request
 		super.handle(target, baseRequest, request, response);
 	}
 
