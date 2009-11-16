@@ -15,13 +15,27 @@
 
 
 	<!-- Application beans -->
+	<bean id="ControllerRegistry" class="org.prot.manager.data.ControllerRegistry">
+
+	</bean>
 
 	<bean id="ManagementService" class="org.prot.manager.zookeeper.ManagementService"
 		init-method="init">
 		<property name="zooHelper" ref="ZooHelper" />
 
-		<property name="host" value="localhost" />
-		<property name="port" value="${rmi.registry.port}" />
+		<property name="jobs">
+			<list>
+				<bean class="org.prot.manager.zookeeper.jobs.RegisterMaster">
+					<constructor-arg index="0" value="localhost" />
+					<constructor-arg index="1" value="${rmi.registry.port}" />
+				</bean>
+				<ref bean="LookupControllers" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="LookupControllers" class="org.prot.manager.zookeeper.jobs.LookupControllers">
+		<property name="registry" ref="ControllerRegistry" />
 	</bean>
 
 

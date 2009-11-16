@@ -1,7 +1,9 @@
 package org.prot.manager.zookeeper;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
-import org.prot.manager.zookeeper.jobs.RegisterMaster;
+import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.ZooHelper;
 
 public class ManagementService
@@ -11,15 +13,13 @@ public class ManagementService
 	// ZooKeeper helper
 	private ZooHelper zooHelper;
 
-	// Hostname of the master
-	private String host;
-
-	// Port of the master
-	private int port;
+	// list with ZooKeeper-Jobsd
+	private List<Job> jobs;
 
 	public void init()
 	{
-		zooHelper.getQueue().insert(new RegisterMaster(host, port));
+		for (Job job : jobs)
+			zooHelper.getQueue().insert(job);
 	}
 
 	public void setZooHelper(ZooHelper zooHelper)
@@ -27,13 +27,8 @@ public class ManagementService
 		this.zooHelper = zooHelper;
 	}
 
-	public void setHost(String host)
+	public void setJobs(List<Job> jobs)
 	{
-		this.host = host;
-	}
-
-	public void setPort(int port)
-	{
-		this.port = port;
+		this.jobs = jobs;
 	}
 }

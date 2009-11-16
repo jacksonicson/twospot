@@ -10,6 +10,6 @@ public class ControllerRegistry
 	
 	public void update(List<ControllerInfo> infos)
 	{
-		
+		System.out.println("Update: " + infos.size());
 	}
 }
