@@ -10,6 +10,8 @@ public class ControllerInfo implements Serializable
 
 	private int port;
 
+	private String serviceAddress;
+	
 	private int servicePort; 
 	
 	private String serviceName; 
@@ -18,8 +20,13 @@ public class ControllerInfo implements Serializable
 	{
 		// empty constructor is necessary
 	}
-
+	
 	public ControllerInfo(ControllerInfo info)
+	{
+		update(info);
+	}
+	
+	public void update(ControllerInfo info) 
 	{
 		this.address = info.getAddress();
 		this.port = info.getPort();
@@ -63,5 +70,15 @@ public class ControllerInfo implements Serializable
 	public void setServiceName(String serviceName)
 	{
 		this.serviceName = serviceName;
+	}
+
+	public String getServiceAddress()
+	{
+		return serviceAddress;
+	}
+
+	public void setServiceAddress(String serviceAddress)
+	{
+		this.serviceAddress = serviceAddress;
 	}
 }
