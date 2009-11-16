@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="etc"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-client-7.0.0.v20091005.jar" sourcepath="D:/work/jetty7src/jetty-client/src"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-http-7.0.0.v20091005.jar" sourcepath="D:/work/jetty7src/jetty-http/src"/>

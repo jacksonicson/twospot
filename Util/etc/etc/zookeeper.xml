@@ -1,0 +1,9 @@
+<?xml-stylesheet type="text/xsl" ?>
+<!DOCTYPE beans SYSTEM "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<beans>
+	<bean id="ZooHelper" class="org.prot.util.zookeeper.ZooHelper">
+		<constructor-arg index="0" value="127.0.0.1" />
+		<constructor-arg index="1" value="2181" />
+	</bean>
+</beans>
