@@ -1,11 +1,10 @@
 package org.prot.manager.zookeeper;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
-import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
-import org.apache.zookeeper.ZooKeeper;
-import org.apache.zookeeper.data.Stat;
-import org.prot.util.zookeeper.ZNodes;
+import org.prot.manager.zookeeper.jobs.RegisterMaster;
 import org.prot.util.zookeeper.ZooHelper;
 
 public class ManagementService
@@ -23,41 +22,19 @@ public class ManagementService
 
 	public void init()
 	{
+		zooHelper.getQueue().insert(new RegisterMaster(host, port));
 		try
 		{
-			registerMaster();
+			zooHelper.getQueue().run();
 		} catch (KeeperException e)
 		{
-			e.printStackTrace();
+			// Do nothing
 		} catch (InterruptedException e)
 		{
 			e.printStackTrace();
-		}
-		
-		ControllerWatcher watcher = new ControllerWatcher(zooHelper); 
-		zooHelper.addWatcher(watcher);
-	}
-
-	private void registerMaster() throws KeeperException, InterruptedException
-	{
-		logger.debug("Registering this master with the ZooKeeper");
-
-		ZooKeeper zk = zooHelper.getZooKeeper();
-
-		Stat statMaster = zk.exists(ZNodes.ZNODE_MASTER, false);
-		if (statMaster == null)
+		} catch (IOException e)
 		{
-			byte[] address = (host + ":" + port).getBytes();
-			zk.create(ZNodes.ZNODE_MASTER, address, zooHelper.getACL(), CreateMode.EPHEMERAL);
-			statMaster = zk.exists(ZNodes.ZNODE_MASTER, true);
-			
-			logger.info("Master registered in ZooKeeper");
-			return;
-		} else
-		{
-			logger.error("ZooKeeper already contains a ZNode: " + ZNodes.ZNODE_MASTER
-					+ ". Multimaster is not supported");
-			System.exit(1);
+			e.printStackTrace();
 		}
 	}
 

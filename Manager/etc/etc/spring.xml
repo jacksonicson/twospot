@@ -12,16 +12,15 @@
 
 
 	<!-- Application beans -->
-	<bean id="ZooHelper" class="org.prot.util.zookeeper.ZooHelper"
-		init-method="init">
-		<property name="host" value="127.0.0.1" />
-		<property name="port" value="2181" />
+	<bean id="ZooHelper" class="org.prot.util.zookeeper.ZooHelper">
+		<constructor-arg index="0" value="127.0.0.1" />
+		<constructor-arg index="1" value="2181" />
 	</bean>
 
 	<bean id="ManagementService" class="org.prot.manager.zookeeper.ManagementService"
-	init-method="init">
+		init-method="init">
 		<property name="zooHelper" ref="ZooHelper" />
-		
+
 		<property name="host" value="localhost" />
 		<property name="port" value="${rmi.registry.port}" />
 	</bean>

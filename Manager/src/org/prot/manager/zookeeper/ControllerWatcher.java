@@ -1,21 +1,10 @@
 package org.prot.manager.zookeeper;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
-import org.apache.zookeeper.ZooKeeper;
-import org.apache.zookeeper.data.Stat;
-import org.prot.manager.data.ControllerInfo;
 import org.prot.manager.data.ControllerRegistry;
 import org.prot.util.zookeeper.FilteredWatcher;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
-import org.prot.util.zookeeper.data.Controller;
 
 public class ControllerWatcher implements FilteredWatcher
 {
@@ -31,69 +20,69 @@ public class ControllerWatcher implements FilteredWatcher
 
 	void register()
 	{
-		ZooKeeper zk = zooHelper.getZooKeeper();
-		try
-		{
-			zk.getChildren(ZNodes.ZNODE_CONTROLLER, true);
-		} catch (KeeperException e)
-		{
-			e.printStackTrace();
-		} catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		}
+//		ZooKeeper zk = zooHelper.getZooKeeper();
+//		try
+//		{
+//			zk.getChildren(ZNodes.ZNODE_CONTROLLER, true);
+//		} catch (KeeperException e)
+//		{
+//			e.printStackTrace();
+//		} catch (InterruptedException e)
+//		{
+//			e.printStackTrace();
+//		}
 	}
 	
 	void update()
 	{
-		ZooKeeper zk = zooHelper.getZooKeeper();
-		try
-		{
-			List<String> childs = zk.getChildren(ZNodes.ZNODE_CONTROLLER, true);
-			List<ControllerInfo> info = new ArrayList<ControllerInfo>();
-			for(String child : childs)
-			{
-				System.out.println("Child: " + child); 
-				
-				child = ZNodes.ZNODE_CONTROLLER + "/" + child; 
-				
-				Stat stat = new Stat();
-				byte[] data = zk.getData(child, false, stat); 
-				ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(data));
-				Object o = (Object)in.readObject();
-				if(o instanceof Controller)
-				{
-					Controller c = (Controller)o;
-					ControllerInfo ci = new ControllerInfo();
-					ci.setAddress(c.address);
-					ci.setPort(c.port);
-					info.add(ci); 
-					System.out.println("DONE: " + c.address + " / " + c.port); 
-					
-				} else
-				{
-					System.out.println("Unable to cast");
-				}
-			}
-			
-			System.out.println("Updating"); 
-			// registry.update(info); 
-			
-		} catch (KeeperException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		} catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
+//		ZooKeeper zk = zooHelper.getZooKeeper();
+//		try
+//		{
+//			List<String> childs = zk.getChildren(ZNodes.ZNODE_CONTROLLER, true);
+//			List<ControllerInfo> info = new ArrayList<ControllerInfo>();
+//			for(String child : childs)
+//			{
+//				System.out.println("Child: " + child); 
+//				
+//				child = ZNodes.ZNODE_CONTROLLER + "/" + child; 
+//				
+//				Stat stat = new Stat();
+//				byte[] data = zk.getData(child, false, stat); 
+//				ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(data));
+//				Object o = (Object)in.readObject();
+//				if(o instanceof Controller)
+//				{
+//					Controller c = (Controller)o;
+//					ControllerInfo ci = new ControllerInfo();
+//					ci.setAddress(c.address);
+//					ci.setPort(c.port);
+//					info.add(ci); 
+//					System.out.println("DONE: " + c.address + " / " + c.port); 
+//					
+//				} else
+//				{
+//					System.out.println("Unable to cast");
+//				}
+//			}
+//			
+//			System.out.println("Updating"); 
+//			// registry.update(info); 
+//			
+//		} catch (KeeperException e)
+//		{
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (InterruptedException e)
+//		{
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e)
+//		{
+//			e.printStackTrace();
+//		} catch (ClassNotFoundException e)
+//		{
+//			e.printStackTrace();
+//		}
 	}
 
 	@Override
