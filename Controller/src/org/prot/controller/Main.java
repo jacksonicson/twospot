@@ -13,7 +13,7 @@ public class Main
 		DOMConfigurator.configure(Main.class.getResource("/etc/log4j/controller.xml"));
 
 		// Start spring ioc container
-		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring/spring.xml",
+		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring.xml",
 				getClass()));
 
 		// Postprocess the factory

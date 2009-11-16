@@ -42,7 +42,7 @@ public class Register implements Job
 		String path = zk.create(ZNodes.ZNODE_CONTROLLER + "/" + name, bo.toByteArray(),
 				zooHelper.getACL(), CreateMode.EPHEMERAL);
 
-		logger.info("Controller registered at ZooKeeper with: " + path);
+		logger.info("Controller registered within ZooKeeper: " + path);
 		
 		return true;
 	}
