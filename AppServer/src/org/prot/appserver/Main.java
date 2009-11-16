@@ -19,8 +19,9 @@ public class Main
 		DOMConfigurator.configure(Main.class.getResource("/etc/log4j.xml"));
 
 		// Start the Monitor
-		new Monitor();
-		
+		if (Configuration.getInstance().isRequiresController())
+			new Monitor();
+
 		// Create beans
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring.xml", getClass()));
 		factory.getBean("Lifecycle");

@@ -14,7 +14,10 @@ public class Configuration
 	private static Configuration configuration;
 
 	// Enable stdout
-	private boolean enableStdOut; 
+	private boolean enableStdOut;
+	
+	// Shutdown if Controller is not available
+	private boolean requiresController; 
 	
 	// Application identifier
 	private String appId;
@@ -154,5 +157,15 @@ public class Configuration
 	public void setEnableStdOut(boolean enableStdOut)
 	{
 		this.enableStdOut = enableStdOut;
+	}
+
+	public boolean isRequiresController()
+	{
+		return requiresController;
+	}
+
+	public void setRequiresController(boolean requiresController)
+	{
+		this.requiresController = requiresController;
 	}
 }

@@ -29,6 +29,9 @@ public class ArgumentParser
 
 		Option stdio = OptionBuilder.withArgName("write sdtout messages").hasArg().create("stdio");
 		options.addOption(stdio);
+		
+		Option controller = OptionBuilder.withArgName("requires the Controller").hasArg().create("controller");
+		options.addOption(controller);
 
 		try
 		{
@@ -42,6 +45,9 @@ public class ArgumentParser
 
 			if (cmd.hasOption("stdio"))
 				config.setEnableStdOut(Boolean.parseBoolean(cmd.getOptionValue("stdio")));
+			
+			if (cmd.hasOption("controller"))
+				config.setRequiresController(Boolean.parseBoolean(cmd.getOptionValue("controller")));
 
 		} catch (ParseException e)
 		{
