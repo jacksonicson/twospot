@@ -1,7 +1,6 @@
 package org.prot.manager.services;
 
 import org.prot.manager.data.ControllerInfo;
-import org.prot.manager.exceptions.MissingControllerException;
 
 public interface FrontendService
 {
@@ -10,7 +9,7 @@ public interface FrontendService
 	 * @return null if there was an error or the controller information
 	 * @throws MissingControllerException
 	 */
-	public ControllerInfo chooseAppServer(String appId) throws MissingControllerException;
+	public ControllerInfo chooseAppServer(String appId);
 	
 	public void newAppOrVersion(String appId); 
 }

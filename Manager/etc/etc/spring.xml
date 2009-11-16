@@ -16,7 +16,6 @@
 
 	<!-- Application beans -->
 	<bean id="ControllerRegistry" class="org.prot.manager.data.ControllerRegistry">
-
 	</bean>
 
 	<bean id="ManagementService" class="org.prot.manager.zookeeper.ManagementService"
@@ -40,7 +39,9 @@
 
 
 	<!-- Services -->
-	<bean id="FrontendService" class="org.prot.manager.services.FrontendServiceImpl" />
+	<bean id="FrontendService" class="org.prot.manager.services.FrontendServiceImpl">
+		<property name="registry" ref="ControllerRegistry" />
+	</bean>
 
 	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
 		<property name="serviceName" value="frontendService" />

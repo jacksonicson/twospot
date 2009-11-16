@@ -4,7 +4,6 @@ import org.apache.log4j.Logger;
 import org.prot.controller.services.ControllerService;
 import org.prot.manager.data.ControllerInfo;
 import org.prot.manager.data.ControllerRegistry;
-import org.prot.manager.exceptions.MissingControllerException;
 import org.springframework.remoting.rmi.RmiProxyFactoryBean;
 
 public class FrontendServiceImpl implements FrontendService
@@ -14,12 +13,9 @@ public class FrontendServiceImpl implements FrontendService
 	private ControllerRegistry registry;
 
 	@Override
-	public ControllerInfo chooseAppServer(String appId) throws MissingControllerException
+	public ControllerInfo chooseAppServer(String appId)
 	{
 		ControllerInfo info = registry.selectController();
-		if (info == null)
-			throw new MissingControllerException();
-
 		return info;
 	}
 
