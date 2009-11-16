@@ -33,8 +33,8 @@
 
 	<!-- Connector -->
 	<bean id="OutsideConnector" class="org.eclipse.jetty.server.nio.SelectChannelConnector">
-		<property name="host" value="${http.server.interface}" />
-		<property name="port" value="${http.server.port}" />
+		<property name="host" value="${http.controller.interface}" />
+		<property name="port" value="${http.controller.port}" />
 		<property name="acceptors" value="1" />
 	</bean>
 
