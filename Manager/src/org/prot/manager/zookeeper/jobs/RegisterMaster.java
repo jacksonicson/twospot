@@ -40,7 +40,7 @@ public class RegisterMaster implements Job
 			statMaster = zk.exists(ZNodes.ZNODE_MASTER, true);
 
 			logger.info("Master registered in ZooKeeper");
-			return false;
+			return true;
 		} else
 		{
 			logger.error("ZooKeeper already contains a ZNode: " + ZNodes.ZNODE_MASTER
@@ -55,5 +55,10 @@ public class RegisterMaster implements Job
 	public boolean isRetryable()
 	{
 		return true;
+	}
+
+	@Override
+	public void init(ZooHelper zooHelper)
+	{
 	}
 }
