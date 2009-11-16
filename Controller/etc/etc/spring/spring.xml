@@ -65,14 +65,13 @@
 	<!-- Application beans -->
 	<bean id="ManagementService" class="org.prot.controller.zookeeper.ManagementService" init-method="init">
 		<property name="zooHelper" ref="ZooHelper" />
-		<property name="host" value="localhost" />
+		<property name="host" value="http://localhost" />
 		<property name="name" value="controller0" />
 	</bean>
 
-	<bean id="ZooHelper" class="org.prot.util.zookeeper.ZooHelper"
-		init-method="init">
-		<property name="host" value="127.0.0.1" />
-		<property name="port" value="2181" />
+	<bean id="ZooHelper" class="org.prot.util.zookeeper.ZooHelper">
+		<constructor-arg index="0" value="127.0.0.1" />
+		<constructor-arg index="1" value="2181" />
 	</bean>
 
 
