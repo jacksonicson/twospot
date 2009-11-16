@@ -36,5 +36,6 @@
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/jdo2-api-2.3-ea/jdo2-api-2.3-eb.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/dep/asm-3.1.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/dep/hsqldb-1.8.0.4.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Util"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
