@@ -20,7 +20,7 @@ public class Main
 
 		// Start the Monitor
 		new Monitor();
-
+		
 		// Create beans
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring.xml", getClass()));
 		factory.getBean("Lifecycle");
