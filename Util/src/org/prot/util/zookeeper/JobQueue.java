@@ -23,9 +23,9 @@ public class JobQueue implements Runnable
 
 		insert(new CreateZNodeStructure());
 
-		logger.info("Starting ZooKeeper JobQueue");
-		Thread thread = new Thread(this);
-		thread.start();
+//		logger.info("Starting ZooKeeper JobQueue");
+//		Thread thread = new Thread(this);
+//		thread.start();
 	}
 
 	public void insert(Job job)
@@ -35,6 +35,8 @@ public class JobQueue implements Runnable
 			jobQueue.add(job);
 			jobQueue.notify();
 		}
+		
+		run();
 	}
 
 	private void reconnect()
@@ -45,24 +47,24 @@ public class JobQueue implements Runnable
 
 	public void run()
 	{
-		while (true)
+//		while (true)
 		{
 
 			Job todo = null;
 
 			synchronized (jobQueue)
 			{
-				while (jobQueue.isEmpty())
-				{
-					try
-					{
-						jobQueue.wait();
-					} catch (InterruptedException e)
-					{
-						logger.error("ZooKeeper JobQueue failed", e);
-						System.exit(1);
-					}
-				}
+//				while (jobQueue.isEmpty())
+//				{
+//					try
+//					{
+//						jobQueue.wait();
+//					} catch (InterruptedException e)
+//					{
+//						logger.error("ZooKeeper JobQueue failed", e);
+//						System.exit(1);
+//					}
+//				}
 
 				todo = jobQueue.get(0);
 			}
