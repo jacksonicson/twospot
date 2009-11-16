@@ -1,53 +1,32 @@
-package org.prot.frontend.zookeeper;
+package org.prot.frontend.zookeeper.jobs;
 
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 import org.prot.frontend.Configuration;
-import org.prot.util.zookeeper.FilteredWatcher;
+import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
 
-public class MasterWatcher implements FilteredWatcher
+public class WatchMaster implements Watcher, Job
 {
-	private static final Logger logger = Logger.getLogger(MasterWatcher.class);
-
+	private static final Logger logger = Logger.getLogger(WatchMaster.class);
+	
 	private ZooHelper zooHelper;
-
-	public MasterWatcher(ZooHelper zooHelper)
-	{
-		this.zooHelper = zooHelper;
-	}
-
-	@Override
-	public boolean matches(WatchedEvent e)
-	{
-		return e.getPath().equals(ZNodes.ZNODE_MASTER);
-	}
-
+	
 	@Override
 	public void process(WatchedEvent event)
 	{
-		try
-		{
-			lookupMaster();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		} catch (KeeperException e)
-		{
-			e.printStackTrace();
-		} catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		}
+		zooHelper.getQueue().insert(this);
 	}
 
-	void lookupMaster() throws IOException, KeeperException, InterruptedException
+	@Override
+	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
 		ZooKeeper zk = zooHelper.getZooKeeper();
 
@@ -66,6 +45,20 @@ public class MasterWatcher implements FilteredWatcher
 		}
 
 		// Install a watcher
-		zk.exists(ZNodes.ZNODE_MASTER, true);
+		zk.exists(ZNodes.ZNODE_MASTER, this);
+		
+		return true;
+	}
+
+	@Override
+	public boolean isRetryable()
+	{
+		return true;
+	}
+
+	@Override
+	public void init(ZooHelper zooHelper)
+	{
+		this.zooHelper = zooHelper; 
 	}
 }
