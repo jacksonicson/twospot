@@ -10,7 +10,7 @@ import org.prot.util.zookeeper.ZooHelper;
 public class Reconnect implements Job
 {
 	private static final Logger logger = Logger.getLogger(Reconnect.class);
-	
+
 	@Override
 	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException
 	{
@@ -23,12 +23,17 @@ public class Reconnect implements Job
 			e.printStackTrace();
 		}
 
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isRetryable()
 	{
 		return false;
+	}
+
+	@Override
+	public void init(ZooHelper zooHelper)
+	{
 	}
 }

@@ -9,7 +9,7 @@ import org.apache.zookeeper.KeeperException;
 import org.prot.util.zookeeper.jobs.CreateZNodeStructure;
 import org.prot.util.zookeeper.jobs.Reconnect;
 
-public class JobQueue
+public class JobQueue implements Runnable
 {
 	private static final Logger logger = Logger.getLogger(JobQueue.class);
 
@@ -22,11 +22,19 @@ public class JobQueue
 		this.zooHelper = zooHelper;
 
 		insert(new CreateZNodeStructure());
+
+		logger.info("Starting ZooKeeper JobQueue");
+		Thread thread = new Thread(this);
+		thread.start();
 	}
 
 	public void insert(Job job)
 	{
-		jobQueue.add(job);
+		synchronized (jobQueue)
+		{
+			jobQueue.add(job);
+			jobQueue.notify();
+		}
 	}
 
 	private void reconnect()
@@ -35,46 +43,80 @@ public class JobQueue
 		jobQueue.add(0, reconnect);
 	}
 
-	public void run() throws KeeperException, InterruptedException, IOException
+	public void run()
 	{
-		while (!jobQueue.isEmpty())
+		while (true)
 		{
-			logger.info("processing job");
 
-			// Get the next job
-			Job job = jobQueue.get(0);
+			Job todo = null;
 
-			// Retry this job?
-			boolean retry = true;
-			try
+			synchronized (jobQueue)
 			{
-				// Execute the job
-				retry = job.execute(zooHelper);
-			} catch (KeeperException e)
-			{
-				// Handle ZooKeeper errors
-				switch (e.code())
+				while (jobQueue.isEmpty())
 				{
-				case CONNECTIONLOSS:
-				case SESSIONEXPIRED:
-				case SESSIONMOVED:
-					reconnect();
-					break;
+					try
+					{
+						jobQueue.wait();
+					} catch (InterruptedException e)
+					{
+						logger.error("ZooKeeper JobQueue failed", e);
+						System.exit(1);
+					}
 				}
-				
-				throw e; 
-				
-			} catch (InterruptedException e)
-			{
-				throw e; 
-			} catch (IOException e)
-			{
-				throw e;
+
+				todo = jobQueue.get(0);
 			}
 
-			// Delete the job from the queue
-			if (!retry)
-				jobQueue.remove(job);
+			boolean deleteJob = execute(todo);
+
+			if (deleteJob)
+			{
+				synchronized (jobQueue)
+				{
+					jobQueue.remove(todo);
+				}
+			}
 		}
+	}
+
+	private boolean execute(Job job)
+	{
+		logger.info("processing job");
+
+		// Setup the job
+		job.init(zooHelper);
+		
+		// Retry this job?
+		boolean deleteJob = false;
+		try
+		{
+			// Execute the job
+			deleteJob = job.execute(zooHelper);
+			
+		} catch (KeeperException e)
+		{
+			// Handle ZooKeeper errors
+			switch (e.code())
+			{
+			case CONNECTIONLOSS:
+			case SESSIONEXPIRED:
+			case SESSIONMOVED:
+				reconnect();
+				break;
+			}
+
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		
+		// Check if job is retryable
+		if(!deleteJob && !job.isRetryable())
+			deleteJob = true;
+
+		return deleteJob;
 	}
 }

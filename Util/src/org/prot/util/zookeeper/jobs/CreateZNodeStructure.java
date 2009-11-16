@@ -36,12 +36,17 @@ public class CreateZNodeStructure implements Job
 			// Do nothing
 		}
 
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isRetryable()
 	{
-		return true;
+		return false;
+	}
+
+	@Override
+	public void init(ZooHelper zooHelper)
+	{
 	}
 }
