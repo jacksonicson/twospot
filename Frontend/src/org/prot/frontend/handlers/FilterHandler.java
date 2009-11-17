@@ -12,6 +12,7 @@ import org.eclipse.jetty.http.HttpMethods;
 import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.server.Request;
 import org.prot.frontend.deploy.AppDeployer;
+import org.prot.util.AppIdExtractor;
 
 public class FilterHandler extends ProxyHandler
 {
@@ -31,27 +32,26 @@ public class FilterHandler extends ProxyHandler
 			if (uri.startsWith("/"))
 				uri = uri.substring(1);
 
-			int index = -1;
-
 			if (uri.indexOf("deploy") == 0)
 			{
-				uri = uri.substring("deploy".length() + 1);
-
-				index = uri.indexOf('/');
-				if (index > 0)
-					uri = uri.substring(0, index);
-
-				if (!uri.equals(""))
+				uri = uri.substring("deploy".length());
+				
+				// Extract the AppId
+				String appId = AppIdExtractor.fromUri(uri); 
+				if (appId != null)
 				{
-					logger.debug("Deploying appId: " + uri);
 					try
 					{
-						this.deployer.deployApplication(uri, baseRequest);
+						logger.debug("Deploying appId: " + uri);
+						this.deployer.deployApplication(appId, baseRequest);
+						
+						// Everything is ok
 						response.setStatus(HttpStatus.OK_200);
 						baseRequest.setHandled(true); 
 						
 					} catch (InterruptedException e)
 					{
+						// Respnod with an error
 						response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500); 
 						baseRequest.setHandled(true); 
 						return; 

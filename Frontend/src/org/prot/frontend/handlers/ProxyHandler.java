@@ -2,7 +2,6 @@ package org.prot.frontend.handlers;
 
 import java.io.IOException;
 import java.net.ConnectException;
-import java.net.URL;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +15,7 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.prot.frontend.cache.AppCache;
 import org.prot.manager.data.ControllerInfo;
 import org.prot.manager.services.FrontendService;
+import org.prot.util.AppIdExtractor;
 import org.prot.util.handler.ExceptionListener;
 import org.prot.util.handler.HttpProxyHelper;
 
@@ -40,57 +40,52 @@ public class ProxyHandler extends AbstractHandler implements ExceptionListener
 	{
 
 		// Extract the appid from the url
-		String appId = null;
-
-		// Get the URL
-		URL url = new URL(request.getRequestURL().toString());
-		String host = url.getHost();
-		if (host.indexOf(".") != -1)
-		{
-			appId = host.substring(0, host.indexOf("."));
-		}
+		String appId = AppIdExtractor.fromDomain(request.getRequestURL().toString());
 
 		if (appId == null)
 		{
-			logger.debug("no application id found");
-			response.sendError(HttpStatus.NOT_FOUND_404);
+			// Error: Missing AppId
+			response.sendError(HttpStatus.NOT_FOUND_404, "Missing AppId (scheme://AppId.domain...)");
 			baseRequest.setHandled(true);
 			return;
 		}
 
 		try
 		{
-			// Check cache
+			// Check if the cache holds a controller for this app
 			appCache.updateCache();
 			ControllerInfo info = appCache.getController(appId);
+
+			// Cache missed
 			if (info == null)
 			{
-				// Ask the manager and cache the results
+				// Ask the manager and cache the controller
 				info = frontendService.chooseAppServer(appId);
 				if (info != null)
+				{
 					appCache.cacheController(appId, info);
-				else
+				} else
 				{
 					response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
-							"Manager unreachable or did not give a Controller");
+							"Manager unreachable or did not return a Controller");
 					baseRequest.setHandled(true);
 					return;
 				}
 			}
 
-			String fUrl = request.getRequestURL().toString();
-			fUrl = info.getAddress() + ":" + info.getPort();
-			String fUri = "/" + appId + request.getRequestURI();
-			fUrl = fUrl + fUri;
+			// Build the destination url
+			String url = info.getAddress() + ":" + info.getPort();
+			String uri = "/" + appId + request.getRequestURI();
+			url = url + uri;
 
-			logger.debug("Forarding to URL: " + fUrl);
+			logger.debug("Forwarding request to: " + url);
 
-			HttpURI uri = new HttpURI(fUrl);
-			proxyHelper.forwardRequest(baseRequest, request, response, uri, response);
+			// Forward the request
+			proxyHelper.forwardRequest(baseRequest, request, response, new HttpURI(url), response);
 
 		} catch (Exception e)
 		{
-			logger.error("Erro while handling the request", e);
+			logger.error("Error while processing the request", e);
 			response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
 			baseRequest.setHandled(true);
 			return;
@@ -100,13 +95,14 @@ public class ProxyHandler extends AbstractHandler implements ExceptionListener
 	@Override
 	public boolean onException(Throwable e, Object obj)
 	{
+		// Frontend could not connect with the Controller
 		if (e instanceof ConnectException)
 		{
 			HttpServletResponse response = (HttpServletResponse) obj;
 			try
 			{
 				response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
-						"Could not connect with a Controller");
+						"Frontend could not communicate with the Controller");
 			} catch (IOException e1)
 			{
 				return false;
