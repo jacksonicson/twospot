@@ -30,15 +30,15 @@
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/ehcache-1.1.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/geronimo-jpa_3.0_spec-1.1.1.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/hadoop-core-0.20.1.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/hbase-0.20.0.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/jdo2-api-2.3-eb.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/joda-time-1.6.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-cache-2.0.0-m2.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-core-2.0.0-m3.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-hbase-1.0.3.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-jodatime-2.0.0-m2.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-jpa-2.0.0-m3.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-management-1.0.2.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/hbase-0.20.0.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/datanucleus/myhbase.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
