@@ -18,7 +18,6 @@
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-cache-2.0.0-m2.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-core-2.0.0-m3.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-hbase-1.0.3.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-jodatime-2.0.0-m2.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-jpa-2.0.0-m3.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-management-1.0.2.jar"/>
