@@ -14,6 +14,7 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.prot.controller.manager.AppInfo;
 import org.prot.controller.manager.AppManager;
+import org.prot.util.AppIdExtractor;
 import org.prot.util.handler.ExceptionListener;
 import org.prot.util.handler.HttpProxyHelper;
 
@@ -21,6 +22,8 @@ public class RequestHandler extends AbstractHandler implements ExceptionListener
 {
 	private static final Logger logger = Logger.getLogger(RequestHandler.class);
 
+	private static final String APP_SERVER_HOST = "localhost"; 
+	
 	private AppManager appManager;
 
 	private HttpProxyHelper proxyHelper;
@@ -32,16 +35,18 @@ public class RequestHandler extends AbstractHandler implements ExceptionListener
 
 	private HttpURI getUrl(Request request, AppInfo appInfo)
 	{
+		// Get the connection settings
 		String scheme = request.getScheme();
 		int port = appInfo.getPort();
 		String uri = request.getUri().toString();
 
+		// Extract the application specific URI
 		if (uri.startsWith("/"))
 			uri = uri.substring(1);
 		uri = uri.substring(appInfo.getAppId().length());
 
-		String url = scheme + "://" + "localhost" + ":" + port + uri;
-		logger.debug("Request URL: " + url);
+		// Build the complete URL
+		String url = scheme + "://" + APP_SERVER_HOST + ":" + port + uri;
 
 		return new HttpURI(url);
 	}
@@ -50,37 +55,40 @@ public class RequestHandler extends AbstractHandler implements ExceptionListener
 	public void handle(String target, Request baseRequest, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException
 	{
-		// extract appId (if appId is missing return NOT FOUND 404)
-		String uri = baseRequest.getUri().getPath().substring(1);
-		int index = uri.indexOf("/");
-		if (index < 0)
+		// Extract the AppId
+		String appId = AppIdExtractor.fromUri(baseRequest.getUri().toString());
+
+		// Check the AppId and send an error
+		if (appId == null)
 		{
-			response.sendError(HttpStatus.NOT_FOUND_404, "Missing AppId");
+			response.sendError(HttpStatus.NOT_FOUND_404, "Invalid AppId (scheme://domain/AppId/...)");
 			baseRequest.setHandled(true);
 			return;
 		}
-		String appId = uri.substring(0, index);
 
 		// Inform the AppManager
 		AppInfo appInfo = null;
 		appInfo = this.appManager.requireApp(appId);
 
-		// the AppServer is not avialable jet - a continuation is used
-		// to restart this request when the AppServer is online
+		// The AppServer is not avialable - a continuation is used to restart
+		// this request when the AppServer is online
 		if (appInfo == null)
-			return; // Continues when the AppServer is available
+			return;
 
 		try
 		{
-			// forward the request
-			HttpURI newurl = getUrl(baseRequest, appInfo);
-			proxyHelper.forwardRequest(baseRequest, request, response, newurl, appId);
+			// Forward the request
+			HttpURI destination = getUrl(baseRequest, appInfo);
+			proxyHelper.forwardRequest(baseRequest, request, response, destination, appId);
 			return;
 
 		} catch (Exception e)
 		{
-			// Unknown exception
+			// Inform the client
 			logger.error("Unknown error while handling the request", e);
+			response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
+					"Controller could not handle the request");
+			baseRequest.setHandled(true);
 		}
 	}
 
@@ -97,15 +105,15 @@ public class RequestHandler extends AbstractHandler implements ExceptionListener
 	@Override
 	public boolean onException(Throwable e, Object obj)
 	{
-		logger.debug("Exception"); 
-		String appId = (String) obj;
 		if (e instanceof ConnectException)
 		{
-			logger.debug("Reporting stale AppServer " + appId);
+			String appId = (String) obj;
+			logger.debug("Reporting stale AppServer for AppId: " + appId);
+			
 			appManager.reportStaleApp(appId);
 			return true;
 		}
-		
-		return false; 
+
+		return false;
 	}
 }
