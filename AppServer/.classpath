@@ -39,6 +39,6 @@
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-jpa-2.0.0-m3.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-management-1.0.2.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/hbase-0.20.0.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/datanucleus/myhbase.jar"/>
+	<classpathentry kind="lib" path="/HBasePlugin (DataNucleus)/hbaseplugin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
