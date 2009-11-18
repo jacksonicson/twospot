@@ -63,6 +63,8 @@ public class RequestHandler extends AbstractHandler implements ExceptionListener
 		// Check the AppId and send an error
 		if (appId == null)
 		{
+			logger.debug("Invalid AppId"); 
+			
 			response.sendError(HttpStatus.NOT_FOUND_404, "Invalid AppId (scheme://domain/AppId/...)");
 			baseRequest.setHandled(true);
 			return;

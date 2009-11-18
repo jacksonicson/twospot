@@ -14,24 +14,27 @@ public class AppDeployer extends AbstractLifeCycle
 	private HandlerCollection contexts;
 	private WebAppContext webAppContext;
 
-	public void setAppInfo(AppInfo appInfo) {
-		this.appInfo = appInfo; 
+	public void setAppInfo(AppInfo appInfo)
+	{
+		this.appInfo = appInfo;
 	}
-	
-	public void setContexts(HandlerCollection contexts) {
-		this.contexts = contexts; 
+
+	public void setContexts(HandlerCollection contexts)
+	{
+		this.contexts = contexts;
 	}
-	
+
 	public void doStart() throws Exception
 	{
-		webAppContext = null; 
+		webAppContext = null;
 		deploy();
 	}
 
 	public void doStop() throws Exception
 	{
-		if(webAppContext != null) {
-			webAppContext.stop(); 
+		if (webAppContext != null)
+		{
+			webAppContext.stop();
 		}
 	}
 
@@ -44,6 +47,8 @@ public class AppDeployer extends AbstractLifeCycle
 		// context.setConfigurationClasses(configurations)
 		webAppContext.setExtractWAR(false);
 		webAppContext.setParentLoaderPriority(true);
+		webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
+				".*/jsp-api-[^/]*\\.jar$|.*/jsp-[^/]*\\.jar$");
 
 		contexts.addHandler(webAppContext);
 		if (contexts.isStarted())
