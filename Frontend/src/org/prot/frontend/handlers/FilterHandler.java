@@ -1,7 +1,6 @@
 package org.prot.frontend.handlers;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.logging.FileHandler;
 
 import javax.servlet.ServletException;
@@ -13,7 +12,6 @@ import org.eclipse.jetty.http.HttpMethods;
 import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.server.Request;
 import org.prot.frontend.deploy.AppDeployer;
-import org.prot.frontend.deploy.login.LoginHandler;
 import org.prot.util.AppIdExtractor;
 
 public class FilterHandler extends ProxyHandler
@@ -21,8 +19,6 @@ public class FilterHandler extends ProxyHandler
 	private static final Logger logger = Logger.getLogger(FileHandler.class);
 
 	private AppDeployer deployer;
-
-	private LoginHandler loginHandler;
 
 	@Override
 	public void handle(String target, Request baseRequest, HttpServletRequest request,
@@ -65,52 +61,8 @@ public class FilterHandler extends ProxyHandler
 					return;
 				}
 			}
-		} else if (baseRequest.getMethod().equals(HttpMethods.GET))
-		{
-			String uri = request.getRequestURI();
-			if (uri.startsWith("/"))
-				uri = uri.substring(1);
-
-			logger.info("Uri: " + uri);
-
-			if (uri.indexOf("login") == 0)
-			{
-				try
-				{
-					String appId = request.getParameter("appid");
-					if (appId != null)
-					{
-
-						String key = loginHandler.doLogin(request.getParameter("appid"), request
-								.getParameter("username"), request.getParameter("password"));
-
-						if (key == null)
-						{
-							logger.info("ERROR");
-							response.sendError(HttpStatus.UNAUTHORIZED_401,
-									"Could not verify user credentials");
-							baseRequest.setHandled(true);
-							return;
-						}
-
-						logger.info("OK");
-
-						response.sendRedirect("http://www.andmedia.de?key=" + key);
-						baseRequest.setHandled(true);
-						return;
-					}
-
-				} catch (NoSuchAlgorithmException e)
-				{
-					logger.error("Could not MD5 encode user password", e);
-					response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
-							"Could not MD5 encode user password");
-					baseRequest.setHandled(true);
-					return;
-				}
-			}
-		}
-		logger.info("test");
+		} 
+		
 		// Could not handle the request
 		super.handle(target, baseRequest, request, response);
 	}
@@ -118,10 +70,5 @@ public class FilterHandler extends ProxyHandler
 	public void setDeployer(AppDeployer deployer)
 	{
 		this.deployer = deployer;
-	}
-
-	public void setLoginHandler(LoginHandler loginHandler)
-	{
-		this.loginHandler = loginHandler;
 	}
 }

@@ -61,7 +61,6 @@
 		<property name="frontendService" ref="FrontendService" />
 		<property name="appCache" ref="AppCache" />
 		<property name="deployer" ref="AppDeployer" />
-		<property name="loginHandler" ref="LoginHandler" />
 		<property name="proxyHelper" ref="ProxyHelper" />
 	</bean>
 
@@ -91,9 +90,6 @@
 	<bean id="HttpClient" class="org.eclipse.jetty.client.HttpClient"
 		init-method="start">
 		<property name="threadPool" ref="ThreadPool" />
-	</bean>
-
-	<bean id="LoginHandler" class="org.prot.frontend.deploy.login.LoginHandler">
 	</bean>
 
 
