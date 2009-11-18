@@ -8,48 +8,58 @@ import org.apache.log4j.Logger;
 public final class ReservedAppIds
 {
 	private static final Logger logger = Logger.getLogger(ReservedAppIds.class);
-	
+
 	public final static String APP_PORTAL = "portal";
 
 	public final static String FRONTEND_DEPLOY = "deploy";
 
 	private final static Set<String> reservedAppIds = new HashSet<String>();
-
 	static
 	{
 		reservedAppIds.add(APP_PORTAL);
 		reservedAppIds.add(FRONTEND_DEPLOY);
 	}
 
-	public static boolean isReserved(String appName)
+	private final static Set<String> privilegedAppIds = new HashSet<String>();
+	static
 	{
-		return reservedAppIds.contains(appName);
+		privilegedAppIds.add(APP_PORTAL);
 	}
-	
+
+	public static boolean isReserved(String appId)
+	{
+		return reservedAppIds.contains(appId);
+	}
+
+	public static boolean isPrivilged(String appId)
+	{
+		return privilegedAppIds.contains(appId);
+	}
+
 	public static boolean validateAppId(String appId)
 	{
-		logger.debug("Validating AppId: " + appId); 
-		
+		logger.debug("Validating AppId: " + appId);
+
 		// Check if this appId is reserved
-		if(ReservedAppIds.isReserved(appId))
+		if (ReservedAppIds.isReserved(appId))
 			return false;
 
-		// Check the length 
-		if(appId.length() > 10)
+		// Check the length
+		if (appId.length() > 10)
 			return false;
-		
-		if(appId.length() < 3)
+
+		if (appId.length() < 3)
 			return false;
-		
+
 		// Check each character of the appId
-		char[] chars = appId.toCharArray(); 
-		for(char c : chars)
+		char[] chars = appId.toCharArray();
+		for (char c : chars)
 		{
-			if(!Character.isLetterOrDigit(c))
-				return false; 
+			if (!Character.isLetterOrDigit(c))
+				return false;
 		}
-		
+
 		// Everything seems ok
-		return true; 	
+		return true;
 	}
 }
