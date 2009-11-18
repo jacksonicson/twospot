@@ -21,5 +21,7 @@
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-jodatime-2.0.0-m2.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-jpa-2.0.0-m3.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-management-1.0.2.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/AppServer"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Controller"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

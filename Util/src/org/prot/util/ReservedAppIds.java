@@ -36,7 +36,10 @@ public final class ReservedAppIds
 
 		// Check the length 
 		if(appId.length() > 10)
-			return false; 
+			return false;
+		
+		if(appId.length() < 3)
+			return false;
 		
 		// Check each character of the appId
 		char[] chars = appId.toCharArray(); 

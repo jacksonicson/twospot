@@ -39,6 +39,16 @@
 
 
 	<!-- Services -->
+	<bean id="UserService" class="org.prot.manager.services.UserServiceImpl" />
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<property name="serviceName" value="UserService" />
+		<property name="service" ref="UserService" />
+		<property name="serviceInterface" value="org.prot.manager.services.UserService" />
+
+		<property name="registryPort" value="${rmi.registry.port}" />
+	</bean>
+
+
 	<bean id="FrontendService" class="org.prot.manager.services.FrontendServiceImpl">
 		<property name="registry" ref="ControllerRegistry" />
 	</bean>

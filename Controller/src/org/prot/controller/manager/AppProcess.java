@@ -118,6 +118,9 @@ class AppProcess
 		File utils = new File("../Util/bin");
 		classpath += utils.getAbsolutePath() + ";";
 		
+		File controller = new File("../Controller/bin");
+		classpath += controller.getAbsolutePath() + ";";
+		
 		System.out.println("Classpath: " + classpath);
 		
 		return classpath;

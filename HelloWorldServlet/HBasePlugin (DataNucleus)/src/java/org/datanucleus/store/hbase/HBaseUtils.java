@@ -44,14 +44,16 @@ import org.prot.appserver.config.Configuration;
 
 public class HBaseUtils
 {
+	private static final String NAMESPACE_USER_TAGBLES = "user";
+	
     public static String getTableName(AbstractClassMetaData acmd)
     {
-    	String appId = Configuration.getInstance().getAppId(); 
-        if (acmd.getTable() != null)
-        {
-            return appId + "." + acmd.getTable();
-        }
-        return appId + "." + acmd.getName();
+    	String appId = Configuration.getInstance().getAppId();
+    	String tableName = acmd.getTable(); 
+    	if(tableName == null)
+    		tableName = acmd.getName(); 
+    	
+    	return appId + "." + NAMESPACE_USER_TAGBLES + "." + tableName; 
     }
 
     public static String getFamilyName(AbstractClassMetaData acmd, int absoluteFieldNumber)

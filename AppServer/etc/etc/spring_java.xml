@@ -53,7 +53,6 @@
 		class="org.eclipse.jetty.server.handler.ContextHandlerCollection">
 	</bean>
 
-
 	<!-- Deployment -->
 	<bean id="AppDeployer" class="org.prot.appserver.runtime.java.AppDeployer">
 		<property name="contexts" ref="ManagementWrapper" />

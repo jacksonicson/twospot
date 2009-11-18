@@ -22,6 +22,7 @@ public class FrontendServiceImpl implements FrontendService
 	@Override
 	public void newAppOrVersion(String appId)
 	{
+		// TODO: Validate the AppId
 		logger.info("new app or version: " + appId);
 		for (ControllerInfo info : registry.getControllers())
 		{

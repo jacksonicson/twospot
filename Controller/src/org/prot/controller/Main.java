@@ -25,6 +25,7 @@ public class Main
 		
 		// Start the RMI-Services
 		factory.getBean("ControllerServiceExporter");
+		factory.getBean("UserServiceExporter");
 		
 		Controller controller = (Controller) factory.getBean("Controller");
 		controller.start();

@@ -34,6 +34,8 @@
 	<!-- Runtimes -->
 	<bean id="PythonRuntime" class="org.prot.appserver.runtime.jython.PythonRuntime" />
 	<bean id="JavaRuntime" class="org.prot.appserver.runtime.java.JavaRuntime" />
-	
+
+	<!-- Connection to the services provided by the Controller -->
+	<!-- TODO -->
 </beans>
 

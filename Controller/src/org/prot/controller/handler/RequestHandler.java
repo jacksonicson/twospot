@@ -48,6 +48,8 @@ public class RequestHandler extends AbstractHandler implements ExceptionListener
 		// Build the complete URL
 		String url = scheme + "://" + APP_SERVER_HOST + ":" + port + uri;
 
+		logger.info("URL: " + url);
+		
 		return new HttpURI(url);
 	}
 

@@ -14,10 +14,10 @@ public class Configuration
 	private static Configuration configuration;
 
 	// Enable stdout
-	private boolean enableStdOut;
+	private boolean enableStdOut = false;
 	
 	// Shutdown if Controller is not available
-	private boolean requiresController; 
+	private boolean requiresController = true; 
 	
 	// Application identifier
 	private String appId;

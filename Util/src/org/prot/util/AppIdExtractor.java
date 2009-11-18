@@ -52,27 +52,29 @@ public final class AppIdExtractor
 		index = url.indexOf("://");
 		if (index != -1)
 			url = url.substring(index + 3);
-		
+
 		return fromUri(url);
 	}
-	
+
 	public static String fromUri(String uri)
 	{
-		int index = -1; 
-	
-		// Remove the first slash
-		if(uri.startsWith("/"))
-			uri = uri.substring(1);
-		
-		// Remove the domain and port part
-		index = uri.indexOf("/");
-		if (index != -1)
-			uri = uri.substring(index + 1);
+		logger.debug("Extracting AppId from URI: " + uri);
 
-		// Find the next slash (if it exists) and remove everything after that
+		int index = -1;
+
+		// Remove the first slash
+		if (uri.startsWith("/"))
+			uri = uri.substring(1);
+
+		// Extract everything before the next slasth
 		index = uri.indexOf("/");
 		if (index != -1)
-			uri = uri.substring(0, index);
+		{
+			if (index == 0)
+				uri = "";
+			else
+				uri = uri.substring(0, index);
+		}
 
 		// Check if the result is a valid AppId
 		if (!ReservedAppIds.validateAppId(uri))

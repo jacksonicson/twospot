@@ -61,6 +61,7 @@
 		<property name="frontendService" ref="FrontendService" />
 		<property name="appCache" ref="AppCache" />
 		<property name="deployer" ref="AppDeployer" />
+		<property name="loginHandler" ref="LoginHandler" />
 		<property name="proxyHelper" ref="ProxyHelper" />
 	</bean>
 
@@ -92,9 +93,11 @@
 		<property name="threadPool" ref="ThreadPool" />
 	</bean>
 
+	<bean id="LoginHandler" class="org.prot.frontend.deploy.login.LoginHandler">
+	</bean>
 
 
 	<!-- Remote -->
-	<bean id="FrontendService" class="org.prot.frontend.Manager">
-	</bean>
+	<bean id="FrontendService" class="org.prot.frontend.Manager" />
+	
 </beans>

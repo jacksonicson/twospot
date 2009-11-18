@@ -40,5 +40,6 @@
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-management-1.0.2.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/hbase-0.20.0.jar"/>
 	<classpathentry kind="lib" path="/HBasePlugin (DataNucleus)/hbaseplugin.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Controller"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
