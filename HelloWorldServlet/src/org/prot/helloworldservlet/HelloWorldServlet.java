@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.prot.appserver.services.UserServiceFactory;
-import org.prot.controller.services.UserService;
+import org.prot.controller.services.user.UserService;
 
 @SuppressWarnings("serial")
 public class HelloWorldServlet extends HttpServlet
@@ -29,8 +29,9 @@ public class HelloWorldServlet extends HttpServlet
 	{
 
 		UserService service = UserServiceFactory.getUserService();
-		service.getCurrentUser(); 
+		service.getCurrentUser(req.getParameter("sid")); 
 		String url = service.getLoginUrl(); 
+		
 		
 		resp.setContentType("text/plain");
 		resp.getWriter().println("helloWorld: " + url);

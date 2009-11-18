@@ -1,4 +1,4 @@
-package org.prot.controller.services;
+package org.prot.controller.services.user;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;

@@ -1,4 +1,4 @@
-package org.prot.controller.services;
+package org.prot.controller.services.user;
 
 public interface PrivilegedUserService extends UserService
 {

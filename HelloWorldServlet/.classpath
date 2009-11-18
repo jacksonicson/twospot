@@ -23,7 +23,6 @@
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-management-1.0.2.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/AppServer"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Controller"/>
-	<classpathentry kind="lib" path="/Libs/lib/joid-1.1/joid-1.1.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/log4j-1.2.15/log4j-1.2.15.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,4 +1,4 @@
-package org.prot.controller.services;
+package org.prot.controller.services.user;
 
 import java.util.Collection;
 
@@ -8,8 +8,12 @@ import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
 
+import org.apache.log4j.Logger;
+
 public class UserServiceImpl implements PrivilegedUserService
 {
+	private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
+	
 	private PersistenceManagerFactory pmFactory;
 	private PersistenceManager persistenceManager;
 
@@ -22,19 +26,19 @@ public class UserServiceImpl implements PrivilegedUserService
 	@Override
 	public boolean getCurrentUser(String session)
 	{
-		if(session == null)
+		if (session == null)
 			return false;
-		
+
 		// Query database
 		Query query = persistenceManager.newQuery(UserSession.class);
 		Collection<UserSession> result = (Collection<UserSession>) query.execute();
 		for (UserSession test : result)
 		{
-			if(test.getSessionId().equals(session))
-				return true; 
+			if (test.getSessionId().equals(session))
+				return true;
 		}
 
-		return false; 
+		return false;
 	}
 
 	@Override
@@ -46,6 +50,9 @@ public class UserServiceImpl implements PrivilegedUserService
 	@Override
 	public void registerSession(String token, String session)
 	{
+		// TODO: Use AOP to check the token!
+		logger.info("Supplied token: " + token);
+
 		UserSession userSession = new UserSession();
 		userSession.setSessionId(session);
 

@@ -36,13 +36,18 @@ public final class ReservedAppIds
 		return privilegedAppIds.contains(appId);
 	}
 
-	public static boolean validateAppId(String appId)
+	public static boolean validateNewAppId(String appId)
 	{
-		logger.debug("Validating AppId: " + appId);
-
 		// Check if this appId is reserved
 		if (ReservedAppIds.isReserved(appId))
 			return false;
+		
+		return validateAppId(appId);
+	}
+	
+	public static boolean validateAppId(String appId)
+	{
+		logger.debug("Validating AppId: " + appId);
 
 		// Check the length
 		if (appId.length() > 10)

@@ -51,14 +51,14 @@
 			<fileset dir="bin" />
 		</copy>
 
-		<war destfile="helloworldnull.war" basedir="deploy" />
+		<war destfile="portalnull.war" basedir="deploy" />
 		
 		<delete dir="deploy" />
 	</target>
 
 	<target name="deploy" depends="war">
 		<copy todir="../HttpFileServer/files">
-			<fileset file="helloworldnull.war" />
+			<fileset file="portalnull.war" />
 		</copy>
 	</target>
 
