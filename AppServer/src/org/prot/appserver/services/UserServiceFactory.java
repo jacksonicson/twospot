@@ -1,14 +1,13 @@
 package org.prot.appserver.services;
 
 import org.prot.controller.services.user.PrivilegedUserService;
-import org.prot.controller.services.user.UserService;
 import org.springframework.remoting.rmi.RmiProxyFactoryBean;
 
 public class UserServiceFactory
 {
-	private static PrivilegedUserService userService;
+	private static UserServiceProxy userService;
 
-	public static UserService getUserService()
+	public static UserServiceProxy getUserService()
 	{
 		if (userService == null)
 		{
@@ -16,7 +15,8 @@ public class UserServiceFactory
 			proxyFactory.setServiceInterface(PrivilegedUserService.class);
 			proxyFactory.setServiceUrl("rmi://localhost:2299/appserver/UserService");
 			proxyFactory.afterPropertiesSet();
-			userService = (PrivilegedUserService) proxyFactory.getObject();
+			
+			userService = new UserServiceProxy((PrivilegedUserService)proxyFactory.getObject());
 		}
 
 		return userService;

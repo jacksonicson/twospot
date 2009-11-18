@@ -64,6 +64,7 @@ public class UserServiceImpl implements PrivilegedUserService
 			tx.commit();
 		} catch (Exception e)
 		{
+			logger.error("Could not persist user session", e);
 			tx.rollback();
 		}
 	}
