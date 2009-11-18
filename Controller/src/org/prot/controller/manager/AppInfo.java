@@ -2,8 +2,10 @@ package org.prot.controller.manager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.eclipse.jetty.continuation.Continuation;
+import org.prot.util.ReservedAppIds;
 
 public class AppInfo
 {
@@ -22,6 +24,12 @@ public class AppInfo
 	// Timestamp which tells last usage
 	private long lastUsed;
 
+	// Is this a privileged application
+	private final boolean privileged; 
+	
+	// Token which is used to authenticate the process
+	private final String processToken; 
+	
 	// Continuations for requests which are waiting for this appserver
 	private List<Continuation> continuations = new ArrayList<Continuation>();
 
@@ -39,6 +47,15 @@ public class AppInfo
 	{
 		this.appId = appId;
 		this.port = port;
+		
+		// Determine if this is a privileged application
+		privileged = ReservedAppIds.isPrivilged(appId);
+		
+		// Generate a authentication token
+		Random random = new Random();
+		random.setSeed(System.currentTimeMillis());
+		long token = random.nextLong() | System.currentTimeMillis();
+		processToken = "" + token;
 	}
 
 	public void addContinuation(Continuation continuation)
@@ -74,6 +91,11 @@ public class AppInfo
 		this.status = status;
 	}
 
+	public boolean isPrivileged()
+	{
+		return privileged;
+	}
+
 	public int hashCode()
 	{
 		return appId.hashCode();
@@ -86,5 +108,10 @@ public class AppInfo
 
 		AppInfo cmp = (AppInfo) o;
 		return cmp.getAppId().equals(this.appId);
+	}
+
+	public String getProcessToken()
+	{
+		return processToken;
 	}
 }

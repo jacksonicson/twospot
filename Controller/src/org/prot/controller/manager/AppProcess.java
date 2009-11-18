@@ -71,13 +71,14 @@ class AppProcess
 		command.add("-appId");
 		command.add(appInfo.getAppId());
 
-		command.add("-ctrlPort");
-		command.add("8079");
-
 		command.add("-appSrvPort");
 		command.add(appInfo.getPort() + "");
-
-		System.out.println(command);
+		
+		if(appInfo.isPrivileged())
+		{
+			command.add("-token");
+			command.add(appInfo.getProcessToken()); 
+		}
 
 		// configure the process
 		ProcessBuilder procBuilder = new ProcessBuilder();
