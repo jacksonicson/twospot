@@ -1,17 +1,13 @@
 <html>
-
 <head>
+<title>Login</title>
 </head>
-
 <body>
-
-TEST: 
-<a href="http://localhost:8080/portal/doLogin?okUrl=http://localhost:8080/portal/loginOk&errUrl=asdf">LINK</a>
-
- <script type="text/javascript">
-document.write(document.cookie);
-    </script>
-
-</body>
-
+<h1>Login</h1>
+<form target="http://localhost:8080/portal/loginfinish"><!-- Hidden fields to transfer the redirect url -->
+<input type="hidden" name="url" />
+<p>Username: <input type="text" name="username" /></p>
+<p>Password: <input type="password" name="password" /></p>
+<p><input type="submit" /></p>
+</form>
 </html>

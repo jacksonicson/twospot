@@ -1,17 +1,12 @@
 package org.prot.helloworldservlet;
 
 import java.io.IOException;
-import java.util.Random;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.prot.appserver.config.Configuration;
-import org.prot.appserver.services.UserServiceFactory;
-import org.prot.appserver.services.UserServiceProxy;
 
 @SuppressWarnings("serial")
 public class LoginServlet extends HttpServlet
@@ -28,26 +23,20 @@ public class LoginServlet extends HttpServlet
 			return;
 		}
 
-		logger.debug("Redirect URL: " + okUrl); 
-		
-		// TODO: Present a login form and check credentials
+		// Redirect to the login page
+		String page = ""
+				+ "<html>"
+				+ "<head>"
+				+ "<title>Login</title>"
+				+ "</head>"
+				+ "<body>"
+				+ "<h1>Login</h1>"
+				+ "<form action='http://localhost:8080/portal/loginfinish'><!-- Hidden fields to transfer the redirect url -->"
+				+ "<input type='hidden' name='url' value='" + okUrl + "' />"
+				+ "<p>Username: <input type='text' name='username' /></p>"
+				+ "<p>Password: <input type='password' name='password' /></p>"
+				+ "<p><input type='submit' /></p>" + "</form>" + "</html>";
 
-		Random r = new Random();
-		long l1 = r.nextLong();
-		long l2 = r.nextLong();
-		String sessionId = "TODO_" + (l1 | l2);
-		UserServiceProxy service = (UserServiceProxy)UserServiceFactory.getUserService();
-		response.getWriter().print(sessionId);
-
-		// Register the sessionId
-		service.registerSession(Configuration.getInstance().getAuthenticationToken(), sessionId);
-
-		// Save a platform cookie (is valid for all subdomains)
-		Cookie cookie = new Cookie("UID", sessionId);
-//		cookie.setDomain(".localhost"); // TODO: Make this more general 
-		response.addCookie(cookie);
-		
-		// Redirect the client
-		response.sendRedirect(okUrl);
+		response.getWriter().print(page);
 	}
 }
