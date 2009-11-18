@@ -1,5 +1,7 @@
 package org.prot.appserver.appfetch;
 
+import java.io.IOException;
+
 import org.prot.appserver.app.AppInfo;
 
 public interface AppFetcher

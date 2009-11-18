@@ -11,7 +11,7 @@ import org.prot.appserver.config.Configuration;
 public class HttpAppFetcher implements AppFetcher
 {
 	private static final Logger logger = Logger.getLogger(HttpAppFetcher.class);
-	
+
 	private HttpClient httpClient;
 
 	private void startHttp()
@@ -23,7 +23,8 @@ public class HttpAppFetcher implements AppFetcher
 			httpClient.start();
 		} catch (Exception e)
 		{
-			logger.error("Could not start the http client", e); 
+			logger.error("Could not start the http client", e);
+			System.exit(1);
 		}
 	}
 
@@ -34,7 +35,8 @@ public class HttpAppFetcher implements AppFetcher
 			httpClient.stop();
 		} catch (Exception e)
 		{
-			logger.error("Could not stop the http client", e); 
+			logger.error("Could not stop the http client", e);
+			System.exit(1);
 		}
 	}
 
@@ -43,10 +45,26 @@ public class HttpAppFetcher implements AppFetcher
 	{
 		AppInfo appInfo = new AppInfo();
 
-		ContentExchange exchange = new ContentExchange(true);
+		ContentExchange exchange = new ContentExchange(true)
+		{
+			protected void onConnectionFailed(Throwable x)
+			{
+				super.onConnectionFailed(x);
+				logger.error("Connection failed while downloading WAR archive", x);
+				System.exit(1);
+			}
+
+			protected void onException(Throwable x)
+			{
+				super.onException(x);
+				logger.error("Error while downloading WAR archive", x);
+				System.exit(1);
+			}
+		};
+
 		exchange.setMethod("GET");
 		exchange.setURL("http://localhost:5050/" + appId); // TODO: Not static
-															
+
 		try
 		{
 			startHttp();
@@ -59,12 +77,14 @@ public class HttpAppFetcher implements AppFetcher
 
 			stopHttp();
 
-		} catch (IOException e)
-		{
-			e.printStackTrace();
 		} catch (InterruptedException e)
 		{
-			e.printStackTrace();
+			logger.error("Interrupted while downloading WAR archive", e);
+			System.exit(1);
+		} catch (IOException e)
+		{
+			logger.error("IOException while downloading WAR archive", e);
+			System.exit(1);
 		}
 
 		return appInfo;

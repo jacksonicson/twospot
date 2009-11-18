@@ -107,6 +107,7 @@ public class ServerLifecycle
 			System.exit(1);
 		}
 
+		logger.info("Server is online: " + SERVER_ONLINE);
 		// Use the original stdio to tell the controller
 		IODirector.getInstance().forcedStdOutPrintln(SERVER_ONLINE);
 	}
