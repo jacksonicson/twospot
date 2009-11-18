@@ -21,9 +21,12 @@ public class Configuration
 	
 	// Application identifier
 	private String appId;
-
-	// Port which is used to commmunicate with the Controller
-	private int controlPort;
+	
+	// Is the app executed by this server a privileged app
+	private boolean privileged = false;
+	
+	// If this is a privileged app it must authenticate with the controller
+	private String authenticationToken; 
 
 	// Port which is used by the AppServer to publish the app
 	private int appServerPort;
@@ -77,16 +80,6 @@ public class Configuration
 	public void setAppId(String appId)
 	{
 		this.appId = appId;
-	}
-
-	public int getControlPort()
-	{
-		return controlPort;
-	}
-
-	public void setControlPort(int controlPort)
-	{
-		this.controlPort = controlPort;
 	}
 
 	public int getAppServerPort()
@@ -167,5 +160,25 @@ public class Configuration
 	public void setRequiresController(boolean requiresController)
 	{
 		this.requiresController = requiresController;
+	}
+
+	public boolean isPrivileged()
+	{
+		return privileged;
+	}
+
+	public void setPrivileged(boolean privileged)
+	{
+		this.privileged = privileged;
+	}
+
+	public String getAuthenticationToken()
+	{
+		return authenticationToken;
+	}
+
+	public void setAuthenticationToken(String authenticationToken)
+	{
+		this.authenticationToken = authenticationToken;
 	}
 }

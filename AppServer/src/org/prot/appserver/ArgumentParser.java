@@ -16,51 +16,67 @@ public class ArgumentParser
 	{
 		Options options = new Options();
 
+		// AppId
 		Option appId = OptionBuilder.withArgName("application id").hasArg().isRequired().create("appId");
 		options.addOption(appId);
 
-		Option controlPort = OptionBuilder.withArgName("control port").hasArg().isRequired().create(
-				"ctrlPort");
-		options.addOption(controlPort);
-
+		// Port for this AppServer
 		Option appServerPort = OptionBuilder.withArgName("appServer port").hasArg().isRequired().create(
 				"appSrvPort");
 		options.addOption(appServerPort);
 
+		// Should the AppServer use the STDOUT and STDIN streams
 		Option stdio = OptionBuilder.withArgName("write sdtout messages").hasArg().create("stdio");
 		options.addOption(stdio);
-		
-		Option controller = OptionBuilder.withArgName("requires the Controller").hasArg().create("controller");
+
+		// Should the AppServer shutdown if the connection to the local
+		// Controller breaks
+		Option controller = OptionBuilder.withArgName("requires the Controller").hasArg()
+				.create("controller");
 		options.addOption(controller);
+
+		// Privileged applications must authenticate with the controller
+		Option authenticationToken = OptionBuilder.withArgName(
+				"authentication token for privileged applications").hasArg().create("token");
+		options.addOption(authenticationToken);
 
 		try
 		{
+			// Parse the command line
 			CommandLineParser parser = new GnuParser();
 			CommandLine cmd = parser.parse(options, args);
 
+			// Central configuration
 			Configuration config = Configuration.getInstance();
+
+			// Fill the configuration
 			config.setAppId(cmd.getOptionValue("appId"));
-			config.setControlPort(new Integer(cmd.getOptionValue("ctrlPort")));
 			config.setAppServerPort(new Integer(cmd.getOptionValue("appSrvPort")));
 
 			if (cmd.hasOption("stdio"))
 				config.setEnableStdOut(Boolean.parseBoolean(cmd.getOptionValue("stdio")));
-			
+
 			if (cmd.hasOption("controller"))
 				config.setRequiresController(Boolean.parseBoolean(cmd.getOptionValue("controller")));
+
+			if (cmd.hasOption("token"))
+			{
+				config.setPrivileged(true);
+				config.setAuthenticationToken(cmd.getOptionValue("token"));
+			}
 
 		} catch (ParseException e)
 		{
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("AppServer", options);
-		
+
 			// Exit process
 			System.exit(0);
 		} catch (NumberFormatException e)
 		{
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("AppServer", options);
-			
+
 			// Exit process
 			System.exit(0);
 		}
