@@ -1,7 +1,7 @@
 package org.prot.manager.services;
 
 import org.apache.log4j.Logger;
-import org.prot.controller.services.ControllerService;
+import org.prot.controller.services.controller.ControllerService;
 import org.prot.manager.data.ControllerInfo;
 import org.prot.manager.data.ControllerRegistry;
 import org.springframework.remoting.rmi.RmiProxyFactoryBean;
