@@ -10,7 +10,7 @@ public class Main
 	public Main()
 	{
 		// Configure logger
-		DOMConfigurator.configure(Main.class.getResource("/etc/log4j/controller.xml"));
+		DOMConfigurator.configure(Main.class.getResource("/etc/log4j.xml"));
 
 		// Start spring ioc container
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring.xml",
