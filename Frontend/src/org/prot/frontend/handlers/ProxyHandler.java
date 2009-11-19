@@ -75,7 +75,7 @@ public class ProxyHandler extends AbstractHandler implements ExceptionListener
 
 			// Build the destination url
 			String url = info.getAddress() + ":" + info.getPort();
-			String uri = "/" + appId + request.getRequestURI();
+			String uri = "/" + appId + baseRequest.getUri().toString();
 			url = url + uri;
 
 			logger.debug("Forwarding request to: " + url);
