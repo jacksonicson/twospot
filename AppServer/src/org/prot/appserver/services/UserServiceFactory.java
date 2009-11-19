@@ -1,22 +1,25 @@
 package org.prot.appserver.services;
 
-import org.prot.controller.services.user.PrivilegedUserService;
+import org.apache.log4j.Logger;
 import org.springframework.remoting.rmi.RmiProxyFactoryBean;
 
 public class UserServiceFactory
 {
-	private static UserServiceProxy userService;
+	private static final Logger logger = Logger.getLogger(UserServiceFactory.class);
 
-	public static UserServiceProxy getUserService()
+	private static UserService userService;
+
+	public static UserService getUserService()
 	{
 		if (userService == null)
 		{
 			RmiProxyFactoryBean proxyFactory = new RmiProxyFactoryBean();
-			proxyFactory.setServiceInterface(PrivilegedUserService.class);
+			proxyFactory.setServiceInterface(org.prot.controller.services.user.UserService.class);
 			proxyFactory.setServiceUrl("rmi://localhost:2299/appserver/UserService");
 			proxyFactory.afterPropertiesSet();
-			
-			userService = new UserServiceProxy((PrivilegedUserService)proxyFactory.getObject());
+
+			userService = new UserService((org.prot.controller.services.user.UserService) proxyFactory
+					.getObject());
 		}
 
 		return userService;

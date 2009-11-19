@@ -10,7 +10,7 @@ import javax.jdo.Transaction;
 
 import org.apache.log4j.Logger;
 
-public class UserServiceImpl implements PrivilegedUserService
+public class UserServiceImpl implements UserService
 {
 	private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
 	
@@ -24,9 +24,9 @@ public class UserServiceImpl implements PrivilegedUserService
 	}
 
 	@Override
-	public boolean getCurrentUser(String session)
+	public boolean getCurrentUser(String uid)
 	{
-		if (session == null)
+		if (uid == null)
 			return false;
 
 		// Query database
@@ -34,7 +34,7 @@ public class UserServiceImpl implements PrivilegedUserService
 		Collection<UserSession> result = (Collection<UserSession>) query.execute();
 		for (UserSession test : result)
 		{
-			if (test.getSessionId().equals(session))
+			if (test.getSessionId().equals(uid))
 				return true;
 		}
 
@@ -42,17 +42,17 @@ public class UserServiceImpl implements PrivilegedUserService
 	}
 
 	@Override
-	public String getLoginUrl()
+	public String getLoginUrl(String redirectUrl)
 	{
-		return "http://localhost:8080/helloworld/login";
+		// TODO: Configuration
+		return "http://localhost:8080/portal/login?url=" + redirectUrl;
 	}
 
 	@Override
-	public void registerSession(String token, String session)
+	public synchronized void registerUser(String token, String session)
 	{
-		// TODO: Use AOP to check the token!
-		logger.info("Supplied token: " + token);
-
+		// TODO: Check the token
+		
 		UserSession userSession = new UserSession();
 		userSession.setSessionId(session);
 

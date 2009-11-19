@@ -1,4 +1,4 @@
-package org.prot.controller.services;
+package org.prot.controller.services.controller;
 
 import org.apache.log4j.Logger;
 import org.prot.controller.manager.AppManager;

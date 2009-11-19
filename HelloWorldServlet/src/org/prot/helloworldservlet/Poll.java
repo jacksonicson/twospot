@@ -1,10 +1,8 @@
 package org.prot.helloworldservlet;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-
 
 @PersistenceCapable
 public class Poll
@@ -18,9 +16,9 @@ public class Poll
 
 	@Persistent
 	private Long time = null;
-	
+
 	@Persistent
-	private String test = null; 
+	private String test = null;
 
 	public Poll()
 	{

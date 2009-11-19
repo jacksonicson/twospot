@@ -98,13 +98,13 @@
 		</property>
 
 		<property name="serviceInterface"
-			value="org.prot.controller.services.user.PrivilegedUserService" />
+			value="org.prot.controller.services.user.UserService" />
 
 		<property name="registryPort" value="${rmi.registry.port}" />
 	</bean>
 
 	<!-- Platform services -->
-	<bean id="ControllerService" class="org.prot.controller.services.ControllerServiceImpl">
+	<bean id="ControllerService" class="org.prot.controller.services.controller.ControllerServiceImpl">
 		<property name="manager" ref="AppManager" />
 	</bean>
 
@@ -113,7 +113,7 @@
 		<property name="serviceName" value="ControllerService" />
 		<property name="service" ref="ControllerService" />
 		<property name="serviceInterface"
-			value="org.prot.controller.services.ControllerService" />
+			value="org.prot.controller.services.controller.ControllerService" />
 
 		<property name="registryPort" value="${rmi.registry.port}" />
 	</bean>

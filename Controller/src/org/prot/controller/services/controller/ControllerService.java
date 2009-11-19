@@ -1,4 +1,4 @@
-package org.prot.controller.services;
+package org.prot.controller.services.controller;
 
 public interface ControllerService
 {

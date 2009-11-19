@@ -28,6 +28,8 @@ public class IODirector
 			this.destination = destionation;
 		}
 
+		String buffer = "";  
+		
 		@Override
 		public void write(int b) throws IOException
 		{
