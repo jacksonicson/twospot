@@ -22,6 +22,10 @@ public final class UserService
 	{
 		HttpConnection httpConnection = HttpConnection.getCurrentConnection();
 		Cookie[] cookies = httpConnection.getRequest().getCookies();
+		
+		if(cookies == null)
+			return false; 
+		
 		for (Cookie cookie : cookies)
 		{
 			if (cookie.getName().equals(Cookies.USER_ID))

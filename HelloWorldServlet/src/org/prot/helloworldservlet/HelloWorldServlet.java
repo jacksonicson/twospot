@@ -14,17 +14,13 @@ import org.prot.appserver.services.UserServiceFactory;
 public class HelloWorldServlet extends HttpServlet
 {
 	private static final Logger logger = Logger.getLogger(HelloWorldServlet.class);
-	
+
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException
 	{
+		// Test the UserService
 		UserService service = UserServiceFactory.getUserService();
-		logger.info("service erhalten"); 
-		
-		boolean value = service.getCurrentUser(); 
-		
-		resp.getWriter().print("done: " + value);
-		
-		if(service.getCurrentUser() == false)
-			resp.sendRedirect(service.getLoginUrl("http://localhost:8080/portal/helloworld"));
+		boolean value = service.getCurrentUser();
+		if (service.getCurrentUser() == false)
+			resp.sendRedirect(service.getLoginUrl(req.getRequestURL().toString()));
 	}
 }

@@ -28,6 +28,8 @@ public class LoginFinishServlet extends HttpServlet
 			response.sendError(404, "Missing redirect URL");
 			return;
 		}
+		
+		// TODO: Check user credentials
 
 		// Create a new user id 
 		Random r = new Random();
@@ -42,10 +44,11 @@ public class LoginFinishServlet extends HttpServlet
 
 		// Save a platform cookie (is valid for all subdomains)
 		Cookie cookie = new Cookie("UID", uid);
-		// cookie.setDomain(".localhost"); // TODO: Make this more general
+		cookie.setDomain("portal.mydomain");
 		response.addCookie(cookie);
 
 		// Redirect the client
+		logger.debug("Login finished, redirecting to: " + okUrl);
 		response.sendRedirect(okUrl);
 	}
 }

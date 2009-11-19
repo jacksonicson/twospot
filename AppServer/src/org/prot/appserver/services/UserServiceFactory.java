@@ -18,8 +18,14 @@ public class UserServiceFactory
 			proxyFactory.setServiceUrl("rmi://localhost:2299/appserver/UserService");
 			proxyFactory.afterPropertiesSet();
 
-			userService = new UserService((org.prot.controller.services.user.UserService) proxyFactory
-					.getObject());
+			Object object = proxyFactory.getObject();
+			if(object == null)
+			{
+				logger.error("Could not connect with the UserService"); 
+				throw new NullPointerException();
+			}
+
+			userService = new UserService((org.prot.controller.services.user.UserService) object);
 		}
 
 		return userService;

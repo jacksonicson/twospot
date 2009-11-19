@@ -1,5 +1,7 @@
 package org.prot.controller.services.user;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Collection;
 
 import javax.jdo.JDOHelper;
@@ -13,7 +15,7 @@ import org.apache.log4j.Logger;
 public class UserServiceImpl implements UserService
 {
 	private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
-	
+
 	private PersistenceManagerFactory pmFactory;
 	private PersistenceManager persistenceManager;
 
@@ -45,14 +47,24 @@ public class UserServiceImpl implements UserService
 	public String getLoginUrl(String redirectUrl)
 	{
 		// TODO: Configuration
-		return "http://localhost:8080/portal/login?url=" + redirectUrl;
+		String url = "http://portal.mydomain:6060";
+		String uri = "";
+		try
+		{
+			uri = "/login?url=" + URLEncoder.encode(redirectUrl, "UTF-8");
+		} catch (UnsupportedEncodingException e)
+		{
+			logger.error("", e);
+		}
+
+		return url + uri;
 	}
 
 	@Override
 	public synchronized void registerUser(String token, String session)
 	{
 		// TODO: Check the token
-		
+
 		UserSession userSession = new UserSession();
 		userSession.setSessionId(session);
 

@@ -1,6 +1,7 @@
 package org.prot.helloworldservlet;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +23,8 @@ public class LoginServlet extends HttpServlet
 			response.sendError(404, "Missing redirect URL");
 			return;
 		}
+		
+		okUrl = URLDecoder.decode(okUrl, "UTF-8");
 
 		// Redirect to the login page
 		String page = ""
