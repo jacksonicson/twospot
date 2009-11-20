@@ -7,7 +7,6 @@ import org.springframework.core.io.ClassPathResource;
 
 public class Main
 {
-
 	public Main()
 	{
 		// Start the IODirector
