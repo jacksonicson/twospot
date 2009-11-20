@@ -55,5 +55,10 @@
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-jndi-7.0.0.v20091005.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-plus-7.0.0.v20091005.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/apache_commons/commons-el.jar"/>
+	<classpathentry kind="src" path=".apt_generated">
+		<attributes>
+			<attribute name="optional" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
