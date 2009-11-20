@@ -52,11 +52,15 @@ public class AppDeployer extends AbstractLifeCycle
 		String[] ownServerClasses = { "org.prot.appserver." };
 		webAppContext.setServerClasses(ownServerClasses);
 		
+		// Configure the session handler
+//		webAppContext.setSessionHandler(new DistributedSessionHandler()); 
 		
 		webAppContext.setExtractWAR(false);
-		webAppContext.setParentLoaderPriority(false); // Load everything from the server classpath
+		webAppContext.setParentLoaderPriority(true); // Load everything from the server classpath
 		webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
 				".*/jsp-api-[^/]*\\.jar$|.*/jsp-[^/]*\\.jar$");
+		
+		webAppContext.setDefaultsDescriptor("/etc/webdefault.xml");
 
 		contexts.addHandler(webAppContext);
 		if (contexts.isStarted())

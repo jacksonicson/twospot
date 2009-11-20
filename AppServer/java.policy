@@ -2,8 +2,6 @@ grant codeBase "file:/D:/work/mscWolke/trunk/dev/-" {
 	permission java.security.AllPermission;
 };
 
-
-
 grant codeBase "file:/C:/temp/-" {
-	
+	permission java.security.AllPermission;
 };
