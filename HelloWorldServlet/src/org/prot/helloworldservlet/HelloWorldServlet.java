@@ -1,6 +1,8 @@
 package org.prot.helloworldservlet;
 
 import java.io.IOException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -8,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.prot.app.services.UserServiceFactory;
-import org.prot.appserver.config.Configuration;
 
 @SuppressWarnings("serial")
 public class HelloWorldServlet extends HttpServlet
@@ -18,7 +19,7 @@ public class HelloWorldServlet extends HttpServlet
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException
 	{
 
-		logger.info("CLASS:" + this.getClass().getProtectionDomain().getCodeSource());
+		// logger.info("CLASS:" + this.getClass().getProtectionDomain().getCodeSource());
 
 		// Darauf darf das ding garkeinen zugriff haben!!!
 		// try
@@ -38,7 +39,26 @@ public class HelloWorldServlet extends HttpServlet
 		} catch (Exception e)
 		{
 			System.out.println("RMI stub failed");
+			e.printStackTrace();
 		}
+		
+		System.out.println("---------------------------------------------------");
+		
+		Object o = AccessController.doPrivileged(new PrivilegedAction()
+		{
+			public Object run()
+			{
+				
+				System.out.println("class codesource"
+						+ UserServiceFactory.class.getProtectionDomain().getCodeSource());
+				
+				System.out.println("class codesource"
+						+ this.getClass().getProtectionDomain().getCodeSource());
+				
+				return null;
+			}
+
+		});
 
 		// Test the UserService
 		// UserService service = UserServiceFactory.getUserService();

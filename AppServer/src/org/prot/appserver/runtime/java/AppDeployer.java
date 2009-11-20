@@ -44,11 +44,11 @@ public class AppDeployer extends AbstractLifeCycle
 		webAppContext.setWar(Configuration.getInstance().getAppDirectory());
 		webAppContext.setContextPath("/");
 
-		// Configure the system classes
+		// Configure the system classes (application can see this classes)
 		String[] ownSystemClasses = { "org.prot.app." };
 		webAppContext.setSystemClasses(ownSystemClasses);
 
-		// Configure the server classes
+		// Configure the server classes (application can not see this classes)
 		String[] ownServerClasses = { "org.prot.appserver." };
 		webAppContext.setServerClasses(ownServerClasses);
 		
