@@ -31,6 +31,6 @@ public class LoginController implements Controller
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("loginCommand", login);
 
-		return new ModelAndView("login/login.jsp", model);
+		return new ModelAndView("login/login", model);
 	}
 }
