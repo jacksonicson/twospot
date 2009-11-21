@@ -1,6 +1,7 @@
 package org.prot.appserver.runtime.java;
 
 import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.util.component.AbstractLifeCycle;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.prot.appserver.app.AppInfo;
@@ -14,6 +15,8 @@ public class AppDeployer extends AbstractLifeCycle
 	private HandlerCollection contexts;
 	private WebAppContext webAppContext;
 
+	private DistributedSessionManager sessionManager; 
+	
 	public void setAppInfo(AppInfo appInfo)
 	{
 		this.appInfo = appInfo;
@@ -53,8 +56,7 @@ public class AppDeployer extends AbstractLifeCycle
 		webAppContext.setServerClasses(ownServerClasses);
 		
 		// Configure the session handler
-		DistributedSessionManager manager = new DistributedSessionManager();
-		webAppContext.setSessionHandler(new DistributedSessionHandler(manager)); 
+		webAppContext.setSessionHandler(new SessionHandler(sessionManager)); 
 		
 		webAppContext.setExtractWAR(false);
 		webAppContext.setParentLoaderPriority(true); // Load everything from the server classpath
@@ -66,5 +68,10 @@ public class AppDeployer extends AbstractLifeCycle
 		contexts.addHandler(webAppContext);
 		if (contexts.isStarted())
 			contexts.start();
+	}
+
+	public synchronized void setSessionManager(DistributedSessionManager sessionManager)
+	{
+		this.sessionManager = sessionManager;
 	}
 }

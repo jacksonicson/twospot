@@ -45,7 +45,8 @@
 	<bean id="ManagementWrapper" class="org.prot.appserver.management.ManagementHandler">
 		<property name="handler" ref="ContextCollectionHandler" />
 		<property name="management">
-			<bean class="org.prot.appserver.management.Management" init-method="init" />
+			<bean class="org.prot.appserver.management.Management"
+				init-method="init" />
 		</property>
 	</bean>
 
@@ -56,6 +57,19 @@
 	<!-- Deployment -->
 	<bean id="AppDeployer" class="org.prot.appserver.runtime.java.AppDeployer">
 		<property name="contexts" ref="ManagementWrapper" />
+		<property name="sessionManager" ref="SessionManager" />
+	</bean>
+
+	<!-- Session -->
+	<bean id="SessionManager"
+		class="org.prot.appserver.runtime.java.DistributedSessionManager">
+		<property name="sessionDao" ref="SessionDao" />
+	</bean>
+
+	<bean id="SessionDao" class="org.prot.appserver.runtime.java.data.JdoSessionDao">
+		<property name="connection">
+			<bean class="org.prot.appserver.runtime.java.data.JdoConnection" init-method="init" />
+		</property>
 	</bean>
 
 </beans>

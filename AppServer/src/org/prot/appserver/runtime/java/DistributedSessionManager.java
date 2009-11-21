@@ -1,17 +1,10 @@
 package org.prot.appserver.runtime.java;
 
-import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.jdo.JDOHelper;
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
@@ -20,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.session.AbstractSessionManager;
 import org.eclipse.jetty.util.LazyList;
+import org.prot.appserver.runtime.java.data.SessionDao;
 
 public class DistributedSessionManager extends AbstractSessionManager
 {
@@ -27,6 +21,9 @@ public class DistributedSessionManager extends AbstractSessionManager
 
 	private ConcurrentHashMap<String, DistributedSession> sessions;
 
+	private SessionDao sessionDao;
+
+	@SuppressWarnings("serial")
 	class DistributedSession extends Session
 	{
 		private SessionData data;
@@ -52,7 +49,7 @@ public class DistributedSessionManager extends AbstractSessionManager
 			this.data = data;
 			super._values = data.getAttributes();
 		}
-		
+
 		public void updateSessionData(SessionData data)
 		{
 			this.data = data;
@@ -117,7 +114,7 @@ public class DistributedSessionManager extends AbstractSessionManager
 				if (dirty)
 				{
 					willPassivate();
-					// updateSession(data);
+					updateSession(this);
 					didActivate();
 				}
 			} catch (Exception e)
@@ -152,96 +149,46 @@ public class DistributedSessionManager extends AbstractSessionManager
 		}
 	}
 
-	PersistenceManagerFactory pmf;
-	PersistenceManager pm;
-
-	private void init()
-	{
-		if (pmf == null)
-		{
-			pmf = JDOHelper.getPersistenceManagerFactory("/etc/jdoDefault.properties");
-			pm = pmf.getPersistenceManager();
-		}
-	}
-
 	private void storeSession(DistributedSession session)
 	{
-		init();
-
-		Transaction tx = pm.currentTransaction();
-
-		SessionData data = session.getSessionData();
-		try
-		{
-			data.prepareSerialization();
-
-			tx.begin();
-			pm.makePersistent(data);
-			tx.commit();
-
-			logger.info("txtx made persistent");
-
-		} catch (IOException e)
-		{
-			tx.rollback();
-
-			e.printStackTrace();
-		}
+		sessionDao.saveSession(session.getSessionData());
 	}
 
-	private DistributedSession loadSession(DistributedSession target, String idInCluster)
+	private void updateSession(DistributedSession sessionData)
 	{
-		init();
+		sessionDao.updateSession(sessionData.getSessionData());
+	}
 
-		logger.info("txtx loading session");
+	private DistributedSession loadSession(DistributedSession target, String sessionId)
+	{
+		// Check if storage has the session
+		boolean exists = sessionDao.exists(sessionId);
+		if (exists == false)
+			return null;
 
-		Query query = pm.newQuery();
+		// Is cached session stale
+		boolean stale = true;
+		if (target != null)
+			stale = sessionDao.isStale(sessionId, target.getLastAccessedTime());
 
-		logger.info("txtx query");
+		logger.debug("stale state: " + stale);
 
-		query.setClass(SessionData.class);
-		query.setFilter("sessionId == '" + idInCluster + "'");
+		// Cached session is ok - return
+		if (!stale)
+			return target;
 
-		logger.info("txtx filter");
+		// Fetch the session from the storage
+		SessionData loadedSession = sessionDao.loadSession(sessionId);
 
-		Collection<SessionData> col = null;
-		try
+		logger.debug("session loaded: " + loadedSession);
+
+		// Update or create a session
+		if (target != null)
 		{
-			col = (Collection<SessionData>) query.execute();
-		} catch (Exception e)
+			target.updateSessionData(loadedSession);
+		} else
 		{
-			logger.error("txtx asdf", e);
-		}
-
-		logger.info("txtx loaded session...");
-
-		SessionData session = col.iterator().next();
-
-		logger.info("txtx loaded session2222: " + session.getSessionId());
-
-		try
-		{
-			if (session != null)
-			{
-				session.restoreSerialization();
-
-				if (target == null)
-				{
-					target = new DistributedSession(session);
-					logger.info("created a NEW session object");
-				} else
-				{
-					target.updateSessionData(session);
-					logger.info("Updated an old session object");
-				}
-
-			}
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		} catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
+			target = new DistributedSession(loadedSession);
 		}
 
 		return target;
@@ -249,30 +196,21 @@ public class DistributedSessionManager extends AbstractSessionManager
 
 	private void deleteSession(DistributedSession session)
 	{
-		init();
-
-		Transaction tx = pm.currentTransaction();
-
-		SessionData data = session.getSessionData();
-
-		tx.begin();
-		pm.deletePersistent(data);
-		tx.commit();
-
-		logger.info("txtx session deleted");
+		sessionDao.deleteSession(session.getSessionData());
 	}
 
 	@Override
 	protected void addSession(AbstractSessionManager.Session session)
 	{
+		// Do nothing if session is null
 		if (session == null)
 			return;
 
+		// Make a cast to the corrent type
 		DistributedSession disSession = (DistributedSession) session;
 
 		synchronized (this)
 		{
-			logger.info("Put session: " + disSession.getClusterId());
 			sessions.put(disSession.getClusterId(), disSession);
 			try
 			{
@@ -284,29 +222,17 @@ public class DistributedSessionManager extends AbstractSessionManager
 				logger.warn("Unable to store new session id=" + session.getId(), e);
 			}
 		}
-
-		String clusterId = disSession.getClusterId();
 	}
 
 	@Override
 	public Session getSession(String idInCluster)
 	{
-		logger.info("Get session: " + idInCluster);
-
+		// Check if the session is in the cache
 		DistributedSession session = sessions.get(idInCluster);
 
 		synchronized (this)
 		{
-			if (session == null)
-			{
-				logger.info("txtx loading session");
-				session = loadSession(session, idInCluster);
-				sessions.put(session.getClusterId(), session);
-			} else
-			{
-				logger.warn("Reloading session!!");
-				loadSession(session, idInCluster);
-			}
+			loadSession(session, idInCluster);
 		}
 
 		return session;
@@ -327,15 +253,13 @@ public class DistributedSessionManager extends AbstractSessionManager
 			size = sessions.size();
 		}
 
-		logger.debug("get sessions: " + size);
-
 		return size;
 	}
 
 	@Override
 	protected void invalidateSessions()
 	{
-		// Do nothing
+		logger.warn("invalidateSessions() does nothing");
 	}
 
 	protected void invalidateSession(String idInCluster)
@@ -351,7 +275,6 @@ public class DistributedSessionManager extends AbstractSessionManager
 	@Override
 	protected Session newSession(HttpServletRequest request)
 	{
-		logger.debug("new session for request");
 		return new DistributedSession(request);
 	}
 
@@ -426,5 +349,10 @@ public class DistributedSessionManager extends AbstractSessionManager
 	{
 		if (isStopping() || isStopped())
 			return;
+	}
+
+	public void setSessionDao(SessionDao sessionDao)
+	{
+		this.sessionDao = sessionDao;
 	}
 }

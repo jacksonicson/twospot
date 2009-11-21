@@ -14,17 +14,16 @@ import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-import javax.persistence.Table;
-
-import org.datanucleus.jpa.annotations.DatastoreIdentity;
 
 @PersistenceCapable
 public class SessionData implements Serializable
 {
+	private static final long serialVersionUID = -7629526712017876974L;
+
 	@PrimaryKey
-	@Persistent(valueStrategy=IdGeneratorStrategy.UUIDSTRING)
-	private String dbid; 
-	
+	@Persistent(valueStrategy = IdGeneratorStrategy.UUIDSTRING)
+	private String dbid;
+
 	@Persistent
 	private String sessionId;
 
@@ -45,7 +44,8 @@ public class SessionData implements Serializable
 	@Persistent
 	private long created;
 
-	// TODO: Identifies the last node where this session was used (not applicable here)
+	// TODO: Identifies the last node where this session was used (not
+	// applicable here)
 	@Persistent
 	private String lastNode;
 
@@ -64,7 +64,7 @@ public class SessionData implements Serializable
 	// Stores the session attributes
 	@NotPersistent
 	volatile private Map attributes;
-	
+
 	// Byte arry wich contains the serialized attributes
 	@Persistent
 	private byte[] serializedAttributes;
@@ -74,27 +74,27 @@ public class SessionData implements Serializable
 		this.sessionId = sessionId;
 		this.created = System.currentTimeMillis();
 		this.accessed = created;
-		this.attributes = new ConcurrentHashMap();
+		this.attributes = new ConcurrentHashMap<Object, Object>();
 	}
 
 	public void restoreSerialization() throws IOException, ClassNotFoundException
 	{
 		ByteArrayInputStream bytes = new ByteArrayInputStream(serializedAttributes);
 		ObjectInputStream in = new ObjectInputStream(bytes);
-		Object o = in.readObject();
-		attributes = (Map)attributes;
+		Object object = in.readObject();
+		attributes = (Map) object;
 		in.close();
 	}
-	
+
 	public void prepareSerialization() throws IOException
 	{
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream(); 
-		ObjectOutputStream out = new ObjectOutputStream(bytes); 
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		ObjectOutputStream out = new ObjectOutputStream(bytes);
 		out.writeObject(attributes);
 		serializedAttributes = bytes.toByteArray();
 		out.close();
 	}
-	
+
 	public synchronized long getAccessed()
 	{
 		return accessed;
@@ -213,5 +213,15 @@ public class SessionData implements Serializable
 	public synchronized void setSessionId(String sessionId)
 	{
 		this.sessionId = sessionId;
+	}
+
+	public synchronized String getDbid()
+	{
+		return dbid;
+	}
+
+	public synchronized void setDbid(String dbid)
+	{
+		this.dbid = dbid;
 	}
 }

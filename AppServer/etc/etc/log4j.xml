@@ -4,10 +4,10 @@
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
 	<appender name="SocketAppender" class="org.apache.log4j.net.SocketAppender">
-		<param name="Port" value="4445"/>
-		<param name="RemoteHost" value="localhost"/>
+		<param name="Port" value="4445" />
+		<param name="RemoteHost" value="localhost" />
 	</appender>
-	
+
 	<appender name="ConsoleAppender" class="org.apache.log4j.ConsoleAppender">
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%p - %C{1}.%M(%L) | %m%n" />
@@ -22,10 +22,21 @@
 		</layout>
 	</appender>
 
-	<root>
-		<priority value="DEBUG" />
+
+	<logger name="org.prot" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="SocketAppender" />
+	</logger>
+
+	<logger name="org.datanucleus" additivity="false">
+		<level value="INFO" />
 		<appender-ref ref="ConsoleAppender" />
-		<!--<appender-ref ref="FileAppender" />-->
+	</logger>
+
+	<root>
+		<priority value="INFO" />
+		<appender-ref ref="ConsoleAppender" />
+		<appender-ref ref="FileAppender" />
 		<appender-ref ref="SocketAppender" />
 	</root>
 
