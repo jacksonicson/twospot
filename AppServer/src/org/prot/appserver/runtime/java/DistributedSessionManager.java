@@ -176,16 +176,12 @@ public class DistributedSessionManager extends AbstractSessionManager
 		if (target != null)
 			stale = sessionDao.isStale(sessionId, target.getLastAccessedTime());
 
-		logger.debug("stale state: " + stale);
-
 		// Cached session is ok - return
 		if (!stale)
 			return target;
 
 		// Fetch the session from the storage
 		SessionData loadedSession = sessionDao.loadSession(sessionId);
-
-		logger.debug("session loaded: " + loadedSession);
 
 		// Update or create a session
 		if (target != null)
