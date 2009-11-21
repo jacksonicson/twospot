@@ -60,5 +60,9 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-beans.jar" sourcepath="/Libs/lib/spring-framework-2.5.6.SEC01/spring-sources.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-context.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-web.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-webmvc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
