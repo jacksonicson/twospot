@@ -28,13 +28,18 @@
 		<appender-ref ref="SocketAppender" />
 	</logger>
 
+	<logger name="org.prot.appserver.runtime.java.data" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="SocketAppender" />
+	</logger>
+
 	<logger name="org.datanucleus" additivity="false">
-		<level value="DEBUG" />
+		<level value="INFO" />
 		<appender-ref ref="ConsoleAppender" />
 	</logger>
 
 	<root>
-		<priority value="DEBUG" />
+		<priority value="ERROR" />
 		<appender-ref ref="ConsoleAppender" />
 		<appender-ref ref="FileAppender" />
 		<appender-ref ref="SocketAppender" />
