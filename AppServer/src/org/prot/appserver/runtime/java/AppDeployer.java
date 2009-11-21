@@ -56,7 +56,8 @@ public class AppDeployer extends AbstractLifeCycle
 		webAppContext.setServerClasses(ownServerClasses);
 		
 		// Configure the session handler
-		webAppContext.setSessionHandler(new SessionHandler(sessionManager)); 
+		SessionHandler sessionHandler = new SessionHandler(sessionManager);
+		webAppContext.setSessionHandler(sessionHandler); 
 		
 		webAppContext.setExtractWAR(false);
 		webAppContext.setParentLoaderPriority(true); // Load everything from the server classpath

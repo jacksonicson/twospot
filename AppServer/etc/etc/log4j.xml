@@ -29,12 +29,12 @@
 	</logger>
 
 	<logger name="org.datanucleus" additivity="false">
-		<level value="INFO" />
+		<level value="DEBUG" />
 		<appender-ref ref="ConsoleAppender" />
 	</logger>
 
 	<root>
-		<priority value="INFO" />
+		<priority value="DEBUG" />
 		<appender-ref ref="ConsoleAppender" />
 		<appender-ref ref="FileAppender" />
 		<appender-ref ref="SocketAppender" />

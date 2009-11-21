@@ -64,11 +64,19 @@
 	<bean id="SessionManager"
 		class="org.prot.appserver.runtime.java.DistributedSessionManager">
 		<property name="sessionDao" ref="SessionDao" />
+		<property name="idManager" ref="IdManager" />
+	</bean>
+
+	<bean id="IdManager"
+		class="org.prot.appserver.runtime.java.DistributedSessionIdManager">
+		<constructor-arg ref="Server" />
+		<property name="sessionDao" ref="SessionDao" />
 	</bean>
 
 	<bean id="SessionDao" class="org.prot.appserver.runtime.java.data.JdoSessionDao">
 		<property name="connection">
-			<bean class="org.prot.appserver.runtime.java.data.JdoConnection" init-method="init" />
+			<bean class="org.prot.appserver.runtime.java.data.JdoConnection"
+				init-method="init" />
 		</property>
 	</bean>
 

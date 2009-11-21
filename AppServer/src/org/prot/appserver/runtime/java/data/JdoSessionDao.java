@@ -26,8 +26,8 @@ public class JdoSessionDao implements SessionDao
 		try
 		{
 			SessionData data = (SessionData) query.execute();
-			logger.debug("exists: " + (data != null) + " class: " + data.getClass());
-			
+			logger.debug("exists: " + (data != null));
+
 			return (data != null);
 		} catch (Exception e)
 		{
@@ -48,15 +48,15 @@ public class JdoSessionDao implements SessionDao
 
 		try
 		{
-			logger.debug("loading stale state"); 
+			logger.debug("loading stale state");
 			SessionData data = (SessionData) query.execute();
 			logger.debug("stale: " + data);
-			
-			if(data == null)
-				return true; 
-			
+
+			if (data == null)
+				return true;
+
 			return (timestamp - data.getLastAccessed()) < 0f;
-			
+
 		} catch (Exception e)
 		{
 			logger.error("Could not load SessionData: " + sessionId, e);
@@ -76,13 +76,13 @@ public class JdoSessionDao implements SessionDao
 
 		try
 		{
-			logger.debug("loading session"); 
+			logger.debug("loading session");
 			SessionData data = (SessionData) query.execute();
 			logger.debug("done: " + data.getClass());
-			
-			logger.debug("restoring session"); 
-			data.restoreSerialization(); 
-			
+
+			logger.debug("restoring session");
+			data.restoreSerialization();
+
 			return data;
 		} catch (Exception e)
 		{
@@ -101,12 +101,12 @@ public class JdoSessionDao implements SessionDao
 		try
 		{
 			logger.debug("preparing session");
-			sessionData.prepareSerialization(); 
-			
-			logger.debug("persisting session"); 
+			sessionData.prepareSerialization();
+
+			logger.debug("persisting session");
 			pm.makePersistent(sessionData);
-			logger.debug("done"); 
-			
+			logger.debug("done");
+
 			tx.commit();
 		} catch (Exception e)
 		{
@@ -123,11 +123,11 @@ public class JdoSessionDao implements SessionDao
 		tx.begin();
 		try
 		{
-			logger.debug("deleting session"); 
+			logger.debug("deleting session");
 			pm.deletePersistent(sessionData);
-			logger.debug("done"); 
-			
-			tx.commit(); 
+			logger.debug("done");
+
+			tx.commit();
 		} catch (Exception e)
 		{
 			logger.error("Could not save the session: " + sessionData.getSessionId());
@@ -144,18 +144,88 @@ public class JdoSessionDao implements SessionDao
 		try
 		{
 			logger.debug("preparing session");
-			sessionData.prepareSerialization(); 
-			
-			logger.debug("updating session"); 
+			sessionData.prepareSerialization();
+
+			logger.debug("updating session");
 			pm.makePersistent(sessionData);
-			logger.debug("done"); 
-			
+			logger.debug("done");
+
 			tx.commit();
 		} catch (Exception e)
 		{
 			logger.error("Could not save the session: " + sessionData.getSessionId());
 			tx.rollback();
 		}
+	}
+
+	@Override
+	public void addSessionId(String sessionId)
+	{
+		// Creating transferable object
+		SessionId id = new SessionId(sessionId);
+		
+		PersistenceManager pm = connection.getPersistenceManager();
+		Transaction tx = pm.currentTransaction();
+		tx.begin();
+		try
+		{
+			logger.debug("persisting sessionId");
+			pm.makePersistent(id);
+			logger.debug("done");
+
+			tx.commit();
+		} catch (Exception e)
+		{
+			logger.error("Could not save the sessionId: " + sessionId);
+			tx.rollback();
+		}
+	}
+
+	@Override
+	public void deleteSessionId(String sessionId)
+	{
+		SessionId id = new SessionId(sessionId);
+		
+		PersistenceManager pm = connection.getPersistenceManager();
+		Transaction tx = pm.currentTransaction();
+		tx.begin();
+		try
+		{
+			logger.debug("deleting session");
+			pm.deletePersistent(id);
+			logger.debug("done");
+
+			tx.commit();
+		} catch (Exception e)
+		{
+			logger.error("Could not save the sessionId: " + sessionId);
+			tx.rollback();
+		}
+	}
+
+	@Override
+	public boolean existsSessionId(String sessionId)
+	{
+		PersistenceManager pm = connection.getPersistenceManager();
+
+		Query query = pm.newQuery();
+		query.setClass(SessionId.class);
+		query.setFilter("sessionId == '" + sessionId + "'");
+		query.setUnique(true);
+
+		try
+		{
+			SessionId data = (SessionId) query.execute();
+			logger.debug("exists sessionId: " + (data != null));
+
+			return (data != null);
+			
+		} catch (Exception e)
+		{
+			logger.error("Could not load SessionId: " + sessionId, e);
+		}
+
+		return false;
 	}
 
 	public synchronized void setConnection(JdoConnection connection)

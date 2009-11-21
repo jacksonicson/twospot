@@ -49,6 +49,11 @@ public class DistributedSessionManager extends AbstractSessionManager
 			this.data = data;
 			super._values = data.getAttributes();
 		}
+		
+		public String getSessionId()
+		{
+			return data.getSessionId(); 
+		}
 
 		public void updateSessionData(SessionData data)
 		{

@@ -15,4 +15,10 @@ public interface SessionDao
 	public void deleteSession(SessionData sessionData);
 	
 	public boolean isStale(String sessionId, long timestamp);
+	
+	public void addSessionId(String sessionId); 
+	
+	public void deleteSessionId(String sessionId);
+	
+	public boolean existsSessionId(String sessionId); 
 }
