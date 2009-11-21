@@ -11,7 +11,7 @@
 		<property name="mappings">
 			<props>
 				<prop key="/login.htm">Login</prop>
-				<prop key="/loginHandler.htm">LoginHandler</prop>
+				<prop key="loginHandler.htm">LoginHandler</prop>
 			</props>
 		</property>
 	</bean>
@@ -34,6 +34,7 @@
 	<bean name="Login" class="org.prot.portal.login.LoginController" />
 
 	<bean id="LoginHandler" class="org.prot.portal.login.LoginHandlerController">
+		<property name="successView" value="" />
 		<property name="validator">
 			<bean class="org.prot.portal.login.CredentialValidator" />
 		</property>

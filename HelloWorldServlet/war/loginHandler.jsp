@@ -3,6 +3,7 @@
      pageEncoding="UTF-8" import="org.prot.portal.login.*"
 %>
 
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <html>
@@ -11,10 +12,16 @@
 </head>
 <body>
 
+<p>Login:</p>
+
 <form:form action="loginHandler.htm" method="POST"
      commandName="loginCommand"
 >
      <form:hidden path="redirectUrl" />
+
+     <p><form:errors path="username" /> <form:errors
+          path="password"
+     /></p>
 
      <table>
           <tr>

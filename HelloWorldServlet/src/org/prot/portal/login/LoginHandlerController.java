@@ -6,9 +6,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractCommandController;
+import org.springframework.web.servlet.mvc.SimpleFormController;
 
-public class LoginHandlerController extends AbstractCommandController
+public class LoginHandlerController extends SimpleFormController
 {
 	private static final Logger logger = Logger.getLogger(LoginHandlerController.class);
 
@@ -18,16 +18,13 @@ public class LoginHandlerController extends AbstractCommandController
 		setCommandName("loginCommand");
 	}
 
-	@Override
-	protected ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object command,
-			BindException exception) throws Exception
-	{
-		LoginCommand loginCommand = (LoginCommand)command; 
+	protected ModelAndView onSubmit(
+			HttpServletRequest request,	HttpServletResponse response, Object command,	BindException errors)
+			throws Exception {
+	
+		LoginCommand loginCommand = (LoginCommand)command;
 		response.sendRedirect(loginCommand.getRedirectUrl());
-		
-		logger.info("Ok redirecting user to the given url: " + loginCommand.getRedirectUrl());
 		
 		return null;
 	}
-
 }
