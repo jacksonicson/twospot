@@ -1,6 +1,7 @@
 package org.prot.portal.login;
 
 import org.apache.log4j.Logger;
+import org.prot.portal.services.UserService;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -8,6 +9,8 @@ import org.springframework.validation.Validator;
 public class RegistrationValidator implements Validator
 {
 	private static Logger logger = Logger.getLogger(RegistrationValidator.class);
+
+	private UserService userService;
 	
 	@Override
 	public boolean supports(Class cls)
@@ -27,6 +30,19 @@ public class RegistrationValidator implements Validator
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "surname", "", "surname is required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "forename", "", "forename is required");
 		
-		// TODO: More validation
+		// Check if user already esists (only if no errors until now)
+		if(!errors.hasErrors())
+		{
+			boolean exists = userService.existsUserId(registerCommand.getUsername());
+			if(exists == true)
+			{
+				errors.rejectValue("username", "", "Username already exists");
+			}
+		}
+	}
+	
+	public void setUserService(UserService userService)
+	{
+		this.userService = userService;
 	}
 }

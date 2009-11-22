@@ -85,4 +85,16 @@ public class PlatformUser
 	{
 		this.forename = forename;
 	}
+	
+	public PlatformUser clone()
+	{
+		PlatformUser platformUser = new PlatformUser(); 
+		platformUser.setUsername(username);
+		platformUser.setSurname(surname);
+		platformUser.setForename(forename);
+		platformUser.setEmail(email);
+		platformUser.setMaxApps(maxApps);
+		platformUser.setMd5Password(md5Password);
+		return platformUser;
+	}
 }

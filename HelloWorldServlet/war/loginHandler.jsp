@@ -16,6 +16,11 @@
      <form:hidden path="redirectUrl" />
 
      <table>
+          <form:errors>
+               <tr>
+                    <td colspan="2">Invalid credentials</td>
+               </tr>
+          </form:errors>
           <tr>
                <td>Username: <form:errors path="username" /></td>
                <td><form:input path="username" size="60" /></td>

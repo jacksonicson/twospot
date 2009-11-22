@@ -4,5 +4,7 @@ public interface UserDao
 {
 	public void saveUser(PlatformUser user);
 	
-	public void getUser(String username); 
+	public void updateUser(PlatformUser user); 
+	
+	public PlatformUser getUser(String username); 
 }

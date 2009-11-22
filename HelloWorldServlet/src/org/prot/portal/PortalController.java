@@ -15,6 +15,8 @@ public class PortalController implements Controller
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
 			throws Exception
 	{
+		
+		
 		return new ModelAndView("portal");
 	}
 }

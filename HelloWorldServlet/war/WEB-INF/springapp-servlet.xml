@@ -5,7 +5,20 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
+	<!-- Data beans -->
+	<bean id="JdoConnection" class="org.prot.portal.login.data.JdoConnection" init-method="init" />
+	
+	<bean id="UserDao" class="org.prot.portal.login.data.JdoUserDao">
+		<property name="jdoConnection" ref="JdoConnection" />
+	</bean>
 
+	<!-- Business logic beans -->
+	<bean id="UserService" class="org.prot.portal.services.UserService">
+		<property name="userDao" ref="UserDao" />
+	</bean>
+
+	<!-- Web -->
+	
 	<bean id="urlMapping"
 		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">
@@ -58,15 +71,20 @@
 	<bean id="LoginHandler" class="org.prot.portal.login.LoginHandlerController">
 		<property name="successView" value="portal" />
 		<property name="validator">
-			<bean class="org.prot.portal.login.CredentialValidator" />
+			<bean class="org.prot.portal.login.CredentialValidator">
+				<property name="userService" ref="UserService" />
+			</bean>
 		</property>
 	</bean>
 
 	<bean id="RegisterHandler" class="org.prot.portal.login.RegisterHandlerController">
 		<property name="successView" value="start" />
 		<property name="validator">
-			<bean class="org.prot.portal.login.RegistrationValidator" />
+			<bean class="org.prot.portal.login.RegistrationValidator">
+				<property name="userService" ref="UserService" />
+			</bean>
 		</property>
+		<property name="userService" ref="UserService" />
 	</bean>
 
 </beans>
