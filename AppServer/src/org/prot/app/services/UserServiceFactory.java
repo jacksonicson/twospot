@@ -16,18 +16,14 @@ public class UserServiceFactory
 	{
 		if (userService == null)
 		{
-
-//			System.out.println("class codesource"
-//					+ UserServiceFactory.class.getProtectionDomain().getCodeSource());
-			
 			Object o = AccessController.doPrivileged(new PrivilegedAction()
 			{
 				public Object run()
 				{
-					
+
 					System.out.println("class codesource"
 							+ UserServiceFactory.class.getProtectionDomain().getCodeSource());
-					
+
 					System.out.println("class codesource"
 							+ this.getClass().getProtectionDomain().getCodeSource());
 

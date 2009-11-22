@@ -13,28 +13,32 @@ public final class UserService
 
 	private org.prot.controller.services.user.UserService proxy;
 
-	public UserService(org.prot.controller.services.user.UserService proxy)
+	protected UserService(org.prot.controller.services.user.UserService proxy)
 	{
 		this.proxy = proxy;
 	}
 
-	public boolean getCurrentUser()
+	public String getCurrentUser()
 	{
 		HttpConnection httpConnection = HttpConnection.getCurrentConnection();
 		Cookie[] cookies = httpConnection.getRequest().getCookies();
-		
-		if(cookies == null)
-			return false; 
-		
+
+		// If there is no cookie there is no active session
+		if (cookies == null)
+			return null;
+
+		// Search the cookie named USER_ID
 		for (Cookie cookie : cookies)
 		{
 			if (cookie.getName().equals(Cookies.USER_ID))
 			{
-				return proxy.getCurrentUser(cookie.getValue());
+				// TODO
+				proxy.getCurrentUser(cookie.getValue());
+				return "super"; // TODO!!!
 			}
 		}
 
-		return false;
+		return null;
 	}
 
 	public String getLoginUrl(String redirectUrl)
@@ -42,9 +46,9 @@ public final class UserService
 		return proxy.getLoginUrl(redirectUrl);
 	}
 
-	public void registerUser(String uid)
+	public void registerUser(String uid, String username)
 	{
 		String token = Configuration.getInstance().getAuthenticationToken();
-		proxy.registerUser(token, uid);
+		proxy.registerUser(token, uid, username);
 	}
 }

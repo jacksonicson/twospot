@@ -4,7 +4,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.log4j.Logger;
-import org.prot.app.services.UserServiceFactory;
 import org.prot.portal.login.data.PlatformUser;
 import org.prot.portal.login.data.UserDao;
 
@@ -20,7 +19,7 @@ public class UserService
 		return user != null;
 	}
 
-	private final String MD5(String input)
+	private static final String MD5(String input)
 	{
 		MessageDigest algorithm;
 		try
@@ -48,10 +47,6 @@ public class UserService
 		// MD5 hash password
 		user.setMd5Password(MD5(user.getMd5Password()));
 
-		// Register user in the platform
-		org.prot.app.services.UserService userService = UserServiceFactory.getUserService();
-		userService.registerUser(user.getUsername());
-
 		// Register user in the application database
 		userDao.saveUser(user);
 	}
@@ -69,6 +64,11 @@ public class UserService
 		logger.info("comparing saved md5 and new md5");
 
 		return (user.getMd5Password().equals(md5));
+	}
+	
+	public void loginUser(String uid, String username)
+	{
+		// TODO: !!!
 	}
 
 	public void setUserDao(UserDao userDao)

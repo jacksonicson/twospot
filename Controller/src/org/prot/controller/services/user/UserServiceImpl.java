@@ -2,7 +2,6 @@ package org.prot.controller.services.user;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Collection;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
@@ -26,21 +25,21 @@ public class UserServiceImpl implements UserService
 	}
 
 	@Override
-	public boolean getCurrentUser(String uid)
+	public String getCurrentUser(String uid)
 	{
 		if (uid == null)
-			return false;
+			return null;
 
 		// Query database
 		Query query = persistenceManager.newQuery(UserSession.class);
-		Collection<UserSession> result = (Collection<UserSession>) query.execute();
-		for (UserSession test : result)
-		{
-			if (test.getSessionId().equals(uid))
-				return true;
-		}
-
-		return false;
+		query.setFilter("sessionId == '" + uid + "'");
+		query.setUnique(true); 
+		
+		UserSession session = (UserSession)query.execute();
+		if(session != null)
+			return session.getUsername();
+			
+		return null;
 	}
 
 	@Override
@@ -61,12 +60,14 @@ public class UserServiceImpl implements UserService
 	}
 
 	@Override
-	public synchronized void registerUser(String token, String session)
+	public synchronized void registerUser(String token, String session, String username)
 	{
-		// TODO: Check the token
+		// TODO: Make this more generic
+		// TODO: Check token
 
 		UserSession userSession = new UserSession();
 		userSession.setSessionId(session);
+		userSession.setUsername(username);
 
 		Transaction tx = persistenceManager.currentTransaction();
 		tx.begin();

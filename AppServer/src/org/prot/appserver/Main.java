@@ -9,9 +9,8 @@ public class Main
 {
 	public Main()
 	{
-
-		System.out.println("code source: " + this.getClass().getProtectionDomain().getCodeSource());
-		System.setSecurityManager(new SecurityManager());
+		// Start the security manager
+//		System.setSecurityManager(new SecurityManager());
 
 		// Start the IODirector
 		IODirector ioDirector = new IODirector();

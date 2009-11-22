@@ -2,6 +2,7 @@ package org.prot.portal.services;
 
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.prot.app.services.UserService;
 import org.prot.app.services.UserServiceFactory;
 import org.prot.portal.app.data.Application;
@@ -9,6 +10,8 @@ import org.prot.portal.login.data.AppDao;
 
 public class AppService
 {
+	private static final Logger logger = Logger.getLogger(AppService.class);
+	
 	private AppDao appDao;
 
 	public boolean existsApplication(String appId)
@@ -21,6 +24,8 @@ public class AppService
 	{
 		UserService userService = UserServiceFactory.getUserService();
 		String owner = userService.getCurrentUser();
+		
+		logger.warn("OWNER: " + owner);
 		
 		appDao.saveApp(appId, owner);
 	}

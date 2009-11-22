@@ -1,29 +1,38 @@
 package org.prot.appserver.management;
 
-import java.lang.management.ManagementFactory;
 import java.util.List;
-
-import javax.management.MBeanServer;
 
 public class Management
 {
-	private List<?> beans;
 
 	public void init()
 	{
-		// Register all Beans in the management server
-		MBeanServer server = ManagementFactory.getPlatformMBeanServer();
-
-		// try
-		// {
-		// MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-		// ObjectName name = new ObjectName("org.prot:type=ServerStatus");
-		// mbs.registerMBean(stat, name);
-		//
-		// } catch (Exception e)
-		// {
-		// e.printStackTrace();
-		// }
+//		try
+//		{
+//			// Needs the RMI registry on the specific port
+//			String jmxurl = "service:jmx:rmi:///jndi/rmi://localhost:9999/" + "appId";
+//
+//			MBeanServer server = MBeanServerFactory.createMBeanServer();
+//
+//			ServerStatus status = new ServerStatus();
+//			ObjectName name = new ObjectName("ServerStatus:port=1099");
+//			server.registerMBean(status, name);
+//
+//			// Create a new connector
+//			JMXServiceURL url = new JMXServiceURL(jmxurl);
+//			
+//			Map<String,String> properties = new HashMap<String, String>(); 
+////			properties.put("com.sun.management.jmxremote.authenticate","false");
+//			JMXConnectorServer connector = JMXConnectorServerFactory.newJMXConnectorServer(url, properties, server);
+//			
+//
+//			// Start the connector
+//			connector.start();
+//
+//		} catch (Exception e)
+//		{
+//			e.printStackTrace();
+//		}
 	}
 
 	void handleConnection()
