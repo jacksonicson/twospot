@@ -11,14 +11,12 @@
 </head>
 <body>
 
-<p>Available actions:</p>
-<ul>
-     <li>Logout</li>
-     <li>New app</li>
-</ul>
+Portal-Start page
 
-<p>Registered aps:</p>
-<!-- TODO -->
+* <a href="logout.htm" />
+* <a href="registerApp.htm">Create a new App</a>
+
+
 
 </body>
 </html>

@@ -10,8 +10,19 @@
 		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">
 			<props>
+				<prop key="/start.htm">Start</prop>
+
+				<!-- Login, Logout and Register -->
+				<prop key="/registerHandler.htm">RegisterHandler</prop>
+				<prop key="/logout.htm">Logout</prop>
 				<prop key="/login.htm">Login</prop>
-				<prop key="loginHandler.htm">LoginHandler</prop>
+				<prop key="/loginHandler.htm">LoginHandler</prop>
+				<prop key="/registerHandler.htm">RegisterHandler</prop>
+
+				<!-- Portal -->
+				<prop key="/portal.htm">Portal</prop>
+				<prop key="/registerApp.htm">RegisterApp</prop>
+
 			</props>
 		</property>
 	</bean>
@@ -27,16 +38,34 @@
 	</bean>
 
 	<!-- Beans -->
+	<bean name="Start" class="org.prot.portal.StartController" />
 
-	<bean name="/hello.htm" class="springapp.web.HelloController" />
+	<!-- Portal -->
+	<bean name="Portal" class="org.prot.portal.PortalController" />
 
-	<!-- Login -->
+	<bean name="RegisterApp" class="org.prot.portal.RegisterAppController">
+		<property name="successView" value="portal" />
+		<property name="validator">
+			<bean class="org.prot.portal.RegisterAppValidator" />
+		</property>
+	</bean>
+
+	<!-- Login and Logout -->
+	<bean name="Logout" class="org.prot.portal.login.LogoutController" />
+
 	<bean name="Login" class="org.prot.portal.login.LoginController" />
 
 	<bean id="LoginHandler" class="org.prot.portal.login.LoginHandlerController">
-		<property name="successView" value="" />
+		<property name="successView" value="portal" />
 		<property name="validator">
 			<bean class="org.prot.portal.login.CredentialValidator" />
+		</property>
+	</bean>
+
+	<bean id="RegisterHandler" class="org.prot.portal.login.RegisterHandlerController">
+		<property name="successView" value="start" />
+		<property name="validator">
+			<bean class="org.prot.portal.login.RegistrationValidator" />
 		</property>
 	</bean>
 

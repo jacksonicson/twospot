@@ -18,13 +18,14 @@ public class LoginHandlerController extends SimpleFormController
 		setCommandName("loginCommand");
 	}
 
-	protected ModelAndView onSubmit(
-			HttpServletRequest request,	HttpServletResponse response, Object command,	BindException errors)
-			throws Exception {
-	
-		LoginCommand loginCommand = (LoginCommand)command;
-		response.sendRedirect(loginCommand.getRedirectUrl());
-		
-		return null;
+	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command,
+			BindException errors) throws Exception
+	{
+
+		LoginCommand loginCommand = (LoginCommand) command;
+		if (loginCommand.getRedirectUrl() != null && loginCommand.getRedirectUrl().isEmpty() == false)
+			response.sendRedirect(loginCommand.getRedirectUrl());
+
+		return super.onSubmit(request, response, command, errors);
 	}
 }

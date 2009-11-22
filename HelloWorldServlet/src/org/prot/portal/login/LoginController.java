@@ -19,11 +19,6 @@ public class LoginController implements Controller
 			throws Exception
 	{
 		String redirectUrl = request.getParameter("url");
-		if (redirectUrl == null)
-		{
-			response.sendError(505, "URL parameter is missing");
-			return null;
-		}
 
 		LoginCommand login = new LoginCommand();
 		login.setRedirectUrl(redirectUrl);

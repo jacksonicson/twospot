@@ -1,7 +1,5 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-     pageEncoding="UTF-8" import="org.prot.portal.login.*"
-%>
+     pageEncoding="UTF-8" import="org.prot.portal.login.*"%>
 
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -12,24 +10,18 @@
 </head>
 <body>
 
-<p>Login:</p>
+<p>Register:</p>
 
-<form:form action="loginHandler.htm" method="POST"
-     commandName="loginCommand"
->
+<form:form action="loginHandler.htm" method="POST" commandName="loginCommand">
      <form:hidden path="redirectUrl" />
-
-     <p><form:errors path="username" /> <form:errors
-          path="password"
-     /></p>
 
      <table>
           <tr>
-               <td>Username:</td>
+               <td>Username: <form:errors path="username" /></td>
                <td><form:input path="username" size="60" /></td>
           </tr>
           <tr>
-               <td>Password:</td>
+               <td>Password: <form:errors path="password" /></td>
                <td><form:input path="password" size="60" /></td>
           </tr>
           <tr>
