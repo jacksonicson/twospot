@@ -1,5 +1,7 @@
 package org.prot.portal.login;
 
+import java.util.Random;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +26,15 @@ public class LoginHandlerController extends SimpleFormController
 
 	private String createGUID()
 	{
-		return "asdf"; 
+		// TODO: Nor really unique!
+		Random r = new Random();
+		long a = r.nextLong(); 
+		long b = r.nextLong(); 
+		long c = System.currentTimeMillis(); 
+		
+		long res = Math.abs(a | b | c);
+		
+		return "" + res; 
 	}
 	
 	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command,

@@ -62,7 +62,6 @@ public class UserService
 			return false;
 
 		logger.info("comparing saved md5 and new md5");
-
 		return (user.getMd5Password().equals(md5));
 	}
 	

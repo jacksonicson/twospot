@@ -32,9 +32,7 @@ public final class UserService
 		{
 			if (cookie.getName().equals(Cookies.USER_ID))
 			{
-				// TODO
-				proxy.getCurrentUser(cookie.getValue());
-				return "super"; // TODO!!!
+				return proxy.getCurrentUser(cookie.getValue());
 			}
 		}
 
@@ -50,5 +48,10 @@ public final class UserService
 	{
 		String token = Configuration.getInstance().getAuthenticationToken();
 		proxy.registerUser(token, uid, username);
+	}
+	
+	public void deregisterUser()
+	{
+		// TODO
 	}
 }

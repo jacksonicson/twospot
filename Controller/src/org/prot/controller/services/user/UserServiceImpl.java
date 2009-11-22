@@ -37,8 +37,12 @@ public class UserServiceImpl implements UserService
 		
 		UserSession session = (UserSession)query.execute();
 		if(session != null)
+		{
+			logger.warn("User session is not null"); 
 			return session.getUsername();
+		}
 			
+		logger.warn("Could not find a user session for: " + uid);
 		return null;
 	}
 
@@ -74,6 +78,8 @@ public class UserServiceImpl implements UserService
 		try
 		{
 			persistenceManager.makePersistent(userSession);
+			logger.debug("User session is persistent"); 
+			
 			tx.commit();
 		} catch (Exception e)
 		{
