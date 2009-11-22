@@ -13,12 +13,7 @@ public final class UserService
 
 	private org.prot.controller.services.user.UserService proxy;
 
-	protected UserService(org.prot.controller.services.user.UserService proxy)
-	{
-		this.proxy = proxy;
-	}
-
-	public String getCurrentUser()
+	private String searchUID()
 	{
 		HttpConnection httpConnection = HttpConnection.getCurrentConnection();
 		Cookie[] cookies = httpConnection.getRequest().getCookies();
@@ -32,11 +27,25 @@ public final class UserService
 		{
 			if (cookie.getName().equals(Cookies.USER_ID))
 			{
-				return proxy.getCurrentUser(cookie.getValue());
+				return cookie.getValue();
 			}
 		}
 
 		return null;
+	}
+
+	protected UserService(org.prot.controller.services.user.UserService proxy)
+	{
+		this.proxy = proxy;
+	}
+
+	public String getCurrentUser()
+	{
+		String uid = searchUID();
+		if (uid == null)
+			return null;
+
+		return proxy.getCurrentUser(uid);
 	}
 
 	public String getLoginUrl(String redirectUrl)
@@ -49,9 +58,14 @@ public final class UserService
 		String token = Configuration.getInstance().getAuthenticationToken();
 		proxy.registerUser(token, uid, username);
 	}
-	
-	public void deregisterUser()
+
+	public void unregisterUser()
 	{
-		// TODO
+		String uid = searchUID();
+		// If there is no UID there is no user session
+		if (uid == null)
+			return; 
+		
+		proxy.unregisterUser(uid);
 	}
 }

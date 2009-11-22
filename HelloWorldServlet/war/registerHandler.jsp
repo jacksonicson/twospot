@@ -20,8 +20,12 @@
                <td><form:input path="username" size="15" /></td>
           </tr>
           <tr>
-               <td>Password: <form:errors path="md5Password" /></td>
-               <td><form:password path="md5Password" size="20" /></td>
+               <td>Password: <form:errors path="password0" /></td>
+               <td><form:password path="password0" size="20" /></td>
+          </tr>
+          <tr>
+               <td>Confirm password: <form:errors path="password1" /></td>
+               <td><form:password path="password1" size="20" /></td>
           </tr>
           <tr>
                <td>e-mail: <form:errors path="email" /></td>

@@ -32,7 +32,7 @@ public class LogoutController implements Controller
 
 		// Logout the user from the platform
 		UserService userService = UserServiceFactory.getUserService(); 
-		userService.deregisterUser(); 
+		userService.unregisterUser(); 
 
 		// Render the start page 
 		return new ModelAndView("start");

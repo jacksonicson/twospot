@@ -10,4 +10,7 @@ public interface UserService
 
 	@PrivilegedAppServer
 	public void registerUser(String token, String uid, String username);
+	
+	@PrivilegedAppServer
+	public void unregisterUser(String uid);
 }

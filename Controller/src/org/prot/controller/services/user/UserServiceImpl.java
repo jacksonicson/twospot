@@ -2,6 +2,7 @@ package org.prot.controller.services.user;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Collection;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
@@ -27,21 +28,20 @@ public class UserServiceImpl implements UserService
 	@Override
 	public String getCurrentUser(String uid)
 	{
-		if (uid == null)
-			return null;
+		assert (uid != null);
 
 		// Query database
 		Query query = persistenceManager.newQuery(UserSession.class);
 		query.setFilter("sessionId == '" + uid + "'");
-		query.setUnique(true); 
-		
-		UserSession session = (UserSession)query.execute();
-		if(session != null)
+		query.setUnique(true);
+
+		UserSession session = (UserSession) query.execute();
+		if (session != null)
 		{
-			logger.warn("User session is not null"); 
+			logger.warn("User session is not null");
 			return session.getUsername();
 		}
-			
+
 		logger.warn("Could not find a user session for: " + uid);
 		return null;
 	}
@@ -69,22 +69,48 @@ public class UserServiceImpl implements UserService
 		// TODO: Make this more generic
 		// TODO: Check token
 
+		// Create a new UserSession object
 		UserSession userSession = new UserSession();
 		userSession.setSessionId(session);
 		userSession.setUsername(username);
 
 		Transaction tx = persistenceManager.currentTransaction();
-		tx.begin();
 		try
 		{
-			persistenceManager.makePersistent(userSession);
-			logger.debug("User session is persistent"); 
-			
+			// Delete everything from previous sessions
+			tx.begin();
+			Query query = persistenceManager.newQuery(UserSession.class);
+			query.setFilter("username == '" + username + "'");
+			Collection<UserSession> oldSessions = (Collection<UserSession>)query.execute();
+			for(UserSession delete : oldSessions)
+				persistenceManager.deletePersistent(delete);
 			tx.commit();
+			
+			// Create a new entry for this session
+			tx.begin();
+			persistenceManager.makePersistent(userSession);
+			logger.debug("User session is persistent");
+			tx.commit();
+			
 		} catch (Exception e)
 		{
-			logger.error("Could not persist user session", e);
+			logger.error("Could not persistate user session", e);
 			tx.rollback();
 		}
+	}
+
+	@Override
+	public void unregisterUser(String uid)
+	{
+		assert (uid != null);
+
+		// Query database
+		Query query = persistenceManager.newQuery(UserSession.class);
+		query.setFilter("sessionId == '" + uid + "'");
+		query.setUnique(true);
+
+		UserSession session = (UserSession) query.execute();
+		if (session != null)
+			persistenceManager.deletePersistent(session);
 	}
 }

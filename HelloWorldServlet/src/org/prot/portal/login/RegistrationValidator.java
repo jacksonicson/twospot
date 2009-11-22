@@ -11,7 +11,7 @@ public class RegistrationValidator implements Validator
 	private static Logger logger = Logger.getLogger(RegistrationValidator.class);
 
 	private UserService userService;
-	
+
 	@Override
 	public boolean supports(Class cls)
 	{
@@ -21,26 +21,31 @@ public class RegistrationValidator implements Validator
 	@Override
 	public void validate(Object command, Errors errors)
 	{
-		RegisterCommand registerCommand = (RegisterCommand)command;
+		RegisterCommand registerCommand = (RegisterCommand) command;
 
 		// Check empty fileds
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "", "username is required");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "md5Password", "", "password is required");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password0", "", "password is required");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password1", "", "password is required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "", "e-mail is required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "surname", "", "surname is required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "forename", "", "forename is required");
-		
+
+		// Both passwords must be equal
+		if (registerCommand.getPassword0().equals(registerCommand.getPassword1()) == false)
+			errors.rejectValue("password1", "", "confirmed password does not match password");
+
 		// Check if user already esists (only if no errors until now)
-		if(!errors.hasErrors())
+		if (!errors.hasErrors())
 		{
 			boolean exists = userService.existsUserId(registerCommand.getUsername());
-			if(exists == true)
+			if (exists == true)
 			{
 				errors.rejectValue("username", "", "Username already exists");
 			}
 		}
 	}
-	
+
 	public void setUserService(UserService userService)
 	{
 		this.userService = userService;

@@ -27,25 +27,30 @@ public class UserService
 			algorithm = MessageDigest.getInstance("MD5");
 			algorithm.reset();
 			algorithm.update(input.getBytes());
-			String md5 = new String(algorithm.digest());
-			return md5; 
+			byte[] byteMd5 = algorithm.digest();
+
+			StringBuffer hexString = new StringBuffer();
+			for (int i = 0; i < byteMd5.length; i++)
+				hexString.append(Integer.toHexString(0xFF & byteMd5[i]));
+
+			return hexString.toString();
 
 		} catch (NoSuchAlgorithmException e)
 		{
 			logger.error("Could not create a MD5 hash of the password", e);
 		}
-		
+
 		return null;
 	}
 
-	public void registerUser(PlatformUser user)
+	public void registerUser(PlatformUser user, String password)
 	{
 		// TODO: Throw an exception
 		if (existsUserId(user.getUsername()) == true)
 			return;
 
 		// MD5 hash password
-		user.setMd5Password(MD5(user.getMd5Password()));
+		user.setMd5Password(MD5(password));
 
 		// Register user in the application database
 		userDao.saveUser(user);
@@ -61,13 +66,8 @@ public class UserService
 		if (user == null)
 			return false;
 
-		logger.info("comparing saved md5 and new md5");
-		return (user.getMd5Password().equals(md5));
-	}
-	
-	public void loginUser(String uid, String username)
-	{
-		// TODO: !!!
+		logger.info("comparing saved md5: " + user.getMd5Password() + " and new md5: " + md5);
+		return user.getMd5Password().equals(md5);
 	}
 
 	public void setUserDao(UserDao userDao)

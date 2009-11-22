@@ -13,10 +13,8 @@
 
 Portal-Start page
 
-* <a href="logout.htm" />
+* <a href="logout.htm">Logout</a>
 * <a href="registerApp.htm">Create a new App</a>
-
-
 
 </body>
 </html>

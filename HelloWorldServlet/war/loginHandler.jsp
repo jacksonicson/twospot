@@ -27,7 +27,7 @@
           </tr>
           <tr>
                <td>Password: <form:errors path="password" /></td>
-               <td><form:input path="password" size="60" /></td>
+               <td><form:password path="password" size="60" /></td>
           </tr>
           <tr>
                <td colspan="2"><input type="submit" value="Post" /></td>

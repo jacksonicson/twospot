@@ -34,11 +34,12 @@ public class CredentialValidator implements Validator
 		{
 			logger.info("yes"); 
 			String username = loginCommand.getUsername();
-			String password = loginCommand.getUsername();
+			String password = loginCommand.getPassword();
 
 			boolean check = userService.checkCredentials(username, password);
 			if (check == false)
 			{
+				logger.info("Login failed"); 
 				errors.reject("", "Login failed - invalid credentials");
 			}
 		}

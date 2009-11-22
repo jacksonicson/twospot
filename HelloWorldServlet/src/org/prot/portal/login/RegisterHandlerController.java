@@ -21,7 +21,7 @@ public class RegisterHandlerController extends SimpleFormController
 	{
 		RegisterCommand registerCommand = (RegisterCommand) command;
 		PlatformUser user = registerCommand.clone(); 
-		userService.registerUser(user);
+		userService.registerUser(user, registerCommand.getPassword0());
 	}
 
 	public void setUserService(UserService userService)
