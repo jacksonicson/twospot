@@ -37,6 +37,6 @@ public class AppService
 	
 	public Set<String> getApplications(String owner)
 	{
-		return null;
+		return appDao.getApps(owner);
 	}
 }

@@ -4,7 +4,6 @@
   http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
 	version="2.4">
 
-
 	<!-- Configure Spring MVC -->
 	<servlet>
 		<servlet-name>springapp</servlet-name>

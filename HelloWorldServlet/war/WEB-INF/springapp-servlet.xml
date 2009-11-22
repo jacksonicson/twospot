@@ -63,10 +63,12 @@
 	<bean name="Start" class="org.prot.portal.StartController" />
 
 	<!-- Portal -->
-	<bean name="Portal" class="org.prot.portal.PortalController" />
+	<bean name="Portal" class="org.prot.portal.PortalController">
+		<property name="appService" ref="AppService" />
+	</bean>
 
 	<bean name="RegisterApp" class="org.prot.portal.RegisterAppController">
-		<property name="successView" value="portal" />
+		<property name="successView" value="redirect:/portal.htm" />
 		<property name="validator">
 			<bean class="org.prot.portal.RegisterAppValidator">
 				<property name="appService" ref="AppService" />
@@ -90,7 +92,7 @@
 	</bean>
 
 	<bean id="RegisterHandler" class="org.prot.portal.login.RegisterHandlerController">
-		<property name="successView" value="start" />
+		<property name="successView" value="redirect:/start.htm" />
 		<property name="validator">
 			<bean class="org.prot.portal.login.RegistrationValidator">
 				<property name="userService" ref="UserService" />

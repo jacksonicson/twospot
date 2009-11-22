@@ -7,6 +7,7 @@ import org.prot.app.services.UserService;
 import org.prot.app.services.UserServiceFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
+import org.springframework.web.servlet.view.InternalResourceView;
 
 public class StartController implements Controller
 {
@@ -21,6 +22,6 @@ public class StartController implements Controller
 		if (user == null)
 			return new ModelAndView("start");
 
-		return new ModelAndView("portal");
+		return new ModelAndView(new InternalResourceView("/portal.htm"));
 	}
 }
