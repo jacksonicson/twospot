@@ -6,9 +6,14 @@
        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
 	<!-- Data beans -->
-	<bean id="JdoConnection" class="org.prot.portal.login.data.JdoConnection" init-method="init" />
-	
+	<bean id="JdoConnection" class="org.prot.portal.login.data.JdoConnection"
+		init-method="init" />
+
 	<bean id="UserDao" class="org.prot.portal.login.data.JdoUserDao">
+		<property name="jdoConnection" ref="JdoConnection" />
+	</bean>
+
+	<bean id="AppDao" class="org.prot.portal.login.data.JdoAppDao">
 		<property name="jdoConnection" ref="JdoConnection" />
 	</bean>
 
@@ -17,8 +22,12 @@
 		<property name="userDao" ref="UserDao" />
 	</bean>
 
+	<bean id="AppService" class="org.prot.portal.services.AppService">
+		<property name="appDao" ref="AppDao" />
+	</bean>
+
 	<!-- Web -->
-	
+
 	<bean id="urlMapping"
 		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">
@@ -59,8 +68,11 @@
 	<bean name="RegisterApp" class="org.prot.portal.RegisterAppController">
 		<property name="successView" value="portal" />
 		<property name="validator">
-			<bean class="org.prot.portal.RegisterAppValidator" />
+			<bean class="org.prot.portal.RegisterAppValidator">
+				<property name="appService" ref="AppService" />
+			</bean>
 		</property>
+		<property name="appService" ref="AppService" />
 	</bean>
 
 	<!-- Login and Logout -->
