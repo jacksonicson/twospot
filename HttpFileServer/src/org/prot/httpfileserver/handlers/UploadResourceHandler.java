@@ -175,7 +175,9 @@ public class UploadResourceHandler extends AbstractHandler
 			IO.copy(baseRequest.getInputStream(), destOut);
 			destOut.close();
 			renameTempFile(dest, appId + version);
-
+			
+			response.getWriter().print("upload done");
+			
 		} catch (IOException e)
 		{
 			logger.error("Error while uploading a file", e);

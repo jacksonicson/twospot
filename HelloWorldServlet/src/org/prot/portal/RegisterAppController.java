@@ -1,7 +1,5 @@
 package org.prot.portal;
 
-import org.prot.app.services.UserService;
-import org.prot.app.services.UserServiceFactory;
 import org.prot.portal.services.AppService;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 

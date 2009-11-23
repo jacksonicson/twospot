@@ -20,6 +20,15 @@ public class AppService
 		return app != null;
 	}
 
+	public String getApplicationOwner(String appId)
+	{
+		Application app = appDao.loadApp(appId);
+		if(app == null)
+			return null;
+			
+		return app.getOwner();
+	}
+	
 	public void registerApplication(String appId)
 	{
 		UserService userService = UserServiceFactory.getUserService();

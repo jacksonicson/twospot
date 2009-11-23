@@ -26,6 +26,8 @@
 		<property name="appDao" ref="AppDao" />
 	</bean>
 
+	<bean id="DeploymentService" class="org.prot.portal.services.DeploymentService" />
+
 	<!-- Web -->
 
 	<bean id="urlMapping"
@@ -33,6 +35,9 @@
 		<property name="mappings">
 			<props>
 				<prop key="/start.htm">Start</prop>
+
+				<!-- Deploy -->
+				<prop key="/deploy.htm">AppDeployment</prop>
 
 				<!-- Login, Logout and Register -->
 				<prop key="/registerHandler.htm">RegisterHandler</prop>
@@ -59,8 +64,14 @@
 		</property>
 	</bean>
 
-	<!-- Beans -->
+	<!-- Web-Beans -->
 	<bean name="Start" class="org.prot.portal.StartController" />
+
+	<!-- Deployment -->
+	<bean name="AppDeployment" class="org.prot.portal.app.AppDeploymentController">
+		<property name="appService" ref="AppService" />
+		<property name="deploymentService" ref="DeploymentService" />
+	</bean>
 
 	<!-- Portal -->
 	<bean name="Portal" class="org.prot.portal.PortalController">

@@ -1,10 +1,11 @@
-import sys
-import httplib
 from optparse import OptionParser
+import Cookie
+import httplib
 import os
-import zipfile
+import sys
+import urllib
 import yaml
-
+import zipfile
 
 class InvalidDirectory(Exception):
     def __init__(self, value):
@@ -28,6 +29,13 @@ class InvalidProjectType(Exception):
     def __str__(self):
         return repr(self.value)
 
+class AuthenticationFailed(Exception):
+    def __init__(self, value):
+        self.value = value
+    
+    def __str__(self):
+        return repr(self.value)
+
 def parseAppYaml(pathToYaml):
     file = open(pathToYaml, "r")
     result = yaml.load(file)
@@ -35,20 +43,47 @@ def parseAppYaml(pathToYaml):
 
 
 
-# Properties 
-SERVER = 'localhost:6060'
+# Properties (TODO: This is the portal app)
+SERVER = 'localhost:9090'
 
 
 
 def upload(warFile, appId):
+    # Deployment requires authentication
+    
+    
+    # Read username and password
+    username = raw_input("username: ")
+    password = raw_input("password: ")
+    
+    # Login
+    con = httplib.HTTPConnection(SERVER)
+    params = urllib.urlencode({'username':username, 'password':password})
+    headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
+    con.request('POST', '/loginHandler.htm', params, headers)
+
+    response = con.getresponse()
+    c = Cookie.SimpleCookie(response.getheader('set-cookie'))
+    # TODO
+        #raise AuthenticationFailed("Authentication failed")
+    
+    print "  Logged in with (uid): " + c['UID'].value
+    
     # Reading (r) a binary file (b)
     file = open(warFile, mode='rb')
     
-    # Create a new connection and send the request (file)
-    con = httplib.HTTPConnection(SERVER)
+    # Send the request (file)
     print "Uploading..."
-    response = con.request('POST', '/deploy/' + appId, file)
-    print "Done"
+    con = httplib.HTTPConnection(SERVER)
+    headers = {'cookie':'UID=' + c["UID"].value}
+    con.request('GET', '/deploy.htm?id=' + appId + '&ver=null', file, headers)
+    response = con.getresponse()
+    
+    print "Status: %i" % response.status
+    if response.status != 200:
+        print "Reason: %s" % response.reason
+    
+    
 
 
 
@@ -111,7 +146,7 @@ def deploy(directory):
     
     # Upload the zip-file to the Web-Server
     appId = yaml["appId"]
-    upload(zipFile ,appId)
+    upload(zipFile , appId)
 
 
 
@@ -165,7 +200,7 @@ def main(args):
 #    args.append("--deploy")
     
     parser = OptionParser()
-    parser.add_option("--dir", action="store", type="string", )
+    parser.add_option("--dir", action="store", type="string",)
     parser.add_option("--createProject", action="store", dest="projectName")
     parser.add_option("--type", action="store", type="string", dest="projectType")
     parser.add_option("--deploy", action="store_true", dest="deploy")
