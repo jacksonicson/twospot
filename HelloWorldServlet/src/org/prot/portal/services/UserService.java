@@ -43,6 +43,14 @@ public class UserService
 		return null;
 	}
 
+	public PlatformUser getUser(String username)
+	{
+		assert(username != null);
+		
+		PlatformUser user = userDao.getUser(username);
+		return user;
+	}
+	
 	public void registerUser(PlatformUser user, String password)
 	{
 		// TODO: Throw an exception

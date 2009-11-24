@@ -1,4 +1,4 @@
-package org.prot.portal;
+package org.prot.portal.portal;
 
 public class RegisterAppCommand
 {

@@ -78,6 +78,7 @@ public class AppDeploymentController implements Controller
 		response.setStatus(status);
 		response.getWriter().write("ok");
 
+		// Don't render anything
 		return null;
 	}
 

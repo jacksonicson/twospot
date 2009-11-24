@@ -15,7 +15,7 @@ public class PlatformUser
 	private String md5Password;
 
 	@Persistent
-	private int maxApps;
+	private int maxApps = 3;
 
 	@Persistent
 	private String email;
@@ -85,10 +85,10 @@ public class PlatformUser
 	{
 		this.forename = forename;
 	}
-	
+
 	public PlatformUser clone()
 	{
-		PlatformUser platformUser = new PlatformUser(); 
+		PlatformUser platformUser = new PlatformUser();
 		platformUser.setUsername(username);
 		platformUser.setSurname(surname);
 		platformUser.setForename(forename);

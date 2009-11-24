@@ -19,7 +19,7 @@ public class AppService
 		Application app = appDao.loadApp(appId);
 		return app != null;
 	}
-
+	
 	public String getApplicationOwner(String appId)
 	{
 		Application app = appDao.loadApp(appId);

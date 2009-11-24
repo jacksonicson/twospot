@@ -1,4 +1,4 @@
-package org.prot.portal;
+package org.prot.portal.portal;
 
 import org.prot.portal.services.AppService;
 import org.springframework.web.servlet.mvc.SimpleFormController;

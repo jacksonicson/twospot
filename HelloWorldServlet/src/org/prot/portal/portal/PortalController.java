@@ -1,4 +1,4 @@
-package org.prot.portal;
+package org.prot.portal.portal;
 
 import java.util.Set;
 
@@ -22,12 +22,8 @@ public class PortalController implements Controller
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
 			throws Exception
 	{
-		logger.info("Portal controller"); 
-		
 		UserService userService = UserServiceFactory.getUserService(); 
 		String user = userService.getCurrentUser();
-		
-		logger.info("Portal controller: " + user);
 		
 		Set<String> appIds = appService.getApplications(user);
 		

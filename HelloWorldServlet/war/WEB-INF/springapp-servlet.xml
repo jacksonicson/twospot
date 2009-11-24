@@ -5,6 +5,10 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
+	<!-- Filters -->
+	<bean id="AccessFilter" class="org.prot.portal.filter.AccessFilter" />
+
+
 	<!-- Data beans -->
 	<bean id="JdoConnection" class="org.prot.portal.login.data.JdoConnection"
 		init-method="init" />
@@ -49,6 +53,7 @@
 				<!-- Portal -->
 				<prop key="/portal.htm">Portal</prop>
 				<prop key="/registerApp.htm">RegisterApp</prop>
+				<prop key="/app.htm">AppDetails</prop>
 
 			</props>
 		</property>
@@ -65,7 +70,7 @@
 	</bean>
 
 	<!-- Web-Beans -->
-	<bean name="Start" class="org.prot.portal.StartController" />
+	<bean name="Start" class="org.prot.portal.start.StartController" />
 
 	<!-- Deployment -->
 	<bean name="AppDeployment" class="org.prot.portal.app.AppDeploymentController">
@@ -74,18 +79,22 @@
 	</bean>
 
 	<!-- Portal -->
-	<bean name="Portal" class="org.prot.portal.PortalController">
+	<bean name="Portal" class="org.prot.portal.portal.PortalController">
 		<property name="appService" ref="AppService" />
 	</bean>
 
-	<bean name="RegisterApp" class="org.prot.portal.RegisterAppController">
-		<property name="successView" value="redirect:/portal.htm" />
+	<bean name="RegisterApp" class="org.prot.portal.portal.RegisterAppController">
+		<property name="successView" value="forward:/portal.htm" />
 		<property name="validator">
-			<bean class="org.prot.portal.RegisterAppValidator">
+			<bean class="org.prot.portal.portal.RegisterAppValidator">
 				<property name="appService" ref="AppService" />
+				<property name="userService" ref="UserService" />
 			</bean>
 		</property>
 		<property name="appService" ref="AppService" />
+	</bean>
+
+	<bean name="AppDetails" class="org.prot.portal.portal.AppDetailsController">
 	</bean>
 
 	<!-- Login and Logout -->
@@ -94,7 +103,7 @@
 	<bean name="Login" class="org.prot.portal.login.LoginController" />
 
 	<bean id="LoginHandler" class="org.prot.portal.login.LoginHandlerController">
-		<property name="successView" value="portal" />
+		<property name="successView" value="redirect:/portal.htm" />
 		<property name="validator">
 			<bean class="org.prot.portal.login.CredentialValidator">
 				<property name="userService" ref="UserService" />
