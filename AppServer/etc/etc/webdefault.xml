@@ -249,11 +249,11 @@
     <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
     <init-param>
         <param-name>logVerbosityLevel</param-name>
-        <param-value>DEBUG</param-value>
+        <param-value>ERROR</param-value>
     </init-param>
     <init-param>
     	<param-name>keepgenerated</param-name>
-    	<param-value>false</param-value>
+    	<param-value>true</param-value>
     </init-param>
     <init-param>
         <param-name>fork</param-name>
@@ -267,6 +267,20 @@
         <param-name>scratchdir</param-name>
         <param-value>C:/temp/scratch/</param-value>
     </init-param>
+    <init-param>
+        <param-name>reloading</param-name>
+        <param-value>false</param-value>
+    </init-param>
+    <init-param>
+        <param-name>development</param-name>
+        <param-value>false</param-value>
+    </init-param>
+    <init-param>
+        <param-name>classdebuginfo</param-name>
+        <param-value>false</param-value>
+    </init-param>
+    
+    
     <!--  
     <init-param>
         <param-name>classpath</param-name>

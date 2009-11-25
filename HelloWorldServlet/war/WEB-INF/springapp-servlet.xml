@@ -6,7 +6,7 @@
        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
 	<!-- Filters -->
-	<bean id="AccessFilter" class="org.prot.portal.filter.AccessFilter" />
+	<bean id="AccessFilter" class="org.prot.portal.filter.AccessFilter" init-method="init" />
 
 
 	<!-- Data beans -->
@@ -21,6 +21,9 @@
 		<property name="jdoConnection" ref="JdoConnection" />
 	</bean>
 
+	<bean id="DbDao" class="org.prot.portal.login.data.JdoDbDao">
+	</bean>
+
 	<!-- Business logic beans -->
 	<bean id="UserService" class="org.prot.portal.services.UserService">
 		<property name="userDao" ref="UserDao" />
@@ -28,6 +31,10 @@
 
 	<bean id="AppService" class="org.prot.portal.services.AppService">
 		<property name="appDao" ref="AppDao" />
+	</bean>
+
+	<bean id="DbService" class="org.prot.portal.services.DbService">
+		<property name="dbDao" ref="DbDao" />
 	</bean>
 
 	<bean id="DeploymentService" class="org.prot.portal.services.DeploymentService" />
@@ -55,6 +62,9 @@
 				<prop key="/registerApp.htm">RegisterApp</prop>
 				<prop key="/app.htm">AppDetails</prop>
 
+				<prop key="/dbBrowser.htm">DbBrowser</prop>
+				<prop key="/dbQueryForm.htm">DbBrowserQuery</prop>
+
 			</props>
 		</property>
 	</bean>
@@ -79,6 +89,15 @@
 	</bean>
 
 	<!-- Portal -->
+	<bean name="DbBrowserQuery" class="org.prot.portal.portal.DbQueryFormController">
+		<property name="dbService" ref="DbService" />
+		<property name="browserController" ref="DbBrowser" />
+	</bean>
+	
+	<bean name="DbBrowser" class="org.prot.portal.portal.DbBrowserController">
+		<property name="dbService" ref="DbService" />
+	</bean>
+
 	<bean name="Portal" class="org.prot.portal.portal.PortalController">
 		<property name="appService" ref="AppService" />
 	</bean>

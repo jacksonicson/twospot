@@ -21,7 +21,7 @@ Portal-Start page *
 Applications
 <ul>
      <c:forEach var="appId" items="${appIds}">
-          <li><a href="/app.htm?id=${appId}">${appId}</a></li>
+          <li><a href="/app.htm?appId=${appId}">${appId}</a></li>
      </c:forEach>
 </ul>
 

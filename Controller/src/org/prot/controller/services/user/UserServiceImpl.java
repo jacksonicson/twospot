@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService
 	}
 
 	@Override
-	public String getCurrentUser(String uid)
+	public synchronized String getCurrentUser(String uid)
 	{
 		assert (uid != null);
 

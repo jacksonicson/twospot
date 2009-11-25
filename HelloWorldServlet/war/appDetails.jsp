@@ -11,10 +11,19 @@
 </head>
 <body>
 
+<ul>
+     <li><a href="/portal.htm">Portal</a></li>
+</ul>
 
-<a href="/portal.htm">Portal</a>
+<p>Details for the Application: ${appId}</p>
 
-Details for the Application: XXX
+<p>
+<ul>
+     <li>Logfiles</li>
+     <li><a href="/dbBrowser.htm?appId=${appId}">Database browser</a></li>
+     <li>Versions</li>
+</ul>
+</p>
 
 </body>
 </html>

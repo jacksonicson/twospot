@@ -42,6 +42,8 @@ public final class UserService
 	public String getCurrentUser()
 	{
 		String uid = searchUID();
+		logger.debug("UID: " + uid);
+		
 		if (uid == null)
 			return null;
 

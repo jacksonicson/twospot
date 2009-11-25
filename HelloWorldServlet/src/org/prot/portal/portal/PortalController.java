@@ -25,6 +25,8 @@ public class PortalController implements Controller
 		UserService userService = UserServiceFactory.getUserService(); 
 		String user = userService.getCurrentUser();
 		
+		logger.info("User: " + user);
+		
 		Set<String> appIds = appService.getApplications(user);
 		
 		return new ModelAndView("portal", "appIds", appIds);

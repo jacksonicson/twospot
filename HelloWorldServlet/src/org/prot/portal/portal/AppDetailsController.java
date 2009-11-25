@@ -13,7 +13,9 @@ public class AppDetailsController implements Controller
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
 			throws Exception
 	{
-		return new ModelAndView("appDetails"); 
+		String appId = request.getParameter("appId"); 
+		
+		return new ModelAndView("appDetails", "appId", appId); 
 	}
 
 }

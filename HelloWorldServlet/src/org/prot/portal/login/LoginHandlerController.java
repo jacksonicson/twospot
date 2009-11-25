@@ -48,7 +48,7 @@ public class LoginHandlerController extends SimpleFormController
 		
 		// Login the user in the platform (privileged)
 		UserService userService = UserServiceFactory.getUserService(); 
-		userService.registerUser(uid, loginCommand.getUsername()); 
+		userService.registerUser(uid, loginCommand.getUsername());
 		
 		// Set the UID cookie
 		Cookie uidCookie = new Cookie(Cookies.USER_ID, uid);
