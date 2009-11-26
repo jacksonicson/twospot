@@ -1,7 +1,9 @@
 package org.prot.controller.manager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -60,7 +62,39 @@ class AppRegistry
 		return appInfo;
 	}
 
-	public Set<AppInfo> tick()
+	void cleanup()
+	{
+		List<AppInfo> copy = null;
+		synchronized (this)
+		{
+			copy = new ArrayList<AppInfo>();
+			copy.addAll(appInfos.values());
+		}
+
+		Set<AppInfo> delete = new HashSet<AppInfo>();
+		for (AppInfo info : copy)
+		{
+			AppState state = info.getStatus();
+			switch (state)
+			{
+			case KILLED:
+			case STALE:
+			case FAILED:
+				delete.add(info);
+				continue;
+			}
+		}
+
+		synchronized (this)
+		{
+			for (AppInfo info : delete)
+			{
+				appInfos.remove(info.getAppId());
+			}
+		}
+	}
+
+	Set<AppInfo> tick()
 	{
 		Set<AppInfo> idleApps = null;
 		for (AppInfo info : appInfos.values())
@@ -71,14 +105,11 @@ class AppRegistry
 					idleApps = new HashSet<AppInfo>();
 
 				info.setStatus(AppState.KILLED);
-				
-				synchronized (this)
-				{
-					appInfos.remove(info.getAppId());
-					idleApps.add(info);
-				}
+				idleApps.add(info);
 			}
 		}
+		
+		cleanup();
 
 		return idleApps;
 	}

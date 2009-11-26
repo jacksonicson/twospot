@@ -22,6 +22,9 @@ public class Main
 		
 		// ZooKeeper
 		factory.getBean("ManagementService");
+
+		// Request-Timer
+		factory.getBean("RequestManager"); 
 		
 		// Start the RMI-Services
 		factory.getBean("ControllerServiceExporter");

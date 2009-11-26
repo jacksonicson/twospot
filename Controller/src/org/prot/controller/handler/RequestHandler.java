@@ -14,6 +14,7 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.prot.controller.manager.AppInfo;
 import org.prot.controller.manager.AppManager;
+import org.prot.controller.security.RequestManager;
 import org.prot.util.AppIdExtractor;
 import org.prot.util.handler.ExceptionListener;
 import org.prot.util.handler.HttpProxyHelper;
@@ -22,9 +23,11 @@ public class RequestHandler extends AbstractHandler implements ExceptionListener
 {
 	private static final Logger logger = Logger.getLogger(RequestHandler.class);
 
-	private static final String APP_SERVER_HOST = "localhost"; 
-	
+	private static final String APP_SERVER_HOST = "localhost";
+
 	private AppManager appManager;
+
+	private RequestManager requestManager;
 
 	private HttpProxyHelper proxyHelper;
 
@@ -49,7 +52,7 @@ public class RequestHandler extends AbstractHandler implements ExceptionListener
 		String url = scheme + "://" + APP_SERVER_HOST + ":" + port + uri;
 
 		logger.info("URL: " + url);
-		
+
 		return new HttpURI(url);
 	}
 
@@ -63,8 +66,8 @@ public class RequestHandler extends AbstractHandler implements ExceptionListener
 		// Check the AppId and send an error
 		if (appId == null)
 		{
-			logger.debug("Invalid AppId"); 
-			
+			logger.debug("Invalid AppId");
+
 			response.sendError(HttpStatus.NOT_FOUND_404, "Invalid AppId (scheme://domain/AppId/...)");
 			baseRequest.setHandled(true);
 			return;
@@ -78,6 +81,10 @@ public class RequestHandler extends AbstractHandler implements ExceptionListener
 		// this request when the AppServer is online
 		if (appInfo == null)
 			return;
+
+		// Register the request in the RequestManager. Long running requests
+		// lead to the termination of the AppServer
+		long requestId = requestManager.registerRequest(appInfo.getAppId());
 
 		try
 		{
@@ -106,6 +113,11 @@ public class RequestHandler extends AbstractHandler implements ExceptionListener
 		this.proxyHelper = proxyHelper;
 	}
 
+	public void setRequestManager(RequestManager requestManager)
+	{
+		this.requestManager = requestManager;
+	}
+
 	@Override
 	public boolean onException(Throwable e, Object obj)
 	{
@@ -113,7 +125,7 @@ public class RequestHandler extends AbstractHandler implements ExceptionListener
 		{
 			String appId = (String) obj;
 			logger.debug("Reporting stale AppServer for AppId: " + appId);
-			
+
 			appManager.reportStaleApp(appId);
 			return true;
 		}

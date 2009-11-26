@@ -1,5 +1,6 @@
 package org.prot.controller.manager;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.jetty.util.thread.ThreadPool;
@@ -11,7 +12,7 @@ public class AppManager
 	private AppRegistry registry;
 
 	private AppMonitor monitor;
-
+	
 	public void init()
 	{
 		monitor = new AppMonitor(threadPool);
@@ -77,6 +78,23 @@ public class AppManager
 		return appInfo;
 	}
 
+	public void killApp(String appId)
+	{
+		AppInfo appInfo = registry.getAppInfo(appId);
+		assert(appInfo != null); 
+
+		// Update the state
+		appInfo.setStatus(AppState.KILLED);
+		
+		// Cleanup the registry
+		registry.cleanup();
+		
+		// Shedule the termination
+		Set<AppInfo> killed = new HashSet<AppInfo>();
+		killed.add(appInfo); 
+		monitor.killProcess(killed);
+	}
+	
 	public void reportStaleApp(String appId)
 	{
 		AppInfo appInfo = registry.getAppInfo(appId);

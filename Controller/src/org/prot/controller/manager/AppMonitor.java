@@ -52,7 +52,7 @@ class AppMonitor implements Runnable
 				AppProcess process = this.processList.get(info);
 				if (process != null)
 				{
-					this.processList.remove(process);
+					this.processList.remove(info);
 					jobQueue.add(process);
 				}
 			}

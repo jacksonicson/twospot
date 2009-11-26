@@ -60,6 +60,7 @@
 		init-method="init">
 		<property name="appManager" ref="AppManager" />
 		<property name="proxyHelper" ref="ProxyHelper" />
+		<property name="requestManager" ref="RequestManager" />
 	</bean>
 
 
@@ -86,6 +87,10 @@
 	<bean id="AppManager" class="org.prot.controller.manager.AppManager"
 		init-method="init">
 		<property name="threadPool" ref="ThreadPool" />
+	</bean>
+	
+	<bean id="RequestManager" class="org.prot.controller.security.RequestManager">
+		<property name="appManager" ref="AppManager" />
 	</bean>
 
 
