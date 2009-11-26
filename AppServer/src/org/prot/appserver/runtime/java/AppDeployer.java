@@ -60,7 +60,7 @@ public class AppDeployer extends AbstractLifeCycle
 		// webAppContext.setSessionHandler(sessionHandler); 
 		
 		webAppContext.setExtractWAR(false);
-		webAppContext.setParentLoaderPriority(true); // Load everything from the server classpath
+		webAppContext.setParentLoaderPriority(false); // Load everything from the server classpath
 		webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
 				".*/jsp-api-[^/]*\\.jar$|.*/jsp-[^/]*\\.jar$");
 		

@@ -1,5 +1,8 @@
 package org.prot.app.services;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
 import javax.servlet.http.Cookie;
 
 import org.apache.log4j.Logger;
@@ -41,13 +44,23 @@ public final class UserService
 
 	public String getCurrentUser()
 	{
-		String uid = searchUID();
+		final String uid = searchUID();
 		logger.debug("UID: " + uid);
-		
+
 		if (uid == null)
 			return null;
 
-		return proxy.getCurrentUser(uid);
+		String o = AccessController.doPrivileged(new PrivilegedAction<String>()
+		{
+			@Override
+			public String run()
+			{
+				return proxy.getCurrentUser(uid);
+			}
+
+		});
+
+		return (String) o;
 	}
 
 	public String getLoginUrl(String redirectUrl)
@@ -55,19 +68,39 @@ public final class UserService
 		return proxy.getLoginUrl(redirectUrl);
 	}
 
-	public void registerUser(String uid, String username)
+	public void registerUser(final String uid, final String username)
 	{
-		String token = Configuration.getInstance().getAuthenticationToken();
-		proxy.registerUser(token, uid, username);
+		final String token = Configuration.getInstance().getAuthenticationToken();
+
+		AccessController.doPrivileged(new PrivilegedAction<String>()
+		{
+			@Override
+			public String run()
+			{
+				proxy.registerUser(token, uid, username);
+				return null;
+			}
+
+		});
+
 	}
 
 	public void unregisterUser()
 	{
-		String uid = searchUID();
+		final String uid = searchUID();
 		// If there is no UID there is no user session
 		if (uid == null)
-			return; 
-		
-		proxy.unregisterUser(uid);
+			return;
+
+		AccessController.doPrivileged(new PrivilegedAction<String>()
+		{
+			@Override
+			public String run()
+			{
+				proxy.unregisterUser(uid);
+				return null;
+			}
+
+		});
 	}
 }

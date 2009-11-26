@@ -34,7 +34,7 @@
 	</logger>
 
 	<logger name="org.datanucleus" additivity="false">
-		<level value="INFO" />
+		<level value="DEBUG" />
 		<appender-ref ref="ConsoleAppender" />
 	</logger>
 

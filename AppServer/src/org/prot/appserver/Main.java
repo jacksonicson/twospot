@@ -1,6 +1,9 @@
 package org.prot.appserver;
 
+import java.security.Policy;
+
 import org.apache.log4j.xml.DOMConfigurator;
+import org.prot.app.services.security.HardPolicy;
 import org.prot.appserver.config.Configuration;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -10,7 +13,9 @@ public class Main
 	public Main()
 	{
 		// Start the security manager
-//		System.setSecurityManager(new SecurityManager());
+		// System.setSecurityManager(new SecurityManager());
+		Policy.setPolicy(new HardPolicy());
+		System.setSecurityManager(new SecurityManager());
 
 		// Start the IODirector
 		IODirector ioDirector = new IODirector();
