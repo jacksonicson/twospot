@@ -29,11 +29,6 @@ public class AppManager
 		// Get or register the AppServer
 		AppInfo appInfo = registry.getOrRegisterApp(appId);
 
-		// Find and kill all idle AppServers
-		Set<AppInfo> killed = registry.tick();
-		if (killed != null)
-			monitor.killProcess(killed);
-
 		// Todo-Information
 		Todo todo = null;
 
@@ -113,6 +108,14 @@ public class AppManager
 
 		// Wait until the AppServer is online
 		return monitor.waitForApplication(appInfo);
+	}
+	
+	private void checkIdle()
+	{
+		// Find and kill all idle AppServers
+		Set<AppInfo> killed = registry.tick();
+		if (killed != null)
+			monitor.killProcess(killed);
 	}
 
 	public void setThreadPool(ThreadPool threadPool)
