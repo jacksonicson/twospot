@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.xml.DOMConfigurator;
-import org.prot.app.services.security.HardPolicy;
+import org.prot.app.security.HardPolicy;
 import org.prot.appserver.config.Configuration;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;

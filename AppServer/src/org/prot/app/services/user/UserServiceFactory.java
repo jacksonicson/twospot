@@ -1,4 +1,4 @@
-package org.prot.app.services;
+package org.prot.app.services.user;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;

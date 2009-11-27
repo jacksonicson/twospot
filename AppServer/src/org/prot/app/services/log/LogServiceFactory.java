@@ -1,4 +1,4 @@
-package org.prot.app.services;
+package org.prot.app.services.log;
 
 public class LogServiceFactory
 {

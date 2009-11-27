@@ -1,4 +1,4 @@
-package org.prot.app.services.security;
+package org.prot.app.security;
 
 import java.io.FilePermission;
 import java.net.MalformedURLException;
