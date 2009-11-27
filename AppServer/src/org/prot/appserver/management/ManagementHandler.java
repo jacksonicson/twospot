@@ -14,9 +14,10 @@ public class ManagementHandler extends ContextHandlerCollection
 {
 	private Handler handler;
 
-	private Management management; 
+	private Management management;
 
-	public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+	public void handle(String target, Request baseRequest, HttpServletRequest request,
+			HttpServletResponse response) throws IOException, ServletException
 	{
 		this.management.handleConnection();
 		super.handle(target, baseRequest, request, response);

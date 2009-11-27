@@ -22,6 +22,10 @@
 		</layout>
 	</appender>
 
+	<logger name="org.prot.appserver" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="ConsoleAppender" />
+	</logger>
 
 	<logger name="org.prot" additivity="false">
 		<level value="DEBUG" />

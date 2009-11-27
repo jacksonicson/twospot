@@ -11,6 +11,9 @@
 
 		<property name="acceptors" value="1" />
 		<property name="statsOn" value="false" />
+		
+		
+		<property name="maxIdleTime" value="5000" />
 	</bean>
 
 	<!-- Server -->

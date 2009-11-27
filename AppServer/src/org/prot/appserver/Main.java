@@ -1,6 +1,9 @@
 package org.prot.appserver;
 
+import java.net.MalformedURLException;
 import java.security.Policy;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.prot.app.services.security.HardPolicy;
@@ -13,8 +16,24 @@ public class Main
 	public Main()
 	{
 		// Start the security manager
-		// System.setSecurityManager(new SecurityManager());
-		Policy.setPolicy(new HardPolicy());
+		HardPolicy policy = new HardPolicy();
+		policy.refresh(); 
+		try
+		{
+			policy.activateApplication("C:/temp/-");
+			
+			List<String> serverDirs = new ArrayList<String>();
+			serverDirs.add("D:/work/mscWolke/-");
+			
+			policy.activateServer(serverDirs);
+			
+		} catch (MalformedURLException e)
+		{
+			System.err.println("Could not activate policies");
+			System.exit(1);
+		}
+		
+		Policy.setPolicy(policy);
 		System.setSecurityManager(new SecurityManager());
 
 		// Start the IODirector
@@ -24,6 +43,9 @@ public class Main
 
 		// Configure logger
 		DOMConfigurator.configure(Main.class.getResource("/etc/log4j.xml"));
+		
+		// Log all startup arguments
+		ArgumentParser.dump();
 
 		// Start the Monitor
 		if (Configuration.getInstance().isRequiresController())

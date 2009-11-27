@@ -8,10 +8,30 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.log4j.Logger;
 import org.prot.appserver.config.Configuration;
 
 public class ArgumentParser
 {
+	private static CommandLine cmd = null; 
+	
+	public static void dump()
+	{
+		Logger logger = Logger.getLogger(ArgumentParser.class);
+		
+		if(cmd == null)
+		{
+			logger.error("Missing starup arguments");
+			return; 
+		}
+
+		logger.info("Startup arguments:"); 
+		for(Option option : cmd.getOptions())
+		{
+			logger.info(option.getOpt() + " = " + option.getValue());
+		}
+	}
+	
 	public static void parseArguments(String args[])
 	{
 		Options options = new Options();
@@ -45,6 +65,7 @@ public class ArgumentParser
 			// Parse the command line
 			CommandLineParser parser = new GnuParser();
 			CommandLine cmd = parser.parse(options, args);
+			ArgumentParser.cmd = cmd;
 
 			// Central configuration
 			Configuration config = Configuration.getInstance();
@@ -64,7 +85,7 @@ public class ArgumentParser
 				config.setPrivileged(true);
 				config.setAuthenticationToken(cmd.getOptionValue("token"));
 			}
-
+			
 		} catch (ParseException e)
 		{
 			HelpFormatter formatter = new HelpFormatter();

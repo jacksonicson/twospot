@@ -4,17 +4,16 @@ import java.io.FilePermission;
 import java.net.MalformedURLException;
 import java.net.SocketPermission;
 import java.net.URL;
+import java.security.AllPermission;
 import java.security.CodeSigner;
 import java.security.CodeSource;
 import java.security.Permission;
-import java.security.PermissionCollection;
 import java.security.Policy;
 import java.security.ProtectionDomain;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.PropertyPermission;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -22,136 +21,140 @@ public class HardPolicy extends Policy
 {
 	private static final Logger logger = Logger.getLogger(HardPolicy.class);
 
-	class MyCol extends PermissionCollection
+	private AsPermissionCollection javaPermissions = new AsPermissionCollection();
+
+	private AsPermissionCollection appPermissions = new AsPermissionCollection();
+
+	private AsPermissionCollection serverPermissions = new AsPermissionCollection();
+
+	private Set<CodeSource> javaSources = new HashSet<CodeSource>();
+
+	private Set<CodeSource> serverSources = new HashSet<CodeSource>();
+
+	private Set<CodeSource> appSource = new HashSet<CodeSource>();
+
+	public void refresh()
 	{
-		private List<Permission> permissions = new ArrayList<Permission>();
-
-		@Override
-		public void add(Permission permission)
+		String extDirs = "C:/Program Files (x86)/Java/jre6/lib/ext/-";
+		try
 		{
-			permissions.add(permission);
-		}
-
-		@Override
-		public Enumeration<Permission> elements()
+			URL url = new URL("file:/" + extDirs);
+			javaSources.add(new CodeSource(url, (CodeSigner[]) null));
+		} catch (MalformedURLException e)
 		{
-			return Collections.enumeration(permissions);
+			System.err.println("Could not set permissions"); 
+			System.exit(1);
 		}
-
-		@Override
-		public boolean implies(Permission permission)
-		{
-			if (permission.getClass().equals(RuntimePermission.class))
-			{
-				System.out.println("permission: " + permission.getActions());
-				return true;
-			}
-
-			if (permission.getClass().equals(PropertyPermission.class))
-				return true;
-
-			if (permission.getClass().equals(FilePermission.class))
-				return true;
-
-			
-			if(permission instanceof SocketPermission)
-			{
-				System.out.println("permission: " + permission.getActions());
-				return false;
-			}
-			
-			/*
-			 * AllPermission perm = new AllPermission();
-			 * if(perm.implies(permission)) return true;
-			 */
-
-			return false;
-		}
-
+		
+		// Set the permissions
+		javaPermissions.add(new AllPermission());
 	}
 
-	private MyCol myCol = new MyCol();
-
-	public PermissionCollection getPermissions(ProtectionDomain domain)
+	public void activateApplication(String dir) throws MalformedURLException
 	{
-		System.out.println("get permissions from domain: " + domain.getPermissions());
-		return myCol;
+
+		// Activate the codesource
+		URL url = new URL("file:/" + dir);
+		logger.info("Activating application codesource: " + url);
+
+		appSource.add(new CodeSource(url, (CodeSigner[]) null));
+
+		// Activate the permissions
+		appPermissions.add(new FilePermission(dir, "read"));
+
+		appPermissions.add(new RuntimePermission("getClassLoader"));
+		appPermissions.add(new RuntimePermission("createClassLoader"));
+		appPermissions.add(new RuntimePermission("setContextClassLoader"));
+		appPermissions.add(new RuntimePermission("loadLibrary.*"));
+		appPermissions.add(new RuntimePermission("accessClassInPackage.*"));
+		appPermissions.add(new RuntimePermission("defineClassInPackage.*"));
+		appPermissions.add(new RuntimePermission("accessDeclareMembers"));
+
+		appPermissions.add(new PropertyPermission("*", "read"));
+
+		// TODO: DataNucleus still does not work without this (Hadoop
+		// connectors)
+		appPermissions.add(new SocketPermission("*", "accept,connect,listen,resolve"));
 	}
 
-	public PermissionCollection getPermissions(CodeSource codesource)
+	public void activateServer(List<String> dirs) throws MalformedURLException
 	{
-		System.out.println("get permissions from code source: " + codesource);
-		return myCol;
+		for (String dir : dirs)
+		{
+			URL url = new URL("file:/" + dir);
+			logger.info("Activating server codesource: " + url);
+
+			serverSources.add(new CodeSource(url, (CodeSigner[]) null));
+
+			// Set the server permissions
+			serverPermissions.add(new AllPermission());
+		}
+	}
+
+	private boolean checkServerPermissions(ProtectionDomain domain, Permission permission)
+	{
+		return serverPermissions.implies(permission);
+	}
+
+	private boolean checkAppPermissions(ProtectionDomain domain, Permission permission)
+	{
+		return appPermissions.implies(permission);
+	}
+	
+	private boolean checkJavaPermissions(ProtectionDomain domain, Permission permission)
+	{
+		return javaPermissions.implies(permission);
 	}
 
 	public boolean implies(ProtectionDomain domain, Permission permission)
 	{
-		try
-		{
-			URL url = new URL("file:/D:/-");
-			CodeSource test = domain.getCodeSource();
-			CodeSource mine = new CodeSource(url, (CodeSigner[]) null);
+		// Check the codesource
+		CodeSource cs = domain.getCodeSource();
 
-			// Alles was von der code source kommt ist mal sicher
-			boolean implies = mine.implies(test);
-			if (implies)
+		// Java permissions
+		for(CodeSource java : javaSources)
+		{
+			if(java.implies(cs))
 			{
-				if(permission instanceof RuntimePermission)
-				{
-//					System.out.println("Ok codesource: " + domain.getCodeSource().getLocation());
-//					System.out.println("Permission: " + permission);
-				}				
-//				System.out.println("Permission: " + permission);
-//				
-				return true;
+				boolean check = checkJavaPermissions(domain, permission);
+				
+				if(check == false)
+					logger.debug("java refused: " + permission);
+				
+				return check;
 			}
-
-		} catch (MalformedURLException e)
+		}
+		
+		// Server permissions
+		for (CodeSource server : serverSources)
 		{
-			e.printStackTrace();
+			if (server.implies(cs))
+			{
+				boolean check = checkServerPermissions(domain, permission);
+
+				if (check == false)
+					logger.debug("server refused: " + permission);
+
+				return check;
+			}
 		}
 
-//		System.out.println("Failed codesource: " + domain.getCodeSource().getLocation());
-
-		boolean check = myCol.implies(permission);
-		if (check == false)
+		// Application permissions
+		for (CodeSource app : appSource)
 		{
-			System.out.println("Codesource: " + domain.getCodeSource());
-			System.out.println("Security permission: " + permission);
-			System.out.println("Classloader: " + domain.getClassLoader());
-
-			StringBuilder sb = new StringBuilder();
-
-			StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-
-			ArrayList<String> list = new ArrayList<String>();
-			String[] array = new String[1];
-
-			for (int i = 0; i < stackTraceElements.length; i++)
+			if (app.implies(cs))
 			{
-				StackTraceElement element = stackTraceElements[i];
-				String classname = element.getClassName();
-				String methodName = element.getMethodName();
-				int lineNumber = element.getLineNumber();
-				list.add(classname + "." + methodName + ":" + lineNumber);
-			}
-			
-			array = list.toArray(array);
+				boolean check = checkAppPermissions(domain, permission);
 
-			for (int i = 0; i < array.length; i++)
-			{
-				sb.append(array[i] + "\n");
-			}
-			
-			System.out.println("Callstack: " +sb.toString());
+				if (check == false)
+					logger.debug("app refused: " + permission);
 
+				return check;
+			}
 		}
 
-		return check;
-	}
-
-	public void refresh()
-	{
-		System.out.println("Refresh");
+		// Did not find any matching permissions (this is risky)
+		logger.debug("fallthrough: " + cs.getLocation());
+		return true;
 	}
 }
