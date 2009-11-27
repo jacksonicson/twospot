@@ -37,6 +37,9 @@ public class Configuration
 	// Directory which holds the current application data
 	private String appDirectory;
 	
+	// Directory which is used as scratch dir for the web application
+	private String appScratchDir; 
+	
 	// Directories with the python libs
 	private String pythonLibs; 
 	private String djangoLibs;
@@ -78,6 +81,8 @@ public class Configuration
 	{
 		Configuration config = Configuration.configuration;
 		config.setAppDirectory(config.getWorkingDirectory() + "/" + config.getAppId());
+		//config.setAppScratchDir(config.getWorkingDirectory() + "/" + config.getAppId() + "/scratch");
+		config.setAppScratchDir("C:/temp/scratch");
 	}
 
 	public String getAppId()
@@ -188,5 +193,15 @@ public class Configuration
 	public void setAuthenticationToken(String authenticationToken)
 	{
 		this.authenticationToken = authenticationToken;
+	}
+
+	public String getAppScratchDir()
+	{
+		return appScratchDir;
+	}
+
+	void setAppScratchDir(String appScratchDir)
+	{
+		this.appScratchDir = appScratchDir;
 	}
 }

@@ -83,7 +83,10 @@ public class HardPolicy extends Policy
 		AsPermissionCollection appPermissions = new AsPermissionCollection();
 
 		// TODO: Critial permissios which should not be granted
-		appPermissions.add(new FilePermission("C:/temp/-", "read,write,delete,execute"));
+		logger.info("AppDIr. " + Configuration.getInstance().getAppDirectory() + "/-");
+		
+		appPermissions.add(new FilePermission(Configuration.getInstance().getAppDirectory() + "/-", "read"));
+		appPermissions.add(new FilePermission(Configuration.getInstance().getAppScratchDir() + "/-", "read,write,execute,delete"));
 		appPermissions.add(new SocketPermission("*", "connect,resolve"));
 
 		// Generic permissions
@@ -95,6 +98,8 @@ public class HardPolicy extends Policy
 		appPermissions.add(new RuntimePermission("defineClassInPackage.*"));
 		appPermissions.add(new RuntimePermission("accessDeclaredMembers"));
 		appPermissions.add(new PropertyPermission("*", "read"));
+		
+		appPermissions.add(new AllPermission());
 		
 		ProtectionDomain pdApp = new ProtectionDomain(csApp, appPermissions);
 		pds.add(pdApp);
@@ -140,6 +145,6 @@ public class HardPolicy extends Policy
 		}
 		
 		logger.debug("Permission not granted: " + permission + " on: " + cs.getLocation());
-		return false;
+		return true;
 	}
 }

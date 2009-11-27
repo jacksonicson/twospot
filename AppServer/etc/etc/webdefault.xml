@@ -264,10 +264,6 @@
         <param-value>false</param-value>
     </init-param>
     <init-param>
-        <param-name>scratchdir</param-name>
-        <param-value>C:/temp/scratch/</param-value>
-    </init-param>
-    <init-param>
         <param-name>reloading</param-name>
         <param-value>false</param-value>
     </init-param>
@@ -280,6 +276,10 @@
         <param-value>false</param-value>
     </init-param>
     
+    <init-param>
+        <param-name>scratchdir</param-name>
+        <param-value>C:/temp/scratch</param-value>
+    </init-param>
     
     <!--  
     <init-param>

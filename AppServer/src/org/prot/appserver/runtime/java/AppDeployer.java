@@ -1,5 +1,8 @@
 package org.prot.appserver.runtime.java;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.util.component.AbstractLifeCycle;
