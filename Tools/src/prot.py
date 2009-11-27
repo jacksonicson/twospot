@@ -44,7 +44,9 @@ def parseAppYaml(pathToYaml):
 
 
 # Properties (TODO: This is the portal app)
-SERVER = 'localhost:9090'
+SERVER = 'localhost'
+PORT = 9090
+TIMEOUT = 10
 
 
 
@@ -57,15 +59,15 @@ def upload(warFile, appId):
     password = raw_input("password: ")
     
     # Login
-    con = httplib.HTTPConnection(SERVER)
+    con = httplib.HTTPConnection(SERVER, PORT, timeout=TIMEOUT)
     params = urllib.urlencode({'username':username, 'password':password})
     headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
     con.request('POST', '/loginHandler.htm', params, headers)
 
     response = con.getresponse()
     c = Cookie.SimpleCookie(response.getheader('set-cookie'))
-    # TODO
-        #raise AuthenticationFailed("Authentication failed")
+    if 'UID' not in c:
+        raise AuthenticationFailed("Authentication failed")
     
     print "  Logged in with (uid): " + c['UID'].value
     
@@ -74,7 +76,7 @@ def upload(warFile, appId):
     
     # Send the request (file)
     print "Uploading..."
-    con = httplib.HTTPConnection(SERVER)
+    con = httplib.HTTPConnection(SERVER, PORT, timeout=TIMEOUT)
     headers = {'cookie':'UID=' + c["UID"].value}
     con.request('GET', '/deploy.htm?id=' + appId + '&ver=null', file, headers)
     response = con.getresponse()

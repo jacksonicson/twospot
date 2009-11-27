@@ -4,10 +4,8 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,15 +25,13 @@ import org.eclipse.jetty.io.Buffer;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.util.TypeUtil;
 
-public class HttpProxyHelper
+public class HttpProxyHelper<M>
 {
 	private static final Logger logger = Logger.getLogger(HttpProxyHelper.class);
 
 	private HttpClient httpClient;
 
 	private final Set<String> invalidHeaders = new HashSet<String>();
-
-	private final List<ExceptionListener> exceptionListeners = new ArrayList<ExceptionListener>();
 
 	protected void setupInvalidHeaders()
 	{
@@ -50,30 +46,54 @@ public class HttpProxyHelper
 		invalidHeaders.add(HttpHeaders.UPGRADE);
 	}
 
-	public void addExceptionListener(ExceptionListener listener)
+	/**
+	 * Called after the send method of the HttpClient has been called
+	 * 
+	 * @param management
+	 *            the management object
+	 * @param exchange
+	 *            the HttpExchange object
+	 */
+	protected void sentRequest(M management, HttpExchange exchange)
 	{
-		synchronized (exceptionListeners)
-		{
-			exceptionListeners.add(listener);
-		}
+		// This is a template method
 	}
 
-	private boolean fireException(Throwable e, Object obj)
+	/**
+	 * The request from the HttpClient has expired
+	 * 
+	 * @param management
+	 */
+	protected void expired(M management)
 	{
-		List<ExceptionListener> copy = new ArrayList<ExceptionListener>();
-		synchronized (exceptionListeners)
-		{
-			copy.addAll(exceptionListeners);
-		}
-		
-		boolean handled = false; 
-		for (ExceptionListener listener : copy)
-			handled |= listener.onException(e, obj);
-		
-		return handled; 
+		// This is a template method
 	}
 
-	protected boolean isFilteredHeader(String header)
+	/**
+	 * Finished processing the proxy request
+	 * 
+	 * @param management
+	 */
+	protected void requestFinished(M management)
+	{
+		// This is a template method
+	}
+
+	/**
+	 * An error occured in the HttpClient
+	 * 
+	 * @param management
+	 * @param t
+	 * @return true if the method has handled the error. If false the error will
+	 *         be logged.
+	 */
+	protected boolean error(M management, Throwable t)
+	{
+		// This is a template method
+		return false;
+	}
+
+	private boolean isFilteredHeader(String header)
 	{
 		return invalidHeaders.contains(header);
 	}
@@ -85,7 +105,7 @@ public class HttpProxyHelper
 	}
 
 	public void forwardRequest(final Request jetRequest, final HttpServletRequest request,
-			final HttpServletResponse response, final HttpURI url, final Object obj) throws Exception
+			final HttpServletResponse response, final HttpURI url, final M obj) throws Exception
 	{
 		if (url == null)
 			throw new NullPointerException("URL must not be null");
@@ -114,6 +134,8 @@ public class HttpProxyHelper
 			{
 				jetRequest.setHandled(true);
 				continuation.complete();
+
+				requestFinished(obj);
 			}
 
 			@Override
@@ -156,7 +178,7 @@ public class HttpProxyHelper
 				if (response.isCommitted() == false)
 					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
-				boolean handled = fireException(ex, obj);
+				boolean handled = error(obj, ex);
 
 				if (!handled)
 					logger.error("exception", ex);
@@ -168,6 +190,20 @@ public class HttpProxyHelper
 			@Override
 			public void onExpire()
 			{
+				if (response.isCommitted() == false)
+					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
+				expired(obj);
+
+				jetRequest.setHandled(true);
+				continuation.complete();
+			}
+
+			@Override
+			public void cancel()
+			{
+				logger.info("cancel");
+
 				if (response.isCommitted() == false)
 					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
@@ -245,6 +281,7 @@ public class HttpProxyHelper
 
 		// Send the request
 		httpClient.send(exchange);
+		sentRequest(obj, exchange);
 	}
 
 	public void setHttpClient(HttpClient httpClient)

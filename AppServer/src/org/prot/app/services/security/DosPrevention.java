@@ -11,7 +11,9 @@ public class DosPrevention
 {
 	private static final Logger logger = Logger.getLogger(DosPrevention.class);
 
-	private static final long MAX_REQUEST_TIME = 3000; 
+	private static final long MAX_REQUEST_TIME = 3000;
+	
+	private static final long MAX_MEMORY = 80 * 1024 * 1024; 
 	
 	private static long requestIdCounter = 0;
 
@@ -47,7 +49,7 @@ public class DosPrevention
 			
 			if((current - time) > MAX_REQUEST_TIME)
 			{
-				logger.fatal("Possible DOS attack detected - shutting down"); 
+				logger.fatal("Possible DOS attack or long running request detected - shutting down"); 
 				System.exit(2); 
 			}
 		}
@@ -55,7 +57,9 @@ public class DosPrevention
 	
 	private final void checkMemory()
 	{
-		// TODO
+		long memory = Runtime.getRuntime().totalMemory();
+		if(memory > MAX_MEMORY)
+			logger.fatal("Possible DOS attack or memory leak detected - shutting down"); 
 	}
 	
 	class Tick extends TimerTask

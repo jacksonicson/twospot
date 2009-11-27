@@ -16,10 +16,8 @@ import org.prot.frontend.cache.AppCache;
 import org.prot.manager.data.ControllerInfo;
 import org.prot.manager.services.FrontendService;
 import org.prot.util.AppIdExtractor;
-import org.prot.util.handler.ExceptionListener;
-import org.prot.util.handler.HttpProxyHelper;
 
-public class ProxyHandler extends AbstractHandler implements ExceptionListener
+public class ProxyHandler extends AbstractHandler
 {
 	private static final Logger logger = Logger.getLogger(ProxyHandler.class);
 
@@ -27,11 +25,11 @@ public class ProxyHandler extends AbstractHandler implements ExceptionListener
 
 	private AppCache appCache;
 
-	private HttpProxyHelper proxyHelper;
+	private FrontendProxy frontendProxy;
 
 	public void init()
 	{
-		proxyHelper.addExceptionListener(this);
+		// Do nothing
 	}
 
 	@Override
@@ -81,7 +79,7 @@ public class ProxyHandler extends AbstractHandler implements ExceptionListener
 			logger.debug("Forwarding request to: " + url);
 
 			// Forward the request
-			proxyHelper.forwardRequest(baseRequest, request, response, new HttpURI(url), response);
+			frontendProxy.forwardRequest(baseRequest, request, response, new HttpURI(url), response);
 
 		} catch (Exception e)
 		{
@@ -90,28 +88,6 @@ public class ProxyHandler extends AbstractHandler implements ExceptionListener
 			baseRequest.setHandled(true);
 			return;
 		}
-	}
-
-	@Override
-	public boolean onException(Throwable e, Object obj)
-	{
-		// Frontend could not connect with the Controller
-		if (e instanceof ConnectException)
-		{
-			HttpServletResponse response = (HttpServletResponse) obj;
-			try
-			{
-				response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
-						"Frontend could not communicate with the Controller");
-			} catch (IOException e1)
-			{
-				return false;
-			}
-
-			return true;
-		}
-
-		return false;
 	}
 
 	public void setFrontendService(FrontendService frontendService)
@@ -124,8 +100,8 @@ public class ProxyHandler extends AbstractHandler implements ExceptionListener
 		this.appCache = appCache;
 	}
 
-	public void setProxyHelper(HttpProxyHelper proxyHelper)
+	public void setFrontendProxy(FrontendProxy frontendProxy)
 	{
-		this.proxyHelper = proxyHelper;
+		this.frontendProxy = frontendProxy;
 	}
 }

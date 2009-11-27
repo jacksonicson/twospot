@@ -45,7 +45,7 @@
 		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">
 			<props>
-				<prop key="/start.htm">Start</prop>
+				<prop key="/helloworld/start.htm">Start</prop>
 
 				<!-- Deploy -->
 				<prop key="/deploy.htm">AppDeployment</prop>

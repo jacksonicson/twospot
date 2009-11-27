@@ -61,13 +61,13 @@
 		<property name="frontendService" ref="FrontendService" />
 		<property name="appCache" ref="AppCache" />
 		<property name="deployer" ref="AppDeployer" />
-		<property name="proxyHelper" ref="ProxyHelper" />
+		<property name="frontendProxy" ref="FrontendProxy" />
 	</bean>
 
 
 
 	<!--  Application beans -->
-	<bean id="ProxyHelper" class="org.prot.util.handler.HttpProxyHelper">
+	<bean id="FrontendProxy" class="org.prot.frontend.handlers.FrontendProxy">
 		<property name="httpClient" ref="HttpClient" />
 	</bean>
 
