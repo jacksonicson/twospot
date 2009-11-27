@@ -18,24 +18,6 @@ public class Main
 		// Start the security manager
 		HardPolicy policy = new HardPolicy();
 		policy.refresh(); 
-		try
-		{
-			List<String> appDirs = new ArrayList<String>();
-			appDirs.add("C:/temp/-");
-			appDirs.add("D:/work/mscWolke/trunk/dev/Libs/-");
-			policy.activateApplication(appDirs);
-			
-			List<String> serverDirs = new ArrayList<String>();
-			serverDirs.add("D:/work/mscWolke/-");
-			
-			policy.activateServer(serverDirs);
-			
-		} catch (MalformedURLException e)
-		{
-			System.err.println("Could not activate policies");
-			System.exit(1);
-		}
-		
 		Policy.setPolicy(policy);
 		System.setSecurityManager(new SecurityManager());
 

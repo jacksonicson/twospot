@@ -10,10 +10,9 @@ import java.security.CodeSource;
 import java.security.Permission;
 import java.security.Policy;
 import java.security.ProtectionDomain;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.PropertyPermission;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -21,59 +20,72 @@ public class HardPolicy extends Policy
 {
 	private static final Logger logger = Logger.getLogger(HardPolicy.class);
 
-	private AsPermissionCollection javaPermissions = new AsPermissionCollection();
+	private CodeSource csJava;
 
-	private AsPermissionCollection appPermissions = new AsPermissionCollection();
+	private CodeSource csServer;
 
-	private AsPermissionCollection serverPermissions = new AsPermissionCollection();
+	private CodeSource csApp;
 
-	private Set<CodeSource> javaSources = new HashSet<CodeSource>();
+	private AsPermissionCollection globalPermission = new AsPermissionCollection();
 
-	private Set<CodeSource> serverSources = new HashSet<CodeSource>();
+	private List<ProtectionDomain> pds = new ArrayList<ProtectionDomain>();
 
-	private Set<CodeSource> appSource = new HashSet<CodeSource>();
-
-	public void refresh()
+	private final void createCodeSources() throws MalformedURLException
 	{
-		try
-		{
-			URL url; 
-			url = new URL("file:/" + "C:/Program%20Files%20(x86)/Java/jre6/lib/ext/-");
-			javaSources.add(new CodeSource(url, (CodeSigner[]) null));
-			
-			url = new URL("file:/" + "C:/Program%20Files%20(x86)/Java/jre6/lib/-");
-			javaSources.add(new CodeSource(url, (CodeSigner[]) null));
-			
-		} catch (MalformedURLException e)
-		{
-			System.err.println("Could not set permissions"); 
-			System.exit(1);
-		}
-		
-		// Set the permissions
-		javaPermissions.add(new AllPermission());
+		CodeSigner[] signer = null;
+
+		URL urlJava = new URL("file:/C:/Program%20Files%20(x86)/Java/jre6/lib/-");
+		csJava = new CodeSource(urlJava, signer);
+		logger.info("CodeSource java: " + urlJava);
+
+		URL urlServer = new URL("file:/D:/work/mscWolke/-");
+		csServer = new CodeSource(urlServer, signer);
+		logger.info("CodeSource server: " + urlServer);
+
+		String appDir = "C:/temp/";
+		if (appDir.endsWith("/"))
+			appDir = appDir.substring(0, appDir.length() - 1);
+		URL urlApp = new URL("file:/" + appDir + "/-");
+		csApp = new CodeSource(urlApp, signer);
+		logger.info("CodeSource app: " + urlApp);
 	}
 
-	public void activateApplication(List<String> dirs) throws MalformedURLException
+	private final void createGlobalPermissions()
 	{
+		globalPermission.add(new FilePermission("C:/Program Files(x86)/Java/jdk1.6.0_14/-", "read"));
+		globalPermission.add(new FilePermission("D:/work/mscWolke/trunk/dev/Libs/-", "read"));
+		globalPermission.add(new FilePermission("D:/work/mscWolke/trunk/dev/HbasePlugin/-", "read"));
+	}
 
-		// Activate the codesource
-		for(String dir : dirs)
-		{
-			URL url = new URL("file:/" + dir);
-			logger.info("Activating application codesource: " + url);
-			
-			appSource.add(new CodeSource(url, (CodeSigner[]) null));
-			
-			// Activate the permissions
-			appPermissions.add(new FilePermission(dir, "read"));
-		}
-		
-		// Stratch-Dir is writable!
-		appPermissions.add(new FilePermission("C:/Program Files (x86)/Java/jre6/lib/-", "read"));
+	private final void createJavaProtectionDomain()
+	{
+		AsPermissionCollection javaPermissions = new AsPermissionCollection();
+
+		javaPermissions.add(new AllPermission());
+
+		ProtectionDomain pdJava = new ProtectionDomain(csJava, javaPermissions);
+		pds.add(pdJava);
+	}
+	
+	private final void createServerProtectionDomain()
+	{
+		AsPermissionCollection serverPermissions = new AsPermissionCollection();
+
+		serverPermissions.add(new AllPermission());
+
+		ProtectionDomain pdServer = new ProtectionDomain(csServer, serverPermissions);
+		pds.add(pdServer);
+	}
+
+	private final void createAppProtectionDomain()
+	{
+		AsPermissionCollection appPermissions = new AsPermissionCollection();
+
+		// TODO: Critial permissios which should not be granted
+		appPermissions.add(new FilePermission("C:/temp/-", "read,write,delete,execute"));
+		appPermissions.add(new SocketPermission("*", "connect,resolve"));
 
 		// Generic permissions
-		appPermissions.add(new FilePermission("C:/temp/-", "read,write,delete,execute"));
 		appPermissions.add(new RuntimePermission("getClassLoader"));
 		appPermissions.add(new RuntimePermission("createClassLoader"));
 		appPermissions.add(new RuntimePermission("setContextClassLoader"));
@@ -81,92 +93,52 @@ public class HardPolicy extends Policy
 		appPermissions.add(new RuntimePermission("accessClassInPackage.*"));
 		appPermissions.add(new RuntimePermission("defineClassInPackage.*"));
 		appPermissions.add(new RuntimePermission("accessDeclaredMembers"));
-
 		appPermissions.add(new PropertyPermission("*", "read"));
-
-		// TODO: DataNucleus still does not work without this (Hadoop
-		// connectors)
-		appPermissions.add(new SocketPermission("*", "accept,connect,listen,resolve"));
+		
+		ProtectionDomain pdApp = new ProtectionDomain(csApp, appPermissions);
+		pds.add(pdApp);
 	}
 
-	public void activateServer(List<String> dirs) throws MalformedURLException
+	private final void createProtectionDomains()
 	{
-		for (String dir : dirs)
+		createGlobalPermissions();
+
+		createJavaProtectionDomain();
+		createAppProtectionDomain();
+		createServerProtectionDomain();
+	}
+
+	public void refresh()
+	{
+		try
 		{
-			URL url = new URL("file:/" + dir);
-			logger.info("Activating server codesource: " + url);
-
-			serverSources.add(new CodeSource(url, (CodeSigner[]) null));
-
-			// Set the server permissions
-			serverPermissions.add(new AllPermission());
+			createCodeSources();
+		} catch (MalformedURLException e)
+		{
+			logger.error("Malformed URL in the policy", e);
+			System.exit(1);
 		}
-	}
 
-	private boolean checkServerPermissions(ProtectionDomain domain, Permission permission)
-	{
-		return serverPermissions.implies(permission);
-	}
-
-	private boolean checkAppPermissions(ProtectionDomain domain, Permission permission)
-	{
-		return appPermissions.implies(permission);
-	}
-	
-	private boolean checkJavaPermissions(ProtectionDomain domain, Permission permission)
-	{
-		return javaPermissions.implies(permission);
+		createProtectionDomains();
 	}
 
 	public boolean implies(ProtectionDomain domain, Permission permission)
 	{
-		// Check the codesource
-		CodeSource cs = domain.getCodeSource();
-
-		// Java permissions
-		for(CodeSource java : javaSources)
+		if(globalPermission.implies(permission))
+			return true; 
+		
+		CodeSource cs = domain.getCodeSource(); 
+		
+		for(ProtectionDomain pd : pds)
 		{
-			if(java.implies(cs))
+			if(pd.getCodeSource().implies(cs))
 			{
-				boolean check = checkJavaPermissions(domain, permission);
-				
-				if(check == false)
-					logger.debug("java refused: " + permission);
-				
-				return check;
+				if(pd.implies(permission))
+					return true; 
 			}
 		}
 		
-		// Server permissions
-		for (CodeSource server : serverSources)
-		{
-			if (server.implies(cs))
-			{
-				boolean check = checkServerPermissions(domain, permission);
-
-				if (check == false)
-					logger.debug("server refused: " + permission);
-
-				return check;
-			}
-		}
-
-		// Application permissions
-		for (CodeSource app : appSource)
-		{
-			if (app.implies(cs))
-			{
-				boolean check = checkAppPermissions(domain, permission);
-
-				if (check == false)
-					logger.debug("app refused: " + permission);
-
-				return check;
-			}
-		}
-
-		// Did not find any matching permissions (this is risky)
-		logger.debug("fallthrough: " + cs.getLocation());
-		return true;
+		logger.debug("Permission not granted: " + permission + " on: " + cs.getLocation());
+		return false;
 	}
 }
