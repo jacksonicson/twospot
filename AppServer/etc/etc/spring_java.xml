@@ -35,7 +35,7 @@
 
 	</bean>
 
-	<bean id="DosPrevention" class="org.prot.app.services.security.DosPrevention">
+	<bean id="DosPrevention" class="org.prot.app.security.DosPrevention">
 	</bean>
 
 	<!-- Request handling -->
@@ -47,7 +47,7 @@
 		</property>
 	</bean>
 
-	<bean id="DosPreventionHandler" class="org.prot.app.services.security.DosPreventionHandler">
+	<bean id="DosPreventionHandler" class="org.prot.app.security.DosPreventionHandler">
 		<property name="handler" ref="ContextCollectionHandler" />
 		<property name="dosPrevention" ref="DosPrevention" />
 	</bean>
