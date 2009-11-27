@@ -1,7 +1,6 @@
 package org.prot.controller.handler;
 
 import java.io.IOException;
-import java.net.ConnectException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,10 +15,8 @@ import org.prot.controller.manager.AppInfo;
 import org.prot.controller.manager.AppManager;
 import org.prot.controller.security.RequestManager;
 import org.prot.util.AppIdExtractor;
-import org.prot.util.handler.ExceptionListener;
-import org.prot.util.handler.HttpProxyHelper;
 
-public class RequestHandler extends AbstractHandler implements ExceptionListener
+public class RequestHandler extends AbstractHandler
 {
 	private static final Logger logger = Logger.getLogger(RequestHandler.class);
 
@@ -29,11 +26,11 @@ public class RequestHandler extends AbstractHandler implements ExceptionListener
 
 	private RequestManager requestManager;
 
-	private HttpProxyHelper proxyHelper;
+	private ControllerProxy controllerProxy;
 
 	public void init()
 	{
-		proxyHelper.addExceptionListener(this);
+		// Do nothing
 	}
 
 	private HttpURI getUrl(Request request, AppInfo appInfo)
@@ -82,25 +79,11 @@ public class RequestHandler extends AbstractHandler implements ExceptionListener
 		if (appInfo == null)
 			return;
 
-		// Register the request in the RequestManager. Long running requests
-		// lead to the termination of the AppServer
-		long requestId = requestManager.registerRequest(appInfo.getAppId());
+		// Forward the request
+		HttpURI destination = getUrl(baseRequest, appInfo);
 
-		try
-		{
-			// Forward the request
-			HttpURI destination = getUrl(baseRequest, appInfo);
-			proxyHelper.forwardRequest(baseRequest, request, response, destination, appId);
-			return;
-
-		} catch (Exception e)
-		{
-			// Inform the client
-			logger.error("Unknown error while handling the request", e);
-			response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
-					"Controller could not handle the request");
-			baseRequest.setHandled(true);
-		}
+		// Register the request in the RequestManager.
+		requestManager.registerRequest(appInfo.getAppId(), baseRequest, request, response, destination);
 	}
 
 	public void setAppManager(AppManager appManager)
@@ -108,28 +91,13 @@ public class RequestHandler extends AbstractHandler implements ExceptionListener
 		this.appManager = appManager;
 	}
 
-	public void setProxyHelper(HttpProxyHelper proxyHelper)
+	public void setControllerProxy(ControllerProxy controllerProxy)
 	{
-		this.proxyHelper = proxyHelper;
+		this.controllerProxy = controllerProxy;
 	}
 
 	public void setRequestManager(RequestManager requestManager)
 	{
 		this.requestManager = requestManager;
-	}
-
-	@Override
-	public boolean onException(Throwable e, Object obj)
-	{
-		if (e instanceof ConnectException)
-		{
-			String appId = (String) obj;
-			logger.debug("Reporting stale AppServer for AppId: " + appId);
-
-			appManager.reportStaleApp(appId);
-			return true;
-		}
-
-		return false;
 	}
 }

@@ -19,6 +19,11 @@
 	<bean id="HttpClient" class="org.eclipse.jetty.client.HttpClient"
 		init-method="start">
 		<property name="threadPool" ref="ThreadPool" />
+
+		<!-- Can be critical if used with complexe servers -->
+		<property name="timeout" value="20000" />
+		
+		<property name="maxRetries" value="0" />
 	</bean>
 
 
@@ -56,10 +61,11 @@
 
 
 	<!-- Request handling -->
+
 	<bean id="RequestHandler" class="org.prot.controller.handler.RequestHandler"
 		init-method="init">
 		<property name="appManager" ref="AppManager" />
-		<property name="proxyHelper" ref="ProxyHelper" />
+		<property name="controllerProxy" ref="ControllerProxy" />
 		<property name="requestManager" ref="RequestManager" />
 	</bean>
 
@@ -74,8 +80,10 @@
 		<property name="name" value="controller0" />
 	</bean>
 
-	<bean id="ProxyHelper" class="org.prot.util.handler.HttpProxyHelper">
+	<bean id="ControllerProxy" class="org.prot.controller.handler.ControllerProxy">
 		<property name="httpClient" ref="HttpClient" />
+		<property name="appManager" ref="AppManager" />
+		<property name="requestManager" ref="RequestManager" />
 	</bean>
 
 
@@ -88,9 +96,10 @@
 		init-method="init">
 		<property name="threadPool" ref="ThreadPool" />
 	</bean>
-	
+
 	<bean id="RequestManager" class="org.prot.controller.security.RequestManager">
 		<property name="appManager" ref="AppManager" />
+		<property name="controllerProxy" ref="ControllerProxy" />
 	</bean>
 
 
@@ -109,7 +118,8 @@
 	</bean>
 
 	<!-- Platform services -->
-	<bean id="ControllerService" class="org.prot.controller.services.controller.ControllerServiceImpl">
+	<bean id="ControllerService"
+		class="org.prot.controller.services.controller.ControllerServiceImpl">
 		<property name="manager" ref="AppManager" />
 	</bean>
 
