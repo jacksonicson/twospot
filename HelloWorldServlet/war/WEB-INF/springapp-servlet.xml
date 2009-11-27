@@ -21,9 +21,6 @@
 		<property name="jdoConnection" ref="JdoConnection" />
 	</bean>
 
-	<bean id="DbDao" class="org.prot.portal.login.data.JdoDbDao">
-	</bean>
-
 	<!-- Business logic beans -->
 	<bean id="UserService" class="org.prot.portal.services.UserService">
 		<property name="userDao" ref="UserDao" />
@@ -31,10 +28,6 @@
 
 	<bean id="AppService" class="org.prot.portal.services.AppService">
 		<property name="appDao" ref="AppDao" />
-	</bean>
-
-	<bean id="DbService" class="org.prot.portal.services.DbService">
-		<property name="dbDao" ref="DbDao" />
 	</bean>
 
 	<bean id="DeploymentService" class="org.prot.portal.services.DeploymentService" />
@@ -45,7 +38,7 @@
 		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">
 			<props>
-				<prop key="/helloworld/start.htm">Start</prop>
+				<prop key="/start.htm">Start</prop>
 
 				<!-- Deploy -->
 				<prop key="/deploy.htm">AppDeployment</prop>
@@ -90,12 +83,10 @@
 
 	<!-- Portal -->
 	<bean name="DbBrowserQuery" class="org.prot.portal.portal.DbQueryFormController">
-		<property name="dbService" ref="DbService" />
 		<property name="browserController" ref="DbBrowser" />
 	</bean>
 	
 	<bean name="DbBrowser" class="org.prot.portal.portal.DbBrowserController">
-		<property name="dbService" ref="DbService" />
 	</bean>
 
 	<bean name="Portal" class="org.prot.portal.portal.PortalController">
