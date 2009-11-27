@@ -30,8 +30,6 @@ public class RequestManager
 
 	private static long requestCounter = 0;
 
-	private Queue<RequestInfo> toStart = new ConcurrentLinkedQueue<RequestInfo>();
-
 	private List<RequestInfo> running = new Vector<RequestInfo>();
 
 	private final long newRequestId()
@@ -50,40 +48,35 @@ public class RequestManager
 		info.setResponse(response);
 		info.setDestination(dest);
 
-		toStart.add(info);
-		start();
+		// Start the request
+		start(info);
 
-		logger.debug("New request scheduled");
 		return info;
 	}
 
-	private void start()
+	private void start(RequestInfo info)
 	{
-		while (toStart.isEmpty() == false)
+		try
 		{
-			RequestInfo info = toStart.poll();
+			controllerProxy.forwardRequest(info.getBaseRequest(), info.getRequest(), info.getResponse(), info
+					.getDestination(), info);
+
+			running.add(info);
+
+		} catch (Exception e)
+		{
+			// Inform the client
+			logger.error("Unknown error while handling the request", e);
 			try
 			{
-				controllerProxy.forwardRequest(info.getBaseRequest(), info.getRequest(), info.getResponse(),
-						info.getDestination(), info);
-
-				running.add(info);
-
-			} catch (Exception e)
+				info.getResponse().sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
+						"Controller could not handle the request");
+			} catch (IOException e1)
 			{
-				// Inform the client
-				logger.error("Unknown error while handling the request", e);
-				try
-				{
-					info.getResponse().sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
-							"Controller could not handle the request");
-				} catch (IOException e1)
-				{
-					logger.error("Error while sending error", e1);
-				}
-
-				info.getBaseRequest().setHandled(true);
+				logger.error("Error while sending error", e1);
 			}
+
+			info.getBaseRequest().setHandled(true);
 		}
 	}
 
@@ -112,10 +105,10 @@ public class RequestManager
 					if ((currentTime - test.getTimestamp()) > 2000)
 					{
 						logger.info("killing appserver");
-						
-						if(test.getExchange() != null)
+
+						if (test.getExchange() != null)
 							test.getExchange().cancel();
-						
+
 						appManager.killApp(test.getAppId());
 						running.remove(test);
 						break;
