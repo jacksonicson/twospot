@@ -11,8 +11,8 @@
 
 		<property name="acceptors" value="1" />
 		<property name="statsOn" value="false" />
-		
-		
+
+
 		<property name="maxIdleTime" value="5000" />
 	</bean>
 
@@ -35,22 +35,21 @@
 
 	</bean>
 
+	<bean id="DosPrevention" class="org.prot.app.services.security.DosPrevention">
+	</bean>
+
 	<!-- Request handling -->
 	<bean id="HandlerCollection" class="org.eclipse.jetty.server.handler.HandlerCollection">
 		<property name="handlers">
 			<list>
-				<ref bean="ManagementWrapper" />
+				<ref bean="DosPreventionHandler" />
 			</list>
 		</property>
 	</bean>
 
-
-	<bean id="ManagementWrapper" class="org.prot.appserver.management.ManagementHandler">
+	<bean id="DosPreventionHandler" class="org.prot.app.services.security.DosPreventionHandler">
 		<property name="handler" ref="ContextCollectionHandler" />
-		<property name="management">
-			<bean class="org.prot.appserver.management.Management"
-				init-method="init" />
-		</property>
+		<property name="dosPrevention" ref="DosPrevention" />
 	</bean>
 
 	<bean id="ContextCollectionHandler"
@@ -59,7 +58,7 @@
 
 	<!-- Deployment -->
 	<bean id="AppDeployer" class="org.prot.appserver.runtime.java.AppDeployer">
-		<property name="contexts" ref="ManagementWrapper" />
+		<property name="contexts" ref="ContextCollectionHandler" />
 		<property name="sessionManager" ref="SessionManager" />
 	</bean>
 

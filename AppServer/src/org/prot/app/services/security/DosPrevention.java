@@ -1,9 +1,9 @@
 package org.prot.app.services.security;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 
@@ -15,7 +15,7 @@ public class DosPrevention
 	
 	private static long requestIdCounter = 0;
 
-	private Map<Long, Long> requests = new HashMap<Long, Long>();
+	private Map<Long, Long> requests = new ConcurrentHashMap<Long, Long>();
 
 	public DosPrevention()
 	{
@@ -38,9 +38,13 @@ public class DosPrevention
 	private final void checkRequests()
 	{
 		long current = System.currentTimeMillis(); 
-		for(long requestId : requests.values())
+		for(long requestId : requests.keySet())
 		{
-			long time = requests.get(requestId);
+			// Could be null in the meantime (Multithreading)
+			Long time = requests.get(requestId);
+			if(time == null)
+				continue;
+			
 			if((current - time) > MAX_REQUEST_TIME)
 			{
 				logger.fatal("Possible DOS attack detected - shutting down"); 
