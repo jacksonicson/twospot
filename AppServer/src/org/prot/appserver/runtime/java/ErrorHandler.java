@@ -10,13 +10,8 @@ import org.eclipse.jetty.server.Request;
 
 public class ErrorHandler extends org.eclipse.jetty.server.handler.ErrorHandler
 {
-	public void handle(String target, Request baseRequest, HttpServletRequest request,
-			HttpServletResponse response) throws IOException
+	private void printStackTrace()
 	{
-		super.handle(target, baseRequest, request, response);
-
-		System.out.println("Handle error");
-
 		StringBuilder sb = new StringBuilder();
 
 		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
@@ -39,7 +34,13 @@ public class ErrorHandler extends org.eclipse.jetty.server.handler.ErrorHandler
 		{
 			sb.append(array[i] + "\n");
 		}
-		
+
 		System.out.println("Stack: " + sb);
+	}
+
+	public void handle(String target, Request baseRequest, HttpServletRequest request,
+			HttpServletResponse response) throws IOException
+	{
+		super.handle(target, baseRequest, request, response);
 	}
 }
