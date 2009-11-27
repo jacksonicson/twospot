@@ -4,10 +4,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.prot.app.services.UserService;
-import org.prot.app.services.UserServiceFactory;
+import org.prot.app.services.user.UserService;
+import org.prot.app.services.user.UserServiceFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
+import org.springframework.web.servlet.view.InternalResourceView;
 
 public class StartController implements Controller
 {
@@ -21,18 +22,11 @@ public class StartController implements Controller
 		UserService userService = UserServiceFactory.getUserService();
 		String user = userService.getCurrentUser();
 
-		//throw new NullPointerException(); 
-		
-		while(true)
-		{
-			
-		}
-		
-//		// If the user is not logged in
-//		if (user == null)
-//			return new ModelAndView("start");
-//
-//		// if the user is loged go to the portal
-//		return new ModelAndView(new InternalResourceView("/portal.htm"));
+		// If the user is not logged in
+		if (user == null)
+			return new ModelAndView("start");
+
+		// if the user is loged go to the portal
+		return new ModelAndView(new InternalResourceView("/portal.htm"));
 	}
 }

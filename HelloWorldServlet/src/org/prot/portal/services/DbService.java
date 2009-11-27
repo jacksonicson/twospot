@@ -3,8 +3,8 @@ package org.prot.portal.services;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.prot.app.services.UserService;
-import org.prot.app.services.UserServiceFactory;
+import org.prot.app.services.user.UserService;
+import org.prot.app.services.user.UserServiceFactory;
 import org.prot.portal.login.data.DataTablet;
 import org.prot.portal.login.data.DbDao;
 

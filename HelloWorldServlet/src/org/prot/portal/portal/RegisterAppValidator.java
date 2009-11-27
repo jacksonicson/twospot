@@ -2,7 +2,7 @@ package org.prot.portal.portal;
 
 import java.util.Set;
 
-import org.prot.app.services.UserServiceFactory;
+import org.prot.app.services.user.UserServiceFactory;
 import org.prot.portal.login.data.PlatformUser;
 import org.prot.portal.services.AppService;
 import org.prot.portal.services.UserService;
@@ -41,7 +41,7 @@ public class RegisterAppValidator implements Validator
 			}
 
 			// Check if user can create another app
-			org.prot.app.services.UserService platUserService = UserServiceFactory.getUserService();
+			org.prot.app.services.user.UserService platUserService = UserServiceFactory.getUserService();
 			PlatformUser user = userService.getUser(platUserService.getCurrentUser());
 			Set<String> apps = appService.getApplications(platUserService.getCurrentUser());
 			if(user.getMaxApps() <= apps.size())

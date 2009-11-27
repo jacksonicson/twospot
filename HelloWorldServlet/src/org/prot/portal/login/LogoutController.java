@@ -4,8 +4,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.prot.app.services.UserService;
-import org.prot.app.services.UserServiceFactory;
+import org.prot.app.services.user.UserService;
+import org.prot.app.services.user.UserServiceFactory;
 import org.prot.util.Cookies;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
