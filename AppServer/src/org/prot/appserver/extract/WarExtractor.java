@@ -15,16 +15,15 @@ public class WarExtractor implements AppExtractor
 	private static final Logger logger = Logger.getLogger(WarExtractor.class);
 
 	@Override
-	public String extract(byte[] archive, String destPath, String appId) throws IOException
+	public void extract(byte[] archive, String destPath, String appId) throws IOException
 	{
-		String folder = createFolder(destPath, appId);
+		String folder = createFolder(destPath);
 		decompress(archive, folder);
-		return folder;
 	}
 
-	private String createFolder(String destPath, String appId) throws IOException
+	private String createFolder(String destPath) throws IOException
 	{
-		String folder = destPath + "/" + appId;
+		String folder = destPath;
 		logger.debug("Using app-folder: " + folder);
 
 		File file = new File(folder);

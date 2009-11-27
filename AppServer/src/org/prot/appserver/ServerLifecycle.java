@@ -52,15 +52,13 @@ public class ServerLifecycle
 	public void extractApp()
 	{
 		byte[] archive = appInfo.getWarFile();
-		String destPath = configuration.getWorkingDirectory();
-		String destDir = appInfo.getAppId();
+		String destPath = configuration.getAppDirectory();
 
-		logger.info("Extracting app archive to: " + destPath + " dir:" + destDir);
+		logger.info("Extracting app archive to: " + destPath);
 
 		try
 		{
-			String appDirectory = appExtractor.extract(archive, destPath, destDir);
-			configuration.setAppDirectory(appDirectory);
+			appExtractor.extract(archive, destPath, appInfo.getAppId());
 		} catch (IOException e)
 		{
 			logger.error("Error while extracting application package", e);

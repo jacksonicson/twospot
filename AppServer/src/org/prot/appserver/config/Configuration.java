@@ -48,7 +48,10 @@ public class Configuration
 	{
 		if (Configuration.configuration == null)
 		{
+			// Create a new Configuration
 			Configuration.configuration = new Configuration();
+			
+			// Init the Configuration
 			loadConfiguration(Configuration.configuration); 
 		}
 
@@ -69,7 +72,12 @@ public class Configuration
 			logger.error("Could not load the configuration properties", e);
 			System.exit(1);
 		}
-		
+	}
+	
+	public void finishConfiugration()
+	{
+		Configuration config = Configuration.configuration;
+		config.setAppDirectory(config.getWorkingDirectory() + "/" + config.getAppId());
 	}
 
 	public String getAppId()
@@ -107,7 +115,7 @@ public class Configuration
 		return appDirectory;
 	}
 
-	public void setAppDirectory(String appDirectory)
+	void setAppDirectory(String appDirectory)
 	{
 		this.appDirectory = appDirectory;
 	}

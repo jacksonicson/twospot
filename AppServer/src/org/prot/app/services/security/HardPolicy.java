@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.PropertyPermission;
 
 import org.apache.log4j.Logger;
+import org.prot.appserver.config.Configuration;
 
 public class HardPolicy extends Policy
 {
@@ -42,7 +43,7 @@ public class HardPolicy extends Policy
 		csServer = new CodeSource(urlServer, signer);
 		logger.info("CodeSource server: " + urlServer);
 
-		String appDir = "C:/temp/";
+		String appDir = Configuration.getInstance().getAppDirectory();
 		if (appDir.endsWith("/"))
 			appDir = appDir.substring(0, appDir.length() - 1);
 		URL urlApp = new URL("file:/" + appDir + "/-");

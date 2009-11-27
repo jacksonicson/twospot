@@ -4,5 +4,5 @@ import java.io.IOException;
 
 public interface AppExtractor
 {
-	public String extract(byte[] archive, String destPath, String destDir) throws IOException;
+	public void extract(byte[] archive, String destPath, String appId) throws IOException;
 }

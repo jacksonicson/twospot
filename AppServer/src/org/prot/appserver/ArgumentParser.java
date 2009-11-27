@@ -86,6 +86,9 @@ public class ArgumentParser
 				config.setAuthenticationToken(cmd.getOptionValue("token"));
 			}
 			
+			// Finish the configuration process
+			config.finishConfiugration(); 
+			
 		} catch (ParseException e)
 		{
 			HelpFormatter formatter = new HelpFormatter();
