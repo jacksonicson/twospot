@@ -35,11 +35,15 @@ public class HardPolicy extends Policy
 
 	public void refresh()
 	{
-		String extDirs = "C:/Program Files (x86)/Java/jre6/lib/ext/-";
 		try
 		{
-			URL url = new URL("file:/" + extDirs);
+			URL url; 
+			url = new URL("file:/" + "C:/Program%20Files%20(x86)/Java/jre6/lib/ext/-");
 			javaSources.add(new CodeSource(url, (CodeSigner[]) null));
+			
+			url = new URL("file:/" + "C:/Program%20Files%20(x86)/Java/jre6/lib/-");
+			javaSources.add(new CodeSource(url, (CodeSigner[]) null));
+			
 		} catch (MalformedURLException e)
 		{
 			System.err.println("Could not set permissions"); 
@@ -50,25 +54,33 @@ public class HardPolicy extends Policy
 		javaPermissions.add(new AllPermission());
 	}
 
-	public void activateApplication(String dir) throws MalformedURLException
+	public void activateApplication(List<String> dirs) throws MalformedURLException
 	{
 
 		// Activate the codesource
-		URL url = new URL("file:/" + dir);
-		logger.info("Activating application codesource: " + url);
+		for(String dir : dirs)
+		{
+			URL url = new URL("file:/" + dir);
+			logger.info("Activating application codesource: " + url);
+			
+			appSource.add(new CodeSource(url, (CodeSigner[]) null));
+			
+			// Activate the permissions
+			appPermissions.add(new FilePermission(dir, "read"));
+		}
+		
+		// Stratch-Dir is writable!
+		appPermissions.add(new FilePermission("C:/Program Files (x86)/Java/jre6/lib/-", "read"));
 
-		appSource.add(new CodeSource(url, (CodeSigner[]) null));
-
-		// Activate the permissions
-		appPermissions.add(new FilePermission(dir, "read"));
-
+		// Generic permissions
+		appPermissions.add(new FilePermission("C:/temp/-", "read,write,delete,execute"));
 		appPermissions.add(new RuntimePermission("getClassLoader"));
 		appPermissions.add(new RuntimePermission("createClassLoader"));
 		appPermissions.add(new RuntimePermission("setContextClassLoader"));
 		appPermissions.add(new RuntimePermission("loadLibrary.*"));
 		appPermissions.add(new RuntimePermission("accessClassInPackage.*"));
 		appPermissions.add(new RuntimePermission("defineClassInPackage.*"));
-		appPermissions.add(new RuntimePermission("accessDeclareMembers"));
+		appPermissions.add(new RuntimePermission("accessDeclaredMembers"));
 
 		appPermissions.add(new PropertyPermission("*", "read"));
 

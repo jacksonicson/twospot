@@ -20,7 +20,10 @@ public class Main
 		policy.refresh(); 
 		try
 		{
-			policy.activateApplication("C:/temp/-");
+			List<String> appDirs = new ArrayList<String>();
+			appDirs.add("C:/temp/-");
+			appDirs.add("D:/work/mscWolke/trunk/dev/Libs/-");
+			policy.activateApplication(appDirs);
 			
 			List<String> serverDirs = new ArrayList<String>();
 			serverDirs.add("D:/work/mscWolke/-");
