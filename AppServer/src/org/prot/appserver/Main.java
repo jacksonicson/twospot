@@ -19,7 +19,7 @@ public class Main
 		HardPolicy policy = new HardPolicy();
 		policy.refresh(); 
 		Policy.setPolicy(policy);
-//		System.setSecurityManager(new SecurityManager());
+		System.setSecurityManager(new SecurityManager());
 
 		// Start the IODirector
 		IODirector ioDirector = new IODirector();
