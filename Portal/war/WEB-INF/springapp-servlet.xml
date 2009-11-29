@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+
+	<bean id="urlMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+				<prop key="/login.htm">Login</prop>
+				<prop key="/loginHandler.htm">LoginHandler</prop>
+			</props>
+		</property>
+	</bean>
+
+
+	<bean name="/hello.htm" class="springapp.web.HelloController" />
+
+	<!-- Login -->
+	<bean name="Login" class="org.prot.portal.login.LoginController" />
+
+	<bean id="LoginHandler" class="org.prot.portal.login.LoginHandlerController">
+		<property name="validator">
+			<bean class="org.prot.portal.login.CredentialValidator" />
+		</property>
+	</bean>
+
+</beans>
