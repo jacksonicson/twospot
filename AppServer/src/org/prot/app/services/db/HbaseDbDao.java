@@ -20,9 +20,9 @@ import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.log4j.Logger;
 
-class JdoDbDao implements DbDao
+class HbaseDbDao implements DbDao
 {
-	private static final Logger logger = Logger.getLogger(JdoDbDao.class);
+	private static final Logger logger = Logger.getLogger(HbaseDbDao.class);
 
 	private String toHex(byte[] data)
 	{

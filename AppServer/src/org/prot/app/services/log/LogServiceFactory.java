@@ -20,12 +20,13 @@ public class LogServiceFactory
 			{
 				dao = new HBaseLogDao();
 				logService = new LogService(Configuration.getInstance().getAppId(), dao);
+				
 			} catch (IOException e)
 			{
 				logger.error("Could not create LogService", e);
 			}
 		}
 
-		return null;
+		return logService;
 	}
 }
