@@ -1,1 +1,0 @@
-storage.hbase, rev. 7953, v. 2.0.0.m3 release
