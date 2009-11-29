@@ -74,16 +74,24 @@ class AppProcess
 
 		command.add("-appSrvPort");
 		command.add(appInfo.getPort() + "");
-
+		
 		if (appInfo.isPrivileged())
 		{
 			command.add("-token");
 			command.add(appInfo.getProcessToken());
 		}
+		
+		String c = ""; 
+		for(String cmd : command)
+		{
+			c += cmd + " "; 
+		}
+		System.out.println("executing: " + c);
+		
 
 		// configure the process
 		ProcessBuilder procBuilder = new ProcessBuilder();
-		procBuilder.directory(new File("../AppServer"));
+		procBuilder.directory(new File("../AppServer/"));
 		procBuilder.command(command);
 		procBuilder.redirectErrorStream(true);
 
@@ -109,6 +117,49 @@ class AppProcess
 
 	}
 
+	private String loadClasspath()
+	{
+		File libs = new File("../Libs/");
+		String classpath = crawlDir(libs) + ";";
+
+		File appServer = new File("../AppServer/bin");
+		classpath += appServer.getAbsolutePath() + ";";
+		
+		File utils = new File("../Util/bin");
+		classpath += utils.getAbsolutePath() + ";";
+		
+		File controller = new File("../Controller/bin");
+		classpath += controller.getAbsolutePath() + ";";
+		
+		System.out.println("Classpath: " + classpath);
+		
+		return classpath;
+	}
+
+	private String crawlDir(File dir)
+	{
+		String jars = "";
+
+		for (File subdir : dir.listFiles())
+		{
+
+			if (subdir.isDirectory())
+			{
+				String subjar = crawlDir(subdir);
+				jars += subjar;
+			} else
+			{
+				String filename = subdir.getName();
+				if (filename.lastIndexOf(".") > 0)
+					filename = filename.substring(filename.lastIndexOf("."));
+				if (filename.equals(".jar"))
+					jars += subdir.getAbsolutePath() + ";";
+			}
+		}
+
+		return jars;
+	}
+	
 	private String loadGeneratedClasspath()
 	{
 		List<String> libs = AppServerLibs.getLibs();
@@ -117,8 +168,7 @@ class AppProcess
 
 		for (String lib : libs)
 		{
-			File flib = new File(libLocation + lib);
-			classpath += flib.getAbsolutePath() + ";";
+			classpath += libLocation + lib + ";";
 		}
 
 		File appServer = new File("../AppServer/bin");
@@ -144,7 +194,7 @@ class AppProcess
 			String line = "";
 			while ((line = stdInStream.readLine()) != null)
 			{
-				logger.debug("from: " + appInfo.getAppId() + ">" + line);
+				logger.debug("from: " + appInfo.getAppId() + " >" + line);
 
 				if (line.equalsIgnoreCase(SERVER_ONLINE))
 				{
