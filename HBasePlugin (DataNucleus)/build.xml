@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="lib" name="HBasePlugin (DataNucleus)">
 	<target name="lib">
-		<jar destfile="hbaseplugin.jar">
+		<jar destfile="../Libs/gen/hbaseplugin.jar">
 			<fileset dir="bin">
+			</fileset>
+			<fileset dir=".">
+				<include name="plugin.xml"/>
 			</fileset>
 		</jar>		
 	</target>
