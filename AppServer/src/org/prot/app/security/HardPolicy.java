@@ -8,6 +8,7 @@ import java.security.AllPermission;
 import java.security.CodeSigner;
 import java.security.CodeSource;
 import java.security.Permission;
+import java.security.PermissionCollection;
 import java.security.Policy;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class HardPolicy extends Policy
 		ProtectionDomain pdJava = new ProtectionDomain(csJava, javaPermissions);
 		pds.add(pdJava);
 	}
-	
+
 	private final void createServerProtectionDomain()
 	{
 		AsPermissionCollection serverPermissions = new AsPermissionCollection();
@@ -84,9 +85,10 @@ public class HardPolicy extends Policy
 
 		// TODO: Critial permissios which should not be granted
 		logger.info("AppDIr. " + Configuration.getInstance().getAppDirectory() + "/-");
-		
+
 		appPermissions.add(new FilePermission(Configuration.getInstance().getAppDirectory() + "/-", "read"));
-		appPermissions.add(new FilePermission(Configuration.getInstance().getAppScratchDir() + "/-", "read,write,execute,delete"));
+		appPermissions.add(new FilePermission(Configuration.getInstance().getAppScratchDir() + "/-",
+				"read,write,execute,delete"));
 		appPermissions.add(new SocketPermission("*", "connect,resolve"));
 
 		// Generic permissions
@@ -98,9 +100,9 @@ public class HardPolicy extends Policy
 		appPermissions.add(new RuntimePermission("defineClassInPackage.*"));
 		appPermissions.add(new RuntimePermission("accessDeclaredMembers"));
 		appPermissions.add(new PropertyPermission("*", "read"));
-		
+
 		appPermissions.add(new AllPermission());
-		
+
 		ProtectionDomain pdApp = new ProtectionDomain(csApp, appPermissions);
 		pds.add(pdApp);
 	}
@@ -128,22 +130,34 @@ public class HardPolicy extends Policy
 		createProtectionDomains();
 	}
 
+	public PermissionCollection getPermissions(CodeSource codesource)
+	{
+		logger.info("get permissions called - unsupported by this policy");
+		return globalPermission;
+	}
+
+	public PermissionCollection getPermissions(ProtectionDomain domain)
+	{
+		logger.info("get permissions called - unsupported by this policy");
+		return globalPermission;
+	}
+
 	public boolean implies(ProtectionDomain domain, Permission permission)
 	{
-		if(globalPermission.implies(permission))
-			return true; 
-		
-		CodeSource cs = domain.getCodeSource(); 
-		
-		for(ProtectionDomain pd : pds)
+		if (globalPermission.implies(permission))
+			return true;
+
+		CodeSource cs = domain.getCodeSource();
+
+		for (ProtectionDomain pd : pds)
 		{
-			if(pd.getCodeSource().implies(cs))
+			if (pd.getCodeSource().implies(cs))
 			{
-				if(pd.implies(permission))
-					return true; 
+				if (pd.implies(permission))
+					return true;
 			}
 		}
-		
+
 		logger.debug("Permission not granted: " + permission + " on: " + cs.getLocation());
 		return true;
 	}
