@@ -13,7 +13,7 @@
 	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/spring-sources.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/spring.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/apache_commons/commons-logging-1.1.1.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Manager"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Master"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-continuation-7.0.0.v20091005.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Util"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-client-7.0.0.v20091005.jar" sourcepath="D:/work/jetty7src/jetty-client/src"/>
