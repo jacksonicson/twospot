@@ -4,11 +4,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.prot.controller.generated.AppServerLibs;
 
 class AppProcess
 {
@@ -74,20 +74,19 @@ class AppProcess
 
 		command.add("-appSrvPort");
 		command.add(appInfo.getPort() + "");
-		
+
 		if (appInfo.isPrivileged())
 		{
 			command.add("-token");
 			command.add(appInfo.getProcessToken());
 		}
-		
-		String c = ""; 
-		for(String cmd : command)
+
+		String c = "";
+		for (String cmd : command)
 		{
-			c += cmd + " "; 
+			c += cmd + " ";
 		}
 		System.out.println("executing: " + c);
-		
 
 		// configure the process
 		ProcessBuilder procBuilder = new ProcessBuilder();
@@ -124,15 +123,15 @@ class AppProcess
 
 		File appServer = new File("../AppServer/bin");
 		classpath += appServer.getAbsolutePath() + ";";
-		
+
 		File utils = new File("../Util/bin");
 		classpath += utils.getAbsolutePath() + ";";
-		
+
 		File controller = new File("../Controller/bin");
 		classpath += controller.getAbsolutePath() + ";";
-		
+
 		System.out.println("Classpath: " + classpath);
-		
+
 		return classpath;
 	}
 
@@ -159,26 +158,56 @@ class AppProcess
 
 		return jars;
 	}
-	
+
+	private List<String> readClasspath()
+	{
+		List<String> classpath = new ArrayList<String>();
+		try
+		{
+			BufferedReader reader = new BufferedReader(new InputStreamReader(AppProcess.class
+					.getResourceAsStream("/classpath.txt")));
+
+			String buffer = "";
+			while ((buffer = reader.readLine()) != null)
+			{
+				classpath.add(buffer);
+			}
+
+			reader.close();
+
+		} catch (IOException e)
+		{
+			logger.error("Could not read the classpath", e);
+		}
+
+		return classpath;
+	}
+
 	private String loadGeneratedClasspath()
 	{
-		List<String> libs = AppServerLibs.getLibs();
+		final String separator;
+		if (System.getProperty("os.name").toLowerCase().indexOf("windows") > -1)
+			separator = ";";
+		else
+			separator = ":";
+
+		List<String> libs = readClasspath();
 		String libLocation = "../";
 		String classpath = "";
 
 		for (String lib : libs)
 		{
-			classpath += libLocation + lib + ";";
+			classpath += libLocation + lib + separator;
 		}
 
 		File appServer = new File("../AppServer/bin");
-		classpath += appServer.getAbsolutePath() + ";";
+		classpath += appServer.getAbsolutePath() + separator;
 
 		File utils = new File("../Util/bin");
-		classpath += utils.getAbsolutePath() + ";";
+		classpath += utils.getAbsolutePath() + separator;
 
 		File controller = new File("../Controller/bin");
-		classpath += controller.getAbsolutePath() + ";";
+		classpath += controller.getAbsolutePath() + separator;
 
 		return classpath;
 	}

@@ -32,36 +32,17 @@ def createClasspathList(eclipseProject, killPath=True):
         
     return li
 
-def createClasspathFile(eclipseProject, killPath):
+def createClasspath(eclipseProject, killPath):
     output = ""
     for extract in createClasspathList(eclipseProject, killPath):
         print extract
-        output += 'libs.add("%s");\n' % extract
+        output += '%s\n' % extract
     
     return output
         
-output = createClasspathFile("../../AppServer/.classpath", False)
-java = """
-package org.prot.controller.generated;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public final class AppServerLibs {
-    private static List<String> libs = new ArrayList<String>();
-    static {
-        %s
-    }
-    
-    public static List<String> getLibs()
-    {
-        return AppServerLibs.libs;
-    }
-}
-""" % output
-
-javaFile = open("./org/prot/controller/generated/AppServerLibs.java", "w")
-javaFile.write(java);
+output = createClasspath("../../AppServer/.classpath", False)
+javaFile = open("classpath.txt", "w")
+javaFile.write(output);
 javaFile.close()
 
 
