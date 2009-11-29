@@ -1,6 +1,6 @@
 import sys
 
-def createClasspathList(eclipseProject):
+def createClasspathList(eclipseProject, killPath=True):
     fProject = open(eclipseProject, "r")
     project = fProject.read()
     
@@ -18,9 +18,11 @@ def createClasspathList(eclipseProject):
         pointer = endFind + 1
                 
         extract = project[nextFind + len(pattern) : endFind]
-        last = extract.rfind("/");
-        if last != -1:
-            extract = extract[last + 1 : len(extract)]
+        
+        if killPath:
+            last = extract.rfind("/");
+            if last != -1:
+                extract = extract[last + 1 : len(extract)]
         
         # Check if extract is a valid classpath
         if(extract.find(mustContain) == -1):
@@ -30,15 +32,15 @@ def createClasspathList(eclipseProject):
         
     return li
 
-def createClasspathFile(eclipseProject):
+def createClasspathFile(eclipseProject, killPath):
     output = ""
-    for extract in createClasspathList(eclipseProject):
+    for extract in createClasspathList(eclipseProject, killPath):
         print extract
         output += 'libs.add("%s");\n' % extract
     
     return output
         
-output = createClasspathFile("../../AppServer/.classpath")
+output = createClasspathFile("../../AppServer/.classpath", False)
 java = """
 package org.prot.controller.generated;
 
