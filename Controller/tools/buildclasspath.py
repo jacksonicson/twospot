@@ -47,7 +47,7 @@ package org.prot.controller.generated;
 import java.util.ArrayList;
 import java.util.List;
 
-class AppServerLibs {
+public final class AppServerLibs {
     private static List<String> libs = new ArrayList<String>();
     static {
         %s

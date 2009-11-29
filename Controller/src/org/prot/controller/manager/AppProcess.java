@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.prot.controller.generated.AppServerLibs;
 
 class AppProcess
 {
@@ -16,7 +17,7 @@ class AppProcess
 
 	// Info sent by appserver
 	private static final String SERVER_ONLINE = "server online";
-	
+
 	// AppInfo which belongs to this process
 	private AppInfo appInfo;
 
@@ -36,7 +37,7 @@ class AppProcess
 	private void stopAndClean()
 	{
 		logger.info("killing the AppServer-process: " + appInfo.getAppId());
-		
+
 		process.destroy();
 		process = null;
 	}
@@ -50,12 +51,12 @@ class AppProcess
 	public void startOrRestart() throws IOException
 	{
 		// Check if the process should be killed
-		if(appInfo.getStatus() == AppState.KILLED)
+		if (appInfo.getStatus() == AppState.KILLED)
 		{
 			stopAndClean();
-			return; 
+			return;
 		}
-		
+
 		// Kill the old process if exists
 		if (process != null)
 			stopAndClean();
@@ -64,7 +65,7 @@ class AppProcess
 		List<String> command = new LinkedList<String>();
 		command.add("java");
 		command.add("-classpath");
-		command.add(loadClasspath());
+		command.add(loadGeneratedClasspath());
 
 		command.add("org.prot.appserver.Main");
 
@@ -73,11 +74,11 @@ class AppProcess
 
 		command.add("-appSrvPort");
 		command.add(appInfo.getPort() + "");
-		
-		if(appInfo.isPrivileged())
+
+		if (appInfo.isPrivileged())
 		{
 			command.add("-token");
-			command.add(appInfo.getProcessToken()); 
+			command.add(appInfo.getProcessToken());
 		}
 
 		// configure the process
@@ -96,59 +97,40 @@ class AppProcess
 
 			// Update the AppServer state
 			this.appInfo.setStatus(AppState.ONLINE);
-			
+
 		} catch (IOException e)
 		{
 			// Log the error
 			logger.error("Could not start a new server process (AppId: " + appInfo.getAppId() + " Command: "
 					+ command.toString() + ")", e);
-			
-			throw e; 
+
+			throw e;
 		}
 
 	}
 
-	private String loadClasspath()
+	private String loadGeneratedClasspath()
 	{
-		File libs = new File("../Libs/");
-		String classpath = crawlDir(libs) + ";";
+		List<String> libs = AppServerLibs.getLibs();
+		String libLocation = "../";
+		String classpath = "";
+
+		for (String lib : libs)
+		{
+			File flib = new File(libLocation + lib);
+			classpath += flib.getAbsolutePath() + ";";
+		}
 
 		File appServer = new File("../AppServer/bin");
 		classpath += appServer.getAbsolutePath() + ";";
-		
+
 		File utils = new File("../Util/bin");
 		classpath += utils.getAbsolutePath() + ";";
-		
+
 		File controller = new File("../Controller/bin");
 		classpath += controller.getAbsolutePath() + ";";
-		
-		System.out.println("Classpath: " + classpath);
-		
+
 		return classpath;
-	}
-
-	private String crawlDir(File dir)
-	{
-		String jars = "";
-
-		for (File subdir : dir.listFiles())
-		{
-
-			if (subdir.isDirectory())
-			{
-				String subjar = crawlDir(subdir);
-				jars += subjar;
-			} else
-			{
-				String filename = subdir.getName();
-				if (filename.lastIndexOf(".") > 0)
-					filename = filename.substring(filename.lastIndexOf("."));
-				if (filename.equals(".jar"))
-					jars += subdir.getAbsolutePath() + ";";
-			}
-		}
-
-		return jars;
 	}
 
 	private void waitForAppServer() throws IOException
@@ -162,8 +144,8 @@ class AppProcess
 			String line = "";
 			while ((line = stdInStream.readLine()) != null)
 			{
-				logger.debug("from: " + appInfo.getAppId() + ">" + line); 
-				
+				logger.debug("from: " + appInfo.getAppId() + ">" + line);
+
 				if (line.equalsIgnoreCase(SERVER_ONLINE))
 				{
 					logger.info("AppServer is online: " + this.appInfo.getAppId());
