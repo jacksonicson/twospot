@@ -11,17 +11,15 @@
 </head>
 <body>
 
-Portal-Start page *
-<a href="logout.htm">Logout</a>
 *
-<a href="registerApp.htm">Create a new App</a>
+<a href="portal.htm">Portal</a>
 
 <br />
 
-Applications
+Logs:
 <ul>
-     <c:forEach var="appId" items="${appIds}">
-          <li><a href="/app.htm?appId=${appId}">${appId}</a></li>
+     <c:forEach var="logMessage" items="${logMessages}">
+          <p>${logMessage}</p>
      </c:forEach>
 </ul>
 

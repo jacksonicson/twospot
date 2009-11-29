@@ -11,19 +11,18 @@
 </head>
 <body>
 
-Portal-Start page *
-<a href="logout.htm">Logout</a>
-*
-<a href="registerApp.htm">Create a new App</a>
-
-<br />
-
-Applications
 <ul>
-     <c:forEach var="appId" items="${appIds}">
-          <li><a href="/app.htm?appId=${appId}">${appId}</a></li>
-     </c:forEach>
+     <li><a href="/portal.htm">Portal</a></li>
 </ul>
+
+<p>Details for the Application: ${appId}</p>
+
+<p>
+<ul>
+     <li><a href="/logs.htm?appId=${appId}">Logfiles</a></li>
+     <li><a href="/dbBrowser.htm?appId=${appId}">Database browser</a></li>
+</ul>
+</p>
 
 </body>
 </html>
