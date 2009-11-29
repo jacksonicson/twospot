@@ -6,7 +6,8 @@
        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
 	<!-- Filters -->
-	<bean id="AccessFilter" class="org.prot.portal.filter.AccessFilter" init-method="init" />
+	<bean id="AccessFilter" class="org.prot.portal.filter.AccessFilter"
+		init-method="init" />
 
 
 	<!-- Data beans -->
@@ -58,6 +59,8 @@
 				<prop key="/dbBrowser.htm">DbBrowser</prop>
 				<prop key="/dbQueryForm.htm">DbBrowserQuery</prop>
 
+				<prop key="/logs.htm">Logs</prop>
+
 			</props>
 		</property>
 	</bean>
@@ -82,10 +85,13 @@
 	</bean>
 
 	<!-- Portal -->
+	<bean name="Logs" class="org.prot.portal.portal.LogsController">
+	</bean>
+
 	<bean name="DbBrowserQuery" class="org.prot.portal.portal.DbQueryFormController">
 		<property name="browserController" ref="DbBrowser" />
 	</bean>
-	
+
 	<bean name="DbBrowser" class="org.prot.portal.portal.DbBrowserController">
 	</bean>
 

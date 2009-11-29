@@ -11,18 +11,17 @@
 </head>
 <body>
 
-<ul>
-     <li><a href="/portal.htm">Portal</a></li>
-</ul>
+*
+<a href="portal.htm">Portal</a>
 
-<p>Details for the Application: ${appId}</p>
+<br />
 
-<p>
+Logs:
 <ul>
-     <li><a href="/logs.htm?appId=${appId}">Logfiles</a></li>
-     <li><a href="/dbBrowser.htm?appId=${appId}">Database browser</a></li>
+     <c:forEach var="logMessage" items="${logMessages}">
+          <p>${logMessage}</p>
+     </c:forEach>
 </ul>
-</p>
 
 </body>
 </html>

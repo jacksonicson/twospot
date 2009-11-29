@@ -88,7 +88,8 @@ public class HBaseLogDao implements LogDao
 
 					for (Result result = it.next(); result != null; result = it.next())
 					{
-						logs.add(new String(result.getValue("message".getBytes())));
+						String message = new String(result.getFamilyMap("message".getBytes()).get("message".getBytes()));
+						logs.add(message);
 					}
 
 				} catch (IOException e)
