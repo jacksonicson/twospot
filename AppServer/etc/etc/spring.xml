@@ -35,7 +35,19 @@
 	<bean id="PythonRuntime" class="org.prot.appserver.runtime.jython.PythonRuntime" />
 	<bean id="JavaRuntime" class="org.prot.appserver.runtime.java.JavaRuntime" />
 
-	<!-- Connection to the services provided by the Controller -->
-	<!-- TODO -->
+	<!-- RMI-Services -->
+	<bean id="ManagementExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<property name="serviceName" value="appserver/portal" />
+		<property name="service">
+			<bean class="org.prot.controller.manager.appserver.AppServerStats" />
+		</property>
+
+		<property name="serviceInterface"
+			value="org.prot.controller.manager.appserver.IAppServerStats" />
+
+		<!-- TODO -->
+		<property name="registryPort" value="2299" />
+	</bean>
+
 </beans>
 

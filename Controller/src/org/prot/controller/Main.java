@@ -1,7 +1,6 @@
 package org.prot.controller;
 
 import org.apache.log4j.xml.DOMConfigurator;
-import org.prot.controller.management.ControllerManagement;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -31,11 +30,13 @@ public class Main
 		factory.getBean("ControllerServiceExporter");
 		factory.getBean("DeployServiceExporter");
 		factory.getBean("UserServiceExporter");
-		
+
+		// Start Management
+		factory.getBean("ManagementWatcher");
+
 		// Start JMX
 		factory.getBean("JmxExporter");
 		factory.getBean("ServerConnector");
-		
 
 		Controller controller = (Controller) factory.getBean("Controller");
 		controller.start();

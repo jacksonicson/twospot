@@ -2,11 +2,9 @@ package org.prot.controller.security;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +24,7 @@ public class RequestManager
 
 	private ControllerProxy controllerProxy;
 
-	private Timer timer = new Timer();
+	private Timer timer = new Timer(true);
 
 	private static long requestCounter = 0;
 

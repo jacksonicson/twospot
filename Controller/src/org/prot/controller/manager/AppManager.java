@@ -73,6 +73,11 @@ public class AppManager
 		return appInfo;
 	}
 
+	public Set<String> getAppIds()
+	{
+		return registry.getAppIds(); 
+	}
+	
 	public void killApp(String appId)
 	{
 		AppInfo appInfo = registry.getAppInfo(appId);

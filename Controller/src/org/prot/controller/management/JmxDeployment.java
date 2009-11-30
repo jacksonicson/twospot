@@ -10,6 +10,7 @@ public class JmxDeployment implements IJmxDeployment
 	public void deployed(String appId)
 	{
 		logger.info("deploying: " + appId);
+		// TODO: Kill AppServers running this id!
 	}
 
 	@Override

@@ -40,7 +40,7 @@
 	<bean id="LookupControllers" class="org.prot.manager.zookeeper.jobs.LookupControllers">
 		<property name="registry" ref="ControllerRegistry" />
 	</bean>
-
+	
 	<!-- Services -->
 	<bean id="FrontendService" class="org.prot.manager.services.FrontendServiceImpl">
 		<property name="registry" ref="ControllerRegistry" />

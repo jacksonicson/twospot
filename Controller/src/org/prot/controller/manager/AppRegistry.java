@@ -20,9 +20,11 @@ class AppRegistry
 
 	private int getPort()
 	{
+		// Check if there are any free ports
 		if (freePorts.isEmpty())
 			return this.currentPort++;
 
+		// Recycle a free port
 		return freePorts.peek();
 	}
 
@@ -90,6 +92,7 @@ class AppRegistry
 			for (AppInfo info : delete)
 			{
 				appInfos.remove(info.getAppId());
+				// TODO: Update free ports
 			}
 		}
 	}
@@ -112,5 +115,10 @@ class AppRegistry
 		cleanup();
 
 		return idleApps;
+	}
+	
+	synchronized Set<String> getAppIds()
+	{
+		return appInfos.keySet();
 	}
 }

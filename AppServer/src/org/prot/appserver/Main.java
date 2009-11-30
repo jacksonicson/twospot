@@ -1,9 +1,6 @@
 package org.prot.appserver;
 
-import java.net.MalformedURLException;
 import java.security.Policy;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.prot.app.security.HardPolicy;
@@ -17,7 +14,7 @@ public class Main
 	{
 		// Start the security manager
 		HardPolicy policy = new HardPolicy();
-		policy.refresh(); 
+		policy.refresh();
 		Policy.setPolicy(policy);
 		System.setSecurityManager(new SecurityManager());
 
@@ -28,7 +25,7 @@ public class Main
 
 		// Configure logger
 		DOMConfigurator.configure(Main.class.getResource("/etc/log4j.xml"));
-		
+
 		// Log all startup arguments
 		ArgumentParser.dump();
 
@@ -38,6 +35,11 @@ public class Main
 
 		// Create beans
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring.xml", getClass()));
+
+		// TODO: Add a postprocess to fill the variables in the definition
+
+		factory.getBean("ManagementExporter");
+
 		factory.getBean("Lifecycle");
 	}
 

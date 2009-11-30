@@ -42,9 +42,13 @@
 	<bean id="HandlerCollection" class="org.eclipse.jetty.server.handler.HandlerCollection">
 		<property name="handlers">
 			<list>
-				<ref bean="DosPreventionHandler" />
+				<ref bean="Statshandler" />
 			</list>
 		</property>
+	</bean>
+
+	<bean id="Statshandler" class="org.prot.appserver.management.StatsHandler">
+		<property name="handler" ref="DosPreventionHandler" />
 	</bean>
 
 	<bean id="DosPreventionHandler" class="org.prot.app.security.DosPreventionHandler">

@@ -130,6 +130,12 @@
 		<property name="registryPort" value="${rmi.registry.port}" />
 	</bean>
 
+	<!-- Management -->
+	<bean id="ManagementWatcher" class="org.prot.controller.management.ManagementWatcher"
+		init-method="init">
+		<property name="manager" ref="AppManager" />
+	</bean>
+
 	<!-- JMX -->
 	<bean id="mbeanServer" class="org.springframework.jmx.support.MBeanServerFactoryBean" />
 
@@ -156,8 +162,6 @@
 
 		<property name="server" ref="mbeanServer" />
 	</bean>
-
-
 
 
 	<!-- Platform services -->
