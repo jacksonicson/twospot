@@ -1,5 +1,7 @@
 package org.prot.controller.management;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -17,11 +19,18 @@ public class ManagementWatcher
 
 	private AppManager manager;
 
+	private Map<String, PerformanceData> performanceData = new HashMap<String, PerformanceData>();
+
 	public void init()
 	{
 		this.timer.scheduleAtFixedRate(new Watcher(), 0, 5000);
 	}
 
+	public void notifyDeployment(String appId)
+	{
+		
+	}
+	
 	private void updateManagementData()
 	{
 		Set<String> appIds = manager.getAppIds();
@@ -31,9 +40,21 @@ public class ManagementWatcher
 			if (stats == null)
 				continue;
 
-			long rps = stats.getRequestsPerSecond();
-			logger.info("RPS: " + rps);
+			updateApp(appId, stats);
 		}
+	}
+
+	private void updateApp(String appId, IAppServerStats stats)
+	{
+		PerformanceData perfData = performanceData.get(appId);
+		if (perfData == null)
+		{
+			perfData = new PerformanceData(appId);
+			performanceData.put(appId, perfData);
+		}
+
+		long rps = stats.getRequestsPerSecond();
+		logger.info("RPS: " + rps);
 	}
 
 	private IAppServerStats connectWithApp(String appId)
@@ -53,7 +74,7 @@ public class ManagementWatcher
 		} catch (Exception e)
 		{
 			// Don't handle this
-			logger.debug("Could not connect to the AppServer management", e);
+			logger.debug("Could not connect to the AppServer management");
 		}
 
 		return null;

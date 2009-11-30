@@ -108,7 +108,9 @@
 		<property name="serviceName" value="appserver/UserService" />
 
 		<property name="service">
-			<bean class="org.prot.controller.services.user.UserServiceImpl" />
+			<bean class="org.prot.controller.services.user.UserServiceImpl">
+				<property name="appManager" ref="AppManager" />
+			</bean>
 		</property>
 
 		<property name="serviceInterface"
@@ -121,7 +123,9 @@
 		<property name="serviceName" value="appserver/DeployService" />
 
 		<property name="service">
-			<bean class="org.prot.controller.services.deploy.DeployServiceImpl" />
+			<bean class="org.prot.controller.services.deploy.DeployServiceImpl">
+				<property name="appManager" ref="AppManager" />
+			</bean>
 		</property>
 
 		<property name="serviceInterface"

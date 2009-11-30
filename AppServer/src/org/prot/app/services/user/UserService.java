@@ -87,8 +87,10 @@ public final class UserService
 
 	public void unregisterUser()
 	{
-		final String uid = searchUID();
+		final String token = Configuration.getInstance().getAuthenticationToken();
+		
 		// If there is no UID there is no user session
+		final String uid = searchUID();
 		if (uid == null)
 			return;
 
@@ -97,7 +99,7 @@ public final class UserService
 			@Override
 			public String run()
 			{
-				proxy.unregisterUser(uid);
+				proxy.unregisterUser(token, uid);
 				return null;
 			}
 

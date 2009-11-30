@@ -72,6 +72,12 @@ public class AppManager
 
 		return appInfo;
 	}
+	
+	public boolean checkToken(String token)
+	{
+		// TODO: Implement this
+		return true; 
+	}
 
 	public Set<String> getAppIds()
 	{

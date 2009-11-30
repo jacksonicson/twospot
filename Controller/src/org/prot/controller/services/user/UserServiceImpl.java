@@ -11,12 +11,16 @@ import javax.jdo.Query;
 import javax.jdo.Transaction;
 
 import org.apache.log4j.Logger;
+import org.prot.controller.manager.AppManager;
 
 public class UserServiceImpl implements UserService
 {
 	private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
 
+	private AppManager appManager;
+	
 	private PersistenceManagerFactory pmFactory;
+	
 	private PersistenceManager persistenceManager;
 
 	public UserServiceImpl()
@@ -66,8 +70,8 @@ public class UserServiceImpl implements UserService
 	@Override
 	public synchronized void registerUser(String token, String session, String username)
 	{
-		// TODO: Make this more generic
-		// TODO: Check token
+		if(appManager.checkToken(token) == false)
+			return;
 
 		// Create a new UserSession object
 		UserSession userSession = new UserSession();
@@ -100,8 +104,11 @@ public class UserServiceImpl implements UserService
 	}
 
 	@Override
-	public void unregisterUser(String uid)
+	public void unregisterUser(String token, String uid)
 	{
+		if(appManager.checkToken(token) == false)
+			return;
+		
 		assert (uid != null);
 
 		// Query database
@@ -112,5 +119,10 @@ public class UserServiceImpl implements UserService
 		UserSession session = (UserSession) query.execute();
 		if (session != null)
 			persistenceManager.deletePersistent(session);
+	}
+
+	public void setAppManager(AppManager appManager)
+	{
+		this.appManager = appManager;
 	}
 }
