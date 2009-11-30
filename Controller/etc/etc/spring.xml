@@ -22,7 +22,7 @@
 
 		<!-- Can be critical if used with complexe servers -->
 		<property name="timeout" value="20000" />
-		
+
 		<property name="maxRetries" value="0" />
 	</bean>
 
@@ -116,7 +116,7 @@
 
 		<property name="registryPort" value="${rmi.registry.port}" />
 	</bean>
-	
+
 	<bean id="DeployServiceExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
 		<property name="serviceName" value="appserver/DeployService" />
 
@@ -130,12 +130,41 @@
 		<property name="registryPort" value="${rmi.registry.port}" />
 	</bean>
 
+	<!-- JMX -->
+	<bean id="mbeanServer" class="org.springframework.jmx.support.MBeanServerFactoryBean" />
+
+	<bean id="ServerConnector"
+		class="org.springframework.jmx.support.ConnectorServerFactoryBean">
+		<property name="objectName" value="connector:name=rmi" />
+		<property name="serviceUrl"
+			value="service:jmx:rmi:///jndi/rmi://localhost:${rmi.registry.port}/server" />
+
+		<property name="server">
+			<ref local="mbeanServer" />
+		</property>
+	</bean>
+
+	<bean id="JmxExporter" class="org.springframework.jmx.export.MBeanExporter">
+		<property name="beans">
+			<map>
+				<entry key="bean:name=testBean">
+					<bean class="org.prot.controller.management.JmxDeployment">
+					</bean>
+				</entry>
+			</map>
+		</property>
+
+		<property name="server" ref="mbeanServer" />
+	</bean>
+
+
+
+
 	<!-- Platform services -->
 	<bean id="ControllerService"
 		class="org.prot.controller.services.controller.ControllerServiceImpl">
 		<property name="manager" ref="AppManager" />
 	</bean>
-
 
 	<bean id="ControllerServiceExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
 		<property name="serviceName" value="ControllerService" />

@@ -37,6 +37,25 @@
 		<property name="registry" ref="ControllerRegistry" />
 	</bean>
 
+	<!-- JMX-Test -->
+	<bean id="clientConnector"
+		class="org.springframework.jmx.support.MBeanServerConnectionFactoryBean">
+		<property name="serviceUrl" value="service:jmx:rmi:///jndi/rmi://localhost:${rmi.registry.port}/server" />
+	</bean>
+
+	<bean id="proxy" class="org.springframework.jmx.access.MBeanProxyFactoryBean">
+
+		<property name="objectName" value="bean:name=testBean" />
+
+		<property name="proxyInterface"
+			value="org.prot.controller.management.IJmxDeployment" />
+
+		<property name="server" ref="clientConnector" />
+	</bean>
+
+
+
+
 
 	<!-- Services -->
 	<bean id="FrontendService" class="org.prot.manager.services.FrontendServiceImpl">

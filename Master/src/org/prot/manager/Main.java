@@ -1,6 +1,7 @@
 package org.prot.manager;
 
 import org.apache.log4j.xml.DOMConfigurator;
+import org.prot.controller.management.IJmxDeployment;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -13,6 +14,9 @@ public class Main
 
 		// Start spring IOC container
 		ApplicationContext context = new ClassPathXmlApplicationContext("/etc/spring.xml");
+
+		IJmxDeployment dep = (IJmxDeployment) context.getBean("proxy");
+		dep.deployed("test"); 
 	}
 
 	public static void main(String arg[])
