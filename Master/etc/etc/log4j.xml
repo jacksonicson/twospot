@@ -9,7 +9,7 @@
 		</layout>
 	</appender>
 	
-	<logger name="org.prot.manager" additivity="true">
+	<logger name="org.prot.manager" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="ConsoleAppender" />
 	</logger>
