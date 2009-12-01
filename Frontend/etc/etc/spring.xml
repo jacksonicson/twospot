@@ -3,8 +3,8 @@
 
 <beans>
 	<!-- Import other Spring-Configurations -->
-	<import resource="zookeeper.xml"/>
-	
+	<import resource="zookeeper.xml" />
+
 	<!-- Properties -->
 	<bean id="PropertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -51,12 +51,12 @@
 	<bean id="HandlerCollection" class="org.eclipse.jetty.server.handler.HandlerCollection">
 		<property name="handlers">
 			<list>
-				<ref bean="FilterHandler" />
+				<ref bean="Handler" />
 			</list>
 		</property>
 	</bean>
 
-	<bean id="FilterHandler" class="org.prot.frontend.handlers.FilterHandler"
+	<bean id="Handler" class="org.prot.frontend.handlers.ProxyHandler"
 		init-method="init">
 		<property name="appCache" ref="AppCache" />
 		<property name="frontendProxy" ref="FrontendProxy" />

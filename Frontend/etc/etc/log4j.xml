@@ -9,13 +9,13 @@
 		</layout>
 	</appender>
 
-	<logger name="org.prot.frontend" additivity="true">
+	<logger name="org.prot.frontend" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="ConsoleAppender" />
 	</logger>
 
 	<root>
-		<priority value="DEBUG" />
+		<priority value="INFO" />
 		<appender-ref ref="ConsoleAppender" />
 	</root>
 

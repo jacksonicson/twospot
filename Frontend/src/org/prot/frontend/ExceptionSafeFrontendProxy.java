@@ -3,25 +3,19 @@ package org.prot.frontend;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.net.ConnectException;
 
 import org.apache.log4j.Logger;
-import org.prot.manager.services.FrontendService;
 import org.springframework.remoting.rmi.RmiProxyFactoryBean;
 
 public class ExceptionSafeFrontendProxy implements InvocationHandler
 {
 	private static final Logger logger = Logger.getLogger(ExceptionSafeFrontendProxy.class);
 
-	private Class clazz;
-
-	private String address;
-
-	private String objName;
+	private Class<?> clazz;
 
 	private Object obj;
 
-	public ExceptionSafeFrontendProxy(Class clazz)
+	public ExceptionSafeFrontendProxy(Class<?> clazz)
 	{
 		this.clazz = clazz;
 	}
@@ -46,7 +40,9 @@ public class ExceptionSafeFrontendProxy implements InvocationHandler
 			{
 				RmiProxyFactoryBean proxyFactory = new RmiProxyFactoryBean();
 
-				proxyFactory.setServiceInterface(FrontendService.class);
+				logger.debug("Connecting with master: " + Configuration.get().getManagerAddress());
+
+				proxyFactory.setServiceInterface(clazz);
 				proxyFactory.setServiceUrl("rmi://" + Configuration.get().getManagerAddress()
 						+ "/frontendService");
 
@@ -56,6 +52,7 @@ public class ExceptionSafeFrontendProxy implements InvocationHandler
 			} catch (Exception e)
 			{
 				// Connection failed
+				logger.info("Connection with master failed");
 				obj = null;
 			}
 		}
@@ -74,7 +71,6 @@ public class ExceptionSafeFrontendProxy implements InvocationHandler
 		{
 			obj = null;
 			logger.debug("exception in proxy - connection with service failed", e);
-			throw new ConnectException();
 		}
 
 		return result;

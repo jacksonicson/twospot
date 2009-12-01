@@ -50,37 +50,35 @@ public class ControllerWatcher
 
 	private void collectManagementData()
 	{
-		logger.debug("collecting management data");
+		// Used to collect all deployments
+		Set<String> deployments = new HashSet<String>();
 
-		Set<String> redeployedApps = new HashSet<String>();
-
+		// Iterate over all known controllers
 		Collection<ControllerInfo> controllers = registry.getControllers();
 		for (ControllerInfo info : controllers)
 		{
 			try
 			{
-				logger.info("from controller: " + info.getServiceAddress());
+				logger.info("Loading management data from Controller: " + info.getServiceAddress());
 
+				// Get the connection to the controller
 				JmxControllerConnection connection = getConnection(info.getServiceAddress());
 
 				// Get redeployed apps
 				IJmxDeployment deploy = connection.getJmxDeployment();
-
 				Set<String> ctrlRedeployedApps = deploy.fetchDeployedApps();
 				for (String app : ctrlRedeployedApps)
 				{
-					if (redeployedApps.contains(app) == false)
+					if (deployments.contains(app) == false)
 					{
 						logger.debug("Redeployed app: " + app);
-						redeployedApps.addAll(ctrlRedeployedApps);
+						deployments.add(app);
 					}
 				}
 
 				// Aquire management data
 				ManagementData management = info.getManagementData();
 				IJmxResources resources = connection.getJmxResources();
-
-				// Update the managemnt data for the current controller
 				management.setRunningApps(resources.getApps());
 				management.setRps(resources.requestsPerSecond());
 
@@ -88,11 +86,14 @@ public class ControllerWatcher
 			{
 				// Connection lost - remove the connection
 				logger.info("Removing controller from list: " + info.getServiceAddress());
+				logger.debug("Cause: " + e);
 				removeConnection(info.getServiceAddress());
 			}
 		}
 
-		executeRedeployedApps(redeployedApps);
+		// Inform all controllers about the deployments
+		if (deployments.isEmpty() == false)
+			executeRedeployedApps(deployments);
 	}
 
 	private void executeRedeployedApps(Set<String> redeployedApps)
@@ -104,17 +105,17 @@ public class ControllerWatcher
 			try
 			{
 				// Get the JMX-Connection to the controller
-				logger.debug("Notifying controller about a deployed app - Controller:"
-						+ info.getServiceAddress());
 				JmxControllerConnection connection = getConnection(info.getServiceAddress());
 
 				// Inform the controller about the deployment
+				logger.info("Informing Controller about the deployments");
 				connection.getJmxDeployment().notifyDeployment(redeployedApps);
 
 			} catch (Exception e)
 			{
 				// Connection lost - remove the connection
 				logger.info("Removing controller from list: " + info.getServiceAddress());
+				logger.debug("Cause", e);
 				removeConnection(info.getServiceAddress());
 			}
 		}

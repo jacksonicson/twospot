@@ -1,6 +1,7 @@
 package org.prot.frontend.handlers;
 
 import java.io.IOException;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +30,8 @@ public class ProxyHandler extends AbstractHandler
 
 	public void init()
 	{
-		ExceptionSafeFrontendProxy.newInstance(getClass().getClassLoader(), FrontendService.class);
+		frontendService = (FrontendService) ExceptionSafeFrontendProxy.newInstance(getClass()
+				.getClassLoader(), FrontendService.class);
 	}
 
 	@Override
@@ -58,10 +60,10 @@ public class ProxyHandler extends AbstractHandler
 			if (info == null)
 			{
 				// Ask the manager and cache the controller
-				info = frontendService.selectController(appId).iterator().next();
-				if (info != null)
+				Set<ControllerInfo> infoset = frontendService.selectController(appId); 
+				if (infoset != null && infoset.size() > 0)
 				{
-					appCache.cacheController(appId, info);
+					appCache.cacheController(appId, infoset.iterator().next());
 				} else
 				{
 					response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
