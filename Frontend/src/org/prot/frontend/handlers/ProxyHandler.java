@@ -11,6 +11,7 @@ import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.prot.frontend.ExceptionSafeFrontendProxy;
 import org.prot.frontend.cache.AppCache;
 import org.prot.manager.data.ControllerInfo;
 import org.prot.manager.services.FrontendService;
@@ -20,15 +21,15 @@ public class ProxyHandler extends AbstractHandler
 {
 	private static final Logger logger = Logger.getLogger(ProxyHandler.class);
 
-	protected FrontendService frontendService;
-
 	private AppCache appCache;
 
 	private FrontendProxy frontendProxy;
 
+	private FrontendService frontendService;
+
 	public void init()
 	{
-		// Do nothing
+		ExceptionSafeFrontendProxy.newInstance(getClass().getClassLoader(), FrontendService.class);
 	}
 
 	@Override
@@ -87,11 +88,6 @@ public class ProxyHandler extends AbstractHandler
 			baseRequest.setHandled(true);
 			return;
 		}
-	}
-
-	public void setFrontendService(FrontendService frontendService)
-	{
-		this.frontendService = frontendService;
 	}
 
 	public void setAppCache(AppCache appCache)

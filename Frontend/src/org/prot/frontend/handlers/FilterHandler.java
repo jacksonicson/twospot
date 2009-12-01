@@ -18,7 +18,7 @@ public class FilterHandler extends ProxyHandler
 	public void handle(String target, Request baseRequest, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException
 	{
-		// Could not handle the request
+		// Do nothing here
 		super.handle(target, baseRequest, request, response);
 	}
 }

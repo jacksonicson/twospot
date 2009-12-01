@@ -58,7 +58,6 @@
 
 	<bean id="FilterHandler" class="org.prot.frontend.handlers.FilterHandler"
 		init-method="init">
-		<property name="frontendService" ref="FrontendService" />
 		<property name="appCache" ref="AppCache" />
 		<property name="frontendProxy" ref="FrontendProxy" />
 	</bean>
@@ -85,8 +84,4 @@
 		<property name="threadPool" ref="ThreadPool" />
 	</bean>
 
-
-	<!-- Remote -->
-	<bean id="FrontendService" class="org.prot.frontend.Manager" />
-	
 </beans>
