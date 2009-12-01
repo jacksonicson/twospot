@@ -86,7 +86,6 @@
 		<property name="requestManager" ref="RequestManager" />
 	</bean>
 
-
 	<bean id="Controller" class="org.prot.controller.Controller">
 		<property name="server" ref="Server" />
 	</bean>

@@ -5,10 +5,14 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.util.thread.ThreadPool;
+import org.prot.util.scheduler.Scheduler;
+import org.prot.util.scheduler.SchedulerTask;
 
 public class AppManager
 {
 	private static final Logger logger = Logger.getLogger(AppManager.class);
+
+	private static final long MAINTENANCE_TIME = 5000;
 
 	private ThreadPool threadPool;
 
@@ -20,6 +24,8 @@ public class AppManager
 	{
 		monitor = new AppMonitor(threadPool);
 		registry = new AppRegistry();
+
+		Scheduler.addTask(new MaintenanceTask());
 	}
 
 	private enum Todo
@@ -159,5 +165,21 @@ public class AppManager
 	public void setThreadPool(ThreadPool threadPool)
 	{
 		this.threadPool = threadPool;
+	}
+
+	class MaintenanceTask extends SchedulerTask
+	{
+		@Override
+		public long getInterval()
+		{
+			return MAINTENANCE_TIME;
+		}
+
+		@Override
+		public void run()
+		{
+			logger.debug("AppManager does maintenance");
+			doMaintenance();
+		}
 	}
 }

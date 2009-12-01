@@ -2,8 +2,6 @@ package org.prot.controller.security;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +13,8 @@ import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.server.Request;
 import org.prot.controller.handler.ControllerProxy;
 import org.prot.controller.manager.AppManager;
+import org.prot.util.scheduler.Scheduler;
+import org.prot.util.scheduler.SchedulerTask;
 
 public class RequestManager
 {
@@ -23,8 +23,6 @@ public class RequestManager
 	private AppManager appManager;
 
 	private ControllerProxy controllerProxy;
-
-	private Timer timer = new Timer(true);
 
 	private static long requestCounter = 0;
 
@@ -86,11 +84,17 @@ public class RequestManager
 
 	public RequestManager()
 	{
-		timer.scheduleAtFixedRate(new CheckRequestsTask(), 0, 1000);
+		Scheduler.addTask(new CheckRequestsTask());
 	}
 
-	class CheckRequestsTask extends TimerTask
+	class CheckRequestsTask extends SchedulerTask
 	{
+		@Override
+		public long getInterval()
+		{
+			return 1000;
+		}
+		
 		@Override
 		public void run()
 		{
