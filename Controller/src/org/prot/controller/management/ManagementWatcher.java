@@ -10,7 +10,6 @@ import java.util.TimerTask;
 import org.apache.log4j.Logger;
 import org.prot.controller.manager.AppManager;
 import org.prot.controller.manager.appserver.IAppServerStats;
-import org.springframework.remoting.rmi.RmiProxyFactoryBean;
 
 public class ManagementWatcher
 {
@@ -29,19 +28,19 @@ public class ManagementWatcher
 
 	public void notifyDeployment(String appId)
 	{
-		
+
 	}
-	
+
 	public List<String> getDeployedApps()
 	{
 		return null;
 	}
-	
+
 	public List<String> getRunningApps()
 	{
 		return null;
 	}
-	
+
 	public long getRps()
 	{
 		return 0;
@@ -77,21 +76,14 @@ public class ManagementWatcher
 	{
 		try
 		{
-			// TODO: encapsulate this
-			RmiProxyFactoryBean proxyFactory = new RmiProxyFactoryBean();
-
-			proxyFactory.setServiceInterface(IAppServerStats.class);
-			proxyFactory.setServiceUrl("rmi://" + "localhost:2299" + "/appserver/" + appId);
-
-			proxyFactory.afterPropertiesSet();
-
-			IAppServerStats stats = (IAppServerStats) proxyFactory.getObject();
+			Object o = ExceptionSafeProxy.newInstance(getClass().getClassLoader(), IAppServerStats.class,
+					appId);
+			IAppServerStats stats = (IAppServerStats) o;
 			return stats;
 
 		} catch (Exception e)
 		{
-			// Don't handle this
-			logger.debug("Could not connect to the AppServer management");
+			logger.debug("error", e);
 		}
 
 		return null;
