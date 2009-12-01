@@ -69,11 +69,17 @@ public class AppServerWatcher
 		Set<String> appIds = manager.getAppIds();
 		for (String appId : appIds)
 		{
-			IAppServerStats stats = connectWithApp(appId);
-			if (stats == null)
-				continue;
+			try
+			{
+				IAppServerStats stats = connectWithApp(appId);
+				if (stats == null)
+					continue;
 
-			updateApp(appId, stats);
+				updateApp(appId, stats);
+			} catch (Exception e)
+			{
+				// Do nothing - connection lost
+			}
 		}
 	}
 
