@@ -35,8 +35,8 @@ public class Main
 		factory.getBean("AppServerWatcher");
 
 		// Start JMX
-		factory.getBean("JmxExporter");
 		factory.getBean("ServerConnector");
+		factory.getBean("JmxExporter");
 
 		Controller controller = (Controller) factory.getBean("Controller");
 		controller.start();

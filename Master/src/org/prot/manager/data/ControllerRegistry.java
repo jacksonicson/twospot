@@ -17,6 +17,7 @@ public class ControllerRegistry
 
 	public synchronized void update(List<ControllerInfo> infos)
 	{
+		// TODO: Handle deletes!!!
 		logger.debug("Updating controller registry");
 
 		// Contains alls addresses from the controllers
@@ -30,27 +31,15 @@ public class ControllerRegistry
 
 			if (controllers.containsKey(address))
 			{
+				logger.info("Updating Controller: " + address);
+
 				ControllerInfo toUpdate = controllers.get(address);
 				toUpdate.update(info);
 			} else
 			{
+				logger.info("New Controller: " + address);
 				controllers.put(address, info);
 			}
-		}
-
-		// Find all controllers to remove
-		Set<String> toRemove = new HashSet<String>();
-		for (String address : controllers.keySet())
-		{
-			if (availableAddresses.contains(address) == false)
-				toRemove.add(address);
-		}
-
-		// Finally remove the controllers
-		for (String remove : toRemove)
-		{
-			logger.info("Removing controller: " + remove);
-			controllers.remove(remove);
 		}
 	}
 

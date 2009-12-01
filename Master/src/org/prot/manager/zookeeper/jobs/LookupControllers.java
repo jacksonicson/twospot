@@ -52,10 +52,14 @@ public class LookupControllers implements Job, Watcher
 	{
 		ZooKeeper zk = zooHelper.getZooKeeper();
 
-		List<ControllerInfo> infos = new ArrayList<ControllerInfo>();
+		logger.debug("Searching Controllers in: " + ZNodes.ZNODE_CONTROLLER);
 		List<String> childs = zk.getChildren(ZNodes.ZNODE_CONTROLLER, this);
+
+		List<ControllerInfo> infos = new ArrayList<ControllerInfo>();
 		for (String child : childs)
 		{
+			logger.debug("Found Controller: " + child);
+
 			child = ZNodes.ZNODE_CONTROLLER + "/" + child;
 			Stat stat = new Stat();
 			byte[] data = zk.getData(child, false, stat);
@@ -67,7 +71,8 @@ public class LookupControllers implements Job, Watcher
 			info.setPort(controller.port);
 			infos.add(info);
 		}
-		
+
+		logger.debug("Updating ControllerRegistry with " + infos.size() + " Controllers");
 		registry.update(infos);
 
 		return true;

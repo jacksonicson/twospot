@@ -31,10 +31,9 @@ public class SimpleLoadBalancer implements LoadBalancer
 		}
 
 		if (infos.isEmpty() == false)
-		{
 			result.add(infos.iterator().next());
-		} else
-			logger.info("Master doesn't have a Controller");
+		else
+			logger.warn("Master doesn't have a Controller");
 
 		return result;
 	}

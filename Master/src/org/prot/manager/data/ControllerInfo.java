@@ -11,26 +11,27 @@ public class ControllerInfo implements Serializable
 	private int port;
 
 	private String serviceAddress;
-	
-	private int servicePort; 
-	
+
+	private int servicePort;
+
 	private String serviceName;
-	
-	private final ManagementData managementData = new ManagementData();
-	
+
+	private transient ManagementData managementData = new ManagementData();
+
 	public ControllerInfo()
 	{
 		// empty constructor is necessary
 	}
-	
+
 	public ControllerInfo(ControllerInfo info)
 	{
 		update(info);
 	}
-	
-	public void update(ControllerInfo info) 
+
+	public void update(ControllerInfo info)
 	{
 		this.address = info.getAddress();
+		this.serviceAddress = info.getServiceAddress();
 		this.port = info.getPort();
 	}
 

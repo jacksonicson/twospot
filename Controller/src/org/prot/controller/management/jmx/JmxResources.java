@@ -1,5 +1,6 @@
 package org.prot.controller.management.jmx;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.prot.controller.management.AppServerWatcher;
@@ -31,7 +32,9 @@ public class JmxResources implements IJmxResources
 	@Override
 	public Set<String> getApps()
 	{
-		return management.getRunningApps();
+		Set<String> apps = new HashSet<String>();
+		apps.addAll(management.getRunningApps());
+		return apps;
 	}
 
 	@Override
