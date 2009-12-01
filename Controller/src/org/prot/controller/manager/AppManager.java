@@ -3,16 +3,19 @@ package org.prot.controller.manager;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jetty.util.thread.ThreadPool;
 
 public class AppManager
 {
+	private static final Logger logger = Logger.getLogger(AppManager.class);
+
 	private ThreadPool threadPool;
 
 	private AppRegistry registry;
 
 	private AppMonitor monitor;
-	
+
 	public void init()
 	{
 		monitor = new AppMonitor(threadPool);
@@ -72,35 +75,55 @@ public class AppManager
 
 		return appInfo;
 	}
-	
+
 	public boolean checkToken(String token)
 	{
-		// TODO: Implement this
-		return true; 
+		// False if there is no token
+		if (token == null)
+			return false;
+
+		logger.debug("Checking token: " + token);
+
+		// Iterate over all running applications
+		for (String appId : registry.getAppIds())
+		{
+			// Get application infos and the token
+			AppInfo info = registry.getAppInfo(appId);
+
+			// Copare stored token
+			if (token.equals(info.getProcessToken()))
+			{
+				// If both tokens are equal - return true
+				return true;
+			}
+		}
+
+		// No matching token found
+		return false;
 	}
 
 	public Set<String> getAppIds()
 	{
-		return registry.getAppIds(); 
+		return registry.getAppIds();
 	}
-	
+
 	public void killApp(String appId)
 	{
 		AppInfo appInfo = registry.getAppInfo(appId);
-		assert(appInfo != null); 
+		assert (appInfo != null);
 
 		// Update the state
 		appInfo.setStatus(AppState.KILLED);
-		
+
 		// Cleanup the registry
 		registry.cleanup();
-		
+
 		// Shedule the termination
 		Set<AppInfo> killed = new HashSet<AppInfo>();
-		killed.add(appInfo); 
+		killed.add(appInfo);
 		monitor.killProcess(killed);
 	}
-	
+
 	public void reportStaleApp(String appId)
 	{
 		AppInfo appInfo = registry.getAppInfo(appId);
@@ -120,7 +143,7 @@ public class AppManager
 		// Wait until the AppServer is online
 		return monitor.waitForApplication(appInfo);
 	}
-	
+
 	private void checkIdle()
 	{
 		// Find and kill all idle AppServers
