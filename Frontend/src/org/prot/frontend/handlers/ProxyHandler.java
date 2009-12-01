@@ -64,6 +64,7 @@ public class ProxyHandler extends AbstractHandler
 				if (infoset != null && infoset.size() > 0)
 				{
 					appCache.cacheController(appId, infoset.iterator().next());
+					info = appCache.getController(appId);
 				} else
 				{
 					response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
