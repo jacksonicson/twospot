@@ -1,8 +1,8 @@
-package org.prot.controller.management;
+package org.prot.controller.management.jmx;
 
 import java.util.List;
 
-public interface IResources
+public interface IJmxResources
 {
 	public long runningAppServers();
 	

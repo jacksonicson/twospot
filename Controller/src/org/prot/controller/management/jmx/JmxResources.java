@@ -1,8 +1,8 @@
-package org.prot.controller.management;
+package org.prot.controller.management.jmx;
 
 import java.util.List;
 
-public class Resources implements IResources
+public class JmxResources implements IJmxResources
 {
 	private static final String NAME = "Resources";
 

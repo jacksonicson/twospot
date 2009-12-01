@@ -1,4 +1,4 @@
-package org.prot.controller.management;
+package org.prot.controller.management.jmx;
 
 import org.apache.log4j.Logger;
 

@@ -1,4 +1,4 @@
-package org.prot.controller.management;
+package org.prot.controller.management.jmx;
 
 public interface IJmxDeployment
 {

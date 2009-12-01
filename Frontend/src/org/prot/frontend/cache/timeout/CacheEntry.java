@@ -46,6 +46,7 @@ public class CacheEntry
 		if(controllers.size() == 0)
 			return null; 
 		
+		// Cycles through all controllers to balance the requests
 		CachedControllerInfo info = controllers.get(0);
 		controllers.remove(0);
 		controllers.add(info);
