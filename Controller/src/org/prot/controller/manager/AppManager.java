@@ -144,7 +144,7 @@ public class AppManager
 		return monitor.waitForApplication(appInfo);
 	}
 
-	private void checkIdle()
+	private void doMaintenance()
 	{
 		// Find and kill all idle AppServers
 		Set<AppInfo> killed = registry.tick();

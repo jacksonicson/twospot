@@ -7,7 +7,7 @@ import java.util.Random;
 import org.eclipse.jetty.continuation.Continuation;
 import org.prot.util.ReservedAppIds;
 
-public class AppInfo
+public final class AppInfo
 {
 	// Maximum time until the AppServer is idle
 	private static final int MAX_TIME_TO_IDLE = 120 * 1000;

@@ -1,6 +1,6 @@
 package org.prot.controller.manager;
 
-public enum AppState
+enum AppState
 {
 	OFFLINE, STARTING, ONLINE, STALE, FAILED, KILLED
 }
