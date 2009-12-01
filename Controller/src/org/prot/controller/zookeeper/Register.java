@@ -32,6 +32,7 @@ public class Register implements Job
 		ZooKeeper zk = zooHelper.getZooKeeper();
 		
 		Controller controller = new Controller();
+		controller.serviceAddress = "localhost";
 		controller.address = address;
 		controller.port = 8080;
 		

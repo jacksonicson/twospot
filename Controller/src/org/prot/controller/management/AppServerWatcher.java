@@ -1,5 +1,6 @@
 package org.prot.controller.management;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,12 +46,12 @@ public class AppServerWatcher
 
 	public List<String> getDeployedApps()
 	{
-		return null;
+		return new ArrayList<String>();
 	}
 
 	public List<String> getRunningApps()
 	{
-		return null;
+		return new ArrayList<String>();
 	}
 
 	public long getRps()
