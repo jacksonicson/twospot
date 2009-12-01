@@ -135,7 +135,7 @@
 	</bean>
 
 	<!-- Management -->
-	<bean id="ManagementWatcher" class="org.prot.controller.management.ManagementWatcher"
+	<bean id="AppServerWatcher" class="org.prot.controller.management.AppServerWatcher"
 		init-method="init">
 		<property name="manager" ref="AppManager" />
 	</bean>
@@ -162,12 +162,12 @@
 			<map>
 				<entry key="bean:name=deployment">
 					<bean class="org.prot.controller.management.jmx.JmxDeployment">
-						<property name="management" ref="ManagementWatcher" />
+						<property name="management" ref="AppServerWatcher" />
 					</bean>
 				</entry>
 				<entry key="bean:name=resources">
 					<bean class="org.prot.controller.management.jmx.JmxResources">
-						<property name="management" ref="ManagementWatcher" />
+						<property name="management" ref="AppServerWatcher" />
 					</bean>
 				</entry>
 			</map>

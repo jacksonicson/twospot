@@ -1,7 +1,7 @@
 package org.prot.controller.services.deploy;
 
 import org.apache.log4j.Logger;
-import org.prot.controller.management.ManagementWatcher;
+import org.prot.controller.management.AppServerWatcher;
 import org.prot.controller.manager.AppManager;
 
 public class DeployServiceImpl implements DeployService
@@ -10,7 +10,7 @@ public class DeployServiceImpl implements DeployService
 
 	private AppManager appManager;
 
-	private ManagementWatcher management;
+	private AppServerWatcher management;
 
 	@Override
 	public void appDeployed(String token, String appId, String version)
@@ -23,7 +23,7 @@ public class DeployServiceImpl implements DeployService
 		management.notifyDeployment(appId);
 	}
 
-	public void setManagement(ManagementWatcher management)
+	public void setManagement(AppServerWatcher management)
 	{
 		this.management = management;
 	}

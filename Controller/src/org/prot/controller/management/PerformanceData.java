@@ -1,7 +1,11 @@
 package org.prot.controller.management;
 
+import org.prot.controller.manager.appserver.IAppServerStats;
+
 public class PerformanceData
 {
+	private IAppServerStats connection;
+
 	private final String appId;
 
 	private long rps;
@@ -24,5 +28,15 @@ public class PerformanceData
 	public String getAppId()
 	{
 		return appId;
+	}
+
+	IAppServerStats getConnection()
+	{
+		return connection;
+	}
+
+	void setConnection(IAppServerStats connection)
+	{
+		this.connection = connection;
 	}
 }

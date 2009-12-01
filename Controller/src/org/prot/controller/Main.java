@@ -32,7 +32,7 @@ public class Main
 		factory.getBean("UserServiceExporter");
 
 		// Start Management
-		factory.getBean("ManagementWatcher");
+		factory.getBean("AppServerWatcher");
 
 		// Start JMX
 		factory.getBean("JmxExporter");

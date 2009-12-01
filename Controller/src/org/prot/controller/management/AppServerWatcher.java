@@ -11,9 +11,9 @@ import org.apache.log4j.Logger;
 import org.prot.controller.manager.AppManager;
 import org.prot.controller.manager.appserver.IAppServerStats;
 
-public class ManagementWatcher
+public class AppServerWatcher
 {
-	private static final Logger logger = Logger.getLogger(ManagementWatcher.class);
+	private static final Logger logger = Logger.getLogger(AppServerWatcher.class);
 
 	private Timer timer = new Timer(true);
 
@@ -24,6 +24,18 @@ public class ManagementWatcher
 	public void init()
 	{
 		this.timer.scheduleAtFixedRate(new Watcher(), 0, 5000);
+	}
+
+	private final PerformanceData getOrCreatePerformanceData(String appId)
+	{
+		PerformanceData data = performanceData.get(appId);
+		if (data == null)
+		{
+			data = new PerformanceData(appId);
+			performanceData.put(appId, data);
+		}
+
+		return data;
 	}
 
 	public void notifyDeployment(String appId)
@@ -74,12 +86,25 @@ public class ManagementWatcher
 
 	private IAppServerStats connectWithApp(String appId)
 	{
+		// Check if the connection already exists
+		PerformanceData data = getOrCreatePerformanceData(appId);
+
+		if (data != null)
+		{
+			IAppServerStats connection = data.getConnection();
+			if (connection != null)
+				return connection;
+		}
+
+		// Connection does not exist - create a new proxy
 		try
 		{
 			Object o = ExceptionSafeProxy.newInstance(getClass().getClassLoader(), IAppServerStats.class,
 					appId);
-			IAppServerStats stats = (IAppServerStats) o;
-			return stats;
+			IAppServerStats connection = (IAppServerStats) o;
+			data.setConnection(connection);
+
+			return connection;
 
 		} catch (Exception e)
 		{

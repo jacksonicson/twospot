@@ -2,13 +2,13 @@ package org.prot.controller.management.jmx;
 
 import java.util.List;
 
-import org.prot.controller.management.ManagementWatcher;
+import org.prot.controller.management.AppServerWatcher;
 
 public class JmxResources implements IJmxResources
 {
 	private static final String NAME = "Resources";
 
-	private ManagementWatcher management;
+	private AppServerWatcher management;
 
 	@Override
 	public long loadAverage()
@@ -40,7 +40,7 @@ public class JmxResources implements IJmxResources
 		return NAME;
 	}
 
-	public void setManagement(ManagementWatcher management)
+	public void setManagement(AppServerWatcher management)
 	{
 		this.management = management;
 	}

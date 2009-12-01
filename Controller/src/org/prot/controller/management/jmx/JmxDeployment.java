@@ -3,13 +3,13 @@ package org.prot.controller.management.jmx;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.prot.controller.management.ManagementWatcher;
+import org.prot.controller.management.AppServerWatcher;
 
 public class JmxDeployment implements IJmxDeployment
 {
 	private static final Logger logger = Logger.getLogger(JmxDeployment.class);
 
-	private ManagementWatcher management;
+	private AppServerWatcher management;
 
 	@Override
 	public String getName()
@@ -23,7 +23,7 @@ public class JmxDeployment implements IJmxDeployment
 		return management.getDeployedApps();
 	}
 
-	public void setManagement(ManagementWatcher management)
+	public void setManagement(AppServerWatcher management)
 	{
 		this.management = management;
 	}
