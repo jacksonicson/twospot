@@ -53,13 +53,15 @@ public class ControllerWatcher
 		// Used to collect all deployments
 		Set<String> deployments = new HashSet<String>();
 
+		logger.debug("Loading management data"); 
+		
 		// Iterate over all known controllers
 		Collection<ControllerInfo> controllers = registry.getControllers();
 		for (ControllerInfo info : controllers)
 		{
 			try
 			{
-				logger.info("Loading management data from Controller: " + info.getServiceAddress());
+				logger.debug("Loading management data from Controller: " + info.getServiceAddress());
 
 				// Get the connection to the controller
 				JmxControllerConnection connection = getConnection(info.getServiceAddress());
