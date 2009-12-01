@@ -63,13 +63,4 @@ public class ControllerRegistry
 	{
 		return controllers.values();
 	}
-
-	public ControllerInfo selectController()
-	{
-		if (controllers.isEmpty())
-			return null;
-
-		ControllerInfo first = controllers.values().iterator().next();
-		return first;
-	}
 }

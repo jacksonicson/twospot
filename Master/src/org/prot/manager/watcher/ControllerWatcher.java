@@ -80,10 +80,15 @@ public class ControllerWatcher
 				// Aquire management data
 				ManagementData management = info.getManagementData();
 				IJmxResources resources = connection.getJmxResources();
-
-				logger.info("Ressources: " + resources.getName());
+				
+				// Update the managemnt data for the current controller
+				management.setRunningApps(resources.getApps()); 
+				management.setRps(resources.requestsPerSecond());
+				
+				
 			} catch (Exception e)
 			{
+				// Connection lost - remove the connection
 				logger.info("Removing controller from list: " + info.getServiceAddress());
 				removeConnection(info.getServiceAddress());
 			}
