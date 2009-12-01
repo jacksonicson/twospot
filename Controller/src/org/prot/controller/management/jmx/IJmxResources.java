@@ -8,7 +8,7 @@ public interface IJmxResources
 	
 	public long loadAverage();
 	
-	public long requestsPerMinute();
+	public long requestsPerSecond();
 
 	public List<String> getApps();
 	

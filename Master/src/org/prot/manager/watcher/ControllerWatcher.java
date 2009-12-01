@@ -80,12 +80,11 @@ public class ControllerWatcher
 				// Aquire management data
 				ManagementData management = info.getManagementData();
 				IJmxResources resources = connection.getJmxResources();
-				
+
 				// Update the managemnt data for the current controller
-				management.setRunningApps(resources.getApps()); 
+				management.setRunningApps(resources.getApps());
 				management.setRps(resources.requestsPerSecond());
-				
-				
+
 			} catch (Exception e)
 			{
 				// Connection lost - remove the connection
@@ -99,7 +98,27 @@ public class ControllerWatcher
 
 	private void executeRedeployedApps(Set<String> redeployedApps)
 	{
-		logger.info("executing redeployed apps");
+		// Iterate over all known controllers
+		Collection<ControllerInfo> controllers = registry.getControllers();
+		for (ControllerInfo info : controllers)
+		{
+			try
+			{
+				// Get the JMX-Connection to the controller
+				logger.debug("Notifying controller about a deployed app - Controller:"
+						+ info.getServiceAddress());
+				JmxControllerConnection connection = getConnection(info.getServiceAddress());
+
+				// Inform the controller about the deployment
+				connection.getJmxDeployment().notifyDeployment(redeployedApps);
+
+			} catch (Exception e)
+			{
+				// Connection lost - remove the connection
+				logger.info("Removing controller from list: " + info.getServiceAddress());
+				removeConnection(info.getServiceAddress());
+			}
+		}
 	}
 
 	class WatchTask extends TimerTask

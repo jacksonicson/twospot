@@ -17,7 +17,7 @@ public class JmxResources implements IJmxResources
 	}
 
 	@Override
-	public long requestsPerMinute()
+	public long requestsPerSecond()
 	{
 		return management.getRps();
 	}
