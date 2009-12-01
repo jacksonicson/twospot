@@ -109,8 +109,12 @@ public class AppManager
 
 	public void killApp(String appId)
 	{
+		// Geht the AppInfo for this application
 		AppInfo appInfo = registry.getAppInfo(appId);
-		assert (appInfo != null);
+
+		// Check if the application is running
+		if (appInfo == null)
+			return;
 
 		// Update the state
 		appInfo.setStatus(AppState.KILLED);
