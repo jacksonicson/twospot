@@ -60,7 +60,6 @@
 		init-method="init">
 		<property name="frontendService" ref="FrontendService" />
 		<property name="appCache" ref="AppCache" />
-		<property name="deployer" ref="AppDeployer" />
 		<property name="frontendProxy" ref="FrontendProxy" />
 	</bean>
 
@@ -73,12 +72,6 @@
 
 
 	<bean id="AppCache" class="org.prot.frontend.cache.timeout.TimeoutAppCache" />
-
-
-	<bean id="AppDeployer" class="org.prot.frontend.deploy.AppDeployer">
-		<property name="frontendService" ref="FrontendService" />
-		<property name="httpClient" ref="HttpClient" />
-	</bean>
 
 	<bean id="ManagementService" class="org.prot.frontend.zookeeper.ManagementService"
 		init-method="init">

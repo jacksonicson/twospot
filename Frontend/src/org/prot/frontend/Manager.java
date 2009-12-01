@@ -1,5 +1,7 @@
 package org.prot.frontend;
 
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.prot.manager.data.ControllerInfo;
 import org.prot.manager.services.FrontendService;
@@ -40,14 +42,14 @@ public class Manager implements FrontendService
 		return true;
 	}
 
-	public ControllerInfo chooseAppServer(String appId)
+	public Set<ControllerInfo> selectController(String appId)
 	{
 		if (!connect())
 			return null;
 
 		try
 		{
-			return frontendService.chooseAppServer(appId);
+			return frontendService.selectController(appId);
 		} catch (Exception e)
 		{
 			logger.error("Connection to manager lost");
@@ -55,21 +57,6 @@ public class Manager implements FrontendService
 		}
 
 		return null;
-	}
-
-	public void newAppOrVersion(String appId)
-	{
-		if (!connect())
-			return;
-
-		try
-		{
-			frontendService.newAppOrVersion(appId);
-		} catch (Exception e)
-		{
-			logger.error("Connection to manager lost");
-			frontendService = null;
-		}
 	}
 
 	public void setFrontendService(FrontendService frontendService)

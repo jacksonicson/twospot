@@ -1,7 +1,6 @@
 package org.prot.frontend.handlers;
 
 import java.io.IOException;
-import java.net.ConnectException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -58,7 +57,7 @@ public class ProxyHandler extends AbstractHandler
 			if (info == null)
 			{
 				// Ask the manager and cache the controller
-				info = frontendService.chooseAppServer(appId);
+				info = frontendService.selectController(appId).iterator().next();
 				if (info != null)
 				{
 					appCache.cacheController(appId, info);
