@@ -1,8 +1,10 @@
 package org.prot.controller.management.jmx;
 
+import java.util.List;
+
 public interface IJmxDeployment
 {
-	public void deployed(String appId);
+	public List<String> getDeployedApps();
 	
 	public String getName();
 }

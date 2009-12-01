@@ -2,29 +2,36 @@ package org.prot.controller.management.jmx;
 
 import java.util.List;
 
+import org.prot.controller.management.ManagementWatcher;
+
 public class JmxResources implements IJmxResources
 {
 	private static final String NAME = "Resources";
 
+	private ManagementWatcher management;
+
 	@Override
 	public long loadAverage()
 	{
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public long requestsPerMinute()
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return management.getRps();
 	}
 
 	@Override
 	public long runningAppServers()
 	{
-		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public List<String> getApps()
+	{
+		return management.getRunningApps();
 	}
 
 	@Override
@@ -33,11 +40,8 @@ public class JmxResources implements IJmxResources
 		return NAME;
 	}
 
-	@Override
-	public List<String> getApps()
+	public void setManagement(ManagementWatcher management)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		this.management = management;
 	}
-
 }

@@ -1,6 +1,7 @@
 package org.prot.controller.management;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
@@ -31,6 +32,21 @@ public class ManagementWatcher
 		
 	}
 	
+	public List<String> getDeployedApps()
+	{
+		return null;
+	}
+	
+	public List<String> getRunningApps()
+	{
+		return null;
+	}
+	
+	public long getRps()
+	{
+		return 0;
+	}
+
 	private void updateManagementData()
 	{
 		Set<String> appIds = manager.getAppIds();
@@ -61,6 +77,7 @@ public class ManagementWatcher
 	{
 		try
 		{
+			// TODO: encapsulate this
 			RmiProxyFactoryBean proxyFactory = new RmiProxyFactoryBean();
 
 			proxyFactory.setServiceInterface(IAppServerStats.class);
