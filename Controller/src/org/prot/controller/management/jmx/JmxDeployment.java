@@ -1,6 +1,5 @@
 package org.prot.controller.management.jmx;
 
-import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -19,9 +18,9 @@ public class JmxDeployment implements IJmxDeployment
 	}
 
 	@Override
-	public List<String> getDeployedApps()
+	public Set<String> fetchDeployedApps()
 	{
-		return management.getDeployedApps();
+		return management.fetchDeployedApps();
 	}
 
 	public void setManagement(AppServerWatcher management)
@@ -32,6 +31,6 @@ public class JmxDeployment implements IJmxDeployment
 	@Override
 	public void notifyDeployment(Set<String> appIds)
 	{
-		logger.info("Informed about app deployment"); 
+		logger.info("Informed about app deployment");
 	}
 }

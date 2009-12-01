@@ -1,6 +1,6 @@
 package org.prot.controller.management.jmx;
 
-import java.util.List;
+import java.util.Set;
 
 import org.prot.controller.management.AppServerWatcher;
 
@@ -27,9 +27,9 @@ public class JmxResources implements IJmxResources
 	{
 		return 0;
 	}
-
+	
 	@Override
-	public List<String> getApps()
+	public Set<String> getApps()
 	{
 		return management.getRunningApps();
 	}

@@ -1,12 +1,12 @@
 package org.prot.manager.data;
 
-import java.util.List;
+import java.util.Set;
 
 public class ManagementData
 {
-	private long rps; 
-	
-	private List<String> runningApps;
+	private long rps;
+
+	private Set<String> runningApps;
 
 	public long getRps()
 	{
@@ -18,14 +18,14 @@ public class ManagementData
 		this.rps = rps;
 	}
 
-	public List<String> getRunningApps()
+	public Set<String> getRunningApps()
 	{
 		return runningApps;
 	}
 
-	public void setRunningApps(List<String> runningApps)
+	public void setRunningApps(Set<String> runningApps)
 	{
 		this.runningApps = runningApps;
 	}
-	
+
 }

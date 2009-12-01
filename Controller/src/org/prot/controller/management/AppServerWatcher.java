@@ -1,8 +1,7 @@
 package org.prot.controller.management;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
@@ -21,6 +20,8 @@ public class AppServerWatcher
 	private AppManager manager;
 
 	private Map<String, PerformanceData> performanceData = new HashMap<String, PerformanceData>();
+
+	private Set<String> deployed = new HashSet<String>();
 
 	public void init()
 	{
@@ -41,17 +42,21 @@ public class AppServerWatcher
 
 	public void notifyDeployment(String appId)
 	{
-
+		deployed.add(appId);
 	}
 
-	public List<String> getDeployedApps()
+	public Set<String> fetchDeployedApps()
 	{
-		return new ArrayList<String>();
+		Set<String> copy = new HashSet<String>();
+		copy.addAll(deployed);
+		deployed.clear();
+
+		return copy;
 	}
 
-	public List<String> getRunningApps()
+	public Set<String> getRunningApps()
 	{
-		return new ArrayList<String>();
+		return manager.getAppIds();
 	}
 
 	public long getRps()

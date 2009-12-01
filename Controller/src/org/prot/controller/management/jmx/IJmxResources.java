@@ -1,6 +1,6 @@
 package org.prot.controller.management.jmx;
 
-import java.util.List;
+import java.util.Set;
 
 public interface IJmxResources
 {
@@ -10,7 +10,7 @@ public interface IJmxResources
 	
 	public long requestsPerSecond();
 
-	public List<String> getApps();
+	public Set<String> getApps();
 	
 	public String getName();
 }

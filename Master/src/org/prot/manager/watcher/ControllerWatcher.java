@@ -3,7 +3,6 @@ package org.prot.manager.watcher;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
@@ -67,7 +66,7 @@ public class ControllerWatcher
 				// Get redeployed apps
 				IJmxDeployment deploy = connection.getJmxDeployment();
 
-				List<String> ctrlRedeployedApps = deploy.getDeployedApps();
+				Set<String> ctrlRedeployedApps = deploy.fetchDeployedApps();
 				for (String app : ctrlRedeployedApps)
 				{
 					if (redeployedApps.contains(app) == false)
