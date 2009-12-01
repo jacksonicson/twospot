@@ -41,11 +41,16 @@ public class ControllerRegistry
 				controllers.put(address, info);
 			}
 		}
-	}
 
-	public synchronized void fetchControllerData()
-	{
-		// TODO!
+		// Search controllers to delete
+		Set<String> allControllers = new HashSet<String>();
+		allControllers.addAll(controllers.keySet());
+		for (String address : availableAddresses)
+			allControllers.remove(address);
+
+		// Delete all remaining controllers
+		for (String delete : allControllers)
+			controllers.remove(delete);
 	}
 
 	public Collection<ControllerInfo> getControllers()

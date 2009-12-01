@@ -30,6 +30,7 @@ public class LookupControllers implements Job, Watcher
 	@Override
 	public void process(WatchedEvent event)
 	{
+		// Reexecute this job
 		zooHelper.getQueue().insert(this);
 	}
 
@@ -50,11 +51,14 @@ public class LookupControllers implements Job, Watcher
 	@Override
 	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
+		// ZooKeeper connection
 		ZooKeeper zk = zooHelper.getZooKeeper();
 
+		// List the controllers directory in ZooKeeper
 		logger.debug("Searching Controllers in: " + ZNodes.ZNODE_CONTROLLER);
 		List<String> childs = zk.getChildren(ZNodes.ZNODE_CONTROLLER, this);
 
+		// Iterate over all found Controllers
 		List<ControllerInfo> infos = new ArrayList<ControllerInfo>();
 		for (String child : childs)
 		{
