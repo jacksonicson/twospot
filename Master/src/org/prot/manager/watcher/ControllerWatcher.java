@@ -10,7 +10,7 @@ import javax.management.MBeanServerConnection;
 import javax.management.MalformedObjectNameException;
 
 import org.apache.log4j.Logger;
-import org.prot.controller.management.IJmxDeployment;
+import org.prot.controller.management.jmx.IJmxDeployment;
 import org.prot.manager.data.ControllerInfo;
 import org.prot.manager.data.ControllerRegistry;
 import org.springframework.jmx.access.MBeanProxyFactoryBean;
@@ -66,8 +66,6 @@ public class ControllerWatcher
 					IJmxDeployment dep = (IJmxDeployment) proxy.getObject();
 					if (dep != null)
 					{
-						dep.deployed("blabla");
-						
 						
 						
 					} else
