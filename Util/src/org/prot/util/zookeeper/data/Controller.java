@@ -6,7 +6,9 @@ public class Controller implements Serializable
 {
 	private static final long serialVersionUID = 5323196795384674010L;
 
-	public String address; 
-	
-	public int port; 
+	public String serviceAddress;
+
+	public String address;
+
+	public int port;
 }
