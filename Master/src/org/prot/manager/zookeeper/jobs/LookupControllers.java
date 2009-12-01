@@ -22,9 +22,9 @@ import org.prot.util.zookeeper.data.Controller;
 public class LookupControllers implements Job, Watcher
 {
 	private final static Logger logger = Logger.getLogger(LookupControllers.class);
-	
+
 	private ZooHelper zooHelper;
-	
+
 	private ControllerRegistry registry;
 
 	@Override
@@ -38,15 +38,15 @@ public class LookupControllers implements Job, Watcher
 		ObjectInputStream oin = new ObjectInputStream(new ByteArrayInputStream(buffer));
 		try
 		{
-			return (Controller)oin.readObject();
+			return (Controller) oin.readObject();
 		} catch (ClassNotFoundException e)
 		{
 			logger.error("Could not deserialize ZooKeeper data: " + e);
 		}
-		
-		return null; 
+
+		return null;
 	}
-	
+
 	@Override
 	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
@@ -57,15 +57,15 @@ public class LookupControllers implements Job, Watcher
 		for (String child : childs)
 		{
 			child = ZNodes.ZNODE_CONTROLLER + "/" + child;
-			Stat stat = new Stat(); 
+			Stat stat = new Stat();
 			byte[] data = zk.getData(child, false, stat);
-			
+
 			Controller controller = loadController(data);
 			ControllerInfo info = new ControllerInfo();
 			info.setAddress(controller.address);
+			info.setServiceAddress(controller.serviceAddress);
 			info.setPort(controller.port);
-			infos.add(info); 
-			// TODO: Service-Information
+			infos.add(info);
 		}
 		
 		registry.update(infos);

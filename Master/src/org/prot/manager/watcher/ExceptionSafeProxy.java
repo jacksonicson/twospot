@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.ConnectException;
 import java.net.MalformedURLException;
 
 import javax.management.MBeanServerConnection;
@@ -81,7 +82,8 @@ public class ExceptionSafeProxy implements InvocationHandler
 		} catch (Exception e)
 		{
 			obj = null;
-			logger.debug("exception in proxy", e);
+			logger.debug("exception in proxy - connection with service failed", e);
+			throw new ConnectException();
 		}
 
 		return result;

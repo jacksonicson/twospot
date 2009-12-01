@@ -14,7 +14,9 @@ public class ControllerInfo implements Serializable
 	
 	private int servicePort; 
 	
-	private String serviceName; 
+	private String serviceName;
+	
+	private final ManagementData managementData = new ManagementData();
 	
 	public ControllerInfo()
 	{
@@ -80,5 +82,10 @@ public class ControllerInfo implements Serializable
 	public void setServiceAddress(String serviceAddress)
 	{
 		this.serviceAddress = serviceAddress;
+	}
+
+	public ManagementData getManagementData()
+	{
+		return managementData;
 	}
 }
