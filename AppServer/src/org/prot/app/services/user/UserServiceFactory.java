@@ -4,19 +4,27 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 
 import org.apache.log4j.Logger;
+import org.prot.appserver.config.Configuration;
 import org.springframework.remoting.rmi.RmiProxyFactoryBean;
 
 public class UserServiceFactory
 {
 	private static final Logger logger = Logger.getLogger(UserServiceFactory.class);
 
+	private static final String CONTROLLER_ADDRESS = "localhost";
+
 	private static UserService userService;
+
+	private static final int getRmiPort()
+	{
+		return Configuration.getInstance().getRmiRegistryPort();
+	}
 
 	public static UserService getUserService()
 	{
 		if (userService == null)
 		{
-			Object o = AccessController.doPrivileged(new PrivilegedAction()
+			Object o = AccessController.doPrivileged(new PrivilegedAction<Object>()
 			{
 				public Object run()
 				{
@@ -29,7 +37,8 @@ public class UserServiceFactory
 
 					RmiProxyFactoryBean proxyFactory = new RmiProxyFactoryBean();
 					proxyFactory.setServiceInterface(org.prot.controller.services.user.UserService.class);
-					proxyFactory.setServiceUrl("rmi://localhost:2299/appserver/UserService");
+					proxyFactory.setServiceUrl("rmi://" + CONTROLLER_ADDRESS + ":" + getRmiPort()
+							+ "/appserver/UserService");
 					proxyFactory.afterPropertiesSet();
 
 					Object object = proxyFactory.getObject();
