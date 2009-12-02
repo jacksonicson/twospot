@@ -22,8 +22,11 @@ public class SimpleLoadBalancer implements LoadBalancer
 		Collection<ControllerInfo> infos = registry.getControllers();
 		for (ControllerInfo info : infos)
 		{
-			boolean contains = info.getManagementData().getRunningApps().contains(appId);
-			if (contains)
+			Set<String> runningApps = info.getManagementData().getRunningApps();
+			if (runningApps == null)
+				continue;
+
+			if (runningApps.contains(appId))
 			{
 				result.add(info);
 				return result;

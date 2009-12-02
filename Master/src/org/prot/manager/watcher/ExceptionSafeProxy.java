@@ -39,19 +39,36 @@ public class ExceptionSafeProxy implements InvocationHandler
 				address, objName));
 	}
 
+	private MBeanServerConnectionFactoryBean connection;
+	private MBeanProxyFactoryBean proxy;
+
+	private void disconnect()
+	{
+		proxy.destroy();
+		try
+		{
+			connection.destroy();
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		proxy = null;
+		connection = null;
+	}
+
 	private void connect()
 	{
 		if (obj != null)
 			return;
 
-		MBeanServerConnectionFactoryBean connection = new MBeanServerConnectionFactoryBean();
+		connection = new MBeanServerConnectionFactoryBean();
 		// TODO: not static
 		try
 		{
 			connection.setServiceUrl("service:jmx:rmi:///jndi/rmi://" + address + ":2299/controller");
 			connection.afterPropertiesSet();
 
-			MBeanProxyFactoryBean proxy = new MBeanProxyFactoryBean();
+			proxy = new MBeanProxyFactoryBean();
 			proxy.setObjectName(objName);
 			proxy.setProxyInterface(clazz);
 			proxy.setServer((MBeanServerConnection) connection.getObject());
@@ -61,12 +78,15 @@ public class ExceptionSafeProxy implements InvocationHandler
 		} catch (MalformedURLException e)
 		{
 			logger.debug("could not connect with controller", e);
+			disconnect();
 		} catch (IOException e)
 		{
 			logger.debug("could not connect with controller", e);
+			disconnect();
 		} catch (MalformedObjectNameException e)
 		{
 			logger.debug("could not connect with controller", e);
+			disconnect();
 		}
 	}
 
@@ -82,6 +102,7 @@ public class ExceptionSafeProxy implements InvocationHandler
 		} catch (Exception e)
 		{
 			obj = null;
+			disconnect();
 			logger.debug("exception in proxy - connection with service failed", e);
 			throw new ConnectException();
 		}

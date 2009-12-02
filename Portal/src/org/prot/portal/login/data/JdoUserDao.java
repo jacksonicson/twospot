@@ -21,7 +21,7 @@ public class JdoUserDao implements UserDao
 		query.setClass(PlatformUser.class);
 		query.setFilter("username == '" + username + "'");
 		query.setUnique(true);
-
+		
 		try
 		{
 			PlatformUser user = (PlatformUser) query.execute();

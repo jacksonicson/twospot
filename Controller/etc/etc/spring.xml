@@ -16,7 +16,7 @@
 		<property name="threadPool" ref="ThreadPool" />
 
 		<!-- Can be critical if used with complexe servers -->
-		<property name="timeout" value="20000" />
+		<property name="timeout" value="30000" />
 
 		<property name="maxRetries" value="0" />
 	</bean>

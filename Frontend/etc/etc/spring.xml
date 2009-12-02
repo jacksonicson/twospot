@@ -79,6 +79,11 @@
 	<bean id="HttpClient" class="org.eclipse.jetty.client.HttpClient"
 		init-method="start">
 		<property name="threadPool" ref="ThreadPool" />
+
+		<property name="timeout" value="30000" />
+
+		<property name="maxRetries" value="0" />
+
 	</bean>
 
 </beans>

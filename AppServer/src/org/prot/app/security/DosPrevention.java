@@ -11,7 +11,7 @@ public class DosPrevention
 {
 	private static final Logger logger = Logger.getLogger(DosPrevention.class);
 
-	private static final long MAX_REQUEST_TIME = 20000;
+	private static final long MAX_REQUEST_TIME = 40000;
 	
 	private static final long MAX_MEMORY = 80 * 1024 * 1024; 
 	

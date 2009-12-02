@@ -20,6 +20,8 @@ public class RequestManager
 {
 	private static final Logger logger = Logger.getLogger(RequestManager.class);
 
+	private static final long MAX_REQUEST_RUNTIME = 45000;
+	
 	private AppManager appManager;
 
 	private ControllerProxy controllerProxy;
@@ -94,7 +96,7 @@ public class RequestManager
 		{
 			return 1000;
 		}
-		
+
 		@Override
 		public void run()
 		{
@@ -104,9 +106,10 @@ public class RequestManager
 				for (RequestInfo test : running)
 				{
 					// Test timestamps
-					if ((currentTime - test.getTimestamp()) > 2000)
+					long dif = currentTime - test.getTimestamp();
+					if (dif > MAX_REQUEST_RUNTIME)
 					{
-						logger.info("killing appserver");
+						logger.info("Killing appserver - reason: DOS prevention, request time: " + dif);
 
 						if (test.getExchange() != null)
 							test.getExchange().cancel();

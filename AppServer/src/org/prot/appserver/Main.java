@@ -33,7 +33,7 @@ public class Main
 		ArgumentParser.dump();
 
 		// Configure HBase (TODO: Make this more generic)
-		HBaseUtils.setNamespace(Configuration.getInstance().getAppId() + ".user."
+		HBaseUtils.setNamespace(Configuration.getInstance().getAppId() + "."
 				+ HBaseUtils.NAMESPACE_USER_TAGBLES);
 
 		// Start the Monitor

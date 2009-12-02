@@ -29,6 +29,8 @@ public class ControllerProxy extends HttpProxyHelper<RequestInfo>
 
 	protected boolean error(Throwable t, RequestInfo management)
 	{
+		requestManager.requestFinished(management);
+		
 		if (t instanceof ConnectException)
 		{
 			String appId = management.getAppId();

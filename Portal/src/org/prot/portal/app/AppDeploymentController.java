@@ -4,6 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.prot.app.services.platform.PlatformService;
+import org.prot.app.services.platform.PlatformServiceFactory;
 import org.prot.app.services.user.UserService;
 import org.prot.app.services.user.UserServiceFactory;
 import org.prot.portal.services.AppService;
@@ -72,7 +74,9 @@ public class AppDeploymentController implements Controller
 			status = deploymentService.deployApplication(appId, version, request.getInputStream());
 
 			// Inform the platform about the deployment
-			// TODO
+			logger.info("Imform platform about the deployment");
+			PlatformService pservice = PlatformServiceFactory.getPlatformService();
+			pservice.appDeployed(appId, version);
 		}
 
 		response.setStatus(status);

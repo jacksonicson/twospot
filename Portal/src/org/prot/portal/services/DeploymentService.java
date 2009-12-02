@@ -9,6 +9,8 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import org.apache.log4j.Logger;
+import org.prot.app.services.platform.PlatformService;
+import org.prot.app.services.platform.PlatformServiceFactory;
 
 public class DeploymentService
 {
@@ -42,21 +44,21 @@ public class DeploymentService
 		out.close();
 
 		// Read the fileserver response
-		logger.info("reading from fileserver now"); 
+		logger.info("reading from fileserver now");
 		BufferedReader httpIn = new BufferedReader(new InputStreamReader(httpCon.getInputStream()));
-		String line = ""; 
-		boolean ok = false; 
-		while((line = httpIn.readLine()) != null)
+		String line = "";
+		boolean ok = false;
+		while ((line = httpIn.readLine()) != null)
 		{
 			logger.debug("Reading from fileserver: " + line);
-			if(ok = line.equals("upload done"))
-				break; 
+			if (ok = line.equals("upload done"))
+				break;
 		}
 		httpIn.close();
 
-		if(ok)
-			return 200; 
-		
-		return 505; 
+		if (ok)
+			return 200;
+
+		return 505;
 	}
 }
