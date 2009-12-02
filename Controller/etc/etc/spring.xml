@@ -142,7 +142,7 @@
 
 		<!-- Register the services in the local RMI registry -->
 		<property name="serviceUrl"
-			value="service:jmx:rmi:///jndi/rmi://localhost:${rmi.registry.port}/server" />
+			value="service:jmx:rmi:///jndi/rmi://localhost:${rmi.registry.port}/controller" />
 
 		<property name="server">
 			<ref local="MbeanServer" />
