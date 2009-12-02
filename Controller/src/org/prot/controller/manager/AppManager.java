@@ -178,7 +178,7 @@ public class AppManager
 		@Override
 		public void run()
 		{
-			logger.debug("AppManager does maintenance");
+			logger.debug("Controller does maintenance");
 			doMaintenance();
 		}
 	}
