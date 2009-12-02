@@ -72,7 +72,6 @@
 		init-method="init">
 		<property name="zooHelper" ref="ZooHelper" />
 		<property name="networkInterface" value="eth3" />
-		<property name="name" value="controller0" />
 	</bean>
 
 	<bean id="ControllerProxy" class="org.prot.controller.handler.ControllerProxy">

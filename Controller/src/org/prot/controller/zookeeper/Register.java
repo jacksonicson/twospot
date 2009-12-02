@@ -22,12 +22,10 @@ public class Register implements Job
 	private static final Logger logger = Logger.getLogger(Register.class);
 
 	private String networkInterface;
-	private String name;
 
-	public Register(String networkInterface, String name)
+	public Register(String networkInterface)
 	{
 		this.networkInterface = networkInterface;
-		this.name = name;
 	}
 
 	private InetAddress getAddress(String networkInterface)
@@ -42,6 +40,11 @@ public class Register implements Job
 		}
 
 		return null;
+	}
+	
+	private String generateUUID()
+	{
+		return java.util.UUID.randomUUID().toString(); 
 	}
 
 	@Override
@@ -58,7 +61,7 @@ public class Register implements Job
 		ObjectOutputStream out = new ObjectOutputStream(bo);
 		out.writeObject(controller);
 
-		String path = zk.create(ZNodes.ZNODE_CONTROLLER + "/" + name, bo.toByteArray(), zooHelper.getACL(),
+		String path = zk.create(ZNodes.ZNODE_CONTROLLER + "/" + generateUUID(), bo.toByteArray(), zooHelper.getACL(),
 				CreateMode.EPHEMERAL);
 
 		logger.info("Controller registered within ZooKeeper: " + path);

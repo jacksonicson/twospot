@@ -14,11 +14,9 @@ public class ManagementService
 
 	private String networkInterface;
 
-	private String name;
-
 	public void init()
 	{
-		zooHelper.getQueue().insert(new Register(networkInterface, name));
+		zooHelper.getQueue().insert(new Register(networkInterface));
 	}
 
 	public void registerApp(String appId)
@@ -39,10 +37,5 @@ public class ManagementService
 	public void setNetworkInterface(String networkInterface)
 	{
 		this.networkInterface = networkInterface;
-	}
-
-	public void setName(String name)
-	{
-		this.name = name;
 	}
 }
