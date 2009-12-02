@@ -12,13 +12,13 @@ public class ManagementService
 	// ZooKeeper helper
 	private ZooHelper zooHelper;
 
-	private String host;
+	private String networkInterface;
 
 	private String name;
 
 	public void init()
 	{
-		zooHelper.getQueue().insert(new Register(host, name));
+		zooHelper.getQueue().insert(new Register(networkInterface, name));
 	}
 
 	public void registerApp(String appId)
@@ -36,9 +36,9 @@ public class ManagementService
 		this.zooHelper = zooHelper;
 	}
 
-	public void setHost(String host)
+	public void setNetworkInterface(String networkInterface)
 	{
-		this.host = host;
+		this.networkInterface = networkInterface;
 	}
 
 	public void setName(String name)

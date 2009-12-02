@@ -76,7 +76,7 @@
 	<bean id="ManagementService" class="org.prot.controller.zookeeper.ManagementService"
 		init-method="init">
 		<property name="zooHelper" ref="ZooHelper" />
-		<property name="host" value="http://localhost" />
+		<property name="networkInterface" value="eth3" />
 		<property name="name" value="controller0" />
 	</bean>
 
