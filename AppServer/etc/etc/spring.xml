@@ -37,7 +37,7 @@
 
 	<!-- RMI-Services -->
 	<bean id="ManagementExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
-		<property name="serviceName" value="appserver/portal" />
+		<property name="serviceName" value="appserver/${appId}" />
 		<property name="service">
 			<bean class="org.prot.controller.manager.appserver.AppServerStats" />
 		</property>
