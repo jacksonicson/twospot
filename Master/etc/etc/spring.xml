@@ -6,11 +6,7 @@
 	<import resource="zookeeper.xml" />
 
 	<!-- Properties -->
-	<bean id="PropertyConfigurer"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location">
-			<value>classpath:/etc/config.properties</value>
-		</property>
+	<bean id="PropertyConfigurer" class="org.prot.manager.config.Configurer">
 	</bean>
 
 
@@ -18,7 +14,8 @@
 	<bean id="ControllerRegistry" class="org.prot.manager.data.ControllerRegistry">
 	</bean>
 
-	<bean id="ControllerWatcher" class="org.prot.manager.watcher.ControllerWatcher" init-method="init">
+	<bean id="ControllerWatcher" class="org.prot.manager.watcher.ControllerWatcher"
+		init-method="init">
 		<property name="registry" ref="ControllerRegistry" />
 	</bean>
 
@@ -28,7 +25,8 @@
 
 		<property name="jobs">
 			<list>
-				<bean class="org.prot.manager.zookeeper.jobs.RegisterMaster" init-method="init">
+				<bean class="org.prot.manager.zookeeper.jobs.RegisterMaster"
+					init-method="init">
 					<constructor-arg index="0" value="eth3" />
 					<constructor-arg index="1" value="${rmi.registry.port}" />
 				</bean>
@@ -40,11 +38,11 @@
 	<bean id="LookupControllers" class="org.prot.manager.zookeeper.jobs.LookupControllers">
 		<property name="registry" ref="ControllerRegistry" />
 	</bean>
-	
+
 	<bean id="LoadBalancer" class="org.prot.manager.balancing.SimpleLoadBalancer">
 		<property name="registry" ref="ControllerRegistry" />
 	</bean>
-	
+
 	<!-- Services -->
 	<bean id="FrontendService" class="org.prot.manager.services.FrontendServiceImpl">
 		<property name="loadBalancer" ref="LoadBalancer" />
