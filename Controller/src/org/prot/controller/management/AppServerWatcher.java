@@ -42,6 +42,7 @@ public class AppServerWatcher
 
 	public void notifyDeployment(String appId)
 	{
+		logger.debug("AppId " + appId + " deployed"); 
 		deployed.add(appId);
 	}
 

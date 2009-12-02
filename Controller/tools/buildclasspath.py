@@ -41,6 +41,7 @@ def createClasspath(eclipseProject, killPath):
     return output
         
 output = createClasspath("../../AppServer/.classpath", False)
+output += createClasspath("../../Controller/.classpath", False)
 javaFile = open("classpath.txt", "w")
 javaFile.write(output);
 javaFile.close()

@@ -118,6 +118,7 @@
 		<property name="service">
 			<bean class="org.prot.controller.services.deploy.DeployServiceImpl">
 				<property name="appManager" ref="AppManager" />
+				<property name="management" ref="AppServerWatcher" />
 			</bean>
 		</property>
 

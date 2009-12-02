@@ -71,6 +71,7 @@ public final class UserService
 	public void registerUser(final String uid, final String username)
 	{
 		final String token = Configuration.getInstance().getAuthenticationToken();
+		assert(token != null);
 
 		AccessController.doPrivileged(new PrivilegedAction<String>()
 		{

@@ -4,6 +4,7 @@ import java.security.Policy;
 import java.util.Properties;
 
 import org.apache.log4j.xml.DOMConfigurator;
+import org.datanucleus.store.hbase.HBaseUtils;
 import org.prot.app.security.HardPolicy;
 import org.prot.appserver.config.Configuration;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
@@ -30,6 +31,10 @@ public class Main
 
 		// Log all startup arguments
 		ArgumentParser.dump();
+
+		// Configure HBase (TODO: Make this more generic)
+		HBaseUtils.setNamespace(Configuration.getInstance().getAppId() + ".user."
+				+ HBaseUtils.NAMESPACE_USER_TAGBLES);
 
 		// Start the Monitor
 		if (Configuration.getInstance().isRequiresController())

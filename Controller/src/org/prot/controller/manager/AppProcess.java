@@ -65,7 +65,8 @@ class AppProcess
 		List<String> command = new LinkedList<String>();
 		command.add("java");
 		command.add("-classpath");
-		command.add(loadGeneratedClasspath());
+		//command.add(loadGeneratedClasspath());
+		command.add(loadClasspath());
 
 		command.add("org.prot.appserver.Main");
 

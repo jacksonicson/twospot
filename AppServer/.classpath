@@ -39,7 +39,11 @@
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-jpa-2.0.0-m3.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-management-1.0.2.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/hbase-0.20.0.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Controller"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Controller">
+		<accessrules>
+			<accessrule kind="nonaccessible" pattern="*.jar"/>
+		</accessrules>
+	</classpathentry>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-policy-7.0.0.v20091005.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jasper/el-api.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jasper/jasper-el.jar"/>

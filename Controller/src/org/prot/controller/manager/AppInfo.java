@@ -25,11 +25,11 @@ public final class AppInfo
 	private long lastUsed;
 
 	// Is this a privileged application
-	private final boolean privileged; 
-	
+	private final boolean privileged;
+
 	// Token which is used to authenticate the process
-	private final String processToken; 
-	
+	private final String processToken;
+
 	// Continuations for requests which are waiting for this appserver
 	private List<Continuation> continuations = new ArrayList<Continuation>();
 
@@ -40,7 +40,8 @@ public final class AppInfo
 
 	boolean isIdle()
 	{
-		//return (System.currentTimeMillis() - this.lastUsed) > MAX_TIME_TO_IDLE;
+		// return (System.currentTimeMillis() - this.lastUsed) >
+		// MAX_TIME_TO_IDLE;
 		return false;
 	}
 
@@ -48,14 +49,14 @@ public final class AppInfo
 	{
 		this.appId = appId;
 		this.port = port;
-		
+
 		// Determine if this is a privileged application
 		privileged = ReservedAppIds.isPrivilged(appId);
-		
+
 		// Generate a authentication token
 		Random random = new Random();
 		random.setSeed(System.currentTimeMillis());
-		long token = random.nextLong() | System.currentTimeMillis();
+		long token = Math.abs(random.nextLong() | System.currentTimeMillis());
 		processToken = "" + token;
 	}
 

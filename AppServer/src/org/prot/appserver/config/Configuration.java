@@ -199,6 +199,7 @@ public class Configuration
 
 	public void setAuthenticationToken(String authenticationToken)
 	{
+		logger.debug("Using authentication token: " + authenticationToken);
 		this.authenticationToken = authenticationToken;
 	}
 

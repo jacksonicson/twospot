@@ -38,7 +38,7 @@ public final class PlatformServiceFactory
 					Object object = proxyFactory.getObject();
 					if (object == null)
 					{
-						logger.error("Could not connect with the UserService");
+						logger.error("Could not connect with the DeployService");
 						throw new NullPointerException();
 					}
 
@@ -50,6 +50,6 @@ public final class PlatformServiceFactory
 			platformService = new PlatformService(deployService);
 		}
 
-		return null;
+		return platformService;
 	}
 }
