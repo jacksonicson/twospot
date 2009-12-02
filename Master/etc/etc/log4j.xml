@@ -19,6 +19,11 @@
 		<appender-ref ref="ConsoleAppender" />
 	</logger>
 	
+	<logger name="org.prot.util" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="ConsoleAppender" />
+	</logger>
+	
 	<root>
 		<priority value="INFO" />
 		<appender-ref ref="ConsoleAppender" />

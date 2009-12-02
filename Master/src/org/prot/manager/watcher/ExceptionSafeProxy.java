@@ -48,7 +48,7 @@ public class ExceptionSafeProxy implements InvocationHandler
 		// TODO: not static
 		try
 		{
-			connection.setServiceUrl("service:jmx:rmi:///jndi/rmi://" + address + ":2299/server");
+			connection.setServiceUrl("service:jmx:rmi:///jndi/rmi://" + address + ":2299/controller");
 			connection.afterPropertiesSet();
 
 			MBeanProxyFactoryBean proxy = new MBeanProxyFactoryBean();
