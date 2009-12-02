@@ -16,14 +16,14 @@ public class CacheEntry
 
 	private String appId;
 
-	void addController(ControllerInfo controller)
+	synchronized void addController(ControllerInfo controller)
 	{
 		CachedControllerInfo cController = new CachedControllerInfo(controller); 
 		cController.setTimestamp(System.currentTimeMillis()); 
 		controllers.add(cController);
 	}
 
-	void removeOlderThan(long threshold)
+	synchronized void removeOlderThan(long threshold)
 	{
 		Set<CachedControllerInfo> toDel = new HashSet<CachedControllerInfo>();
 		long currentTime = System.currentTimeMillis(); 
@@ -41,9 +41,9 @@ public class CacheEntry
 		}
 	}
 	
-	ControllerInfo pickController()
+	synchronized ControllerInfo pickController()
 	{
-		if(controllers.size() == 0)
+		if(controllers.isEmpty())
 			return null; 
 		
 		// Cycles through all controllers to balance the requests

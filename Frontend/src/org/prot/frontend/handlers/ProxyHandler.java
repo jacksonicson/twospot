@@ -75,7 +75,7 @@ public class ProxyHandler extends AbstractHandler
 			}
 
 			// Build the destination url
-			String url = info.getAddress() + ":" + info.getPort();
+			String url = request.getScheme() + "://" + info.getAddress() + ":" + info.getPort();
 			String uri = "/" + appId + baseRequest.getUri().toString();
 			url = url + uri;
 

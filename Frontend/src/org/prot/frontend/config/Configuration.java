@@ -24,7 +24,7 @@ public class Configuration
 		return configuration;
 	}
 
-	public Configuration()
+	Configuration()
 	{
 		InputStream in = this.getClass().getResourceAsStream("/etc/config.properties");
 		try
