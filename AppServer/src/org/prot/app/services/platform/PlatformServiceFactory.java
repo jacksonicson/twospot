@@ -1,37 +1,38 @@
-package org.prot.app.services.user;
+package org.prot.app.services.platform;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
 import org.apache.log4j.Logger;
 import org.prot.appserver.config.Configuration;
+import org.prot.controller.services.deploy.DeployService;
 import org.springframework.remoting.rmi.RmiProxyFactoryBean;
 
-public class UserServiceFactory
+public final class PlatformServiceFactory
 {
-	private static final Logger logger = Logger.getLogger(UserServiceFactory.class);
+	private static final Logger logger = Logger.getLogger(PlatformServiceFactory.class);
 
 	private static final String CONTROLLER_ADDRESS = "localhost";
 
-	private static UserService userService;
+	private static PlatformService platformService;
 
 	private static final int getRmiPort()
 	{
 		return Configuration.getInstance().getRmiRegistryPort();
 	}
 
-	public static UserService getUserService()
+	public static PlatformService getPlatformService()
 	{
-		if (userService == null)
+		if (platformService == null)
 		{
-			Object o = AccessController.doPrivileged(new PrivilegedAction<Object>()
+			DeployService deployService = AccessController.doPrivileged(new PrivilegedAction<DeployService>()
 			{
-				public Object run()
+				public DeployService run()
 				{
 					RmiProxyFactoryBean proxyFactory = new RmiProxyFactoryBean();
-					proxyFactory.setServiceInterface(org.prot.controller.services.user.UserService.class);
+					proxyFactory.setServiceInterface(DeployService.class);
 					proxyFactory.setServiceUrl("rmi://" + CONTROLLER_ADDRESS + ":" + getRmiPort()
-							+ "/appserver/UserService");
+							+ "/appserver/DeployService");
 					proxyFactory.afterPropertiesSet();
 
 					Object object = proxyFactory.getObject();
@@ -41,18 +42,14 @@ public class UserServiceFactory
 						throw new NullPointerException();
 					}
 
-					UserService userService = new UserService(
-							(org.prot.controller.services.user.UserService) object);
-
-					// Object o = userService;
-					return userService;
+					return (DeployService)object;
 				}
 
 			});
 
-			userService = (UserService) o;
+			platformService = new PlatformService(deployService);
 		}
 
-		return userService;
+		return null;
 	}
 }
