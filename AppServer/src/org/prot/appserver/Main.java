@@ -1,10 +1,12 @@
 package org.prot.appserver;
 
 import java.security.Policy;
+import java.util.Properties;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.prot.app.security.HardPolicy;
 import org.prot.appserver.config.Configuration;
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 
@@ -36,10 +38,17 @@ public class Main
 		// Create beans
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring.xml", getClass()));
 
-		// TODO: Add a postprocess to fill the variables in the definition
+		// Create the configuration properties
+		Properties props = new Properties();
+		props.setProperty("appId", Configuration.getInstance().getAppId());
 
+		// Postprocess the factory
+		PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
+		configurer.setProperties(props);
+		configurer.postProcessBeanFactory(factory);
+
+		// Get the beans
 		factory.getBean("ManagementExporter");
-
 		factory.getBean("Lifecycle");
 	}
 
