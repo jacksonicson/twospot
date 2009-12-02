@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
+import org.prot.controller.config.Configuration;
 import org.prot.util.net.AddressExtractor;
 import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.ZNodes;
@@ -49,9 +50,9 @@ public class Register implements Job
 		ZooKeeper zk = zooHelper.getZooKeeper();
 
 		Controller controller = new Controller();
-		controller.serviceAddress = "localhost";
+		controller.serviceAddress = getAddress(networkInterface).getHostAddress();
 		controller.address = getAddress(networkInterface).getHostAddress();
-		controller.port = 8080;
+		controller.port = Configuration.getConfiguration().getControllerPort();
 
 		ByteArrayOutputStream bo = new ByteArrayOutputStream();
 		ObjectOutputStream out = new ObjectOutputStream(bo);

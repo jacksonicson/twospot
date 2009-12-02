@@ -12,6 +12,8 @@ public class ExceptionSafeProxy implements InvocationHandler
 {
 	private static final Logger logger = Logger.getLogger(ExceptionSafeProxy.class);
 
+	private static final String APP_SERVER_ADDRESS = "localhost";
+	
 	private String appId;
 
 	private Object obj;
@@ -26,6 +28,11 @@ public class ExceptionSafeProxy implements InvocationHandler
 		return Proxy.newProxyInstance(loader, new Class<?>[] { clazz }, new ExceptionSafeProxy(appId));
 	}
 
+	private static final int getRmiPort()
+	{
+		return 2299;
+	}
+	
 	private void connect()
 	{
 		if (obj != null)
@@ -35,7 +42,7 @@ public class ExceptionSafeProxy implements InvocationHandler
 		{
 			RmiProxyFactoryBean proxyFactory = new RmiProxyFactoryBean();
 			proxyFactory.setServiceInterface(IAppServerStats.class);
-			proxyFactory.setServiceUrl("rmi://" + "localhost:2299" + "/appserver/" + appId);
+			proxyFactory.setServiceUrl("rmi://" + APP_SERVER_ADDRESS + ":" + getRmiPort() + "/appserver/" + appId);
 			proxyFactory.afterPropertiesSet();
 
 			obj = proxyFactory.getObject();

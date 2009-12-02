@@ -8,12 +8,7 @@
 	<!-- Properties -->
 	<bean id="PropertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location">
-			<value>classpath:/etc/config.properties</value>
-		</property>
 	</bean>
-
-
 
 	<!-- HTTP-Client -->
 	<bean id="HttpClient" class="org.eclipse.jetty.client.HttpClient"
@@ -146,6 +141,7 @@
 		class="org.springframework.jmx.support.ConnectorServerFactoryBean">
 		<property name="objectName" value="connector:name=rmi" />
 
+		<!-- Register the services in the local RMI registry -->
 		<property name="serviceUrl"
 			value="service:jmx:rmi:///jndi/rmi://localhost:${rmi.registry.port}/server" />
 
