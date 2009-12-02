@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 import org.apache.log4j.Logger;
+import org.prot.frontend.config.Configuration;
 import org.springframework.remoting.rmi.RmiProxyFactoryBean;
 
 public class ExceptionSafeFrontendProxy implements InvocationHandler
@@ -31,7 +32,7 @@ public class ExceptionSafeFrontendProxy implements InvocationHandler
 		if (obj != null)
 			return;
 
-		if (Configuration.get().getManagerAddress() == null)
+		if (Configuration.getConfiguration().getManagerAddress() == null)
 			return;
 
 		if (obj == null)
@@ -40,10 +41,10 @@ public class ExceptionSafeFrontendProxy implements InvocationHandler
 			{
 				RmiProxyFactoryBean proxyFactory = new RmiProxyFactoryBean();
 
-				logger.debug("Connecting with master: " + Configuration.get().getManagerAddress());
+				logger.debug("Connecting with master: " + Configuration.getConfiguration().getManagerAddress());
 
 				proxyFactory.setServiceInterface(clazz);
-				proxyFactory.setServiceUrl("rmi://" + Configuration.get().getManagerAddress()
+				proxyFactory.setServiceUrl("rmi://" + Configuration.getConfiguration().getManagerAddress()
 						+ "/frontendService");
 
 				proxyFactory.afterPropertiesSet();

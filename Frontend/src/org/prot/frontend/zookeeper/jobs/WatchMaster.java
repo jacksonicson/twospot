@@ -8,7 +8,7 @@ import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
-import org.prot.frontend.Configuration;
+import org.prot.frontend.config.Configuration;
 import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
@@ -37,14 +37,14 @@ public class WatchMaster implements Watcher, Job
 			logger.info("Could not find " + ZNodes.ZNODE_MASTER + " in the ZooKeeper. Waiting for the ZNode");
 
 			// Update the configuration
-			Configuration.get().setManagerAddress(null);
+			Configuration.getConfiguration().setManagerAddress(null);
 		} else
 		{
 			logger.info("Updating configuration with the Manager"); 
 			
 			// Update the configuration
 			byte[] data = zk.getData(ZNodes.ZNODE_MASTER, this, statMaster);
-			Configuration.get().setManagerAddress(new String(data));
+			Configuration.getConfiguration().setManagerAddress(new String(data));
 		}
 
 		// Install a watcher

@@ -8,9 +8,6 @@
 	<!-- Properties -->
 	<bean id="PropertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location">
-			<value>classpath:/etc/config.properties</value>
-		</property>
 	</bean>
 
 

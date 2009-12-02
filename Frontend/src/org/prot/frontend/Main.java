@@ -3,6 +3,7 @@ package org.prot.frontend;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.eclipse.jetty.server.Server;
+import org.prot.frontend.config.Configuration;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -21,6 +22,7 @@ public class Main
 
 		// Postprocess the factory
 		PropertyPlaceholderConfigurer conf = (PropertyPlaceholderConfigurer)factory.getBean("PropertyConfigurer");
+		conf.setProperties(Configuration.getConfiguration().getProperties());
 		conf.postProcessBeanFactory(factory);
 		
 		// Load the beans
