@@ -46,6 +46,9 @@ public class Configuration
 	// Directory which is used as scratch dir for the web application
 	private String appScratchDir;
 
+	// Maximum request time
+	private long dosPreventionTime = 40000;
+
 	// Directories with the python libs
 	private String pythonLibs;
 	private String djangoLibs;
@@ -87,7 +90,10 @@ public class Configuration
 			configuration.pythonLibs = props.getProperty("python.lib");
 			configuration.djangoLibs = props.getProperty("python.lib.site-packages");
 
-			configuration.setAppScratchDir(props.getProperty("appServer.scratchdir"));
+			configuration.appScratchDir = props.getProperty("appServer.scratchdir");
+
+			configuration.dosPreventionTime = Long.parseLong(props
+					.getProperty("appServer.security.DOSPrevention.time"));
 
 			switch (configuration.serverMode)
 			{
@@ -261,4 +267,10 @@ public class Configuration
 	{
 		this.serverMode = serverMode;
 	}
+
+	public long getDosPreventionTime()
+	{
+		return dosPreventionTime;
+	}
+	
 }
