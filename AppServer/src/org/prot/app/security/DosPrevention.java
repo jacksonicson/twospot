@@ -13,8 +13,6 @@ public class DosPrevention
 
 	private static final long MAX_REQUEST_TIME = 40000;
 	
-	private static final long MAX_MEMORY = 80 * 1024 * 1024; 
-	
 	private static long requestIdCounter = 0;
 
 	private Map<Long, Long> requests = new ConcurrentHashMap<Long, Long>();
@@ -55,20 +53,12 @@ public class DosPrevention
 		}
 	}
 	
-	private final void checkMemory()
-	{
-		long memory = Runtime.getRuntime().totalMemory();
-		if(memory > MAX_MEMORY)
-			logger.fatal("Possible DOS attack or memory leak detected - shutting down"); 
-	}
-	
 	class Tick extends TimerTask
 	{
 		@Override
 		public void run()
 		{
 			checkRequests();
-			checkMemory();
 		}
 	}
 }
