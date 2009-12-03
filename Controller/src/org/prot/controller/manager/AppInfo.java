@@ -40,9 +40,7 @@ public final class AppInfo
 
 	boolean isIdle()
 	{
-		// return (System.currentTimeMillis() - this.lastUsed) >
-		// MAX_TIME_TO_IDLE;
-		return false;
+		return (System.currentTimeMillis() - this.lastUsed) > MAX_TIME_TO_IDLE;
 	}
 
 	public AppInfo(String appId, int port)
