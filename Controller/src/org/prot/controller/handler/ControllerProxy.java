@@ -17,20 +17,23 @@ public class ControllerProxy extends HttpProxyHelper<RequestInfo>
 
 	private AppManager appManager;
 
+	@Override
 	protected void requestFinished(RequestInfo management)
 	{
 		requestManager.requestFinished(management);
 	}
 
+	@Override
 	protected void sentRequest(RequestInfo management, HttpExchange exchange)
 	{
 		management.setExchange(exchange);
 	}
 
-	protected boolean error(Throwable t, RequestInfo management)
+	@Override
+	protected boolean error(RequestInfo management, Throwable t)
 	{
 		requestManager.requestFinished(management);
-		
+
 		if (t instanceof ConnectException)
 		{
 			String appId = management.getAppId();
