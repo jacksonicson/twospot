@@ -1,6 +1,6 @@
 #### Server Options ###
 # Mode in which the AppServer is running (DEVELOPMENT, SERVER)
-appServer.mode=SERVER
+appServer.mode=DEVELOPMENT
 
 # Defines the working directory in which the extracted application directores reside
 appserver.workDir=C:/temp
