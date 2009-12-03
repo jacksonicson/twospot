@@ -53,6 +53,11 @@ public class Configuration
 	// AppInfo
 	private AppInfo appInfo;
 
+	/**
+	 * Singlethon get the instance of the Configuration
+	 * 
+	 * @return intance of the Configuration
+	 */
 	public static Configuration getInstance()
 	{
 		if (Configuration.configuration == null)
@@ -78,10 +83,12 @@ public class Configuration
 
 			// General configuration settings
 			configuration.serverMode = ServerMode.valueOf(props.getProperty("appServer.mode"));
-			
+
 			configuration.pythonLibs = props.getProperty("python.lib");
 			configuration.djangoLibs = props.getProperty("python.lib.site-packages");
-			
+
+			configuration.setAppScratchDir(props.getProperty("appServer.scratchdir"));
+
 			switch (configuration.serverMode)
 			{
 			case SERVER:
@@ -107,12 +114,16 @@ public class Configuration
 		}
 	}
 
-	void finishConfiugration()
+	/**
+	 * Executed after all propertie files and command line arguments have been
+	 * set
+	 */
+	void postInitialize()
 	{
 		Configuration config = Configuration.configuration;
-		
+
 		config.setAppDirectory(config.getWorkingDirectory() + "/" + config.getAppId());
-		config.setAppScratchDir("C:/temp/scratch");
+		logger.error("AppDirectory: " + config.getAppDirectory());
 	}
 
 	public String getAppId()

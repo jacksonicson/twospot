@@ -61,9 +61,9 @@ public class ArgumentParser
 		options.addOption(authenticationToken);
 
 		// Location of the decompressed application (for the standalone mode)
-		Option applicationDirectory = OptionBuilder.withArgName("application directory").hasArg().create(
-				"appDir");
-		options.addOption(applicationDirectory);
+		Option workingDirectory = OptionBuilder.withArgName("application directory").hasArg().create(
+				"workDir");
+		options.addOption(workingDirectory);
 
 		try
 		{
@@ -91,13 +91,13 @@ public class ArgumentParser
 				config.setAuthenticationToken(cmd.getOptionValue("token"));
 			}
 
-			if (cmd.hasOption("appDir"))
+			if (cmd.hasOption("workDir"))
 			{
-				config.setAppDirectory(cmd.getOptionValue("appDir"));
+				config.setWorkingDirectory(cmd.getOptionValue("workDir"));
 			}
 
 			// Finish the configuration process
-			config.finishConfiugration();
+			config.postInitialize();
 
 		} catch (ParseException e)
 		{
