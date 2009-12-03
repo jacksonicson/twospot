@@ -2,55 +2,12 @@
 <!DOCTYPE beans SYSTEM "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 
 <beans>
-	<!-- Configuration -->
-	<bean id="Configuration" class="org.prot.appserver.Configuration" />
-
-	<!-- Lifecycle manager -->
-	<bean id="Lifecycle" class="org.prot.appserver.ServerLifecycle"
-		init-method="start">
-		<property name="appFetcher" ref="AppFetcher" />
-		<property name="appExtractor" ref="AppExtractor" />
-		<property name="appConfigurer" ref="AppConfigurer" />
-		<property name="runtimeRegistry" ref="RuntimeRegistry" />
-	</bean>
+	<import resource="spring.xml" />
 
 	<!-- Server-Mode dependent beans -->
 	<bean id="AppFetcher" class="org.prot.appserver.appfetch.NullAppFetcher" />
 
 	<bean id="AppExtractor" class="org.prot.appserver.extract.NullExtractor" />
-
-
-	<!-- Application beans -->
-	<bean id="AppConfigurer" class="org.prot.appserver.config.AppConfigurer">
-		<property name="runtimeRegistry" ref="RuntimeRegistry" />
-	</bean>
-
-	<bean id="RuntimeRegistry" class="org.prot.appserver.runtime.RuntimeRegistry">
-		<property name="runtimes">
-			<list>
-				<ref bean="PythonRuntime" />
-				<ref bean="JavaRuntime" />
-			</list>
-		</property>
-	</bean>
-
-	<!-- Runtimes -->
-	<bean id="PythonRuntime" class="org.prot.appserver.runtime.jython.PythonRuntime" />
-	<bean id="JavaRuntime" class="org.prot.appserver.runtime.java.JavaRuntime" />
-
-	<!-- RMI-Services -->
-	<bean id="ManagementExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
-		<property name="serviceName" value="appserver/${appId}" />
-		<property name="service">
-			<bean class="org.prot.controller.manager.appserver.AppServerStats" />
-		</property>
-
-		<property name="serviceInterface"
-			value="org.prot.controller.manager.appserver.IAppServerStats" />
-
-		<!-- TODO -->
-		<property name="registryPort" value="2299" />
-	</bean>
 
 </beans>
 
