@@ -14,7 +14,7 @@ public class Configuration
 	private static Configuration configuration;
 
 	// Port under wich the local RMI registry is running
-	private int rmiRegistryPort = -1;
+	private int controllerRmiRegistryPort = -1;
 
 	// Enable stdout
 	private boolean enableStdOut = false;
@@ -73,7 +73,8 @@ public class Configuration
 			configuration.workingDirectory = props.getProperty("appserver.working.dir");
 			configuration.pythonLibs = props.getProperty("python.lib");
 			configuration.djangoLibs = props.getProperty("python.lib.site-packages");
-			configuration.rmiRegistryPort = Integer.parseInt(props.getProperty("rmi.registry.port"));
+			configuration.controllerRmiRegistryPort = Integer.parseInt(props
+					.getProperty("rmi.controller.registry.port"));
 		} catch (IOException e)
 		{
 			logger.error("Could not load the configuration properties", e);
@@ -215,6 +216,6 @@ public class Configuration
 
 	public int getRmiRegistryPort()
 	{
-		return rmiRegistryPort;
+		return controllerRmiRegistryPort;
 	}
 }

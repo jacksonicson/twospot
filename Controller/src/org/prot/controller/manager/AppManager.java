@@ -127,7 +127,10 @@ public class AppManager
 
 		// Check if the application is running
 		if (appInfo == null)
+		{
+			logger.debug("Cannot kill application " + appId + " - not running");
 			return;
+		}
 
 		// Update the state
 		appInfo.setStatus(AppState.KILLED);

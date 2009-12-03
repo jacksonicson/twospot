@@ -59,7 +59,7 @@
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-plus-7.0.0.v20091005.jar" sourcepath="D:/work/jetty7src/jetty-plus/src/"/>
 	<classpathentry kind="lib" path="/Libs/lib/apache_commons/commons-el.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-beans.jar" sourcepath="/Libs/lib/spring-framework-2.5.6.SEC01/spring-sources.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-context.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-context.jar" sourcepath="D:/work/mscNotes/3party/src"/>
 	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-web.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-webmvc.jar"/>
 	<classpathentry kind="lib" path="/Libs/gen/hbaseplugin.jar"/>

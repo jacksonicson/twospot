@@ -163,6 +163,7 @@
 				<entry key="bean:name=deployment">
 					<bean class="org.prot.controller.management.jmx.JmxDeployment">
 						<property name="management" ref="AppServerWatcher" />
+						<property name="manager" ref="AppManager" />
 					</bean>
 				</entry>
 				<entry key="bean:name=resources">
