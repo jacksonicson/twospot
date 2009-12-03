@@ -274,14 +274,14 @@
     <init-param>
         <param-name>classdebuginfo</param-name>
         <param-value>false</param-value>
-    </init-param>
+    </init-param><!--
     
     <init-param>
         <param-name>scratchdir</param-name>
         <param-value>C:/temp/scratch</param-value>
     </init-param>
     
-    <!--  
+    --><!--  
     <init-param>
         <param-name>classpath</param-name>
         <param-value>?</param-value>

@@ -3,6 +3,7 @@ package org.prot.appserver;
 import java.security.Policy;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.datanucleus.store.hbase.HBaseUtils;
 import org.prot.app.security.HardPolicy;
@@ -29,6 +30,7 @@ public class Main
 
 		// Configure logger
 		DOMConfigurator.configure(Main.class.getResource("/etc/log4j.xml"));
+		final Logger logger = Logger.getLogger(Main.class);
 
 		// Log all startup arguments
 		ArgumentParser.dump();
@@ -54,6 +56,7 @@ public class Main
 		}
 
 		// Load the beans
+		logger.info("Using spring configuration: " + configurationFile);
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource(configurationFile, getClass()));
 
 		// Create the configuration properties

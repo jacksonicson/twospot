@@ -1,7 +1,6 @@
 package org.prot.appserver.runtime.java;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
 
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.session.SessionHandler;
@@ -18,8 +17,8 @@ public class AppDeployer extends AbstractLifeCycle
 	private HandlerCollection contexts;
 	private WebAppContext webAppContext;
 
-	private DistributedSessionManager sessionManager; 
-	
+	private DistributedSessionManager sessionManager;
+
 	public void setAppInfo(AppInfo appInfo)
 	{
 		this.appInfo = appInfo;
@@ -52,23 +51,27 @@ public class AppDeployer extends AbstractLifeCycle
 
 		// Configure the system classes (application can see this classes)
 		String[] ownSystemClasses = { "org.prot.app." };
-//		webAppContext.setSystemClasses(ownSystemClasses);
+		// webAppContext.setSystemClasses(ownSystemClasses);
 
 		// Configure the server classes (application can not see this classes)
 		String[] ownServerClasses = { "org.prot.appserver." };
-//		webAppContext.setServerClasses(ownServerClasses);
-		
+		// webAppContext.setServerClasses(ownServerClasses);
+
 		// Configure the session handler
 		SessionHandler sessionHandler = new SessionHandler(sessionManager);
 		// webAppContext.setSessionHandler(sessionHandler);
-		
+
 		webAppContext.setErrorHandler(new ErrorHandler());
-		
+
+		// Set the scratch directory for this web application
+		webAppContext.setTempDirectory(new File(Configuration.getInstance().getAppScratchDir()));
+
 		webAppContext.setExtractWAR(false);
-		webAppContext.setParentLoaderPriority(true); // Load everything from the server classpath
+		webAppContext.setParentLoaderPriority(true); // Load everything from the
+														// server classpath
 		webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
 				".*/jsp-api-[^/]*\\.jar$|.*/jsp-[^/]*\\.jar$");
-		
+
 		webAppContext.setDefaultsDescriptor("/etc/webdefault.xml");
 
 		contexts.addHandler(webAppContext);
