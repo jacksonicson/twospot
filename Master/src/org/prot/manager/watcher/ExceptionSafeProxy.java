@@ -11,6 +11,7 @@ import javax.management.MBeanServerConnection;
 import javax.management.MalformedObjectNameException;
 
 import org.apache.log4j.Logger;
+import org.prot.manager.config.Configuration;
 import org.springframework.jmx.access.MBeanProxyFactoryBean;
 import org.springframework.jmx.support.MBeanServerConnectionFactoryBean;
 
@@ -55,6 +56,11 @@ public class ExceptionSafeProxy implements InvocationHandler
 		proxy = null;
 		connection = null;
 	}
+	
+	private static final int getControllerRmiPort()
+	{
+		return Configuration.getConfiguration().getRmiControllerPort();
+	}
 
 	private void connect()
 	{
@@ -65,7 +71,7 @@ public class ExceptionSafeProxy implements InvocationHandler
 		// TODO: not static
 		try
 		{
-			connection.setServiceUrl("service:jmx:rmi:///jndi/rmi://" + address + ":2299/controller");
+			connection.setServiceUrl("service:jmx:rmi:///jndi/rmi://" + address + ":" + getControllerRmiPort() + "/controller");
 			connection.afterPropertiesSet();
 
 			proxy = new MBeanProxyFactoryBean();

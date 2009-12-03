@@ -15,8 +15,8 @@ public class Main
 		DOMConfigurator.configure(Main.class.getResource("/etc/log4j.xml"));
 
 		// Configure HBase (TODO: Make this more generic)
-		HBaseUtils.setNamespace("controller"); 		
-		
+		HBaseUtils.setNamespace("controller");
+
 		// Start spring ioc container
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring.xml", getClass()));
 

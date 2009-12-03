@@ -9,11 +9,14 @@ import org.apache.log4j.Logger;
 public class Configuration
 {
 	private static final Logger logger = Logger.getLogger(Configuration.class);
-	
+
 	private static Configuration configuration;
 
 	private Properties properties = new Properties();
-	
+
+	// Port under which the RMI registry of the Controller runs
+	private int rmiControllerPort = -1;
+
 	public static Configuration getConfiguration()
 	{
 		if (configuration == null)
@@ -29,6 +32,8 @@ public class Configuration
 		{
 			properties.load(in);
 
+			rmiControllerPort = Integer.parseInt(properties.getProperty("rmi.controller.registry.port"));
+
 		} catch (IOException e)
 		{
 			logger.error("Could not load configuration", e);
@@ -43,5 +48,10 @@ public class Configuration
 	public Properties getProperties()
 	{
 		return properties;
+	}
+
+	public int getRmiControllerPort()
+	{
+		return rmiControllerPort;
 	}
 }

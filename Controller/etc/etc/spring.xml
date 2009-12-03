@@ -109,7 +109,7 @@
 		<property name="serviceInterface"
 			value="org.prot.controller.services.user.UserService" />
 
-		<property name="registryPort" value="${rmi.registry.port}" />
+		<property name="registryPort" value="${rmi.controller.registry.port}" />
 	</bean>
 
 	<bean id="DeployServiceExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
@@ -125,7 +125,7 @@
 		<property name="serviceInterface"
 			value="org.prot.controller.services.deploy.DeployService" />
 
-		<property name="registryPort" value="${rmi.registry.port}" />
+		<property name="registryPort" value="${rmi.controller.registry.port}" />
 	</bean>
 
 	<!-- Management -->
@@ -143,7 +143,10 @@
 
 		<!-- Register the services in the local RMI registry -->
 		<property name="serviceUrl"
-			value="service:jmx:rmi:///jndi/rmi://localhost:${rmi.registry.port}/controller" />
+			value="service:jmx:rmi:///jndi/rmi://localhost:${rmi.controller.registry.port}/controller" />
+
+		<property name="threaded" value="true" />
+		<property name="daemon" value="true" />
 
 		<property name="server">
 			<ref local="MbeanServer" />
@@ -152,6 +155,8 @@
 
 	<bean id="JmxExporter" class="org.springframework.jmx.export.MBeanExporter">
 		<property name="server" ref="MbeanServer" />
+
+		<property name="registrationBehaviorName" value="REGISTRATION_REPLACE_EXISTING" />
 
 		<property name="beans">
 			<map>
@@ -182,7 +187,7 @@
 		<property name="serviceInterface"
 			value="org.prot.controller.services.controller.ControllerService" />
 
-		<property name="registryPort" value="${rmi.registry.port}" />
+		<property name="registryPort" value="${rmi.controller.registry.port}" />
 	</bean>
 
 </beans>

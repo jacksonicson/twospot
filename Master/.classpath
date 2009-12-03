@@ -13,5 +13,7 @@
 	<classpathentry kind="lib" path="/Libs/lib/zookeeper-3.2.1/zookeeper-3.2.1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Util"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Controller"/>
+	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-jms.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-tx.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
