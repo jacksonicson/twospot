@@ -13,6 +13,9 @@ public class Configuration
 	// Singleton
 	private static Configuration configuration;
 
+	// In which mode is the server running
+	private ServerMode serverMode = ServerMode.SERVER;
+
 	// Port under wich the local RMI registry is running
 	private int controllerRmiRegistryPort = -1;
 
@@ -58,23 +61,41 @@ public class Configuration
 			Configuration.configuration = new Configuration();
 
 			// Init the Configuration
-			loadConfiguration(Configuration.configuration);
+			initConfiguration(Configuration.configuration);
 		}
 
 		return Configuration.configuration;
 	}
 
-	private static void loadConfiguration(Configuration configuration)
+	private static void initConfiguration(Configuration configuration)
 	{
 		Properties props = new Properties();
 		try
 		{
+			// Load all propertie files
 			props.load(Configuration.class.getResourceAsStream("/etc/config.properties"));
-			configuration.workingDirectory = props.getProperty("appserver.working.dir");
+			props.load(Configuration.class.getResourceAsStream("/etc/appServer.properties"));
+
+			// General configuration settings
+			configuration.serverMode = ServerMode.valueOf(props.getProperty("appServer.mode"));
+			
 			configuration.pythonLibs = props.getProperty("python.lib");
 			configuration.djangoLibs = props.getProperty("python.lib.site-packages");
-			configuration.controllerRmiRegistryPort = Integer.parseInt(props
-					.getProperty("rmi.controller.registry.port"));
+			
+			switch (configuration.serverMode)
+			{
+			case SERVER:
+				configuration.workingDirectory = props.getProperty("appserver.working.dir");
+
+				configuration.controllerRmiRegistryPort = Integer.parseInt(props
+						.getProperty("rmi.controller.registry.port"));
+				break;
+
+			case DEVELOPMENT:
+				configuration.workingDirectory = props.getProperty("./work");
+				break;
+			}
+
 		} catch (IOException e)
 		{
 			logger.error("Could not load the configuration properties", e);
@@ -86,9 +107,10 @@ public class Configuration
 		}
 	}
 
-	public void finishConfiugration()
+	void finishConfiugration()
 	{
 		Configuration config = Configuration.configuration;
+		
 		config.setAppDirectory(config.getWorkingDirectory() + "/" + config.getAppId());
 		config.setAppScratchDir("C:/temp/scratch");
 	}
@@ -217,5 +239,15 @@ public class Configuration
 	public int getRmiRegistryPort()
 	{
 		return controllerRmiRegistryPort;
+	}
+
+	public ServerMode getServerMode()
+	{
+		return serverMode;
+	}
+
+	public void setServerMode(ServerMode serverMode)
+	{
+		this.serverMode = serverMode;
 	}
 }

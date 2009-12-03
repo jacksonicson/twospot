@@ -6,6 +6,7 @@ import java.util.Properties;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.datanucleus.store.hbase.HBaseUtils;
 import org.prot.app.security.HardPolicy;
+import org.prot.appserver.config.ArgumentParser;
 import org.prot.appserver.config.Configuration;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
@@ -40,8 +41,20 @@ public class Main
 		if (Configuration.getInstance().isRequiresController())
 			new Monitor();
 
-		// Create beans
-		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring.xml", getClass()));
+		// Determine which configuration to use
+		String configurationFile = null;
+		switch (Configuration.getInstance().getServerMode())
+		{
+		case DEVELOPMENT:
+			configurationFile = "/etc/spring_development.xml";
+			break;
+		case SERVER:
+			configurationFile = "/etc/spring.xml";
+			break;
+		}
+
+		// Load the beans
+		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource(configurationFile, getClass()));
 
 		// Create the configuration properties
 		Properties props = new Properties();

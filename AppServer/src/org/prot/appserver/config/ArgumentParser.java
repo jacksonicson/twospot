@@ -1,4 +1,4 @@
-package org.prot.appserver;
+package org.prot.appserver.config;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -9,29 +9,29 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Logger;
-import org.prot.appserver.config.Configuration;
 
 public class ArgumentParser
 {
-	private static CommandLine cmd = null; 
-	
+	private static CommandLine cmd = null;
+
 	public static void dump()
 	{
 		Logger logger = Logger.getLogger(ArgumentParser.class);
-		
-		if(cmd == null)
+
+		if (cmd == null)
 		{
 			logger.error("Missing starup arguments");
-			return; 
+			return;
 		}
 
-		logger.info("Startup arguments:"); 
-		for(Option option : cmd.getOptions())
+		logger.info("Startup arguments:");
+		for (Option option : cmd.getOptions())
 		{
 			logger.info(option.getOpt() + " = " + option.getValue());
 		}
 	}
-	
+
+	@SuppressWarnings("static-access")
 	public static void parseArguments(String args[])
 	{
 		Options options = new Options();
@@ -57,8 +57,13 @@ public class ArgumentParser
 
 		// Privileged applications must authenticate with the controller
 		Option authenticationToken = OptionBuilder.withArgName(
-				"authentication token for privileged applications").hasArg().create("token");
+				"authentication token used to authenticate privileged applications").hasArg().create("token");
 		options.addOption(authenticationToken);
+
+		// Location of the decompressed application (for the standalone mode)
+		Option applicationDirectory = OptionBuilder.withArgName("application directory").hasArg().create(
+				"appDir");
+		options.addOption(applicationDirectory);
 
 		try
 		{
@@ -85,10 +90,15 @@ public class ArgumentParser
 				config.setPrivileged(true);
 				config.setAuthenticationToken(cmd.getOptionValue("token"));
 			}
-			
+
+			if (cmd.hasOption("appDir"))
+			{
+				config.setAppDirectory(cmd.getOptionValue("appDir"));
+			}
+
 			// Finish the configuration process
-			config.finishConfiugration(); 
-			
+			config.finishConfiugration();
+
 		} catch (ParseException e)
 		{
 			HelpFormatter formatter = new HelpFormatter();
