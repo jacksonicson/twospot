@@ -11,19 +11,42 @@ public class LogServiceFactory
 
 	private static LogService logService;
 
+	private static LogService createLogService()
+	{
+		LogDao dao;
+		LogService logService;
+		try
+		{
+			dao = new HBaseLogDao();
+			logService = new LogService(Configuration.getInstance().getAppId(), dao);
+			return logService;
+
+		} catch (IOException e)
+		{
+			logger.error("Could not create LogService", e);
+		}
+
+		return null;
+	}
+
+	private static LogService createMockLogService()
+	{
+		LogDao dao = new MockLogDao();
+		return new LogService(Configuration.getInstance().getAppId(), dao);
+	}
+
 	public static LogService getLogService()
 	{
 		if (logService == null)
 		{
-			LogDao dao;
-			try
+			switch (Configuration.getInstance().getServerMode())
 			{
-				dao = new HBaseLogDao();
-				logService = new LogService(Configuration.getInstance().getAppId(), dao);
-				
-			} catch (IOException e)
-			{
-				logger.error("Could not create LogService", e);
+			case DEVELOPMENT:
+				logService = createMockLogService();
+				break;
+			case SERVER:
+				logService = createLogService();
+				break;
 			}
 		}
 

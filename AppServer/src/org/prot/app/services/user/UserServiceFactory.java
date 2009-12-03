@@ -51,7 +51,7 @@ public class UserServiceFactory
 		return userService;
 	}
 
-	private static UserService createDevUserService()
+	private static UserService createMockUserService()
 	{
 		return new UserService(new MockUserService());
 	}
@@ -63,7 +63,7 @@ public class UserServiceFactory
 			switch (Configuration.getInstance().getServerMode())
 			{
 			case DEVELOPMENT:
-				userService = createDevUserService();
+				userService = createMockUserService();
 				break;
 			case SERVER:
 				userService = createUserService();
