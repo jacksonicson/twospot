@@ -53,7 +53,7 @@ public class UserServiceFactory
 
 	private static UserService createDevUserService()
 	{
-		return null;
+		return new UserService(new MockUserService());
 	}
 
 	public static UserService getUserService()
