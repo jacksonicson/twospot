@@ -20,37 +20,56 @@ public class UserServiceFactory
 		return Configuration.getInstance().getRmiRegistryPort();
 	}
 
+	private static UserService createUserService()
+	{
+		UserService userService = AccessController.doPrivileged(new PrivilegedAction<UserService>()
+		{
+			public UserService run()
+			{
+				RmiProxyFactoryBean proxyFactory = new RmiProxyFactoryBean();
+				proxyFactory.setServiceInterface(org.prot.controller.services.user.UserService.class);
+				proxyFactory.setServiceUrl("rmi://" + CONTROLLER_ADDRESS + ":" + getRmiPort()
+						+ "/appserver/UserService");
+				proxyFactory.afterPropertiesSet();
+
+				Object object = proxyFactory.getObject();
+				if (object == null)
+				{
+					logger.error("Could not connect with the UserService");
+					throw new NullPointerException();
+				}
+
+				UserService userService = new UserService(
+						(org.prot.controller.services.user.UserService) object);
+
+				// Object o = userService;
+				return userService;
+			}
+
+		});
+
+		return userService;
+	}
+
+	private static UserService createDevUserService()
+	{
+		return null;
+	}
+
 	public static UserService getUserService()
 	{
 		if (userService == null)
 		{
-			Object o = AccessController.doPrivileged(new PrivilegedAction<Object>()
+			switch (Configuration.getInstance().getServerMode())
 			{
-				public Object run()
-				{
-					RmiProxyFactoryBean proxyFactory = new RmiProxyFactoryBean();
-					proxyFactory.setServiceInterface(org.prot.controller.services.user.UserService.class);
-					proxyFactory.setServiceUrl("rmi://" + CONTROLLER_ADDRESS + ":" + getRmiPort()
-							+ "/appserver/UserService");
-					proxyFactory.afterPropertiesSet();
+			case DEVELOPMENT:
+				userService = createDevUserService();
+				break;
+			case SERVER:
+				userService = createUserService();
+				break;
+			}
 
-					Object object = proxyFactory.getObject();
-					if (object == null)
-					{
-						logger.error("Could not connect with the UserService");
-						throw new NullPointerException();
-					}
-
-					UserService userService = new UserService(
-							(org.prot.controller.services.user.UserService) object);
-
-					// Object o = userService;
-					return userService;
-				}
-
-			});
-
-			userService = (UserService) o;
 		}
 
 		return userService;
