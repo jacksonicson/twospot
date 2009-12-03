@@ -21,33 +21,50 @@ public final class PlatformServiceFactory
 		return Configuration.getInstance().getRmiRegistryPort();
 	}
 
+	private static PlatformService createPlatformService()
+	{
+		DeployService deployService = AccessController.doPrivileged(new PrivilegedAction<DeployService>()
+		{
+			public DeployService run()
+			{
+				RmiProxyFactoryBean proxyFactory = new RmiProxyFactoryBean();
+				proxyFactory.setServiceInterface(DeployService.class);
+				proxyFactory.setServiceUrl("rmi://" + CONTROLLER_ADDRESS + ":" + getRmiPort()
+						+ "/appserver/DeployService");
+				proxyFactory.afterPropertiesSet();
+
+				Object object = proxyFactory.getObject();
+				if (object == null)
+				{
+					logger.error("Could not connect with the DeployService");
+					throw new NullPointerException();
+				}
+
+				return (DeployService) object;
+			}
+		});
+
+		return new PlatformService(deployService);
+	}
+
+	private static PlatformService createMockPlatformService()
+	{
+		return new PlatformService(new MockDeployService());
+	}
+
 	public static PlatformService getPlatformService()
 	{
 		if (platformService == null)
 		{
-			DeployService deployService = AccessController.doPrivileged(new PrivilegedAction<DeployService>()
+			switch (Configuration.getInstance().getServerMode())
 			{
-				public DeployService run()
-				{
-					RmiProxyFactoryBean proxyFactory = new RmiProxyFactoryBean();
-					proxyFactory.setServiceInterface(DeployService.class);
-					proxyFactory.setServiceUrl("rmi://" + CONTROLLER_ADDRESS + ":" + getRmiPort()
-							+ "/appserver/DeployService");
-					proxyFactory.afterPropertiesSet();
-
-					Object object = proxyFactory.getObject();
-					if (object == null)
-					{
-						logger.error("Could not connect with the DeployService");
-						throw new NullPointerException();
-					}
-
-					return (DeployService)object;
-				}
-
-			});
-
-			platformService = new PlatformService(deployService);
+			case DEVELOPMENT:
+				platformService = createMockPlatformService();
+				break;
+			case SERVER:
+				platformService = createPlatformService();
+				break;
+			}
 		}
 
 		return platformService;
