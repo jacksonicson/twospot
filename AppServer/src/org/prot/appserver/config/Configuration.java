@@ -92,14 +92,14 @@ public class Configuration
 			switch (configuration.serverMode)
 			{
 			case SERVER:
-				configuration.workingDirectory = props.getProperty("appserver.working.dir");
+				configuration.workingDirectory = props.getProperty("appserver.workDir");
 
 				configuration.controllerRmiRegistryPort = Integer.parseInt(props
 						.getProperty("rmi.controller.registry.port"));
 				break;
 
 			case DEVELOPMENT:
-				configuration.workingDirectory = props.getProperty("./work");
+				configuration.workingDirectory = props.getProperty("appserver.workDir");
 				break;
 			}
 
