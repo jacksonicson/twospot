@@ -131,7 +131,7 @@ public class Configuration
 		Configuration config = Configuration.configuration;
 
 		config.setAppDirectory(config.getWorkingDirectory() + "/" + config.getAppId());
-		logger.error("AppDirectory: " + config.getAppDirectory());
+		logger.info("AppDirectory: " + config.getAppDirectory());
 	}
 
 	public String getAppId()
