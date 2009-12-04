@@ -1,7 +1,6 @@
 package org.prot.appserver;
 
 import java.security.Policy;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -66,13 +65,9 @@ public class Main
 		logger.info("Using spring configuration: " + configurationFile);
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource(configurationFile, getClass()));
 
-		// Create the configuration properties
-		Properties props = new Properties();
-		props.setProperty("appId", Configuration.getInstance().getAppId());
-
 		// Postprocess the factory
 		PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
-		configurer.setProperties(props);
+		configurer.setProperties(Configuration.getProperties());
 		configurer.postProcessBeanFactory(factory);
 
 		// Get the beans

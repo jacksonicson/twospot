@@ -13,6 +13,9 @@ public class Configuration
 	// Singleton
 	private static Configuration configuration;
 
+	// Merged properties from all configuration files
+	private final static Properties properties = new Properties();
+
 	// In which mode is the server running
 	private ServerMode serverMode = ServerMode.SERVER;
 
@@ -77,35 +80,34 @@ public class Configuration
 
 	private static void initConfiguration(Configuration configuration)
 	{
-		Properties props = new Properties();
 		try
 		{
 			// Load all propertie files
-			props.load(Configuration.class.getResourceAsStream("/etc/config.properties"));
-			props.load(Configuration.class.getResourceAsStream("/etc/appServer.properties"));
+			properties.load(Configuration.class.getResourceAsStream("/etc/config.properties"));
+			properties.load(Configuration.class.getResourceAsStream("/etc/appServer.properties"));
 
 			// General configuration settings
-			configuration.serverMode = ServerMode.valueOf(props.getProperty("appServer.mode"));
+			configuration.serverMode = ServerMode.valueOf(properties.getProperty("appServer.mode"));
 
-			configuration.pythonLibs = props.getProperty("python.lib");
-			configuration.djangoLibs = props.getProperty("python.lib.site-packages");
+			configuration.pythonLibs = properties.getProperty("python.lib");
+			configuration.djangoLibs = properties.getProperty("python.lib.site-packages");
 
-			configuration.appScratchDir = props.getProperty("appServer.scratchdir");
+			configuration.appScratchDir = properties.getProperty("appServer.scratchdir");
 
-			configuration.dosPreventionTime = Long.parseLong(props
+			configuration.dosPreventionTime = Long.parseLong(properties
 					.getProperty("appServer.security.DOSPrevention.time"));
 
 			switch (configuration.serverMode)
 			{
 			case SERVER:
-				configuration.workingDirectory = props.getProperty("appserver.workDir");
+				configuration.workingDirectory = properties.getProperty("appserver.workDir");
 
-				configuration.controllerRmiRegistryPort = Integer.parseInt(props
+				configuration.controllerRmiRegistryPort = Integer.parseInt(properties
 						.getProperty("rmi.controller.registry.port"));
 				break;
 
 			case DEVELOPMENT:
-				configuration.workingDirectory = props.getProperty("appserver.workDir");
+				configuration.workingDirectory = properties.getProperty("appserver.workDir");
 				break;
 			}
 
@@ -272,5 +274,9 @@ public class Configuration
 	{
 		return dosPreventionTime;
 	}
-	
+
+	public static Properties getProperties()
+	{
+		return properties;
+	}
 }

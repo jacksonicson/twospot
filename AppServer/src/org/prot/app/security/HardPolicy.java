@@ -13,6 +13,7 @@ import java.security.Policy;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.PropertyPermission;
 
 import org.apache.log4j.Logger;
@@ -36,7 +37,8 @@ public class HardPolicy extends Policy
 	{
 		CodeSigner[] signer = null;
 
-		URL urlJava = new URL("file:/C:/Program%20Files%20(x86)/Java/jre6/lib/-");
+		URL urlJava = new URL(Configuration.getInstance().getProperties().getProperty(
+				"appServer.security.manager.java.url"));
 		csJava = new CodeSource(urlJava, signer);
 		logger.info("CodeSource java: " + urlJava);
 
@@ -54,8 +56,11 @@ public class HardPolicy extends Policy
 
 	private final void createGlobalPermissions()
 	{
-		globalPermission.add(new FilePermission("C:/Program Files(x86)/Java/jdk1.6.0_14/-", "read"));
-		globalPermission.add(new FilePermission("D:/work/mscWolke/trunk/dev/Libs/-", "read"));
+		Properties props = Configuration.getInstance().getProperties();
+		globalPermission.add(new FilePermission(props.getProperty("appServer.security.manager.java.dir"),
+				"read"));
+		globalPermission.add(new FilePermission(props.getProperty("appserver.security.manager.server"),
+				"read"));
 	}
 
 	private final void createJavaProtectionDomain()
