@@ -2,6 +2,7 @@ package org.prot.appserver.runtime.java;
 
 import java.io.File;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.util.component.AbstractLifeCycle;
@@ -11,7 +12,8 @@ import org.prot.appserver.config.Configuration;
 
 public class AppDeployer extends AbstractLifeCycle
 {
-	@SuppressWarnings("unused")
+	private static final Logger logger = Logger.getLogger(AppDeployer.class);
+
 	private AppInfo appInfo;
 
 	private HandlerCollection contexts;
@@ -51,15 +53,22 @@ public class AppDeployer extends AbstractLifeCycle
 
 		// Configure the system classes (application can see this classes)
 		String[] ownSystemClasses = { "org.prot.app." };
+		// TODO
 		// webAppContext.setSystemClasses(ownSystemClasses);
 
 		// Configure the server classes (application can not see this classes)
 		String[] ownServerClasses = { "org.prot.appserver." };
+		// TODO
 		// webAppContext.setServerClasses(ownServerClasses);
 
-		// Configure the session handler
-		SessionHandler sessionHandler = new SessionHandler(sessionManager);
-		// webAppContext.setSessionHandler(sessionHandler);
+		// Configure the session handler (Depends on the app configuration)
+		JavaConfiguration configuration = (JavaConfiguration) appInfo.getRuntimeConfiguration();
+		if (configuration.isUseDistributedSessions())
+		{
+			SessionHandler sessionHandler = new SessionHandler(sessionManager);
+			webAppContext.setSessionHandler(sessionHandler);
+			logger.info("Using distributed sesssion manager");
+		}
 
 		webAppContext.setErrorHandler(new ErrorHandler());
 
@@ -68,7 +77,7 @@ public class AppDeployer extends AbstractLifeCycle
 
 		webAppContext.setExtractWAR(false);
 		webAppContext.setParentLoaderPriority(true); // Load everything from the
-														// server classpath
+		// server classpath
 		webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
 				".*/jsp-api-[^/]*\\.jar$|.*/jsp-[^/]*\\.jar$");
 
