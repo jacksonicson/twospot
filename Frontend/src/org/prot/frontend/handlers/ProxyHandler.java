@@ -39,7 +39,7 @@ public class ProxyHandler extends AbstractHandler
 			HttpServletResponse response) throws IOException, ServletException
 	{
 
-		// Extract the appid from the url
+		// Extract the AppId from the url
 		String appId = AppIdExtractor.fromDomain(request.getRequestURL().toString());
 
 		if (appId == null)
@@ -59,8 +59,8 @@ public class ProxyHandler extends AbstractHandler
 			// Cache missed
 			if (info == null)
 			{
-				// Ask the manager and cache the controller
-				Set<ControllerInfo> infoset = frontendService.selectController(appId); 
+				// Ask the manager and cache the result
+				Set<ControllerInfo> infoset = frontendService.selectController(appId);
 				if (infoset != null && infoset.size() > 0)
 				{
 					appCache.cacheController(appId, infoset.iterator().next());
@@ -68,7 +68,7 @@ public class ProxyHandler extends AbstractHandler
 				} else
 				{
 					response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
-							"Manager unreachable or did not return a Controller");
+							"Manager unreachable, did not return a Controller or the AppId is unknown.");
 					baseRequest.setHandled(true);
 					return;
 				}
