@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="package" name="AppServer">
+
+	<property name="zipfile" value="twospot.zip" />
+
+	<property name="AppServer" value="../AppServer" />
+	<property name="Tools" value="../Tools" />
+	<property name="Controller" value="../Controller" />
+	<property name="Libs" value="../Libs" />
+	<property name="Util" value="../Util" />
+
+	<property name="tmpdir" value="${AppServer}/tmp" />
+	<property name="bindir" value="${AppServer}/bin" />
+
+	<target name="package">
+		<mkdir dir="${tmpdir}" />
+		<copy todir="${tmpdir}" overwrite="true">
+			<fileset dir="${bindir}" />
+		</copy>
+		
+		<copy todir="${tmpdir}" overwrite="false">
+			<fileset dir="${Controller}/bin" />
+			<fileset dir="${Util}/bin" />
+			<fileset dir="${Tools}/src" />
+			<fileset file="${Controller}/tools/classpath.txt" />
+		</copy>
+		
+		<copy todir="${tmpdir}/Libs">
+			<fileset dir="${Libs}" />
+		</copy>
+		
+		<delete file="${tmpdir}/etc/appServer.properties" />
+		<rename dest="${tmpdir}/etc/appServer.properties" src="${tmpdir}/etc/appServer.properties_dev" />
+
+		<zip destfile="${zipfile}">
+			<fileset dir="${tmpdir}" />
+		</zip>
+
+		<delete dir="${tmpdir}" />
+	</target>
+
+</project>
