@@ -7,6 +7,18 @@ import urllib
 import yaml
 import zipfile
 
+###########################################
+# Properties (TODO: This is the portal app)
+###########################################
+
+SERVER = 'localhost'
+PORT = 6060
+TIMEOUT = 10
+
+###########################################
+###########################################
+
+
 class InvalidDirectory(Exception):
     def __init__(self, value):
         self.value = value
@@ -36,17 +48,12 @@ class AuthenticationFailed(Exception):
     def __str__(self):
         return repr(self.value)
 
+
+
 def parseAppYaml(pathToYaml):
     file = open(pathToYaml, "r")
     result = yaml.load(file)
     return result; 
-
-
-
-# Properties (TODO: This is the portal app)
-SERVER = 'localhost'
-PORT = 9090
-TIMEOUT = 10
 
 
 
@@ -192,6 +199,70 @@ def createProject(directory, projectType, projectName):
     file.writelines(yaml)
     file.close; 
     
+    
+
+def runServer(directory):
+    print "Running server with: %s" % directory 
+    
+    # Check the directory and parse the YAML-Configuration
+    yaml = testApp(directory)
+    appId = yaml["appId"]
+
+    # Extract the working directory
+    index = directory.find(appId)
+    directory = directory[0:index]
+    
+    # Launch the server process
+    # -appId ff2 -appSrvPort 9090 -stdio true -controller false -workDir C:/temp/tests/
+    appSrvPort = '8080'
+    stdio = 'true'
+    controller = 'false'
+    workDir = directory
+
+    # Load the classpath from classpath.txt
+    file = open(sys.path[0] + "/classpath.txt", "r")
+    lines = file.readlines()
+    classpath = ".;"
+    for line in lines:
+        line = line.replace("\n", "")
+        classpath += "." + line + ";"
+
+    # Main-Class
+    javaMain = "org.prot.appserver.Main"
+
+    # Configure the server params
+    params = []
+    params.append('java')
+    params.append('-classpath')
+    params.append(classpath)
+    
+    # Java main
+    params.append(javaMain);
+    
+    # Application parameters
+    params.append('-appId')
+    params.append(appId)
+    
+    params.append('-appSrvPort')
+    params.append(appSrvPort)
+    
+    params.append('-stdio')
+    params.append(stdio)
+    
+    params.append('-controller')
+    params.append(controller)
+    
+    params.append('-workDir')
+    params.append(workDir)
+    
+    # Print the params before starting
+    print params
+    
+    # Replace the own process with the AppServer-process
+    print "executing in: %s" % sys.path[0]
+    os.chdir(sys.path[0])
+    os.execvp("java", params)
+    
 
 
 def main(args):
@@ -202,10 +273,14 @@ def main(args):
 #    args.append("--deploy")
     
     parser = OptionParser()
-    parser.add_option("--dir", action="store", type="string",)
+    parser.add_option("--runServer", action="store_true", dest="runServer");
+    
     parser.add_option("--createProject", action="store", dest="projectName")
     parser.add_option("--type", action="store", type="string", dest="projectType")
+    
     parser.add_option("--deploy", action="store_true", dest="deploy")
+    
+    parser.add_option("--dir", action="store", type="string",)
     parser.add_option("--server", action="store", dest="server")
     
     # Parse the command line 
@@ -234,6 +309,9 @@ def main(args):
     
     elif options.deploy:
         deploy(options.dir)
+        
+    elif options.runServer:
+        runServer(options.dir)
         
     else:
         parser.error("Invalid operation")
