@@ -53,6 +53,27 @@ public class JavaRuntime implements AppRuntime
 	@Override
 	public void loadConfiguration(AppInfo appInfo, Map<?, ?> yaml)
 	{
-		// Empty
+		// Create a specific java configuration
+		JavaConfiguration configuration = new JavaConfiguration();
+		appInfo.setRuntimeConfiguration(configuration);
+
+		// Default - do not use distributed sessions
+		configuration.setUseDistributedSessions(false);
+
+		// Check if the distributed sessions are configured
+		String distSession = (String) yaml.get("distSession");
+		if (distSession != null)
+		{
+			try
+			{
+				configuration.setUseDistributedSessions(Boolean.parseBoolean(distSession));
+			} catch (NumberFormatException e)
+			{
+				logger.error("Could not parse configuration");
+				System.exit(1);
+			}
+		}
+
+		logger.debug("Using distributed sessions: " + configuration.isUseDistributedSessions());
 	}
 }

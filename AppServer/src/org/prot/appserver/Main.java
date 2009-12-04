@@ -1,6 +1,7 @@
 package org.prot.appserver;
 
 import java.security.Policy;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -66,8 +67,10 @@ public class Main
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource(configurationFile, getClass()));
 
 		// Postprocess the factory
+		Properties props = Configuration.getInstance().getProperties();
+		props.setProperty("appId", Configuration.getInstance().getAppId());
 		PropertyPlaceholderConfigurer configurer = new PropertyPlaceholderConfigurer();
-		configurer.setProperties(Configuration.getProperties());
+		configurer.setProperties(props);
 		configurer.postProcessBeanFactory(factory);
 
 		// Get the beans
