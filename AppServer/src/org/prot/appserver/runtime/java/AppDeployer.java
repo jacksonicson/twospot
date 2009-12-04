@@ -53,13 +53,11 @@ public class AppDeployer extends AbstractLifeCycle
 
 		// Configure the system classes (application can see this classes)
 		String[] ownSystemClasses = { "org.prot.app." };
-		// TODO
-		// webAppContext.setSystemClasses(ownSystemClasses);
+		webAppContext.setSystemClasses(ownSystemClasses);
 
 		// Configure the server classes (application can not see this classes)
 		String[] ownServerClasses = { "org.prot.appserver." };
-		// TODO
-		// webAppContext.setServerClasses(ownServerClasses);
+		webAppContext.setServerClasses(ownServerClasses);
 
 		// Configure the session handler (Depends on the app configuration)
 		JavaConfiguration configuration = (JavaConfiguration) appInfo.getRuntimeConfiguration();
