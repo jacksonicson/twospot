@@ -56,7 +56,6 @@ public class HardPolicy extends Policy
 	{
 		globalPermission.add(new FilePermission("C:/Program Files(x86)/Java/jdk1.6.0_14/-", "read"));
 		globalPermission.add(new FilePermission("D:/work/mscWolke/trunk/dev/Libs/-", "read"));
-		globalPermission.add(new FilePermission("D:/work/mscWolke/trunk/dev/HbasePlugin/-", "read"));
 	}
 
 	private final void createJavaProtectionDomain()
@@ -84,7 +83,7 @@ public class HardPolicy extends Policy
 		AsPermissionCollection appPermissions = new AsPermissionCollection();
 
 		// TODO: Critial permissios which should not be granted
-		logger.info("AppDIr. " + Configuration.getInstance().getAppDirectory() + "/-");
+		logger.info("AppDir: " + Configuration.getInstance().getAppDirectory() + "/-");
 
 		appPermissions.add(new FilePermission(Configuration.getInstance().getAppDirectory() + "/-", "read"));
 		appPermissions.add(new FilePermission(Configuration.getInstance().getAppScratchDir() + "/-",

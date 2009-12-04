@@ -9,6 +9,7 @@ import org.datanucleus.store.hbase.HBaseUtils;
 import org.prot.app.security.HardPolicy;
 import org.prot.appserver.config.ArgumentParser;
 import org.prot.appserver.config.Configuration;
+import org.prot.appserver.config.ServerMode;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -17,11 +18,17 @@ public class Main
 {
 	public Main()
 	{
-		// Start the security manager
-		HardPolicy policy = new HardPolicy();
-		policy.refresh();
-		Policy.setPolicy(policy);
-		System.setSecurityManager(new SecurityManager());
+		// Load basic configuration settings
+		Configuration.getInstance();
+
+		// Start the security manager (only in server mode)
+		if (Configuration.getInstance().getServerMode() == ServerMode.SERVER)
+		{
+			HardPolicy policy = new HardPolicy();
+			policy.refresh();
+			Policy.setPolicy(policy);
+			System.setSecurityManager(new SecurityManager());
+		}
 
 		// Start the IODirector
 		IODirector ioDirector = new IODirector();
