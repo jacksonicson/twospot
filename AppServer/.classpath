@@ -64,5 +64,7 @@
 	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-webmvc.jar"/>
 	<classpathentry kind="lib" path="/Libs/gen/hbaseplugin.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/zookeeper-3.2.1/zookeeper-3.2.1.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/h2-1.2.123/h2-1.2.123.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-rdbms-2.0.0-m2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

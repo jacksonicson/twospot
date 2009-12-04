@@ -34,8 +34,9 @@ public class JavaRuntime implements AppRuntime
 		SelectChannelConnector connector = (SelectChannelConnector) factory.getBean("Connector");
 		connector.setPort(Configuration.getInstance().getAppServerPort());
 
-		// Deployer
+		// Load and init AppDeployer
 		AppDeployer deployer = (AppDeployer) factory.getBean("AppDeployer");
+		deployer.setAppInfo(appInfo);
 
 		// Start server
 		Server server = (Server) factory.getBean("Server");
