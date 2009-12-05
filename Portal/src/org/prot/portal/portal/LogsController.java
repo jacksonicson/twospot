@@ -17,7 +17,7 @@ public class LogsController implements Controller
 	{
 		String appId = request.getParameter("appId");
 
-		List<String> messages = LogServiceFactory.getLogService().getMessages(-1);
+		List<String> messages = LogServiceFactory.getLogService().getMessages(appId, -1);
 
 		return new ModelAndView("logs", "logMessages", messages);
 	}

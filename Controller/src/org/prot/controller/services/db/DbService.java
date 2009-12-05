@@ -7,9 +7,6 @@ import org.prot.controller.services.PrivilegedAppServer;
 public interface DbService
 {
 	@PrivilegedAppServer
-	public List<String> getLogs(String token, String appId);
-
-	@PrivilegedAppServer
 	public List<String> getTables(String token, String appId);
 
 	@PrivilegedAppServer

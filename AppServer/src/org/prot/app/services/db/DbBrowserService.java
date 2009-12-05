@@ -51,7 +51,7 @@ public final class DbBrowserService
 			return null;
 		}
 
-		return dbService.getTableData(Configuration.getInstance().getAuthenticationToken(), tableName, startKey,
-				count);
+		return dbService.getTableData(Configuration.getInstance().getAuthenticationToken(), tableName,
+				startKey, count);
 	}
 }

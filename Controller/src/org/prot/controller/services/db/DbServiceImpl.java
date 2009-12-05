@@ -11,15 +11,6 @@ public class DbServiceImpl implements DbService
 	private DbDao dbDao;
 
 	@Override
-	public List<String> getLogs(String token, String appId)
-	{
-		if (appManager.checkToken(token) == false)
-			return null;
-
-		return null;
-	}
-
-	@Override
 	public DataTablet getTableData(String token, String tableName, String startKey, long count)
 	{
 		if (appManager.checkToken(token) == false)

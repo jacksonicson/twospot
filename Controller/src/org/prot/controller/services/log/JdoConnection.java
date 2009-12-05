@@ -1,4 +1,4 @@
-package org.prot.app.services.log;
+package org.prot.controller.services.log;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;

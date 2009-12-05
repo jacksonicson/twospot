@@ -1,11 +1,6 @@
 package org.prot.app.services.log;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
 
 import org.apache.log4j.Logger;
 import org.prot.appserver.config.Configuration;
@@ -14,58 +9,24 @@ public final class LogService
 {
 	private static final Logger logger = Logger.getLogger(LogService.class);
 
-	private final String appId;
+	private final org.prot.controller.services.log.LogService logService;
 
-	private JdoConnection connection;
-
-	LogService()
+	LogService(org.prot.controller.services.log.LogService logService)
 	{
-		this.appId = Configuration.getInstance().getAppId();
-		this.connection = new JdoConnection();
-		this.connection.init();
+		this.logService = logService;
 	}
 
 	private void log(String message, int severity)
 	{
-		PersistenceManager pm = this.connection.getPersistenceManager();
-		Transaction tx = pm.currentTransaction();
-
-		LogMessage log = new LogMessage();
-		log.setAppId(appId);
-		log.setMessage(message);
-		log.setSeverity(0);
-
-		try
-		{
-			tx.begin();
-			pm.makePersistent(log);
-			tx.commit();
-		} catch (Exception e)
-		{
-			tx.rollback();
-			logger.error("Could not write log message" + e);
-		}
+		String token = Configuration.getInstance().getAuthenticationToken();
+		String appId = Configuration.getInstance().getAppId();
+		logService.log(token, appId, message, severity);
 	}
 
-	public List<String> getMessages(int severity)
+	public List<String> getMessages(String appId, int severity)
 	{
-		PersistenceManager pm = this.connection.getPersistenceManager();
-		Transaction tx = pm.currentTransaction();
-
-		Query query = pm.newQuery(LogMessage.class);
-		if (severity != -1)
-		{
-			query.setFilter("severity == " + severity);
-		}
-
-		List<LogMessage> logs = (List<LogMessage>) query.execute();
-		List<String> messages = new ArrayList<String>();
-		for (LogMessage message : logs)
-		{
-			messages.add(message.getMessage());
-		}
-
-		return messages;
+		String token = Configuration.getInstance().getAuthenticationToken();
+		return logService.getMessages(token, appId, severity);
 	}
 
 	public void debug(String message)

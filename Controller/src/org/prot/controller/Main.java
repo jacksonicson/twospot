@@ -37,6 +37,7 @@ public class Main
 		factory.getBean("DeployServiceExporter");
 		factory.getBean("UserServiceExporter");
 		factory.getBean("DbServiceExporter");
+		factory.getBean("LogServiceExporter");
 
 		// Start Management
 		factory.getBean("AppServerWatcher");

@@ -22,7 +22,6 @@ public class DbBrowserController implements Controller
 			throws Exception
 	{
 		String appId = request.getParameter("appId");
-		appId = "portal"; // DEBUG
 
 		DbQueryCommand queryCommand = new DbQueryCommand();
 		queryCommand.setAppId(appId);
@@ -30,8 +29,8 @@ public class DbBrowserController implements Controller
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("queryCommand", queryCommand);
 
-		DbBrowserService dbService = DbBrowserServiceFactory.getDbBrowserService(); 
-		
+		DbBrowserService dbService = DbBrowserServiceFactory.getDbBrowserService();
+
 		List<String> tables = dbService.getTables(appId);
 		model.put("tableList", tables);
 		return new ModelAndView("dbBrowser", model);
