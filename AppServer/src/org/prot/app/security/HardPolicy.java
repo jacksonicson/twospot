@@ -33,12 +33,67 @@ public class HardPolicy extends Policy
 
 	private List<ProtectionDomain> pds = new ArrayList<ProtectionDomain>();
 
+	private final URL getJavaUrl() throws MalformedURLException
+	{
+		Properties props = Configuration.getProperties();
+
+		String javaUrl = props.getProperty("appServer.security.manager.java.url");
+		if (javaUrl == null)
+		{
+			// Autodetecting the java directory
+			javaUrl = "file:/" + System.getProperty("java.home") + "/lib/-";
+			// Replace all backslashes with slashes
+			javaUrl = javaUrl.replace('\\', '/');
+			// Replace all whitespaces with %20 (URL)
+			javaUrl = javaUrl.replaceAll("\\s", "%20");
+		}
+
+		logger.info("Using java url: " + javaUrl);
+
+		return new URL(javaUrl);
+	}
+
+	private final String getJavaDir()
+	{
+		Properties props = Configuration.getProperties();
+
+		String javaDir = props.getProperty("appServer.security.manager.java.dir");
+		if (javaDir == null)
+		{
+			javaDir = System.getProperty("java.home") + "/-";
+
+			// Replace all backslashes with slashes
+			javaDir = javaDir.replace('\\', '/');
+		}
+
+		logger.info("Using java dir: " + javaDir);
+
+		return javaDir;
+	}
+
+	private final String getLibsDir()
+	{
+		Properties props = Configuration.getProperties();
+
+		String libsDir = props.getProperty("appserver.security.manager.server");
+		if (libsDir == null)
+		{
+			libsDir = System.getProperty("user.dir") + "/../Libs/-";
+
+			// Replace all backslashes with slashes
+			libsDir = libsDir.replace('\\', '/');
+		}
+
+		logger.info("Using libs dir: " + libsDir);
+
+		return libsDir;
+	}
+
 	private final void createCodeSources() throws MalformedURLException
 	{
 		CodeSigner[] signer = null;
 
-		URL urlJava = new URL(Configuration.getInstance().getProperties().getProperty(
-				"appServer.security.manager.java.url"));
+		URL urlJava = getJavaUrl();
 		csJava = new CodeSource(urlJava, signer);
 		logger.info("CodeSource java: " + urlJava);
 
@@ -56,11 +111,8 @@ public class HardPolicy extends Policy
 
 	private final void createGlobalPermissions()
 	{
-		Properties props = Configuration.getInstance().getProperties();
-		globalPermission.add(new FilePermission(props.getProperty("appServer.security.manager.java.dir"),
-				"read"));
-		globalPermission.add(new FilePermission(props.getProperty("appserver.security.manager.server"),
-				"read"));
+		globalPermission.add(new FilePermission(getJavaDir(), "read"));
+		globalPermission.add(new FilePermission(getLibsDir(), "read"));
 	}
 
 	private final void createJavaProtectionDomain()
