@@ -23,9 +23,9 @@
 			<classpath refid="classpath" />
 		</javac>
 
-		<copy todir="${build}">
+		<!--<copy todir="${build}">
 			<fileset dir="${etc}" />
-		</copy>
+		</copy>-->
 	</target>
 
 	<target name="package" depends="build">

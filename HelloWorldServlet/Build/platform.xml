@@ -15,6 +15,27 @@
 			</fileset>
 		</copy>
 
+		<!-- copy the configuration (etc) -->
+		<mkdir dir="${dest}/conf" />
+		<copy todir="${dest}/conf/util">
+			<fileset dir="../Util/etc/" />
+		</copy>
+		<copy todir="${dest}/conf/appserver">
+			<fileset dir="../AppServer/etc/" />
+		</copy>
+		<copy todir="${dest}/conf/controller">
+			<fileset dir="../Controller/etc/" />
+		</copy>
+		<copy todir="${dest}/conf/frontend">
+			<fileset dir="../Frontend/etc/" />
+		</copy>
+		<copy todir="${dest}/conf/master">
+			<fileset dir="../Master/etc/" />
+		</copy>
+		<copy todir="${dest}/conf/fileserver">
+			<fileset dir="../HttpFileServer/etc/" />
+		</copy>
+
 		<!-- copy the classpath -->
 		<copyfile src="../AppServer/classpath.txt" dest="${dest}/appserver_classpath.txt" />
 		<copyfile src="../Controller/classpath.txt" dest="${dest}/controller_classpath.txt" />
