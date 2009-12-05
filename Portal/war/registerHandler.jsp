@@ -10,11 +10,15 @@
 </head>
 <body>
 
-<p>Register:</p>
+<p>Navigation</p>
+<ul>
+     <li><a href="/start.htm">Start</a></li>
+</ul>
 
-<form:form action="registerHandler.htm" method="POST" commandName="registerCommand">
-
- <table>
+<p>Register</p>
+<form:form action="registerHandler.htm" method="POST"
+     commandName="registerCommand">
+     <table>
           <tr>
                <td>Username: <form:errors path="username" /></td>
                <td><form:input path="username" size="15" /></td>
@@ -43,8 +47,6 @@
                <td colspan="2"><input type="submit" value="Ok" /></td>
           </tr>
      </table>
-
-
 </form:form>
 
 

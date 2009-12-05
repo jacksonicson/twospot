@@ -10,17 +10,24 @@
 </head>
 <body>
 
-Create a new Application:
-<form:form action="registerApp.htm" method="POST" commandName="registerAppCommand">
-<table>
-     <tr>
-          <td>AppId: <form:errors path="appId" /></td>
-          <td><form:input path="appId" /></td>
-     </tr>
-     <tr>
-          <td colspan="2"><input type="submit" value="Ok" /></td>
-     </tr>
-</table>
+<p>Navigation</p>
+<ul>
+     <li><a href="/portal.htm">Portal</a></li>
+     <li><a href="/logout.htm">Logout</a></li>
+</ul>
+
+<p>Create a new Application</p>
+<form:form action="/registerApp.htm" method="POST"
+     commandName="registerAppCommand">
+     <table>
+          <tr>
+               <td>AppId<form:errors path="appId" /></td>
+               <td><form:input path="appId" /></td>
+          </tr>
+          <tr>
+               <td colspan="2"><input type="submit" value="Ok" /></td>
+          </tr>
+     </table>
 </form:form>
 
 

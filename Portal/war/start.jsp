@@ -7,8 +7,14 @@
 </head>
 <body>
 
-* <a href="login.htm">Login</a>
-* <a href="registerHandler.htm">Register</a>
+<h1>Twospot portal</h1>
+
+<h2>Navigation</h2>
+<ul>
+     <li><a href="/">Twospot</a></li>
+     <li><a href="/login.htm">Login</a></li>
+     <li><a href="/registerHandler.htm">Register</a></li>
+</ul>
 
 </body>
 </html>

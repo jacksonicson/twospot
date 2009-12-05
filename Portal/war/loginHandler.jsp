@@ -10,8 +10,9 @@
 </head>
 <body>
 
-<p>Register:</p>
+<p>Twospot login system</p>
 
+<p>Login</p>
 <form:form action="loginHandler.htm" method="POST" commandName="loginCommand">
      <form:hidden path="redirectUrl" />
 
@@ -33,9 +34,11 @@
                <td colspan="2"><input type="submit" value="Post" /></td>
           </tr>
      </table>
-
 </form:form>
 
+<ul>
+     <li><a href="/start.htm">Back</a></li>
+</ul>
 
 </body>
 </html>

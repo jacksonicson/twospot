@@ -11,14 +11,15 @@
 </head>
 <body>
 
-Portal-Start page *
-<a href="logout.htm">Logout</a>
-*
-<a href="registerApp.htm">Create a new App</a>
+<h1>Twospot portal</h1>
 
-<br />
+<h2>Navigation</h2>
+<ul>
+     <li><a href="logout.htm">Logout</a></li>
+     <li><a href="registerApp.htm">Create a new App</a></li>
+</ul>
 
-Applications
+<h2>Registered apps</h2>
 <ul>
      <c:forEach var="appId" items="${appIds}">
           <li><a href="/app.htm?appId=${appId}">${appId}</a></li>
