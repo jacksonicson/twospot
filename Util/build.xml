@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="all" name="Util">
+
+	<import file="./classpath.xml" />
+
+	<property name="jar" value="twospot-util.jar" />
+
+	<property name="src" value="./src" />
+	<property name="etc" value="./etc" />
+	<property name="build" value="./build" />
+
+	<target name="prepare">
+		<mkdir dir="${build}" />
+	</target>
+
+	<target name="cleanup">
+		<delete dir="${build}" />
+	</target>
+
+	<target name="build" depends="prepare">
+		<javac srcdir="${src}" destdir="${build}">
+			<classpath refid="classpath" />
+		</javac>
+
+		<copy todir="${build}">
+			<fileset dir="${etc}" />
+		</copy>
+	</target>
+
+	<target name="package" depends="build">
+		<jar destfile="${jar}">
+			<fileset dir="${build}" />
+		</jar>
+	</target>
+
+	<target name="mkcp">
+		<exec executable="python">
+			<arg value="buildclasspath.py" />
+		</exec>
+	</target>
+
+	<target name="all" depends="mkcp,package,cleanup" />
+
+</project>
