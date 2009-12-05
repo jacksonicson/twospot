@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="all" name="Util">
+<project basedir="." default="all" name="Controller">
 
-	<import file="./classpath.xml" />
+	<import id="" file="./classpath.xml" />
 
-	<property name="jar" value="twospot-util.jar" />
+	<property name="jar" value="twospot-controller.jar" />
 
 	<property name="src" value="./src" />
 	<property name="etc" value="./etc" />
