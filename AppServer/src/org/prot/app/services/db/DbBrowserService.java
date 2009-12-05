@@ -1,6 +1,5 @@
 package org.prot.app.services.db;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -29,11 +28,6 @@ public final class DbBrowserService
 			this.userService = UserServiceFactory.getUserService();
 
 		return this.userService;
-	}
-
-	public List<String> getLogs(String appId)
-	{
-		return new ArrayList<String>();
 	}
 
 	public List<String> getTables(String appId)
