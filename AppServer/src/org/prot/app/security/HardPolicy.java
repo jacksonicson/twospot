@@ -78,10 +78,13 @@ public class HardPolicy extends Policy
 		String libsDir = props.getProperty("appserver.security.manager.server");
 		if (libsDir == null)
 		{
-			libsDir = System.getProperty("user.dir") + "/../Libs/-";
+			libsDir = System.getProperty("user.dir");
 
 			// Replace all backslashes with slashes
 			libsDir = libsDir.replace('\\', '/');
+
+			libsDir = libsDir.replaceAll("/AppServer", "");
+			libsDir = libsDir + "/Libs/-";
 		}
 
 		logger.info("Using libs dir: " + libsDir);
@@ -211,10 +214,12 @@ public class HardPolicy extends Policy
 			{
 				if (pd.implies(permission))
 					return true;
+				else
+					logger.warn("Permission not granted: " + permission + " on: " + cs.getLocation());
 			}
 		}
 
-		logger.debug("Permission not granted: " + permission + " on: " + cs.getLocation());
+		logger.warn("Permission not granted: " + permission + " on: " + cs.getLocation());
 		return true;
 	}
 }
