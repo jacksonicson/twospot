@@ -22,7 +22,7 @@ public class AppConfigurer
 
 	private RuntimeRegistry runtimeRegistry;
 
-	public AppInfo configure(String appDirectory, RuntimeConfigurer rtConfig) throws ConfigurationException
+	public AppInfo configure(String appDirectory) throws ConfigurationException
 	{
 		try
 		{

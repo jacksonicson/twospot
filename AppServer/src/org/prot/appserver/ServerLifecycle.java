@@ -37,7 +37,6 @@ public class ServerLifecycle
 		loadApp();
 		extractApp();
 		configure();
-		startManagement();
 		launchRuntime();
 	}
 
@@ -70,20 +69,16 @@ public class ServerLifecycle
 	{
 		logger.info("Loading app configuration");
 
-		// Configure
 		try
 		{
-			this.appInfo = appConfigurer.configure(configuration.getAppDirectory(), null);
+			// Does the general configuration and calls the runtime specific
+			// configuerer
+			this.appInfo = appConfigurer.configure(configuration.getAppDirectory());
 		} catch (ConfigurationException e)
 		{
 			logger.error("Configuration failed", e);
 			System.exit(1);
 		}
-	}
-
-	public void startManagement()
-	{
-		// TODO: Start and register the JMX-Beans here
 	}
 
 	public void launchRuntime()

@@ -16,6 +16,9 @@ public class Configuration
 	// Configuration
 	private Properties properties = new Properties();
 
+	// Domain plus port under which the platform is running
+	private String platformDomain;
+
 	// Port on which the Controller listens
 	private int controllerPort = -1;
 
@@ -37,6 +40,7 @@ public class Configuration
 			properties.load(in);
 
 			this.controllerPort = Integer.parseInt(properties.getProperty("http.controller.port"));
+			this.platformDomain = properties.getProperty("platform.domain");
 
 		} catch (IOException e)
 		{
@@ -57,5 +61,10 @@ public class Configuration
 	public int getControllerPort()
 	{
 		return controllerPort;
+	}
+
+	public String getPlatformDomain()
+	{
+		return platformDomain;
 	}
 }

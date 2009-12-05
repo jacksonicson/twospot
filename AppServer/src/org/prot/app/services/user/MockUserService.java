@@ -18,7 +18,7 @@ public class MockUserService implements UserService
 	}
 
 	@Override
-	public String getLoginUrl(String redirectUrl)
+	public String getLoginUrl(String redirectUrl, String cancelUrl)
 	{
 		// TODO - AppServer must implement some mock login system
 		return null;

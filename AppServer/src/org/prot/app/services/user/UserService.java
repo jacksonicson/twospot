@@ -63,15 +63,15 @@ public final class UserService
 		return (String) o;
 	}
 
-	public String getLoginUrl(String redirectUrl)
+	public String getLoginUrl(String redirectUrl, String cancelUrl)
 	{
-		return proxy.getLoginUrl(redirectUrl);
+		return proxy.getLoginUrl(redirectUrl, cancelUrl);
 	}
 
 	public void registerUser(final String uid, final String username)
 	{
 		final String token = Configuration.getInstance().getAuthenticationToken();
-		assert(token != null);
+		assert (token != null);
 
 		AccessController.doPrivileged(new PrivilegedAction<String>()
 		{
@@ -89,7 +89,7 @@ public final class UserService
 	public void unregisterUser()
 	{
 		final String token = Configuration.getInstance().getAuthenticationToken();
-		
+
 		// If there is no UID there is no user session
 		final String uid = searchUID();
 		if (uid == null)

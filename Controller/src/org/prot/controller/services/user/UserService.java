@@ -6,7 +6,7 @@ public interface UserService
 {
 	public String getCurrentUser(String uid);
 
-	public String getLoginUrl(String redirectUrl);
+	public String getLoginUrl(String redirectUrl, String cancelUrl);
 
 	@PrivilegedAppServer
 	public void registerUser(String token, String uid, String username);

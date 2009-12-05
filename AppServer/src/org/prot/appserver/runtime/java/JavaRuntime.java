@@ -62,16 +62,23 @@ public class JavaRuntime implements AppRuntime
 		configuration.setUseDistributedSessions(false);
 
 		// Check if the distributed sessions are configured
-		String distSession = (String) yaml.get("distSession");
+		Object distSession = yaml.get("distSession");
 		if (distSession != null)
 		{
-			try
+			// Check if the setting is a boolean value
+			if (distSession instanceof Boolean)
 			{
-				configuration.setUseDistributedSessions(Boolean.parseBoolean(distSession));
-			} catch (NumberFormatException e)
+				try
+				{
+					configuration.setUseDistributedSessions((Boolean) distSession);
+				} catch (NumberFormatException e)
+				{
+					logger.error("Could not parse configuration");
+					System.exit(1);
+				}
+			} else
 			{
-				logger.error("Could not parse configuration");
-				System.exit(1);
+				logger.warn("app.yaml setting distSession must be boolean");
 			}
 		}
 
