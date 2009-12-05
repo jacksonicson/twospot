@@ -47,5 +47,5 @@
 <pathelement location="../Libs/lib/datanucleus/datanucleus-jpa-2.0.0-m3.jar" />
 <pathelement location="../Libs/lib/datanucleus/datanucleus-management-1.0.2.jar" />
 <pathelement location="../Libs/gen/hbaseplugin.jar" />
-<pathelement location="../Util/twospot-util.jar" />
+<pathelement location="../Libs/gen/twospot-util.jar" />
 </path></project>

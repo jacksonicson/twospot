@@ -57,6 +57,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/Libs/gen/hbaseplugin.jar"/>
-	<classpathentry kind="lib" path="/Util/twospot-util.jar"/>
+	<classpathentry kind="lib" path="/Libs/gen/twospot-util.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

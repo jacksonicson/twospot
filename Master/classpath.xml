@@ -8,6 +8,6 @@
 <pathelement location="../Libs/lib/zookeeper-3.2.1/zookeeper-3.2.1.jar" />
 <pathelement location="../Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-jms.jar" />
 <pathelement location="../Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-tx.jar" />
-<pathelement location="../Util/twospot-util.jar" />
-<pathelement location="../Controller/twospot-controller.jar" />
+<pathelement location="../Libs/gen/twospot-controller.jar" />
+<pathelement location="../Libs/gen/twospot-util.jar" />
 </path></project>

@@ -1,0 +1,9 @@
+./Libs/lib/jetty-7.0.0/jetty-client-7.0.0.v20091005.jar
+./Libs/lib/jetty-7.0.0/jetty-http-7.0.0.v20091005.jar
+./Libs/lib/jetty-7.0.0/jetty-io-7.0.0.v20091005.jar
+./Libs/lib/jetty-7.0.0/jetty-util-7.0.0.v20091005.jar
+./Libs/lib/jetty-7.0.0/servlet-api-2.5.jar
+./Libs/lib/jetty-7.0.0/jetty-server-7.0.0.v20091005.jar
+./Libs/lib/log4j-1.2.15/log4j-1.2.15.jar
+./Libs/lib/jetty-7.0.0/jetty-continuation-7.0.0.v20091005.jar
+./Libs/lib/zookeeper-3.2.1/zookeeper-3.2.1.jar

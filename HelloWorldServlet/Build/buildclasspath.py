@@ -32,19 +32,31 @@ def createClasspathList(eclipseProject, killPath=True):
         
     return li
 
-def createClasspath(eclipseProject, killPath):
+def createAntClasspath(eclipseProject, killPath):
     output = ""
     for extract in createClasspathList(eclipseProject, killPath):
         print extract
         output += '<pathelement location="..%s" />\n' % extract
-    
+        
+    return output
+
+
+def createStartClasspath(eclipseProject, killPath):
+    output = ""
+    for extract in createClasspathList(eclipseProject, killPath):
+        print extract
+        output += '.%s\n' % extract
+        
     return output
         
-output = createClasspath(".classpath", False)
+output = createAntClasspath(".classpath", False)
 output = "<project><path id='classpath'>" + output + "</path></project>"
-
 javaFile = open("classpath.xml", "w")
 javaFile.write(output);
 javaFile.close()
 
+output = createStartClasspath(".classpath", False)
+javaFile = open("classpath.txt", "w")
+javaFile.write(output)
+javaFile.close()
 

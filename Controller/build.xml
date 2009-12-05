@@ -3,7 +3,8 @@
 
 	<import file="./classpath.xml" />
 
-	<property name="jar" value="twospot-controller.jar" />
+	<property name="libs" value="../Libs" />
+	<property name="jar" value="${libs}/gen/twospot-controller.jar" />
 
 	<property name="src" value="./src" />
 	<property name="etc" value="./etc" />
@@ -59,7 +60,7 @@
 
 	<target name="mkcp">
 		<exec executable="python">
-			<arg value="buildclasspath.py" />
+			<arg value="../Build/buildclasspath.py" />
 		</exec>
 	</target>
 
