@@ -19,9 +19,11 @@ public class LoginController implements Controller
 			throws Exception
 	{
 		String redirectUrl = request.getParameter("url");
+		String cancelUrl = request.getParameter("cancel");
 
 		LoginCommand login = new LoginCommand();
 		login.setRedirectUrl(redirectUrl);
+		login.setCancelUrl(cancelUrl);
 
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("loginCommand", login);

@@ -15,7 +15,6 @@
 <p>Login</p>
 <form:form action="loginHandler.htm" method="POST" commandName="loginCommand">
      <form:hidden path="redirectUrl" />
-
      <table>
           <form:errors>
                <tr>
@@ -37,7 +36,7 @@
 </form:form>
 
 <ul>
-     <li><a href="/start.htm">Back</a></li>
+     <li><a href="${loginCommand.cancelUrl}">Cancel</a></li>
 </ul>
 
 </body>
