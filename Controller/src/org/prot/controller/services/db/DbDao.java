@@ -1,10 +1,10 @@
-package org.prot.app.services.db;
+package org.prot.controller.services.db;
 
 import java.util.List;
 
 interface DbDao
 {
-	public List<String> getTables(String username, String appId);
+	public List<String> getTables(String appId);
 	
 	public DataTablet getTableData(String tableName);
 }

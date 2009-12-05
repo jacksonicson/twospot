@@ -1,26 +1,26 @@
 package org.prot.app.services.db;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.prot.app.services.log.LogDao;
 import org.prot.app.services.user.UserService;
 import org.prot.app.services.user.UserServiceFactory;
+import org.prot.appserver.config.Configuration;
+import org.prot.controller.services.db.DataTablet;
+import org.prot.controller.services.db.DbService;
 
-public class DbBrowserService
+public final class DbBrowserService
 {
 	private static final Logger logger = Logger.getLogger(DbBrowserService.class);
 
-	private DbDao dbDao;
-	
-	private LogDao logDao;
+	private final DbService dbService;
 
 	private UserService userService;
 
-	DbBrowserService(DbDao dbDao, LogDao logDao)
+	DbBrowserService(DbService dbService)
 	{
-		this.dbDao = dbDao;
-		this.logDao = logDao; 
+		this.dbService = dbService;
 	}
 
 	private UserService getUserService()
@@ -33,19 +33,19 @@ public class DbBrowserService
 
 	public List<String> getLogs(String appId)
 	{
-		return logDao.getLog(appId);
+		return new ArrayList<String>();
 	}
-	
+
 	public List<String> getTables(String appId)
 	{
 		String user = getUserService().getCurrentUser();
 		if (user == null)
 		{
-			logger.debug("Missing user info");
+			logger.debug("User must be logged in to browse tables");
 			return null;
 		}
 
-		return dbDao.getTables(user, appId);
+		return dbService.getTables(Configuration.getInstance().getAuthenticationToken(), appId);
 	}
 
 	public DataTablet getTableData(String tableName, String startKey, long count)
@@ -53,10 +53,11 @@ public class DbBrowserService
 		String user = getUserService().getCurrentUser();
 		if (user == null)
 		{
-			logger.debug("Missing user info"); 
+			logger.debug("User msut be logged in to browse tables");
 			return null;
 		}
 
-		return dbDao.getTableData(tableName);
+		return dbService.getTableData(Configuration.getInstance().getAuthenticationToken(), tableName, startKey,
+				count);
 	}
 }

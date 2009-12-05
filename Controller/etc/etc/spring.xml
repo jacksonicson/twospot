@@ -128,6 +128,22 @@
 		<property name="registryPort" value="${rmi.controller.registry.port}" />
 	</bean>
 
+	<bean id="DbDao" class="org.prot.controller.services.db.HbaseDbDao" />
+	<bean id="DbServiceExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<property name="serviceName" value="appserver/DbService" />
+
+		<property name="service">
+			<bean class="org.prot.controller.services.db.DbServiceImpl">
+				<property name="appManager" ref="AppManager" />
+				<property name="dbDao" ref="DbDao" />
+			</bean>
+		</property>
+
+		<property name="serviceInterface" value="org.prot.controller.services.db.DbService" />
+
+		<property name="registryPort" value="${rmi.controller.registry.port}" />
+	</bean>
+
 	<!-- Management -->
 	<bean id="AppServerWatcher" class="org.prot.controller.management.AppServerWatcher"
 		init-method="init">

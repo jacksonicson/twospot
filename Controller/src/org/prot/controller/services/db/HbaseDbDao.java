@@ -1,4 +1,4 @@
-package org.prot.app.services.db;
+package org.prot.controller.services.db;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
 class HbaseDbDao implements DbDao
 {
 	private static final Logger logger = Logger.getLogger(HbaseDbDao.class);
-
+	
 	private String toHex(byte[] data)
 	{
 		String hex = "";
@@ -112,7 +112,7 @@ class HbaseDbDao implements DbDao
 	public DataTablet getTableData(final String tableName)
 	{
 		final DataTablet tablet = new DataTablet();
-
+		
 		// TODO: The Hbase-API should do this in critical sections ... but it
 		// doesn't
 		// See also: http://www.jpox.org/servlet/jira/browse/NUCHBASE-12
@@ -162,7 +162,7 @@ class HbaseDbDao implements DbDao
 	}
 
 	@Override
-	public List<String> getTables(final String username, final String appId)
+	public List<String> getTables(final String appId)
 	{
 		// TODO: The Hbase-API should do this in critical sections ... but it
 		// doesn't
@@ -177,21 +177,28 @@ class HbaseDbDao implements DbDao
 					HBaseConfiguration config = new HBaseConfiguration();
 					ArrayList<String> names = new ArrayList<String>();
 
+					// Create a connection to the hbase
 					HBaseAdmin admin = new HBaseAdmin(config);
+					
+					// List all tables
 					HTableDescriptor[] list = admin.listTables();
+
+					// Iterate over table names
 					for (HTableDescriptor descriptor : list)
 					{
+						// Get the table name
 						String name = new String(descriptor.getName());
-						logger.debug("checking name: " + name);
 
-						// Extract names with appId and the namespace
+						logger.debug("Checking name: " + name);
+						
+						// Check if table name starts with the AppId
 						if (name.startsWith(appId))
 						{
-							if (name.indexOf(".user") != -1)
+							// Check if its a user table
+							if (name.indexOf(".user.") != -1)
 							{
+								logger.debug("DbBrowser found table name: " + name);
 								names.add(name);
-
-								logger.debug("adding name");
 							}
 						}
 					}

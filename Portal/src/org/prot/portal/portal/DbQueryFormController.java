@@ -3,9 +3,9 @@ package org.prot.portal.portal;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.prot.app.services.db.DataTablet;
 import org.prot.app.services.db.DbBrowserService;
 import org.prot.app.services.db.DbBrowserServiceFactory;
+import org.prot.controller.services.db.DataTablet;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;

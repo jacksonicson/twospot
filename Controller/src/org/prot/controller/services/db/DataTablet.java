@@ -1,5 +1,6 @@
-package org.prot.app.services.db;
+package org.prot.controller.services.db;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -8,8 +9,10 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-public class DataTablet implements Iterable<String[]>
+public class DataTablet implements Iterable<String[]>, Serializable
 {
+	private static final long serialVersionUID = -4818904405696749610L;
+
 	private static final Logger logger = Logger.getLogger(DataTablet.class);
 	
 	private int len = 0;

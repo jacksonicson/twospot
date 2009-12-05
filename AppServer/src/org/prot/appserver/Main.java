@@ -42,7 +42,7 @@ public class Main
 		// Log all startup arguments
 		ArgumentParser.dump();
 
-		// Configure HBase (TODO: Make this more generic)
+		// Configure HBase namespace (TODO: Make this more generic)
 		HBaseUtils.setNamespace(Configuration.getInstance().getAppId() + "."
 				+ HBaseUtils.NAMESPACE_USER_TAGBLES);
 
