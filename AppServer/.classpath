@@ -25,7 +25,6 @@
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-security-7.0.0.v20091005.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-rewrite-7.0.0.v20091005.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-xml-7.0.0.v20091005.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Util"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/asm-3.1.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/ehcache-1.1.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/geronimo-jpa_3.0_spec-1.1.1.jar"/>
@@ -39,11 +38,6 @@
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-jpa-2.0.0-m3.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-management-1.0.2.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/hbase-0.20.0.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Controller">
-		<accessrules>
-			<accessrule kind="nonaccessible" pattern="*.jar"/>
-		</accessrules>
-	</classpathentry>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-policy-7.0.0.v20091005.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jasper/el-api.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jasper/jasper-el.jar"/>
@@ -66,5 +60,7 @@
 	<classpathentry kind="lib" path="/Libs/lib/zookeeper-3.2.1/zookeeper-3.2.1.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/h2-1.2.123/h2-1.2.123.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-rdbms-2.0.0-m2.jar"/>
+	<classpathentry kind="lib" path="/Controller/twospot-controller.jar"/>
+	<classpathentry kind="lib" path="/Util/twospot-util.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
