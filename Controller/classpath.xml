@@ -43,7 +43,6 @@
 <pathelement location="../Libs/lib/datanucleus/deps/joda-time-1.6.jar" />
 <pathelement location="../Libs/lib/datanucleus/datanucleus-cache-2.0.0-m2.jar" />
 <pathelement location="../Libs/lib/datanucleus/datanucleus-core-2.0.0-m3.jar" />
-<pathelement location="../Libs/lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar" />
 <pathelement location="../Libs/lib/datanucleus/datanucleus-jodatime-2.0.0-m2.jar" />
 <pathelement location="../Libs/lib/datanucleus/datanucleus-jpa-2.0.0-m3.jar" />
 <pathelement location="../Libs/lib/datanucleus/datanucleus-management-1.0.2.jar" />
