@@ -3,7 +3,7 @@
 
 	<import id="" file="./classpath.xml" />
 
-	<property name="jar" value="twospot-controller.jar" />
+	<property name="jar" value="twospot-appserver.jar" />
 
 	<property name="src" value="./src" />
 	<property name="etc" value="./etc" />
@@ -17,6 +17,30 @@
 		<delete dir="${build}" />
 	</target>
 
+	<target name="enhance" description="DataNucleus enhancement">
+		<path id="enhancer.classpath">
+			<path refid="classpath" />
+
+			<fileset dir="../Libs/lib/datanucleus/">
+				<include name="**/*.jar" />
+			</fileset>
+
+			<pathelement location="./build" />
+		</path>
+
+		<taskdef name="enhance" classpathref="enhancer.classpath"
+			classname="org.datanucleus.enhancer.tools.EnhancerTask" />
+
+		<enhance classpathref="enhancer.classpath" failonerror="true"
+			verbose="true">
+			<jvmarg line="-Dlog4j.configuration=${log4j.config.file}" />
+
+			<fileset dir="./build">
+				<include name="**/*.class" />
+			</fileset>
+		</enhance>
+	</target>
+
 	<target name="build" depends="prepare">
 		<javac srcdir="${src}" destdir="${build}">
 			<classpath refid="classpath" />
@@ -27,7 +51,7 @@
 		</copy>
 	</target>
 
-	<target name="package" depends="build">
+	<target name="package" depends="build,enhance">
 		<jar destfile="${jar}">
 			<fileset dir="${build}" />
 		</jar>
