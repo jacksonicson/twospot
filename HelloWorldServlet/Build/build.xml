@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="package" name="AppServer">
+<project basedir="." default="package" name="DevPackage">
 
 	<property name="zipfile" value="twospot.zip" />
 
@@ -17,20 +17,23 @@
 		<copy todir="${tmpdir}" overwrite="true">
 			<fileset dir="${bindir}" />
 		</copy>
-		
+
 		<copy todir="${tmpdir}" overwrite="false">
 			<fileset dir="${Controller}/bin" />
 			<fileset dir="${Util}/bin" />
 			<fileset dir="${Tools}/src" />
 			<fileset file="${Controller}/tools/classpath.txt" />
 		</copy>
-		
+
 		<copy todir="${tmpdir}/Libs">
 			<fileset dir="${Libs}" />
 		</copy>
-		
+
 		<delete file="${tmpdir}/etc/appServer.properties" />
 		<rename dest="${tmpdir}/etc/appServer.properties" src="${tmpdir}/etc/appServer.properties_dev" />
+
+		<delete file="${tmpdir}/etc/jdoDefault.properties" />
+		<rename dest="${tmpdir}/etc/jdoDefault.properties" src="${tmpdir}/etc/jdoDefault.properties_dev" />
 
 		<zip destfile="${zipfile}">
 			<fileset dir="${tmpdir}" />
