@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="Platform">
+
+	<target name="build">
+
+		<ant antfile="../Util/build.xml" dir="../Util/" />
+		<ant antfile="../Controller/build.xml" dir="../Controller/" />
+		<ant antfile="../Master/build.xml" dir="../Master/" />
+		<ant antfile="../Frontend/build.xml" dir="../Frontend/" />
+		<ant antfile="../AppServer/build.xml" dir="../AppServer/" />
+
+	</target>
+
+</project>
