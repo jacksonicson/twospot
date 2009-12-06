@@ -53,6 +53,7 @@
 		<copyfile src="./start.py" dest="${dest}/start.py" />
 
 		<!-- create a zip archive of the dest folder -->
+		<delete file="twospot.zip" />
 		<zip destfile="twospot.zip">
 			<fileset dir="${dest}" />
 		</zip>
