@@ -9,14 +9,25 @@
 		</layout>
 	</appender>
 
+	<appender name="FileAppender" class="org.apache.log4j.FileAppender">
+		<param name="File" value="controller.log" />
+
+		<param name="Threshold" value="DEBUG" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%p - %C{1}.%M(%L) | %m%n" />
+		</layout>
+	</appender>
+
 	<logger name="org.prot" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="ConsoleAppender" />
+		<appender-ref ref="FileAppender" />
 	</logger>
 
 	<root>
 		<priority value="INFO" />
 		<appender-ref ref="ConsoleAppender" />
+		<appender-ref ref="FileAppender" />
 	</root>
 
 </log4j:configuration>
