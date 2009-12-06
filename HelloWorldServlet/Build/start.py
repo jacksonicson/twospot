@@ -7,7 +7,9 @@ def loadClasspath(file, specific):
     lines = file.readlines()
     classpath = ""
     for line in lines:
+        line = line.replace("\r\n", "")
         line = line.replace("\n", "")
+        line = line.replace("\r", "")
         classpath += line + ";"
     
     # Add the classpath from the argument    

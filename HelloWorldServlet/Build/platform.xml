@@ -3,10 +3,16 @@
 
 	<property name="dest" value="./package" />
 
-	<target name="package">
+	<target name="clean">
+		<delete dir="${dest}" />
+	</target>
+
+	<target name="setup">
 		<delete dir="${dest}" />
 		<mkdir dir="${dest}" />
+	</target>
 
+	<target name="package">
 		<!-- copy the libs -->
 		<mkdir dir="${dest}/Libs" />
 		<copy todir="${dest}/Libs">
@@ -45,6 +51,11 @@
 
 		<!-- copy the python script with the bootstrap routines -->
 		<copyfile src="./start.py" dest="${dest}/start.py" />
+
+		<!-- create a zip archive of the dest folder -->
+		<zip destfile="twospot.zip">
+			<fileset dir="${dest}" />
+		</zip>
 	</target>
 
 	<target name="mkcp">
@@ -65,6 +76,6 @@
 		<ant antfile="../HttpFileServer/build.xml" dir="../HttpFileServer/" />
 	</target>
 
-	<target name="all" depends="build,package" />
+	<target name="all" depends="setup,build,package,clean" />
 
 </project>
