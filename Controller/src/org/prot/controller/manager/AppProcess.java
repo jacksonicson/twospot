@@ -65,8 +65,9 @@ class AppProcess
 		List<String> command = new LinkedList<String>();
 		command.add("java");
 		command.add("-classpath");
-		//command.add(loadGeneratedClasspath());
-		command.add(loadClasspath());
+		// command.add(loadClasspath()); // WARN: Don't use this - doesn't work
+		// in deployment!!!
+		command.add(loadGeneratedClasspath());
 
 		command.add("org.prot.appserver.Main");
 
@@ -117,6 +118,7 @@ class AppProcess
 
 	}
 
+	@SuppressWarnings("unused")
 	private String loadClasspath()
 	{
 		File libs = new File("../Libs/");
