@@ -9,7 +9,6 @@
 	<bean id="AccessFilter" class="org.prot.portal.filter.AccessFilter"
 		init-method="init" />
 
-
 	<!-- Data beans -->
 	<bean id="JdoConnection" class="org.prot.portal.login.data.JdoConnection"
 		init-method="init" />

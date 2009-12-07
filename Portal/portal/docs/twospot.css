@@ -70,15 +70,18 @@ h4 {
 }
 
 #navigation {
-	width: 150px;
+	width: 170px;
 	position: absolute;
-	left: 0px;
-	top: 0px;
+	left: 20px;
+	top: 50px;
+	padding-top: 10px;
+	margin-bottom: 50px;
 }
 
 #page {
 	width: 700px;
 	position: absolute;
-	left: 150px;
-	top: 0px;
+	left: 190px;
+	top: 50px;
+	padding-bottom: 150px;
 }
