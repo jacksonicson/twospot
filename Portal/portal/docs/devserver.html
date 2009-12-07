@@ -1,0 +1,47 @@
+<h2>DevServer</h2>
+
+<h3>Setup</h3>
+<p>
+Das DevServer ZIP-Paket kann <a href="./dwls/devserver.zip">hier</a> heruntergeladen werden. Das ZIP-Paket kann in ein beliebiges Verzeichnis extrahiert werden. Das gewählte Verzeichnis muss in die <code>PATH</code>-Umgebungsvariable aufgenommen werden. Damit wird der <code>twospot.py</code>-Befehl zur Verfügung gestellt. 
+</p>
+
+<h3>Konfiguration</h3>
+<p>
+Vor dem Start des DevServers müssen eninige wenige Konfigurationseinstellungen vorgenommen werden. Diese betreffen das Scratch-Verzeichnis. Dieses wird vom DevServer für temporäre Dateien genutzt. Zum Beispiel werden JSP-Seiten in das Scratch-Verzecihnis kompiliert. 
+</p>
+
+<p>
+Die Konfigurationseinstellungen befinden sich in der <code>devserver/conf/appserver/etc/appServer.properties</code> Datei. Der anzupassende Schlüssel ist <code>appServer.scratchdir</code> (Zeile 11). Das folgende Beispiel zeigt eine korrekt konfigurierte <code>appServer.properties</code>-Datei.
+</p>
+
+<p>
+<p>Das Scratch-Verzeichnis muss bereits existieren! Es wird nicht vom DevServer erstellt!</p>
+</p>
+
+<pre class="prettyprint">
+#### Server Options ###
+# Mode in which the AppServer is running (DEVELOPMENT, SERVER)
+appServer.mode=DEVELOPMENT
+
+# Defines the working directory in which the extracted application directores reside
+appserver.workDir=
+
+# Defines the scratch dir wich is used by the JSP-Compiler (TODO: Currently unused!!!)
+appServer.scratchdir=C:/temp/scratch
+
+### Security options ###
+# Request-Time which is detected as a DOS-attack (in ms)
+appServer.security.DOSPrevention.time=40000
+</pre>
+
+<h3>Start</h3>
+<p>Der Start des DevServers erfolgt über das <code>twospot.py</code> Tools-Script. Dieses muss in dem Verzeichnis der auszuführenden Anwendung gestartet werden. Im Beispiel befindet sich die Anwendung gogo im Verzeichnis <code>/home/alf/dev/gogo</code>. Der DevServer wird dann folgendermaßen gestartet: 
+</p>
+
+<pre class="prettypring">
+/home/alf/dev/gogo> twospot.py --runServer
+</pre>
+
+<p>
+Nach dem Start ist der DevServer auf dem Port <b>8080</b> verfügbar. Die gogo-Anwendung ist z.B. über die http-Adresse <code>http://localhost:8080/</code> erreichbar.
+</p>
