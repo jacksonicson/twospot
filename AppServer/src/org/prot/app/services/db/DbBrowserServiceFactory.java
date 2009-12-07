@@ -54,6 +54,7 @@ public class DbBrowserServiceFactory
 
 	private static DbBrowserService createMockDbBrowserService()
 	{
+		// Service is privileged
 		return null;
 	}
 
