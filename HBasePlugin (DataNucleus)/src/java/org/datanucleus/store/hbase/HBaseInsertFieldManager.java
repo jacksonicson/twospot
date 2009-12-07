@@ -14,7 +14,7 @@ limitations under the License.
 
 Contributors :
     ...
-***********************************************************************/
+ ***********************************************************************/
 package org.datanucleus.store.hbase;
 
 import java.io.ByteArrayOutputStream;
@@ -29,214 +29,219 @@ import org.datanucleus.store.fieldmanager.AbstractFieldManager;
 
 public class HBaseInsertFieldManager extends AbstractFieldManager
 {
-    Put put;
-    Delete delete;
-    StateManager sm;
+	Put put;
+	Delete delete;
+	StateManager sm;
 
-    public HBaseInsertFieldManager(StateManager sm, Put put, Delete delete)
-    {
-        this.sm = sm;
-        this.put = put;
-        this.delete = delete;
-    }
-    
-    public void storeBooleanField(int fieldNumber, boolean value)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
+	public HBaseInsertFieldManager(StateManager sm, Put put, Delete delete)
+	{
+		this.sm = sm;
+		this.put = put;
+		this.delete = delete;
+	}
 
-        try
-        {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
-            oos.writeBoolean(value);
-            oos.flush();
-            put.add(familyName.getBytes(), columnName.getBytes(), bos.toByteArray());
-            oos.close();
-            bos.close();
-        }
-        catch (IOException e)
-        {
-            throw new NucleusException(e.getMessage(), e);
-        }
-    }
-    
-    public void storeByteField(int fieldNumber, byte value)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
-        put.add(familyName.getBytes(), columnName.getBytes(), new byte[]{value});
-    }
+	public void storeBooleanField(int fieldNumber, boolean value)
+	{
+		String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(), fieldNumber);
+		String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(), fieldNumber);
 
-    public void storeCharField(int fieldNumber, char value)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
-        try
-        {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
-            oos.writeChar(value);
-            oos.flush();
-            put.add(familyName.getBytes(), columnName.getBytes(), bos.toByteArray());
-            oos.close();
-            bos.close();
-        }
-        catch (IOException e)
-        {
-            throw new NucleusException(e.getMessage(), e);
-        }
-    }
-    
-    public void storeDoubleField(int fieldNumber, double value)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
-        try
-        {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
-            oos.writeDouble(value);
-            oos.flush();
-            put.add(familyName.getBytes(), columnName.getBytes(), bos.toByteArray());
-            oos.close();
-            bos.close();
-        }
-        catch (IOException e)
-        {
-            throw new NucleusException(e.getMessage(), e);
-        }
-    }
-    
-    public void storeFloatField(int fieldNumber, float value)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
-        try
-        {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
-            oos.writeFloat(value);
-            oos.flush();
-            put.add(familyName.getBytes(), columnName.getBytes(), bos.toByteArray());
-            oos.close();
-            bos.close();
-        }
-        catch (IOException e)
-        {
-            throw new NucleusException(e.getMessage(), e);
-        }
-    }
-    
-    public void storeIntField(int fieldNumber, int value)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
-        try
-        {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
-            oos.writeInt(value);
-            oos.flush();
-            put.add(familyName.getBytes(), columnName.getBytes(), bos.toByteArray());
-            oos.close();
-            bos.close();
-        }
-        catch (IOException e)
-        {
-            throw new NucleusException(e.getMessage(), e);
-        }
-    }
-    
-    public void storeLongField(int fieldNumber, long value)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
-        try
-        {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
-            oos.writeLong(value);
-            oos.flush();
-            put.add(familyName.getBytes(), columnName.getBytes(), bos.toByteArray());
-            oos.close();
-            bos.close();
-        }
-        catch (IOException e)
-        {
-            throw new NucleusException(e.getMessage(), e);
-        }
-    }
-    
-    public void storeObjectField(int fieldNumber, Object value)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
-        if(value==null)
-        {
-            delete.deleteColumn(familyName.getBytes(), columnName.getBytes());
-        }
-        else
-        {
-            try
-            {
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                ObjectOutputStream oos = new ObjectOutputStream(bos);
-                oos.writeObject(value);
-                put.add(familyName.getBytes(), columnName.getBytes(), bos.toByteArray());
-                oos.close();
-                bos.close();
-            }
-            catch (IOException e)
-            {
-                throw new NucleusException(e.getMessage(), e);
-            }
-        }
-    }
-    
-    public void storeShortField(int fieldNumber, short value)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
-        try
-        {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
-            oos.writeShort(value);
-            oos.flush();
-            put.add(familyName.getBytes(), columnName.getBytes(), bos.toByteArray());
-            oos.close();
-            bos.close();
-        }
-        catch (IOException e)
-        {
-            throw new NucleusException(e.getMessage(), e);
-        }
-    }
-    
-    public void storeStringField(int fieldNumber, String value)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
-        if(value==null)
-        {
-            delete.deleteColumn(familyName.getBytes(), columnName.getBytes());
-        }
-        else
-        {
-            try
-            {
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                ObjectOutputStream oos = new ObjectOutputStream(bos);
-                oos.writeObject(value);
-                put.add(familyName.getBytes(), columnName.getBytes(), bos.toByteArray());
-                oos.close();
-                bos.close();
-            }
-            catch (IOException e)
-            {
-                throw new NucleusException(e.getMessage(), e);
-            }
-        }
-    }
+		try
+		{
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(bos);
+			oos.writeBoolean(value);
+			oos.flush();
+			put.add(familyName.getBytes(), columnName.getBytes(), bos.toByteArray());
+			oos.close();
+			bos.close();
+		} catch (IOException e)
+		{
+			throw new NucleusException(e.getMessage(), e);
+		}
+	}
+
+	public void storeByteField(int fieldNumber, byte value)
+	{
+		String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(), fieldNumber);
+		String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(), fieldNumber);
+		put.add(familyName.getBytes(), columnName.getBytes(), new byte[] { value });
+	}
+
+	public void storeCharField(int fieldNumber, char value)
+	{
+		String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(), fieldNumber);
+		String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(), fieldNumber);
+		try
+		{
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(bos);
+			oos.writeChar(value);
+			oos.flush();
+			put.add(familyName.getBytes(), columnName.getBytes(), bos.toByteArray());
+			oos.close();
+			bos.close();
+		} catch (IOException e)
+		{
+			throw new NucleusException(e.getMessage(), e);
+		}
+	}
+
+	public void storeDoubleField(int fieldNumber, double value)
+	{
+		String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(), fieldNumber);
+		String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(), fieldNumber);
+		try
+		{
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(bos);
+			oos.writeDouble(value);
+			oos.flush();
+			put.add(familyName.getBytes(), columnName.getBytes(), bos.toByteArray());
+			oos.close();
+			bos.close();
+		} catch (IOException e)
+		{
+			throw new NucleusException(e.getMessage(), e);
+		}
+	}
+
+	public void storeFloatField(int fieldNumber, float value)
+	{
+		String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(), fieldNumber);
+		String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(), fieldNumber);
+		try
+		{
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(bos);
+			oos.writeFloat(value);
+			oos.flush();
+			put.add(familyName.getBytes(), columnName.getBytes(), bos.toByteArray());
+			oos.close();
+			bos.close();
+		} catch (IOException e)
+		{
+			throw new NucleusException(e.getMessage(), e);
+		}
+	}
+
+	public void storeIntField(int fieldNumber, int value)
+	{
+		String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(), fieldNumber);
+		String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(), fieldNumber);
+		try
+		{
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(bos);
+			oos.writeInt(value);
+			oos.flush();
+			put.add(familyName.getBytes(), columnName.getBytes(), bos.toByteArray());
+			oos.close();
+			bos.close();
+		} catch (IOException e)
+		{
+			throw new NucleusException(e.getMessage(), e);
+		}
+	}
+
+	public void storeLongField(int fieldNumber, long value)
+	{
+		String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(), fieldNumber);
+		String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(), fieldNumber);
+		try
+		{
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(bos);
+			oos.writeLong(value);
+			oos.flush();
+
+			// Prevent oversized uploads
+			if (!HBaseUtils.checkFieldSize(bos.size()))
+				throw new IOException("Maximum field size exceeded");
+
+			put.add(familyName.getBytes(), columnName.getBytes(), bos.toByteArray());
+
+			oos.close();
+			bos.close();
+		} catch (IOException e)
+		{
+			throw new NucleusException(e.getMessage(), e);
+		}
+	}
+
+	public void storeObjectField(int fieldNumber, Object value)
+	{
+		String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(), fieldNumber);
+		String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(), fieldNumber);
+		if (value == null)
+		{
+			delete.deleteColumn(familyName.getBytes(), columnName.getBytes());
+		} else
+		{
+			try
+			{
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				ObjectOutputStream oos = new ObjectOutputStream(bos);
+				oos.writeObject(value);
+
+				// Prevent oversized uploads
+				if (!HBaseUtils.checkFieldSize(bos.size()))
+					throw new IOException("Maximum field size exceeded");
+
+				put.add(familyName.getBytes(), columnName.getBytes(), bos.toByteArray());
+				oos.close();
+				bos.close();
+			} catch (IOException e)
+			{
+				throw new NucleusException(e.getMessage(), e);
+			}
+		}
+	}
+
+	public void storeShortField(int fieldNumber, short value)
+	{
+		String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(), fieldNumber);
+		String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(), fieldNumber);
+		try
+		{
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(bos);
+			oos.writeShort(value);
+			oos.flush();
+			put.add(familyName.getBytes(), columnName.getBytes(), bos.toByteArray());
+			oos.close();
+			bos.close();
+		} catch (IOException e)
+		{
+			throw new NucleusException(e.getMessage(), e);
+		}
+	}
+
+	public void storeStringField(int fieldNumber, String value)
+	{
+		String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(), fieldNumber);
+		String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(), fieldNumber);
+		if (value == null)
+		{
+			delete.deleteColumn(familyName.getBytes(), columnName.getBytes());
+		} else
+		{
+			try
+			{
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				ObjectOutputStream oos = new ObjectOutputStream(bos);
+				oos.writeObject(value);
+
+				// Prevent oversized uploads
+				if (!HBaseUtils.checkFieldSize(bos.size()))
+					throw new IOException("Maximum field size exceeded");
+
+				put.add(familyName.getBytes(), columnName.getBytes(), bos.toByteArray());
+				oos.close();
+				bos.close();
+			} catch (IOException e)
+			{
+				throw new NucleusException(e.getMessage(), e);
+			}
+		}
+	}
 }

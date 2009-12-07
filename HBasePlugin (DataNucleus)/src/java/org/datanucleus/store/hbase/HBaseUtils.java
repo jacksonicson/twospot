@@ -45,11 +45,28 @@ public class HBaseUtils
 {
 	public static final String NAMESPACE_USER_TAGBLES = "user";
 
+	// Namespace for the tables (used as prefix)
 	private static String namespace = NAMESPACE_USER_TAGBLES;
 
+	// Use -1 for infinite field size
+	private static long maxFieldSize = 1 * 1024* 1024;
+	
 	public static void setNamespace(String namespace)
 	{
 		HBaseUtils.namespace = namespace;
+	}
+	
+	public static void setMaxFieldSize(long size)
+	{
+		maxFieldSize = size;
+	}
+	
+	public static boolean checkFieldSize(long size)
+	{
+		if(maxFieldSize == -1)
+			return true;
+		
+		return size <= maxFieldSize;
 	}
 
 	public static String getTableName(AbstractClassMetaData acmd)
