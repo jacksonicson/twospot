@@ -39,7 +39,7 @@ public class LogServiceFactory
 					throw new NullPointerException();
 				}
 
-				LogService service = new LogService((org.prot.controller.services.log.LogService) object);
+				LogService service = new LogServiceImpl((org.prot.controller.services.log.LogService) object);
 
 				// Object o = userService;
 				return service;
@@ -52,7 +52,7 @@ public class LogServiceFactory
 
 	private static LogService createMockLogService()
 	{
-		return null;
+		return new LogServiceMock();
 	}
 
 	public static LogService getLogService()
