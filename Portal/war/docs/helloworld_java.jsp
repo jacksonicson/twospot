@@ -18,15 +18,15 @@
 
 <h3>Setup</h3>
 <p>
-Die TwoSpot-Tools sind eine Sammlung von Python Hilfs-Scripten die der vereinfachten Anwendungsentwicklung dienen. &Uuml;ber die Tools lassen sich Anwendungen deployen. Zusätzlich helfen Sie auch beim Anlegen neuer Anwendungen. Die Tools lassen sich <a href="./dwls/tools.jar">hier</a> herunterladen. 
+Die TwoSpot-Tools sind eine Sammlung von Python Hilfs-Scripten die der vereinfachten Anwendungsentwicklung dienen. &Uuml;ber die Tools lassen sich Anwendungen deployen. Zusätzlich helfen Sie auch beim Anlegen neuer Anwendungen. Die Tools lassen sich <a href="./dwls/tools.zip">hier</a> herunterladen. 
 </p>
 
 <p>
-Das ZIP-Archiv <code>tools.jar</code> kann ein beliebiges Verzeichnis extrahiert werden. Das Verzeichnis muss in die <code>PATH</code>-Umgebungsvariabel aufgenommen werden, damit der <code>twospot.py</code>-Befehl verwendet werden kann.
+Das ZIP-Archiv <code>tools.zip</code> kann ein beliebiges Verzeichnis extrahiert werden. Das Verzeichnis muss in die <code>PATH</code>-Umgebungsvariabel aufgenommen werden, damit der <code>twospot.py</code>-Befehl verwendet werden kann.
 </p>
 
 <p>
-Vor dem Deployment einer Anwendung muss für diese eine AppId registriert werden. Die Registrierung erfolgt über das TwoSpot-Portal, das <a href="../start.htm">hier</a> erreichbar ist. Nach der Benutzerregistrierung lassen sich drei AppId's registrieren. Nachfolgend wird als AppId der Name <code>gogo</code> verwendet. Dieser muss durch die eigenen AppId ersetzt werden. 
+Vor dem Deployment einer Anwendung muss für diese eine AppId registriert werden. Die Registrierung erfolgt über das TwoSpot-Portal, das <a href="../../start.htm">hier</a> erreichbar ist. Nach der Benutzerregistrierung lassen sich drei AppId's registrieren. Nachfolgend wird als AppId der Name <code>gogo</code> verwendet. Dieser muss durch die eigenen AppId ersetzt werden. 
 </p>
 
 <h3>Dateistruktur</h3>

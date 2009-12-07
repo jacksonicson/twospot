@@ -11,6 +11,11 @@
 
 <script type="text/javascript" src="prettify.js"></script>
 
+<div id="navigation">
+<h1>TwoSpot</h1>
+<p>Start</p>
+</div>
+
 <div id="page">
 <h1>Twospot documentation</h1>
 
