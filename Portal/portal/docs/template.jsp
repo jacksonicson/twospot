@@ -3,7 +3,7 @@
 <head>
 <title></title>
 </head>
-<body>
+<body onload="prettyPrint()">
 
 <link href="prettify.css" type="text/css" rel="stylesheet" />
 <link href="twospot.css" type="text/css" rel="stylesheet" />
