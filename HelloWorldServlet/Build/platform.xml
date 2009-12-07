@@ -15,8 +15,11 @@
 	<target name="package">
 		<!-- copy the libs -->
 		<mkdir dir="${dest}/Libs" />
-		<copy todir="${dest}/Libs">
-			<fileset dir="../Libs">
+		<copy todir="${dest}/Libs/gen">
+			<!--<fileset dir="../Libs">
+				<include name="**/*.jar" />
+			</fileset>-->
+			<fileset dir="../Libs/gen">
 				<include name="**/*.jar" />
 			</fileset>
 		</copy>
