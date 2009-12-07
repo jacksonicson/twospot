@@ -43,7 +43,7 @@
 	<target name="war" >
 		<mkdir dir="deploy" />
 		<copy todir="deploy">
-			<fileset dir="war" />
+			<fileset dir="portal" />
 		</copy>
 
 		<mkdir dir="deploy/WEB-INF/classes" />
