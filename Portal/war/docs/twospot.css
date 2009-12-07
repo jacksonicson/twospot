@@ -1,0 +1,70 @@
+p {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: small;
+}
+
+a,a:link {
+	color: #00c
+}
+
+a:active {
+	color: red
+}
+
+a:visited {
+	color: #551a8b
+}
+
+code,pre {
+	font-family: monospace;
+	color: #007000
+}
+
+pre {
+	font-size: 9pt;
+	background-color: #fafafa;
+	border: 1px solid #bbb;
+	line-height: 125%;
+	margin: 1em 0 0 0;
+	padding: .99em;
+	overflow: auto;
+	word-wrap: break-word
+}
+
+code {
+	font-size: 10pt
+}
+
+p {
+	padding: 1em 0 0 0;
+	margin: 0;
+	line-height: 125%
+}
+
+body {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: small;
+	color: #000;
+	background-color: #fff;
+	margin: 3px 8px
+}
+
+h1,h2,h3,h4 {
+	margin-bottom: 0
+}
+
+h1 {
+	font-size: 160%
+}
+
+h2 {
+	font-size: 140%
+}
+
+h3 {
+	font-size: 120%
+}
+
+h4 {
+	font-size: 110%
+}

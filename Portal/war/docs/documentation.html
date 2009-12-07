@@ -4,44 +4,88 @@
 <title>Twospot</title>
 </head>
 
-<body>
+<body onload="prettyPrint()">
+
+<link href="prettify.css" type="text/css" rel="stylesheet" />
+<link href="twospot.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="prettify.js"></script>
+
+
 <h1>Twospot documentation</h1>
 
 <h2>Downloads</h2>
 <ul>
-     <li>Tools</li>
-     <li>Development-Server + Tools</li>
+     <li><a href="downloads/tools.jar">Tools</a></li>
+     <li><a href="downloads/devserver.jar">DevServer + Tools</a></li>
 </ul>
 
-<h2>HelloWorld in Java</h2>
+<h2>TwoSpot HelloWorld (Java)</h2>
 
-<p>Requirements</p>
+<h3>Setup</h3>
+<p>
+Die TwoSpot-Tools sind eine Sammlung von Python-Scripten zur Erleichterung der TwoSpot-Anwendungsentwicklung. Zusätzlich lässt sich über die Tools auch die Verzeichnisstruktur für neue TwoSpot-Anwendungen erstellen. Die Tools lassen sich  <a href="downlodas/tools.jar">hier</a> herunterladen. 
+</p>
 
-<p>Download the Tools package and extract it to a folder of your choice. The
-destination folder has to bee in your PATH variable. You can check this by
-executing <code>twospot.py -h</code> in the command line. If the command is found
-and you see the twospot.py help information, everythin is ok.</p>
+<p>
+Das ZIP-Archiv <code>tools.jar</code> kann ein beliebiges Verzeichnis extrahiert werden. Das Verzeichnis muss in die <code>PATH</code>-Umgebungsvariabel aufgenommen werden, damit der <code>twospot.py</code>-Befehl verwendet werden kann.
+</p>
 
-<p>The folder structure for the HelloWorld application is created by using the
-twospot.py tools script. The command <code>twospot.py --createApplication
-HelloWorld --type java</code> crates the folder structure for a java application named
-HelloWorld.</p>
+<p>
+Vor dem Deployment einer Anwendung muss für diese eine AppId registriert werden. Die Registrierung erfolgt über das TwoSpot-Portal, das <a href="../start.htm">hier</a> erreichbar ist. Nach der Benutzerregistrierung lassen sich drei AppId's registrieren. Nachfolgend wird als AppId der Name <code>gogo</code> verwendet. Dieser muss durch die eigenen AppId ersetzt werden. 
+</p>
 
-<p>The genrated folder structure looks very similar to a standard java web
-application. The only difference lies in the app.yaml configuration file. This
-file contains platform specific configuration settings.</p>
+<h3>Dateistruktur</h3>
+<p>Die Dateistruktur von TwoSpot-Anwendungen weist sehr große Ähnlichkeit mit der Dateistruktur gewöhnlicher Java Web-Anwendungen auf. Die Dateistruktur der leeren <code>gogo</code>-Anwendungen hat die Form:</p>
 
-<p>/HelloWorld TODO</p>
+<pre class="prettyprint lang-htm">
+ /helloworld
+    /WEB-INF
+        /web.xml
+        /classes
+            /class files
+            /application configuration files (e.g. the etc directory)
+        /lib
+            /jar files
+    /app.yaml
+    /index.html
+    /*.jsp
+    /...
+</pre>
 
-<p>The generated app.yaml file TODO</p>
+<p>
+Die Verzeichnisstruktur lässt sich einfach über die Tools erstellen. Dazu muss der folgende Befehl in dem Verzeichnis ausgeführt werden, in dem die Dateistruktur angelegt werden soll. 
+</p>
 
+<pre class="prettyprint bsh">
+twospot.py --createProject gogo --type java
+</pre>
 
+<p>
+Jede TwoSpot-Anwendung muss die Datei <code>app.yaml</code> enthalten. Dabei handelt es sich um eine Konfigurationsdatei die Informationen über die Anwendung (AppId, Typ der Runtime) und auch Konfigurationseinstellungen für den Application-Container beinhaltet. Beim Anlegen der Verzeichnisstruktur über die Tools wird die <code>app.yaml</code>-Datei automatisch erstellt. Für die HelloWorld-Anwendung sind keine Änderungen an der Datei notwendig. 
+</p>
 
+<h3>Startseite</h3>
 
+<p>Im Anwendungsverzeichnis kann nun eine einfache HTML-Seite als Startseite für die TwoSpot-Anwendung angelegt werden. Für die <code>gogo</code>-Anwendung wurde die folgende <code>index.jsp</code>-Datei angelegt:</p>
 
+<pre class="prettyprint lang-htm">
+&lt;html&gt;
+   &lt;body&gt;
+      &lt;h1&gt;GoGo - HelloWorld&lt;/h1&gt;
+   &lt;/body&gt;
+&lt;/html&gt;
+</pre>
 
-<h2>HelloWorld in Python</h2>
-<p>Functionality is still under development</p>
+<h3>Deployment</h3>
+<p>Nach dem Anlegen der Startseite kann die TwoSpot-Anwendung in die Platform deployt werden. Das Deployment erfolgt ebenfalls über die Tools. Der folgende Befehl muss im Verzeichnis der <code>gogo</code>-Anwendung ausgeführt werden. Beim Deployment fragt das Script nach dem Benutzernamen und Passwort.
+</p>
+
+<pre class="prettyprint lang bsh">
+twospot.py --deploy
+</pre>
+
+<br/>
 
 </body>
 
