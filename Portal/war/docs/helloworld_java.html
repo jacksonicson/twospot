@@ -11,7 +11,7 @@
 
 <script type="text/javascript" src="prettify.js"></script>
 
-
+<div id="page">
 <h1>Twospot documentation</h1>
 
 <h2>TwoSpot HelloWorld (Java)</h2>
@@ -72,15 +72,24 @@ Jede TwoSpot-Anwendung muss die Datei <code>app.yaml</code> enthalten. Dabei han
 </pre>
 
 <h3>Deployment</h3>
-<p>Nach dem Anlegen der Startseite kann die TwoSpot-Anwendung in die Platform deployt werden. Das Deployment erfolgt ebenfalls über die Tools. Der folgende Befehl muss im Verzeichnis der <code>gogo</code>-Anwendung ausgeführt werden. Beim Deployment fragt das Script nach dem Benutzernamen und Passwort.
+<p>Nach dem Anlegen der Startseite kann die TwoSpot-Anwendung in die Platform deployt werden. Das Deployment erfolgt ebenfalls über die Tools. Der folgende Befehl muss im Verzeichnis der <code>gogo</code>-Anwendung ausgeführt werden. Beim Deployment fragt das Script nach dem Benutzernamen und Passwort, um die Berechtigung des Deployments zu prüfen. 
 </p>
 
 <pre class="prettyprint lang bsh">
 twospot.py --deploy
 </pre>
 
+<p>Ein erfolgreiches Deployment wird mit einem <code>Status 200</code> angezeigt. Die Anwendung ist anschließend unter der http-Adresse <code>http://appId.twospot.informatik.fh-augsburg.de:6060/index.jsp</code> erreichbar.</p>
+<p>
+<b>Info: Beim ersten Anwendungsstart ist die Response-Time stark erhöht!</b>
+</p>
+
+<p>
+Die Quellocdes der gogo-Anwendung können <a href="dwls/gogo.zip">hier</a> heruntergeladen werden. 
+
 <br/>
 
 </body>
+</div>
 
 </html>
