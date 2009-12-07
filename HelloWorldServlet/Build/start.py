@@ -135,11 +135,11 @@ def runController(args):
 
 def writePid():
     pid = os.getpid()
-    pidfile = pid + ".pid"
+    pidfile = str(pid) + ".pid"
     print "Writing %i to %s" % (pid, pidfile)
     
-    file = fopen(pidfile)
-    file.write(pid)
+    file = open(pidfile, 'w')
+    file.write(str(pid))
     file.close()
 
 
