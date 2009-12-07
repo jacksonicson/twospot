@@ -79,6 +79,8 @@ public class AppDeployer extends AbstractLifeCycle
 		webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
 				".*/jsp-api-[^/]*\\.jar$|.*/jsp-[^/]*\\.jar$");
 
+//		webAppContext.setMaxFormContentSize(3 * 1024 * 1024);
+		
 		webAppContext.setDefaultsDescriptor("/etc/webdefault.xml");
 
 		contexts.addHandler(webAppContext);
