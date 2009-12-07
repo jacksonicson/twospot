@@ -6,7 +6,7 @@ appServer.mode=DEVELOPMENT
 appserver.workDir=C:/temp
 
 # Defines the scratch dir wich is used by the JSP-Compiler (TODO: Currently unused!!!)
-appServer.scratchdir=C:/temp/scratch
+appServer.scratchdir=C:/temp/scratch2
 
 ### Security options ###
 # Request-Time which is detected as a DOS-attack (in ms)

@@ -45,11 +45,11 @@
 		</copy>
 
 		<!-- Swap the configuration files -->
-		<delete file="${dest}/etc/appServer.properties" />
-		<rename dest="${dest}/etc/appServer.properties" src="${tmpdir}/etc/appServer.properties_dev" />
-
-		<delete file="${dest}/etc/jdoDefault.properties" />
-		<rename dest="${dest}/etc/jdoDefault.properties" src="${tmpdir}/etc/jdoDefault.properties_dev" />
+		<delete file="${dest}/conf/appserver/etc/appServer.properties" />
+		<move file="${dest}/conf/appserver/etc/appServer.properties_dev" tofile="${dest}/conf/appserver/etc/appServer.properties" />
+		
+		<delete file="${dest}/conf/appserver/etc/jdoDefault.properties" />
+		<move file="${dest}/conf/appserver/etc/jdoDefault.properties_dev" tofile="${dest}/conf/appserver/etc/jdoDefault.properties" />
 
 		<!-- create a zip archive of the dest folder -->
 		<delete file="devserver.zip" />

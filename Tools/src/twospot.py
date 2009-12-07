@@ -1,3 +1,4 @@
+from getpass import getpass
 from optparse import OptionParser
 import Cookie
 import httplib
@@ -58,12 +59,9 @@ def parseAppYaml(pathToYaml):
 
 
 def upload(warFile, appId):
-    # Deployment requires authentication
-    
-    
     # Read username and password
     username = raw_input("username: ")
-    password = raw_input("password: ")
+    password = getpass("password:")
     
     # Login
     con = httplib.HTTPConnection(SERVER, PORT, timeout=TIMEOUT)
@@ -202,7 +200,7 @@ def createProject(directory, projectType, projectName):
     
 
 def runServer(directory):
-    print "Running server with: %s" % directory 
+    print "Running server from (app dir): %s" % directory 
     
     # Check the directory and parse the YAML-Configuration
     yaml = testApp(directory)
@@ -220,12 +218,19 @@ def runServer(directory):
     workDir = directory
 
     # Load the classpath from classpath.txt
-    file = open(sys.path[0] + "/classpath.txt", "r")
+    file = open(sys.path[0] + "/appserver_classpath.txt", "r")
     lines = file.readlines()
     classpath = ".;"
     for line in lines:
         line = line.replace("\n", "")
-        classpath += "." + line + ";"
+        classpath += line + ";"
+
+    additionalCp = []
+    additionalCp.append('./Libs/gen/twospot-appserver.jar')
+    additionalCp.append('./conf/util/')
+    additionalCp.append('./conf/appserver/')
+    for cp in additionalCp:
+        classpath += cp + ";" 
 
     # Main-Class
     javaMain = "org.prot.appserver.Main"
