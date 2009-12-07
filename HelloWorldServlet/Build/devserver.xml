@@ -1,45 +1,63 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="package" name="DevPackage">
+<project basedir="." default="all" name="DevServer">
 
-	<property name="zipfile" value="twospot.zip" />
+	<import file="./platform.xml" />
 
-	<property name="AppServer" value="../AppServer" />
-	<property name="Tools" value="../Tools" />
-	<property name="Controller" value="../Controller" />
-	<property name="Libs" value="../Libs" />
-	<property name="Util" value="../Util" />
+	<property name="dest" value="./devserver" />
 
-	<property name="tmpdir" value="${AppServer}/tmp" />
-	<property name="bindir" value="${AppServer}/bin" />
+	<target name="prepare">
+		<mkdir dir="${dest}" />
+	</target>
+
+	<target name="cleanup">
+		<delete dir="${dest}" />
+	</target>
 
 	<target name="package">
-		<mkdir dir="${tmpdir}" />
-		<copy todir="${tmpdir}" overwrite="true">
-			<fileset dir="${bindir}" />
+		<!-- copy the libs -->
+		<mkdir dir="${dest}/Libs" />
+		<copy todir="${dest}/Libs/">
+			<fileset dir="../Libs">
+				<include name="**/*.jar" />
+			</fileset>
+			<!--<fileset dir="../Libs/gen">
+						<include name="**/*.jar" />
+					</fileset>-->
 		</copy>
 
-		<copy todir="${tmpdir}" overwrite="false">
-			<fileset dir="${Controller}/bin" />
-			<fileset dir="${Util}/bin" />
-			<fileset dir="${Tools}/src" />
-			<fileset file="${Controller}/tools/classpath.txt" />
+		<!-- copy the configuration (etc) -->
+		<mkdir dir="${dest}/conf" />
+		<copy todir="${dest}/conf/util">
+			<fileset dir="../Util/etc/" />
+		</copy>
+		<copy todir="${dest}/conf/appserver">
+			<fileset dir="../AppServer/etc/" />
 		</copy>
 
-		<copy todir="${tmpdir}/Libs">
-			<fileset dir="${Libs}" />
+		<!-- copy the classpath -->
+		<copyfile src="../AppServer/classpath.txt" dest="${dest}/appserver_classpath.txt" />
+
+		<!-- copy the tools python script -->
+		<copy todir="${dest}">
+			<fileset dir="../Tools/src">
+				<include name="**/*.*" />
+			</fileset>
 		</copy>
 
-		<delete file="${tmpdir}/etc/appServer.properties" />
-		<rename dest="${tmpdir}/etc/appServer.properties" src="${tmpdir}/etc/appServer.properties_dev" />
+		<!-- Swap the configuration files -->
+		<delete file="${dest}/etc/appServer.properties" />
+		<rename dest="${dest}/etc/appServer.properties" src="${tmpdir}/etc/appServer.properties_dev" />
 
-		<delete file="${tmpdir}/etc/jdoDefault.properties" />
-		<rename dest="${tmpdir}/etc/jdoDefault.properties" src="${tmpdir}/etc/jdoDefault.properties_dev" />
+		<delete file="${dest}/etc/jdoDefault.properties" />
+		<rename dest="${dest}/etc/jdoDefault.properties" src="${tmpdir}/etc/jdoDefault.properties_dev" />
 
-		<zip destfile="${zipfile}">
-			<fileset dir="${tmpdir}" />
+		<!-- create a zip archive of the dest folder -->
+		<delete file="devserver.zip" />
+		<zip destfile="devserver.zip">
+			<fileset dir="${dest}" />
 		</zip>
-
-		<delete dir="${tmpdir}" />
 	</target>
+
+	<target name="all" depends="mkcp,prepare,build,package,cleanup" />
 
 </project>
