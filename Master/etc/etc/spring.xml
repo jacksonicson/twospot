@@ -27,7 +27,8 @@
 			<list>
 				<bean class="org.prot.manager.zookeeper.jobs.RegisterMaster"
 					init-method="init">
-					<constructor-arg index="0" value="eth3" />
+					<constructor-arg index="0"
+						value="${zk.master.networkInterface}" />
 					<constructor-arg index="1" value="${rmi.registry.port}" />
 				</bean>
 				<ref bean="LookupControllers" />

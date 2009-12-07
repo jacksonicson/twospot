@@ -22,6 +22,12 @@ public class Configuration
 	// Port on which the Controller listens
 	private int controllerPort = -1;
 
+	// Prefix which ist used when building the classpath for the AppServer
+	private String classpathPrefix = "";
+
+	// Contains an additional classpath which is added to the classpath file
+	private String additionalClasspath = "";
+
 	public static Configuration getConfiguration()
 	{
 		if (configuration == null)
@@ -34,13 +40,20 @@ public class Configuration
 
 	public Configuration()
 	{
-		InputStream in = this.getClass().getResourceAsStream("/etc/config.properties");
+		InputStream utilIn = this.getClass().getResourceAsStream("/etc/config.properties");
+		InputStream controllerIn = this.getClass().getResourceAsStream("/etc/controller.properties");
 		try
 		{
-			properties.load(in);
+			properties.load(utilIn);
+			properties.load(controllerIn);
 
 			this.controllerPort = Integer.parseInt(properties.getProperty("http.controller.port"));
+
 			this.platformDomain = properties.getProperty("platform.domain");
+
+			this.classpathPrefix = properties.getProperty("appserver.classpath.prefix");
+
+			this.additionalClasspath = properties.getProperty("appserver.classpath.additional");
 
 		} catch (IOException e)
 		{
@@ -66,5 +79,15 @@ public class Configuration
 	public String getPlatformDomain()
 	{
 		return platformDomain;
+	}
+
+	public String getClasspathPrefix()
+	{
+		return classpathPrefix;
+	}
+
+	public String getAdditionalClasspath()
+	{
+		return additionalClasspath;
 	}
 }

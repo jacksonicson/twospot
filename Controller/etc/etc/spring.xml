@@ -71,7 +71,7 @@
 	<bean id="ManagementService" class="org.prot.controller.zookeeper.ManagementService"
 		init-method="init">
 		<property name="zooHelper" ref="ZooHelper" />
-		<property name="networkInterface" value="eth3" />
+		<property name="networkInterface" value="${zk.controller.networkInterface}" />
 	</bean>
 
 	<bean id="ControllerProxy" class="org.prot.controller.handler.ControllerProxy">

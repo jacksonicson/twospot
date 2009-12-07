@@ -7,7 +7,7 @@
 		<delete dir="${dest}" />
 	</target>
 
-	<target name="setup">
+	<target name="prepare">
 		<delete dir="${dest}" />
 		<mkdir dir="${dest}" />
 	</target>
@@ -50,7 +50,13 @@
 		<copyfile src="../HttpFileServer/classpath.txt" dest="${dest}/httpserver_classpath.txt" />
 
 		<!-- copy the python script with the bootstrap routines -->
-		<copyfile src="./start.py" dest="${dest}/start.py" />
+		<copy todir="${dest}">
+			<fileset dir=".">
+				<include name="start.py" />
+				<include name="twospot.bat" />
+				<include name="twospot.sh" />
+			</fileset>
+		</copy>
 
 		<!-- create a zip archive of the dest folder -->
 		<delete file="twospot.zip" />
@@ -60,11 +66,13 @@
 	</target>
 
 	<target name="mkcp">
+		<!-- The order of this items is important. For example the Controller
+			 requires the classpath from the AppServer -->
 		<ant antfile="../Util/build.xml" dir="../Util/" target="mkcp" />
+		<ant antfile="../AppServer/build.xml" dir="../AppServer/" target="mkcp" />
 		<ant antfile="../Controller/build.xml" dir="../Controller/" target="mkcp" />
 		<ant antfile="../Master/build.xml" dir="../Master/" target="mkcp" />
 		<ant antfile="../Frontend/build.xml" dir="../Frontend/" target="mkcp" />
-		<ant antfile="../AppServer/build.xml" dir="../AppServer/" target="mkcp" />
 		<ant antfile="../HttpFileServer/build.xml" dir="../HttpFileServer/" target="mkcp" />
 	</target>
 
@@ -77,6 +85,6 @@
 		<ant antfile="../HttpFileServer/build.xml" dir="../HttpFileServer/" />
 	</target>
 
-	<target name="all" depends="setup,build,package,clean" />
+	<target name="all" depends="mkcp,prepare,build,package,clean" />
 
 </project>

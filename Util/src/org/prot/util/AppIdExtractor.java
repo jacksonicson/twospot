@@ -26,6 +26,8 @@ public final class AppIdExtractor
 		index = url.indexOf(".");
 		if (index != -1)
 			url = url.substring(0, index);
+		else
+			url = "";
 
 		// Check if the result is a valid AppId
 		if (!ReservedAppIds.validateAppId(url))

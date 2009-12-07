@@ -34,8 +34,6 @@ public class AppService
 		UserService userService = UserServiceFactory.getUserService();
 		String owner = userService.getCurrentUser();
 		
-		logger.warn("OWNER: " + owner);
-		
 		appDao.saveApp(appId, owner);
 	}
 

@@ -18,5 +18,6 @@
 	<classpathentry kind="lib" path="/Libs/lib/zookeeper-3.2.1/zookeeper-3.2.1.jar"/>
 	<classpathentry kind="lib" path="/Libs/gen/twospot-util.jar"/>
 	<classpathentry kind="lib" path="/Libs/gen/twospot-master.jar"/>
+	<classpathentry kind="lib" path="/Util/etc"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

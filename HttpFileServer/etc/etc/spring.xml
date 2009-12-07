@@ -45,11 +45,11 @@
 	</bean>
 
 	<bean id="DownloadResourceHandler" class="org.prot.httpfileserver.handlers.DownloadResourceHandler">
-		<property name="resourceBase" value="./files" />
+		<property name="resourceBase" value="C:/temp/files" />
 	</bean>
 
 	<bean id="UploadResourceHandler" class="org.prot.httpfileserver.handlers.UploadResourceHandler">
-		<property name="resourceBase" value="./files" />
+		<property name="resourceBase" value="C:/temp/files" />
 	</bean>
 </beans>
 

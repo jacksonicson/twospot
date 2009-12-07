@@ -1,7 +1,6 @@
 package org.prot.controller.manager;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -9,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.prot.controller.config.Configuration;
 
 class AppProcess
 {
@@ -50,9 +50,12 @@ class AppProcess
 
 	public void startOrRestart() throws IOException
 	{
+		logger.debug("Starting new AppServer process");
+
 		// Check if the process should be killed
 		if (appInfo.getStatus() == AppState.KILLED)
 		{
+			logger.debug("Could not start AppServer - already killed");
 			stopAndClean();
 			return;
 		}
@@ -65,9 +68,7 @@ class AppProcess
 		List<String> command = new LinkedList<String>();
 		command.add("java");
 		command.add("-classpath");
-		// command.add(loadClasspath()); // WARN: Don't use this - doesn't work
-		// in deployment!!!
-		command.add(loadGeneratedClasspath());
+		command.add(loadClasspath());
 
 		command.add("org.prot.appserver.Main");
 
@@ -85,26 +86,27 @@ class AppProcess
 
 		String c = "";
 		for (String cmd : command)
-		{
 			c += cmd + " ";
-		}
-		System.out.println("executing: " + c);
+		logger.debug("Executing command: " + c);
 
 		// configure the process
 		ProcessBuilder procBuilder = new ProcessBuilder();
-		procBuilder.directory(new File("../AppServer/"));
+		// procBuilder.directory(new File("../AppServer/"));
 		procBuilder.command(command);
 		procBuilder.redirectErrorStream(true);
 
 		try
 		{
 			// Start the process
+			logger.debug("ProcesssBuilder start process");
 			this.process = procBuilder.start();
 
 			// Wait until the Server running
+			logger.debug("Waiting for AppServer now");
 			waitForAppServer();
 
 			// Update the AppServer state
+			logger.debug("AppServer seems to be online");
 			this.appInfo.setStatus(AppState.ONLINE);
 
 		} catch (IOException e)
@@ -118,99 +120,58 @@ class AppProcess
 
 	}
 
-	@SuppressWarnings("unused")
-	private String loadClasspath()
-	{
-		File libs = new File("../Libs/");
-		String classpath = crawlDir(libs) + ";";
-
-		File appServer = new File("../AppServer/bin");
-		classpath += appServer.getAbsolutePath() + ";";
-
-		File utils = new File("../Util/bin");
-		classpath += utils.getAbsolutePath() + ";";
-
-		File controller = new File("../Controller/bin");
-		classpath += controller.getAbsolutePath() + ";";
-
-		System.out.println("Classpath: " + classpath);
-
-		return classpath;
-	}
-
-	private String crawlDir(File dir)
-	{
-		String jars = "";
-
-		for (File subdir : dir.listFiles())
-		{
-
-			if (subdir.isDirectory())
-			{
-				String subjar = crawlDir(subdir);
-				jars += subjar;
-			} else
-			{
-				String filename = subdir.getName();
-				if (filename.lastIndexOf(".") > 0)
-					filename = filename.substring(filename.lastIndexOf("."));
-				if (filename.equals(".jar"))
-					jars += subdir.getAbsolutePath() + ";";
-			}
-		}
-
-		return jars;
-	}
-
 	private List<String> readClasspath()
 	{
+		logger.debug("Reading classpath file");
 		List<String> classpath = new ArrayList<String>();
 		try
 		{
 			BufferedReader reader = new BufferedReader(new InputStreamReader(AppProcess.class
-					.getResourceAsStream("/classpath.txt")));
+					.getResourceAsStream("/cpAppServer.txt")));
 
 			String buffer = "";
 			while ((buffer = reader.readLine()) != null)
-			{
 				classpath.add(buffer);
-			}
 
 			reader.close();
 
 		} catch (IOException e)
 		{
 			logger.error("Could not read the classpath", e);
+		} catch (NullPointerException e)
+		{
+			logger.error("Could not read classpath", e);
 		}
 
 		return classpath;
 	}
 
-	private String loadGeneratedClasspath()
+	private String loadClasspath()
 	{
+		// Determine the classpath separator
 		final String separator;
 		if (System.getProperty("os.name").toLowerCase().indexOf("windows") > -1)
 			separator = ";";
 		else
 			separator = ":";
 
+		// Read the classpath file
 		List<String> libs = readClasspath();
-		String libLocation = "../";
 		String classpath = "";
 
+		// Load the classpath prefix
+		String prefix = Configuration.getConfiguration().getClasspathPrefix();
+
+		// Build the classpath from the classpath file
 		for (String lib : libs)
-		{
-			classpath += libLocation + lib + separator;
-		}
+			classpath += prefix + lib + separator;
 
-		File appServer = new File("../AppServer/bin");
-		classpath += appServer.getAbsolutePath() + separator;
+		// Add the additional classpath
+		String additionalClasspath = Configuration.getConfiguration().getAdditionalClasspath();
+		logger.debug("Using additional classpath: " + additionalClasspath);
 
-		File utils = new File("../Util/bin");
-		classpath += utils.getAbsolutePath() + separator;
-
-		File controller = new File("../Controller/bin");
-		classpath += controller.getAbsolutePath() + separator;
+		additionalClasspath = additionalClasspath.replace(":", separator);
+		classpath += additionalClasspath;
 
 		return classpath;
 	}

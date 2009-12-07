@@ -1,20 +1,33 @@
 import os
+import string
 import sys
 
-def loadClasspath(file, specific):
+def getClasspathSeparator():
+    separator = ";"
+    if os.name == 'posix':
+        separator = ":"
+    
+    return separator
+
+def loadClasspath(file, additionalCp):
     # Load the classpath from classpath.txt
     file = open(sys.path[0] + file, "r")
     lines = file.readlines()
+    
+    # Load classpath separator
+    separator = getClasspathSeparator()
+    
+    # Read classpath from file
     classpath = ""
     for line in lines:
         line = line.replace("\r\n", "")
         line = line.replace("\n", "")
         line = line.replace("\r", "")
-        classpath += line + ";"
+        classpath += line + separator
     
     # Add the classpath from the argument    
-    for cp in specific:
-        classpath += cp + ";"
+    for additional in additionalCp:
+        classpath += additional + separator
     
     return classpath    
 
@@ -119,29 +132,63 @@ def runController(args):
     os.execvp("java", params)
 
 
+
+def writePid():
+    pid = os.getpid()
+    pidfile = pid + ".pid"
+    print "Writing %i to %s" % (pid, pidfile)
+    
+    file = fopen(pidfile)
+    file.write(pid)
+    file.close()
+
+
+
+def killAll():
+    dirlist = os.listdir(os.curdir)
+    for item in dirlist:
+        if item.find('.pid') != -1:
+            index = item.find('.pid')
+            pid = item[0:index]
+            print "Killing %s" % pid
+            os.kill(pid, 15)
+            
+            toremove = os.curdir + os.sep + item
+            print "Deleting file %s" % toremove
+            os.remove(toremove)
+
+
+
 def main(args):
     name = args[1]
-    print name
+    print "Option %s" % name
     
     if name == 'fileserver':
         print 'starting fileserver'
+        writePid()
         runFileserver(args[2:-1])
         
     elif name == 'frontend':
         print 'starting frontend'
+        writePid()
         runFrontend(args[2:-1])
         
     elif name == 'master':
         print 'starting master'
+        writePid()
         runMaster(args[2:-1])
         
     elif name == 'controller':
         print 'starting controller'
+        writePid();
         runController(args[2:-1])
     
-    
+    elif name == 'kill':
+        print 'shutting down'
+        killAll()
+
+
         
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
-    
-    
+

@@ -24,7 +24,7 @@ def createClasspathList(eclipseProject, killPath=True):
             if last != -1:
                 extract = extract[last + 1 : len(extract)]
         
-        # Check if extract is a valid classpath
+        # Check if extract is a jar file
         if(extract.find(mustContain) == -1):
             continue
 
@@ -48,15 +48,20 @@ def createStartClasspath(eclipseProject, killPath):
         output += '.%s\n' % extract
         
     return output
-        
-output = createAntClasspath(".classpath", False)
-output = "<project><path id='classpath'>" + output + "</path></project>"
-javaFile = open("classpath.xml", "w")
-javaFile.write(output);
-javaFile.close()
 
-output = createStartClasspath(".classpath", False)
-javaFile = open("classpath.txt", "w")
-javaFile.write(output)
-javaFile.close()
 
+def main():
+    output = createAntClasspath(".classpath", False)
+    output = "<project><path id='classpath'>" + output + "</path></project>"
+    javaFile = open("classpath.xml", "w")
+    javaFile.write(output);
+    javaFile.close()
+    
+    output = createStartClasspath(".classpath", False)
+    javaFile = open("classpath.txt", "w")
+    javaFile.write(output)
+    javaFile.close()
+
+
+if __name__ == "__main__":
+    main()

@@ -44,6 +44,8 @@ public class ProxyHandler extends AbstractHandler
 
 		if (appId == null)
 		{
+			logger.debug("Missing AppId: " + request.getRequestURL().toString());
+
 			// Error: Missing AppId
 			response.sendError(HttpStatus.NOT_FOUND_404, "Missing AppId (scheme://AppId.domain...)");
 			baseRequest.setHandled(true);
@@ -68,7 +70,7 @@ public class ProxyHandler extends AbstractHandler
 				} else
 				{
 					response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
-							"Manager unreachable, did not return a Controller or the AppId is unknown.");
+							"Manager unreachable or did not return a Controller.");
 					baseRequest.setHandled(true);
 					return;
 				}
@@ -87,7 +89,10 @@ public class ProxyHandler extends AbstractHandler
 		} catch (Exception e)
 		{
 			logger.error("Error while processing the request", e);
+
 			response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
+			response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500);
+
 			baseRequest.setHandled(true);
 			return;
 		}

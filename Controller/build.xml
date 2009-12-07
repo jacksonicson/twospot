@@ -2,6 +2,7 @@
 <project basedir="." default="all" name="Controller">
 
 	<import file="./classpath.xml" />
+	<import file="./copyClasspath.xml" />
 
 	<property name="libs" value="../Libs" />
 	<property name="jar" value="${libs}/gen/twospot-controller.jar" />
@@ -29,11 +30,9 @@
 			<pathelement location="./build" />
 		</path>
 
-		<taskdef name="enhance" classpathref="enhancer.classpath"
-			classname="org.datanucleus.enhancer.tools.EnhancerTask" />
+		<taskdef name="enhance" classpathref="enhancer.classpath" classname="org.datanucleus.enhancer.tools.EnhancerTask" />
 
-		<enhance classpathref="enhancer.classpath" failonerror="true"
-			verbose="true">
+		<enhance classpathref="enhancer.classpath" failonerror="true" verbose="true">
 			<jvmarg line="-Dlog4j.configuration=${log4j.config.file}" />
 
 			<fileset dir="./build">
@@ -46,11 +45,7 @@
 		<javac srcdir="${src}" destdir="${build}">
 			<classpath refid="classpath" />
 		</javac>
-
-		<!--<copy todir="${build}">
-			<fileset dir="${etc}" />
-		</copy>
-	--></target>
+	</target>
 
 	<target name="package" depends="build,enhance">
 		<jar destfile="${jar}">
@@ -58,7 +53,7 @@
 		</jar>
 	</target>
 
-	<target name="mkcp">
+	<target name="mkcp" depends="copyAppServerCp">
 		<exec executable="python">
 			<arg value="../Build/buildclasspath.py" />
 		</exec>

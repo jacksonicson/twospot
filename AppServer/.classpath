@@ -61,5 +61,6 @@
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-rdbms-2.0.0-m2.jar"/>
 	<classpathentry kind="lib" path="/Libs/gen/twospot-controller.jar"/>
 	<classpathentry kind="lib" path="/Libs/gen/twospot-util.jar"/>
+	<classpathentry kind="lib" path="/Util/etc"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

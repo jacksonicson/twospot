@@ -76,12 +76,13 @@ public class Main
 		// Get the beans
 		factory.getBean("ManagementExporter");
 		factory.getBean("Lifecycle");
-		
-		// If the AppServer is running in Development mode - do some more initialization
-		if(Configuration.getInstance().getServerMode() == ServerMode.DEVELOPMENT)
+
+		// If the AppServer is running in Development mode - do some more
+		// initialization
+		if (Configuration.getInstance().getServerMode() == ServerMode.DEVELOPMENT)
 			initDev();
 	}
-	
+
 	private void initDev()
 	{
 		// Do nothing here
