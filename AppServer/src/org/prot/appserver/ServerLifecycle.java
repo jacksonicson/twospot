@@ -18,6 +18,7 @@ public class ServerLifecycle
 	private static final Logger logger = Logger.getLogger(ServerLifecycle.class);
 
 	private static final String SERVER_ONLINE = "server online";
+	private static final String SERVER_FAILED = "server failed";
 
 	private Configuration configuration;
 
@@ -46,6 +47,16 @@ public class ServerLifecycle
 
 		String appId = configuration.getAppId();
 		appInfo = appFetcher.fetchApp(appId);
+
+		if (appInfo == null)
+		{
+			logger.error("Error while fetching app archive");
+
+			// Use the original stdio to tell the controller
+			IODirector.getInstance().forcedStdOutPrintln(SERVER_FAILED);
+
+			System.exit(1);
+		}
 	}
 
 	public void extractApp()
@@ -61,6 +72,10 @@ public class ServerLifecycle
 		} catch (IOException e)
 		{
 			logger.error("Error while extracting application package", e);
+
+			// Use the original stdio to tell the controller
+			IODirector.getInstance().forcedStdOutPrintln(SERVER_FAILED);
+
 			System.exit(1);
 		}
 	}
@@ -77,6 +92,10 @@ public class ServerLifecycle
 		} catch (ConfigurationException e)
 		{
 			logger.error("Configuration failed", e);
+
+			// Use the original stdio to tell the controller
+			IODirector.getInstance().forcedStdOutPrintln(SERVER_FAILED);
+
 			System.exit(1);
 		}
 	}
@@ -93,14 +112,22 @@ public class ServerLifecycle
 		} catch (NoSuchRuntimeException e)
 		{
 			logger.error("Failed launching the runtime", e);
+
+			// Use the original stdio to tell the controller
+			IODirector.getInstance().forcedStdOutPrintln(SERVER_FAILED);
+
 			System.exit(1);
 		} catch (Exception e)
 		{
 			logger.error("Failed launching the runtime", e);
+
+			// Use the original stdio to tell the controller
+			IODirector.getInstance().forcedStdOutPrintln(SERVER_FAILED);
+
 			System.exit(1);
 		}
 
-		logger.info("Server is online: " + SERVER_ONLINE);
+		logger.info("SERVER IS ONLINE: " + SERVER_ONLINE);
 		// Use the original stdio to tell the controller
 		IODirector.getInstance().forcedStdOutPrintln(SERVER_ONLINE);
 	}

@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.http.HttpStatus;
 import org.prot.appserver.app.AppInfo;
 import org.prot.appserver.config.Configuration;
 
@@ -71,6 +72,15 @@ public class HttpAppFetcher implements AppFetcher
 
 			httpClient.send(exchange);
 			exchange.waitForDone();
+
+			// Check status
+			int status = exchange.getStatus();
+			if (status != HttpStatus.OK_200)
+				return null;
+
+			// Check size (applications cannot be 0 bytes)
+			if (exchange.getResponseContentBytes().length == 0)
+				return null;
 
 			appInfo.setWarFile(exchange.getResponseContentBytes());
 			appInfo.setAppId(Configuration.getInstance().getAppId());
