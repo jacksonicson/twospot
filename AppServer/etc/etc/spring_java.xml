@@ -5,7 +5,7 @@
 
 	<!-- Connector -->
 	<bean id="Connector" class="org.eclipse.jetty.server.nio.SelectChannelConnector">
-		<property name="host" value="127.0.0.1" />
+		<property name="host" value="0.0.0.0" />
 
 		<property name="port" value="9090" />
 
@@ -21,7 +21,7 @@
 		<property name="threadPool">
 			<bean class="org.eclipse.jetty.util.thread.QueuedThreadPool">
 				<property name="minThreads" value="2" />
-				<property name="maxThreads" value="5" />
+				<property name="maxThreads" value="10" />
 			</bean>
 		</property>
 
@@ -32,6 +32,15 @@
 		</property>
 
 		<property name="handler" ref="HandlerCollection" />
+		
+		<property name="sessionIdManager">
+			<bean class="org.eclipse.jetty.server.session.HashSessionIdManager">
+				<property name="random">
+					<bean class="java.util.Random" />
+				</property>
+				<property name="workerName" value="work1" />
+			</bean>
+		</property>
 
 	</bean>
 
@@ -63,11 +72,11 @@
 	<!-- Deployment -->
 	<bean id="AppDeployer" class="org.prot.appserver.runtime.java.AppDeployer">
 		<property name="contexts" ref="ContextCollectionHandler" />
-		<property name="sessionManager" ref="SessionManager" />
+		<!-- <property name="sessionManager" ref="SessionManager" /> -->
 	</bean>
 
 	<!-- Session -->
-	<bean id="SessionManager"
+	<!--<bean id="SessionManager"
 		class="org.prot.appserver.runtime.java.DistributedSessionManager">
 		<property name="sessionDao" ref="SessionDao" />
 		<property name="idManager" ref="IdManager" />
@@ -86,5 +95,5 @@
 		</property>
 	</bean>
 
-</beans>
+--></beans>
 
