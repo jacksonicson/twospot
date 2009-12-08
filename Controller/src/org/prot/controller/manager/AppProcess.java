@@ -39,8 +39,14 @@ class AppProcess
 	{
 		logger.info("Killing AppServer process: " + appInfo.getAppId());
 
-		process.destroy();
-		process = null;
+		try
+		{
+			process.destroy();
+			process = null;
+		} catch (Exception e)
+		{
+			// Do nothing
+		}
 	}
 
 	public void kill()
@@ -118,7 +124,6 @@ class AppProcess
 
 			throw e;
 		}
-
 	}
 
 	private List<String> readClasspath()
@@ -177,14 +182,14 @@ class AppProcess
 		return classpath;
 	}
 
-	private void waitForAppServer() throws IOException
+	private boolean waitForAppServer() throws IOException
 	{
 		// create IO streams
 		BufferedReader stdInStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
 		try
 		{
-			// read the input stream until SERVER_ONLINE sequence is found
+			// Read the input stream until SERVER_ONLINE sequence is found
 			String line = "";
 			while ((line = stdInStream.readLine()) != null)
 			{
@@ -193,7 +198,7 @@ class AppProcess
 				if (line.equalsIgnoreCase(SERVER_ONLINE))
 				{
 					logger.info("AppServer is ONLINE: " + this.appInfo.getAppId());
-					return;
+					return true;
 				} else if (line.equalsIgnoreCase(SERVER_FAILED))
 				{
 					logger.info("AppServer FAILED" + this.appInfo.getAppId());
@@ -201,14 +206,20 @@ class AppProcess
 				}
 			}
 
+			// AppServer is not online - we did not recive SERVER_ONLINE or
+			// SERVER_FAILED
+			logger.info("AppServer is NOT ONLINE: " + this.appInfo.getAppId());
+			throw new IOException("AppServer FAILED");
+
 		} catch (IOException e)
 		{
 			// Log the error
-			logger.error("Could not start a new server process - AppId: " + appInfo.getAppId(), e);
+			logger.error("Could not start a new server process - AppId: " + appInfo.getAppId());
 
 			// Could not verify if server is online so kill it
 			stopAndClean();
 
+			// Rethrow this exception
 			throw e;
 		} finally
 		{

@@ -22,9 +22,11 @@ public class AppManager
 
 	public void init()
 	{
+		// Create AppMonitor and AppReigstry
 		monitor = new AppMonitor(threadPool);
 		registry = new AppRegistry();
 
+		// Schedule the maintaince task
 		Scheduler.addTask(new MaintenanceTask());
 	}
 
@@ -35,6 +37,8 @@ public class AppManager
 
 	public AppInfo requireApp(String appId)
 	{
+		logger.debug("Required AppId: " + appId);
+		
 		// Get or register the AppServer
 		AppInfo appInfo = registry.getOrRegisterApp(appId);
 
@@ -48,6 +52,7 @@ public class AppManager
 			switch (appInfo.getStatus())
 			{
 			case ONLINE:
+			case FAILED:
 				// Don't change the state
 				return appInfo;
 			case STARTING:
@@ -84,14 +89,14 @@ public class AppManager
 
 	public boolean checkToken(String token)
 	{
-//		return true;
-		
+		// return true;
+
 		logger.debug("Checking token: " + token);
-		
+
 		// False if there is no token
 		if (token == null)
 		{
-			logger.debug("Invalid token - token is null"); 
+			logger.debug("Invalid token - token is null");
 			return false;
 		}
 
@@ -105,13 +110,13 @@ public class AppManager
 			if (token.equals(info.getProcessToken()))
 			{
 				// If both tokens are equal - return true
-				logger.debug("Valid token"); 
+				logger.debug("Valid token");
 				return true;
 			}
 		}
 
 		// No matching token found
-		logger.debug("Invalid token - token is unknown"); 
+		logger.debug("Invalid token - token is unknown");
 		return false;
 	}
 
@@ -134,14 +139,6 @@ public class AppManager
 
 		// Update the state
 		appInfo.setStatus(AppState.KILLED);
-
-		// Cleanup the registry
-		registry.cleanup();
-
-		// Shedule the termination
-		Set<AppInfo> killed = new HashSet<AppInfo>();
-		killed.add(appInfo);
-		monitor.killProcess(killed);
 	}
 
 	public void reportStaleApp(String appId)

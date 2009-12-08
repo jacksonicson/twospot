@@ -8,8 +8,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+import org.apache.log4j.Logger;
+
 class AppRegistry
 {
+	private static final Logger logger = Logger.getLogger(AppRegistry.class);
+	
 	private final int startPort = 9090;
 
 	private int currentPort = startPort;
@@ -64,7 +68,7 @@ class AppRegistry
 		return appInfo;
 	}
 
-	void cleanup()
+	private void cleanup()
 	{
 		List<AppInfo> copy = null;
 		synchronized (this)
@@ -92,7 +96,9 @@ class AppRegistry
 			for (AppInfo info : delete)
 			{
 				appInfos.remove(info.getAppId());
-				// TODO: Update free ports
+
+				logger.debug("Releasing port: " + info.getPort());
+				freePorts.add(info.getPort());
 			}
 		}
 	}
@@ -102,7 +108,8 @@ class AppRegistry
 		Set<AppInfo> idleApps = null;
 		for (AppInfo info : appInfos.values())
 		{
-			if (info.isIdle())
+			AppState state = info.getStatus(); 
+			if (info.isIdle() || state == AppState.FAILED || state == AppState.KILLED)
 			{
 				if (idleApps == null)
 					idleApps = new HashSet<AppInfo>();
@@ -111,12 +118,13 @@ class AppRegistry
 				idleApps.add(info);
 			}
 		}
-		
+
+		// Remove everything
 		cleanup();
 
 		return idleApps;
 	}
-	
+
 	synchronized Set<String> getAppIds()
 	{
 		return appInfos.keySet();

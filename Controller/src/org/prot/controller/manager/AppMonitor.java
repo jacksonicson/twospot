@@ -94,7 +94,7 @@ class AppMonitor implements Runnable
 			Continuation continuation = ContinuationSupport.getContinuation(con.getRequest());
 
 			// Register the continuation
-			logger.debug("suspending the request for: " + appInfo.getAppId());
+			logger.debug("Suspending the request for: " + appInfo.getAppId());
 			appInfo.addContinuation(continuation);
 			continuation.suspend();
 
@@ -119,6 +119,7 @@ class AppMonitor implements Runnable
 				{
 					try
 					{
+						logger.debug("Waiting for Job"); 
 						jobQueue.wait();
 					} catch (InterruptedException e)
 					{
@@ -130,7 +131,7 @@ class AppMonitor implements Runnable
 				toProcess = jobQueue.poll();
 			}
 
-			logger.debug("monitor processes job");
+			logger.debug("Monitor starts job");
 
 			// Start
 			try
@@ -140,6 +141,7 @@ class AppMonitor implements Runnable
 			} catch (IOException e)
 			{
 				// Update the AppServer state
+				logger.debug("AppProcess failed - updating status"); 
 				toProcess.getAppInfo().setStatus(AppState.FAILED);
 			}
 

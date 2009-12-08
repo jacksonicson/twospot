@@ -17,7 +17,7 @@
 			<param name="ConversionPattern" value="%p - %C{1}.%M(%L) | %m%n" />
 		</layout>
 	</appender>
-	
+
 	<appender name="Rolling" class="org.apache.log4j.RollingFileAppender">
 		<param name="File" value="controller.log" />
 		<param name="MaxFileSize" value="10MB" />
@@ -27,6 +27,12 @@
 		</layout>
 	</appender>
 
+	<logger name="org.prot.controller.management" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="ConsoleAppender" />
+		<appender-ref ref="Rolling" />
+	</logger>
+
 	<logger name="org.prot" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="ConsoleAppender" />
@@ -34,7 +40,7 @@
 	</logger>
 
 	<root>
-		<priority value="INFO" />
+		<priority value="ERROR" />
 		<appender-ref ref="ConsoleAppender" />
 		<appender-ref ref="Rolling" />
 	</root>

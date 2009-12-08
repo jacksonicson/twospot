@@ -60,15 +60,21 @@ public final class AppInfo
 
 	public void addContinuation(Continuation continuation)
 	{
-		this.continuations.add(continuation);
+		synchronized (continuations)
+		{
+			this.continuations.add(continuation);
+		}
 	}
 
-	public synchronized void resume()
+	public void resume()
 	{
-		for (Continuation continuation : continuations)
-			continuation.resume();
+		synchronized (continuations)
+		{
+			for (Continuation continuation : continuations)
+				continuation.resume();
 
-		continuations.clear();
+			continuations.clear();
+		}
 	}
 
 	public String getAppId()

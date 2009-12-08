@@ -80,18 +80,18 @@ public class RequestHandler extends AbstractHandler
 		// continuation continues this handle method will be called again and
 		// the appInfo than is *not* null
 		if (appInfo == null)
-			return;
+			return; // To be continued
 
 		// Check the State of the AppInfo
 		switch (appInfo.getStatus())
 		{
 		case FAILED:
-			response.sendError(HttpStatus.NOT_FOUND_404);
 			response.sendError(HttpStatus.NOT_FOUND_404, "AppServer has failed");
+			baseRequest.setHandled(true);
 			return;
 		case STALE:
-			response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500);
 			response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500, "AppServer is stale");
+			baseRequest.setHandled(true);
 			return;
 		}
 
