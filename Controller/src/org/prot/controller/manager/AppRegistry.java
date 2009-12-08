@@ -29,7 +29,7 @@ class AppRegistry
 			return this.currentPort++;
 
 		// Recycle a free port
-		return freePorts.peek();
+		return freePorts.pop();
 	}
 
 	private void putApp(AppInfo appInfo)
