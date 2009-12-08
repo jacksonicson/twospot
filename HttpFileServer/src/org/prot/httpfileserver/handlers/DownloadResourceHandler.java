@@ -20,6 +20,7 @@ public class DownloadResourceHandler extends ResourceHandler
 		{
 			res = Resource.newResource(resourceBase);
 			super.setBaseResource(res);
+			logger.info("Using resourceBase: " + resourceBase);
 
 		} catch (MalformedURLException e)
 		{
@@ -33,41 +34,42 @@ public class DownloadResourceHandler extends ResourceHandler
 	protected Resource getResource(HttpServletRequest request) throws MalformedURLException
 	{
 		String uri = request.getRequestURI();
-		
+
 		// Kill the first slash
-		if(uri.startsWith("/"))
-			uri = uri.substring(1); 
-		
-		String appId = null; 
+		if (uri.startsWith("/"))
+			uri = uri.substring(1);
+
+		String appId = null;
 		String version = null;
-		int index = uri.indexOf('/'); 
+		int index = uri.indexOf('/');
 
 		// Check if there is a version information
 		// URL: http://host:port/appId/version/*
-		if(index >= 0) 
+		if (index >= 0)
 		{
-			appId = uri.substring(0, index); 
+			appId = uri.substring(0, index);
 			uri = uri.substring(index + 1);
-			
+
 			index = uri.indexOf('/');
-			if(index >= 0)
-				uri = uri.substring(0, index); 
-			
-			if(uri == "")
+			if (index >= 0)
+				uri = uri.substring(0, index);
+
+			if (uri == "")
 				version = "nulL";
 			else
-				version = uri; 
-			
-		} else {
-			appId = uri; 
-			version = "null"; 
+				version = uri;
+
+		} else
+		{
+			appId = uri;
+			version = "null";
 		}
-		
+
 		// Debug
 		logger.debug("Resource with AppId: " + appId + " Version: " + version);
-		
+
 		// Create file
-		String file = appId + version + ".war"; 
+		String file = appId + version + ".war";
 		return getResource("/" + file);
 	}
 }

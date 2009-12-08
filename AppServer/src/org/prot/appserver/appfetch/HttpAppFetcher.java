@@ -77,7 +77,7 @@ public class HttpAppFetcher implements AppFetcher
 			int status = exchange.getResponseStatus();
 			if (status != HttpStatus.OK_200)
 			{
-				logger.error("Fileserver did not returned status: " + status);
+				logger.error("Fileserver did return error status: " + status);
 				return null;
 			}
 

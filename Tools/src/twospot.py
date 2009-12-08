@@ -12,7 +12,7 @@ import zipfile
 # Properties (TODO: This is the portal app)
 ###########################################
 
-SERVER = 'portal.twospot.local'
+SERVER = 'portal.twospot.informatik.fh-augsburg.de'
 PORT = 6060
 TIMEOUT = 10
 

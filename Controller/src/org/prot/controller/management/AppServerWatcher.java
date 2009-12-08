@@ -42,7 +42,7 @@ public class AppServerWatcher
 
 	public void notifyDeployment(String appId)
 	{
-		logger.debug("AppId " + appId + " deployed"); 
+		logger.debug("AppId " + appId + " deployed");
 		deployed.add(appId);
 	}
 
@@ -86,15 +86,9 @@ public class AppServerWatcher
 
 	private void updateApp(String appId, IAppServerStats stats)
 	{
-		PerformanceData perfData = performanceData.get(appId);
-		if (perfData == null)
-		{
-			perfData = new PerformanceData(appId);
-			performanceData.put(appId, perfData);
-		}
+		PerformanceData perfData = getOrCreatePerformanceData(appId);
 
-		long rps = stats.getRequestsPerSecond();
-		logger.info("RPS: " + rps);
+		perfData.setRps(stats.getRequestsPerSecond());
 	}
 
 	private IAppServerStats connectWithApp(String appId)
