@@ -7,12 +7,12 @@
 		<value>192.168.178.11</value>
 	</property>
 
-	<property>
+	<!--<property>
 		<name>hbase.zookeeper.property.clientPort</name>
 		<value>2222</value>
 	</property>
 
-	<property>
+	--><property>
 		<name>hbase.client.retries.number</name>
 		<value>2</value>
 	</property>

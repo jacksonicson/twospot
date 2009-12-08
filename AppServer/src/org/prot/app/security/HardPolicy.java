@@ -46,6 +46,16 @@ public class HardPolicy extends Policy
 	// Protection domains for different codesourcess
 	private List<ProtectionDomain> pds = new ArrayList<ProtectionDomain>();
 
+	/**
+	 * The AppServer internally uses slashes as file seperator signs. For the
+	 * FilePermission the system file seperator has to bee used. This method
+	 * swaps all slash signs with the seperator from the system property
+	 * file.seperator.
+	 * 
+	 * @param path
+	 *            a appserver intern path (with slashes)
+	 * @return a system path
+	 */
 	private final String swapSeparator(String path)
 	{
 		char separator = System.getProperty("file.separator").toCharArray()[0];
@@ -360,6 +370,14 @@ public class HardPolicy extends Policy
 		String jdkDir = getJdkDir() + "/-";
 		String serverDir = getServerDir() + "/-";
 
+		javaDir = swapSeparator(javaDir);
+		jdkDir = swapSeparator(jdkDir);
+		serverDir = swapSeparator(serverDir);
+
+		logger.info("Granting permission to javaDir: " + javaDir);
+		logger.info("Granting permission to jdkDir: " + jdkDir);
+		logger.info("Granting permission to serverDir: " + serverDir);
+
 		globalPermission.add(new FilePermission(swapSeparator(javaDir), "read"));
 		globalPermission.add(new FilePermission(swapSeparator(jdkDir), "read"));
 		globalPermission.add(new FilePermission(swapSeparator(serverDir), "read"));
@@ -393,8 +411,8 @@ public class HardPolicy extends Policy
 	private final void createAppProtectionDomain()
 	{
 		// Application directorys are the App-Dir and the Scratch-Dir
-		final String appDir = getAppDir() + "/-";
-		final String scratchDir = getScratchDir() + "/-";
+		final String appDir = swapSeparator(getAppDir() + "/-");
+		final String scratchDir = swapSeparator(getScratchDir() + "/-");
 
 		logger.info("Granting permissions to AppDir: " + appDir);
 		logger.info("Granting permissions to ScratchDir: " + scratchDir);
@@ -403,8 +421,8 @@ public class HardPolicy extends Policy
 		AsPermissionCollection appPermissions = new AsPermissionCollection();
 
 		// FilePermissions
-		appPermissions.add(new FilePermission(swapSeparator(appDir), "read"));
-		appPermissions.add(new FilePermission(swapSeparator(scratchDir), "read,write,execute,delete"));
+		appPermissions.add(new FilePermission(appDir, "read"));
+		appPermissions.add(new FilePermission(scratchDir, "read,write,execute,delete"));
 
 		// TODO: DON'T GRANT THIS!!!!!
 		appPermissions.add(new SocketPermission("*", "connect,resolve"));
