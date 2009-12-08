@@ -98,7 +98,7 @@ public class Configuration
 					.getProperty("appServer.security.DOSPrevention.time"));
 
 			configuration.workingDirectory = properties.getProperty("appserver.workDir");
-			
+
 			switch (configuration.serverMode)
 			{
 			case SERVER:
@@ -129,11 +129,17 @@ public class Configuration
 	{
 		Configuration config = Configuration.configuration;
 
+		// Get the working directory
 		String workingDir = config.getWorkingDirectory();
 
-		for (int i = 0; i < 5 & workingDir.endsWith("/"); i++)
+		// Replace all backslashes
+		workingDir.replaceAll("\\", "/");
+
+		// Remove all trailing slashes
+		while (workingDir.endsWith("/"))
 			workingDir = workingDir.substring(0, workingDir.length());
 
+		// Set the app directory
 		config.setAppDirectory(workingDir + "/" + config.getAppId());
 		logger.info("Configured AppDirectory: " + config.getAppDirectory());
 	}
