@@ -17,6 +17,7 @@ class AppProcess
 
 	// Info sent by appserver
 	private static final String SERVER_ONLINE = "server online";
+	private static final String SERVER_FAILED = "server failed";
 
 	// AppInfo which belongs to this process
 	private AppInfo appInfo;
@@ -36,7 +37,7 @@ class AppProcess
 
 	private void stopAndClean()
 	{
-		logger.info("killing the AppServer-process: " + appInfo.getAppId());
+		logger.info("Killing AppServer process: " + appInfo.getAppId());
 
 		process.destroy();
 		process = null;
@@ -187,12 +188,16 @@ class AppProcess
 			String line = "";
 			while ((line = stdInStream.readLine()) != null)
 			{
-				logger.debug("from: " + appInfo.getAppId() + " >" + line);
+				logger.debug("appserver: " + appInfo.getAppId() + "> " + line);
 
 				if (line.equalsIgnoreCase(SERVER_ONLINE))
 				{
-					logger.info("AppServer is online: " + this.appInfo.getAppId());
+					logger.info("AppServer is ONLINE: " + this.appInfo.getAppId());
 					return;
+				} else if (line.equalsIgnoreCase(SERVER_FAILED))
+				{
+					logger.info("AppServer FAILED" + this.appInfo.getAppId());
+					throw new IOException("AppServer FAILED");
 				}
 			}
 
@@ -208,7 +213,13 @@ class AppProcess
 		} finally
 		{
 			// Close the input stream
-			stdInStream.close();
+			try
+			{
+				stdInStream.close();
+			} catch (IOException e)
+			{
+				// Do nothing
+			}
 		}
 	}
 }

@@ -79,6 +79,19 @@ public class RequestHandler extends AbstractHandler
 		if (appInfo == null)
 			return;
 
+		// Check the State of the AppInfo
+		switch (appInfo.getStatus())
+		{
+		case FAILED:
+			response.sendError(HttpStatus.NOT_FOUND_404);
+			response.sendError(HttpStatus.NOT_FOUND_404, "AppServer has failed");
+			return;
+		case STALE:
+			response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500);
+			response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500, "AppServer is stale");
+			return;
+		}
+
 		// Forward the request
 		HttpURI destination = getUrl(baseRequest, appInfo);
 
