@@ -74,13 +74,19 @@ public class HttpAppFetcher implements AppFetcher
 			exchange.waitForDone();
 
 			// Check status
-			int status = exchange.getStatus();
+			int status = exchange.getResponseStatus();
 			if (status != HttpStatus.OK_200)
+			{
+				logger.error("Fileserver did not returned status: " + status);
 				return null;
+			}
 
 			// Check size (applications cannot be 0 bytes)
 			if (exchange.getResponseContentBytes().length == 0)
+			{
+				logger.error("Fileserver returned an empty archive");
 				return null;
+			}
 
 			appInfo.setWarFile(exchange.getResponseContentBytes());
 			appInfo.setAppId(Configuration.getInstance().getAppId());

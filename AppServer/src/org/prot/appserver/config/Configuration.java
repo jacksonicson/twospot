@@ -133,11 +133,11 @@ public class Configuration
 		String workingDir = config.getWorkingDirectory();
 
 		// Replace all backslashes
-		workingDir.replaceAll("\\", "/");
+		workingDir.replace('\\', '/');
 
-		// Remove all trailing slashes
-		while (workingDir.endsWith("/"))
-			workingDir = workingDir.substring(0, workingDir.length());
+		// Remove all trailing slahes
+		while(workingDir.endsWith("/"))
+			workingDir = workingDir.substring(0, workingDir.length() - 1);
 
 		// Set the app directory
 		config.setAppDirectory(workingDir + "/" + config.getAppId());

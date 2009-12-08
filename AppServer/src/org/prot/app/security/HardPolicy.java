@@ -46,6 +46,13 @@ public class HardPolicy extends Policy
 	// Protection domains for different codesourcess
 	private List<ProtectionDomain> pds = new ArrayList<ProtectionDomain>();
 
+	private final String swapSeparator(String path)
+	{
+		char separator = System.getProperty("file.separator").toCharArray()[0];
+		path = path.replace('/', separator);
+		return path;
+	}
+
 	/**
 	 * Pepares a directory for use as a CodeSource URL. The CodeSource URL has
 	 * the form: file:/directory The method guarantees:
@@ -353,9 +360,9 @@ public class HardPolicy extends Policy
 		String jdkDir = getJdkDir() + "/-";
 		String serverDir = getServerDir() + "/-";
 
-		globalPermission.add(new FilePermission(javaDir, "read"));
-		globalPermission.add(new FilePermission(jdkDir, "read"));
-		globalPermission.add(new FilePermission(serverDir, "read"));
+		globalPermission.add(new FilePermission(swapSeparator(javaDir), "read"));
+		globalPermission.add(new FilePermission(swapSeparator(jdkDir), "read"));
+		globalPermission.add(new FilePermission(swapSeparator(serverDir), "read"));
 	}
 
 	private final void createJavaProtectionDomain()
@@ -396,8 +403,8 @@ public class HardPolicy extends Policy
 		AsPermissionCollection appPermissions = new AsPermissionCollection();
 
 		// FilePermissions
-		appPermissions.add(new FilePermission(appDir, "read"));
-		appPermissions.add(new FilePermission(scratchDir, "read,write,execute,delete"));
+		appPermissions.add(new FilePermission(swapSeparator(appDir), "read"));
+		appPermissions.add(new FilePermission(swapSeparator(scratchDir), "read,write,execute,delete"));
 
 		// TODO: DON'T GRANT THIS!!!!!
 		appPermissions.add(new SocketPermission("*", "connect,resolve"));
@@ -446,23 +453,26 @@ public class HardPolicy extends Policy
 
 	public PermissionCollection getPermissions(CodeSource codesource)
 	{
-		AsPermissionCollection perms = new AsPermissionCollection();
-		perms.addAll(globalPermission);
+		return globalPermission;
 
-		for (ProtectionDomain pd : pds)
-		{
-			if (pd.getCodeSource().implies(codesource))
-			{
-				perms.addAll(pd.getPermissions());
-			}
-		}
-
-		return perms;
+		// AsPermissionCollection perms = new AsPermissionCollection();
+		// perms.addAll(globalPermission);
+		//
+		// for (ProtectionDomain pd : pds)
+		// {
+		// if (pd.getCodeSource().implies(codesource))
+		// {
+		// perms.addAll(pd.getPermissions());
+		// }
+		// }
+		//
+		// return perms;
 	}
 
 	public PermissionCollection getPermissions(ProtectionDomain domain)
 	{
-		return getPermissions(domain.getCodeSource());
+		return globalPermission;
+		// return getPermissions(domain.getCodeSource());
 	}
 
 	public boolean implies(ProtectionDomain domain, Permission permission)
