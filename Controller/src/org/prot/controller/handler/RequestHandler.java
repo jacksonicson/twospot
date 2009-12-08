@@ -75,7 +75,10 @@ public class RequestHandler extends AbstractHandler
 		appInfo = this.appManager.requireApp(appId);
 
 		// The AppServer is not avialable - a continuation is used to restart
-		// this request when the AppServer is online
+		// this request when the AppServer is online. If a continuation is used
+		// the appInfo is null - this method will return for now. If the
+		// continuation continues this handle method will be called again and
+		// the appInfo than is *not* null
 		if (appInfo == null)
 			return;
 
