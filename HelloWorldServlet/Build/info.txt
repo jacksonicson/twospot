@@ -16,6 +16,7 @@ All configuration files are located within the /conf directory. The /conf direct
 The following list contains all important configuration files and properties:
   * /conf/util/etc
     * config.properties: All properties are important and documented in this file
+    * zookeeper.xml: Address of the ZooKeeper quorum server
   * /conf/fileserver/
     * DownloadResourceHandler.resouceBase: Defines where the application packages are located
     * UploadResourceHandler.resouceBase: Defines where the application packages are located

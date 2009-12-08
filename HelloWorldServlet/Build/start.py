@@ -151,7 +151,7 @@ def killAll():
             index = item.find('.pid')
             pid = item[0:index]
             print "Killing %s" % pid
-            os.kill(pid, 15)
+            os.kill(int(pid), 15)
             
             toremove = os.curdir + os.sep + item
             print "Deleting file %s" % toremove

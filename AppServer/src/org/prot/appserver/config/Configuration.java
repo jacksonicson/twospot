@@ -97,17 +97,16 @@ public class Configuration
 			configuration.dosPreventionTime = Long.parseLong(properties
 					.getProperty("appServer.security.DOSPrevention.time"));
 
+			configuration.workingDirectory = properties.getProperty("appserver.workDir");
+			
 			switch (configuration.serverMode)
 			{
 			case SERVER:
-				configuration.workingDirectory = properties.getProperty("appserver.workDir");
-
 				configuration.controllerRmiRegistryPort = Integer.parseInt(properties
 						.getProperty("rmi.controller.registry.port"));
 				break;
 
 			case DEVELOPMENT:
-				configuration.workingDirectory = properties.getProperty("appserver.workDir");
 				break;
 			}
 
@@ -130,7 +129,12 @@ public class Configuration
 	{
 		Configuration config = Configuration.configuration;
 
-		config.setAppDirectory(config.getWorkingDirectory() + "/" + config.getAppId());
+		String workingDir = config.getWorkingDirectory();
+
+		for (int i = 0; i < 5 & workingDir.endsWith("/"); i++)
+			workingDir = workingDir.substring(0, workingDir.length());
+
+		config.setAppDirectory(workingDir + "/" + config.getAppId());
 		logger.info("Configured AppDirectory: " + config.getAppDirectory());
 	}
 
