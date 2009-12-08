@@ -4,3 +4,8 @@
 <p>
 Es wird nicht der DNS-Server der FH verwendet. Bei Einsatz eines externen DNS-Server kann der Hostname sporadisch nicht aufgelöst werden. Abhilfe schafft die Eintragung des DNS-Servers der FH als alternativen DNS-Server. Dies funktioniert auch bei Rechnern außerhalb des FH-Netzwerkes. Die IP-Adresse des DNS-Servers ist: 141.82.16.242
 </p>
+
+<p><b>Das Starten einer Anwendung dauert sehr lange</b></p>
+<p>
+Beim ersten Start einer Anwendung wird exklusiv ein neuer AppServer-Prozess gestartet. Nachdem der AppServer-Prozess gestartet wurde, werden alle Requests mit "normaler" Geschwindigkeit verarbeitet. Das Starten des AppServer-Prozesses dauert leider noch etwas länger, da die AppServer-Prozesse noch nicht recycled werden.
+</p>
