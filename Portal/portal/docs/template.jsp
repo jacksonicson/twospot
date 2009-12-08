@@ -1,9 +1,11 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
 <%@ taglib uri='/WEB-INF/tlds/template.tld' prefix='template'%>
 <html>
 <head>
 <title></title>
 </head>
-<body onload="prettyPrint()">
+<body onLoad="prettyPrint()">
 
 <link href="prettify.css" type="text/css" rel="stylesheet" />
 <link href="twospot.css" type="text/css" rel="stylesheet" />

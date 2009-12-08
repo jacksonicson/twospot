@@ -1,0 +1,47 @@
+<h2>UserService</h2>
+
+<p>
+Die TwoSpot-Platform stellt einen zentralen Benutzer-Service zur Verfügung. Der Benutzerservice selbst ist in der Portal-Anwendung implementiert. Alle Registrierungsdaten wie z.B. Name, E-Mail und Passwort werden in der Portal-Datenbank gespeichert. Die TwoSpot-Anwendungen erhalten bis auf den Benutzernamen <b>keinen</b> Zugriff auf die  Registrierungsdaten.
+</p>
+
+<h3>Funktionsweise</h3>
+<p>
+Über die UserService-API können die TwoSpot-Anwendungen den Benutzer auf die Login-Seite des UserService weiterleiten. Bei der Weiteleitung werden dem UserService zwei URL's überben. Die <code>okUrl</code> wird vom UserService aufgerufen, falls sich der Benutzer mit gültigen Daten einloggt. Die <code>failedUrl</code> wird aufgerufen, falls der Benutzer den Login-Vorgang abbricht oder nicht eingeloggt werden konnte.
+</p>
+
+<h3>Verwendung</h3>
+<p>
+Der Zugriff auf den UserService erfolgt über das Interface <code>UserService</code>. Eine TwoSpot-Anwendung kann über die Factory <code>UserServiceFactory</code> ein konkretes <code>UserService</code>-Objekt laden. Der folgende Codeausschnitt demonstriert dies: 
+</p>
+
+<pre class="prettyprint lang java">
+UserService userService = UserServiceFactory.getUserService();
+</pre>
+
+<h4>Aktuellen Benutzer laden</h4>
+<p>
+Die wichtigste Methode des UserService ist die <code>getCurrentUser()</code>-Methode. Diese liefert entweder <code>null</code>, der aktuelle Benutzer ist nicht am UserService angemeldet, oder einen <code>String</code> zurück. Falls ein String zurückgegeben wird, enthält dieser den Benutzernamen. Dieser kann in der Datenbank als Fremdschlüssel eingesetzt werden, um z.B. Benutzerdaten abzulegen. 
+</p>
+<p>Das folgende Code-Beispiel zeigt eine typische Verwendung des UserService:</p>
+<pre class="prettyprint lang java">
+UserService userService = UserServiceFactory.getUserService();
+String user = userService.getCurrentUser();
+</pre>
+
+<h4>Benutzer auf Login-Seite weiterleiten</h4>
+<p>
+Über die Methode <code>getLoginUrl(String redirectUrl, String cancelUrl)</code> kann die URL zur Login-Seite des UserService's ermittelt werden. Die Methode erwartet zwei URL's als Argumente. Die <code>redirectUrl</code> gibt die Ziel-Seite an, auf die der Benutzer nach einem erfolgreichen Login weiterleitet werden soll. Die <code>cancelUrl</code> gibt die Ziel-Seite an, auf die der Benutzer beim Abbruch oder Fehlschlag des Logins vermittelt wird.
+</p>
+<p>
+Das Folgende Code-Beispiel zeigt eine typische Verwendung des UserService zum Einloggen eines Benutzers:</p>
+</p>
+<pre class="prettyprint lang java">
+UserService userService = UserServiceFactory.getUserService();
+String user = userService.getCurrentUser();
+if(user == null) 
+{
+	// Der Benutzer ist _nicht_ eingeloggt
+	String currUrl = request.getRequestURL();
+	String url = userService.getLoginUrl(currUrl + "/ok.html", currUrl + "/err.html");
+}
+</pre>
