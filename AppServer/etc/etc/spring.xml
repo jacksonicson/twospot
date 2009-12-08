@@ -14,7 +14,9 @@
 		<property name="runtimeRegistry" ref="RuntimeRegistry" />
 	</bean>
 
-	<bean id="AppFetcher" class="org.prot.appserver.appfetch.HttpAppFetcher" />
+	<bean id="AppFetcher" class="org.prot.appserver.appfetch.HttpAppFetcher">
+		<property name="url" value="${fileserver.url}" />
+	</bean>
 
 	<bean id="AppExtractor" class="org.prot.appserver.extract.WarExtractor" />
 

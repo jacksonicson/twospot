@@ -15,6 +15,8 @@ public class HttpAppFetcher implements AppFetcher
 
 	private HttpClient httpClient;
 
+	private String url;
+
 	private void startHttp()
 	{
 		try
@@ -64,7 +66,7 @@ public class HttpAppFetcher implements AppFetcher
 		};
 
 		exchange.setMethod("GET");
-		exchange.setURL("http://localhost:5050/" + appId); // TODO: Not static
+		exchange.setURL(url + appId);
 
 		try
 		{
@@ -104,5 +106,10 @@ public class HttpAppFetcher implements AppFetcher
 		}
 
 		return appInfo;
+	}
+
+	public void setUrl(String url)
+	{
+		this.url = url;
 	}
 }
