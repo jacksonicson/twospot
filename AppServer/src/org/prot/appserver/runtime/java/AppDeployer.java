@@ -47,6 +47,8 @@ public class AppDeployer extends AbstractLifeCycle
 
 	private void deploy() throws Exception
 	{
+		logger.debug("Deploying application");
+
 		webAppContext = new WebAppContext();
 		webAppContext.setWar(Configuration.getInstance().getAppDirectory());
 		webAppContext.setContextPath("/");
@@ -79,13 +81,15 @@ public class AppDeployer extends AbstractLifeCycle
 		webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
 				".*/jsp-api-[^/]*\\.jar$|.*/jsp-[^/]*\\.jar$");
 
-//		webAppContext.setMaxFormContentSize(3 * 1024 * 1024);
-		
+		// webAppContext.setMaxFormContentSize(3 * 1024 * 1024);
+
 		webAppContext.setDefaultsDescriptor("/etc/webdefault.xml");
 
+		logger.debug("Adding and starting handler");
 		contexts.addHandler(webAppContext);
 		if (contexts.isStarted())
 			contexts.start();
+		logger.debug("Application handler started");
 	}
 
 	public synchronized void setSessionManager(DistributedSessionManager sessionManager)

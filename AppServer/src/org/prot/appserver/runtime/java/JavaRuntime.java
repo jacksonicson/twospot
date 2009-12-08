@@ -3,8 +3,8 @@ package org.prot.appserver.runtime.java;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.prot.appserver.app.AppInfo;
 import org.prot.appserver.config.Configuration;
 import org.prot.appserver.runtime.AppRuntime;
@@ -31,10 +31,13 @@ public class JavaRuntime implements AppRuntime
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring_java.xml", getClass()));
 
 		// Configure server port
-		SelectChannelConnector connector = (SelectChannelConnector) factory.getBean("Connector");
-		connector.setPort(Configuration.getInstance().getAppServerPort());
+		int port = Configuration.getInstance().getAppServerPort();
+		logger.debug("Configuring server port: " + port);
+		Connector connector = (Connector) factory.getBean("Connector");
+		connector.setPort(port);
 
 		// Load and init AppDeployer
+		logger.debug("Initialize the AppDeployer");
 		AppDeployer deployer = (AppDeployer) factory.getBean("AppDeployer");
 		deployer.setAppInfo(appInfo);
 
@@ -43,6 +46,7 @@ public class JavaRuntime implements AppRuntime
 		server.addBean(deployer);
 		try
 		{
+			logger.debug("Starting jetty");
 			server.start();
 		} catch (Exception e)
 		{
