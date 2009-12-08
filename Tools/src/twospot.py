@@ -208,7 +208,8 @@ def runServer(directory):
 
     # Extract the working directory
     index = directory.find(appId)
-    directory = directory[0:index]
+    if index != -1:
+        directory = directory[0:index]
     
     # Launch the server process
     # -appId ff2 -appSrvPort 9090 -stdio true -controller false -workDir C:/temp/tests/
