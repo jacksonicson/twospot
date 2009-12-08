@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Collection;
 
-import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
@@ -13,6 +12,7 @@ import javax.jdo.Transaction;
 import org.apache.log4j.Logger;
 import org.prot.controller.config.Configuration;
 import org.prot.controller.manager.AppManager;
+import org.prot.controller.services.log.JdoConnection;
 import org.prot.util.ReservedAppIds;
 
 public class UserServiceImpl implements UserService
@@ -23,12 +23,11 @@ public class UserServiceImpl implements UserService
 
 	private PersistenceManagerFactory pmFactory;
 
-	private PersistenceManager persistenceManager;
+	private JdoConnection jdoConnection;
 
 	public UserServiceImpl()
 	{
-		pmFactory = JDOHelper.getPersistenceManagerFactory("etc/jdoDefault.properties");
-		persistenceManager = pmFactory.getPersistenceManager();
+		jdoConnection = new JdoConnection();
 	}
 
 	@Override
@@ -37,19 +36,26 @@ public class UserServiceImpl implements UserService
 		assert (uid != null);
 
 		// Query database
-		Query query = persistenceManager.newQuery(UserSession.class);
-		query.setFilter("sessionId == '" + uid + "'");
-		query.setUnique(true);
-
-		UserSession session = (UserSession) query.execute();
-		if (session != null)
+		PersistenceManager persistenceManager = jdoConnection.getPersistenceManager();
+		try
 		{
-			logger.warn("User session is not null");
-			return session.getUsername();
-		}
+			Query query = persistenceManager.newQuery(UserSession.class);
+			query.setFilter("sessionId == '" + uid + "'");
+			query.setUnique(true);
 
-		logger.warn("Could not find a user session for: " + uid);
-		return null;
+			UserSession session = (UserSession) query.execute();
+			if (session != null)
+			{
+				logger.warn("User session is not null");
+				return session.getUsername();
+			}
+
+			logger.warn("Could not find a user session for: " + uid);
+			return null;
+		} finally
+		{
+			jdoConnection.releasePersistenceManager(persistenceManager);
+		}
 	}
 
 	@Override
@@ -87,28 +93,35 @@ public class UserServiceImpl implements UserService
 		userSession.setSessionId(session);
 		userSession.setUsername(username);
 
-		Transaction tx = persistenceManager.currentTransaction();
+		PersistenceManager persistenceManager = jdoConnection.getPersistenceManager();
 		try
 		{
-			// Delete everything from previous sessions
-			tx.begin();
-			Query query = persistenceManager.newQuery(UserSession.class);
-			query.setFilter("username == '" + username + "'");
-			Collection<UserSession> oldSessions = (Collection<UserSession>) query.execute();
-			for (UserSession delete : oldSessions)
-				persistenceManager.deletePersistent(delete);
-			tx.commit();
+			Transaction tx = persistenceManager.currentTransaction();
+			try
+			{
+				// Delete everything from previous sessions
+				tx.begin();
+				Query query = persistenceManager.newQuery(UserSession.class);
+				query.setFilter("username == '" + username + "'");
+				Collection<UserSession> oldSessions = (Collection<UserSession>) query.execute();
+				for (UserSession delete : oldSessions)
+					persistenceManager.deletePersistent(delete);
+				tx.commit();
 
-			// Create a new entry for this session
-			tx.begin();
-			persistenceManager.makePersistent(userSession);
-			logger.debug("User session is persistent");
-			tx.commit();
+				// Create a new entry for this session
+				tx.begin();
+				persistenceManager.makePersistent(userSession);
+				logger.debug("User session is persistent");
+				tx.commit();
 
-		} catch (Exception e)
+			} catch (Exception e)
+			{
+				logger.error("Could not persistate user session", e);
+				tx.rollback();
+			}
+		} finally
 		{
-			logger.error("Could not persistate user session", e);
-			tx.rollback();
+			jdoConnection.releasePersistenceManager(persistenceManager);
 		}
 	}
 
@@ -120,14 +133,21 @@ public class UserServiceImpl implements UserService
 
 		assert (uid != null);
 
-		// Query database
-		Query query = persistenceManager.newQuery(UserSession.class);
-		query.setFilter("sessionId == '" + uid + "'");
-		query.setUnique(true);
+		PersistenceManager persistenceManager = jdoConnection.getPersistenceManager();
+		try
+		{
+			// Query database
+			Query query = persistenceManager.newQuery(UserSession.class);
+			query.setFilter("sessionId == '" + uid + "'");
+			query.setUnique(true);
 
-		UserSession session = (UserSession) query.execute();
-		if (session != null)
-			persistenceManager.deletePersistent(session);
+			UserSession session = (UserSession) query.execute();
+			if (session != null)
+				persistenceManager.deletePersistent(session);
+		} finally
+		{
+			jdoConnection.releasePersistenceManager(persistenceManager);
+		}
 	}
 
 	public void setAppManager(AppManager appManager)

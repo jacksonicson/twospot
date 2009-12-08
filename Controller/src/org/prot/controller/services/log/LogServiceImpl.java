@@ -31,22 +31,28 @@ public class LogServiceImpl implements LogService
 			return;
 
 		PersistenceManager pm = this.connection.getPersistenceManager();
-		Transaction tx = pm.currentTransaction();
-
-		LogMessage log = new LogMessage();
-		log.setAppId(appId);
-		log.setMessage(message);
-		log.setSeverity(0);
-
 		try
 		{
-			tx.begin();
-			pm.makePersistent(log);
-			tx.commit();
-		} catch (Exception e)
+			Transaction tx = pm.currentTransaction();
+
+			LogMessage log = new LogMessage();
+			log.setAppId(appId);
+			log.setMessage(message);
+			log.setSeverity(0);
+
+			try
+			{
+				tx.begin();
+				pm.makePersistent(log);
+				tx.commit();
+			} catch (Exception e)
+			{
+				tx.rollback();
+				logger.error("Could not write log message", e);
+			}
+		} finally
 		{
-			tx.rollback();
-			logger.error("Could not write log message" + e);
+			this.connection.releasePersistenceManager(pm);
 		}
 	}
 
@@ -57,22 +63,29 @@ public class LogServiceImpl implements LogService
 			return null;
 
 		PersistenceManager pm = this.connection.getPersistenceManager();
-		Transaction tx = pm.currentTransaction();
-
-		Query query = pm.newQuery(LogMessage.class);
-		String filter = "appId == '" + appId + "'";
-		if (severity != -1)
-			filter += " && severity == " + severity;
-		query.setFilter(filter);
-
-		List<LogMessage> logs = (List<LogMessage>) query.execute();
-		List<String> messages = new ArrayList<String>();
-		for (LogMessage message : logs)
+		try
 		{
-			messages.add(message.getMessage());
-		}
+			Transaction tx = pm.currentTransaction();
 
-		return messages;
+			Query query = pm.newQuery(LogMessage.class);
+			String filter = "appId == '" + appId + "'";
+			if (severity != -1)
+				filter += " && severity == " + severity;
+			query.setFilter(filter);
+
+			List<LogMessage> logs = (List<LogMessage>) query.execute();
+			List<String> messages = new ArrayList<String>();
+			for (LogMessage message : logs)
+			{
+				messages.add(message.getMessage());
+			}
+
+			return messages;
+
+		} finally
+		{
+			this.connection.releasePersistenceManager(pm);
+		}
 	}
 
 	public void setAppManager(AppManager appManager)

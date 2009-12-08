@@ -57,6 +57,7 @@ public class AppManager
 				return appInfo;
 			case STARTING:
 				// Don't change the state
+				logger.debug("AppServer is starting, waiting ...");
 				todo = Todo.WAIT;
 				break;
 			case OFFLINE:

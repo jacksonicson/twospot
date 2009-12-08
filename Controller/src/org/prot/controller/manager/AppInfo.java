@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jetty.continuation.Continuation;
 import org.prot.util.ReservedAppIds;
 
 public final class AppInfo
 {
+	private static final Logger logger = Logger.getLogger(AppInfo.class);
+	
 	// Maximum time until the AppServer is idle
 	private static final int MAX_TIME_TO_IDLE = 120 * 1000;
 
@@ -63,6 +66,7 @@ public final class AppInfo
 		synchronized (continuations)
 		{
 			this.continuations.add(continuation);
+			logger.debug("Number of continuations: " + this.continuations.size());
 		}
 	}
 
