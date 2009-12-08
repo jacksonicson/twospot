@@ -2,6 +2,7 @@ package org.prot.manager.balancing;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -18,8 +19,16 @@ public class SimpleLoadBalancer implements LoadBalancer
 	public Set<ControllerInfo> selectController(String appId)
 	{
 		Set<ControllerInfo> result = new HashSet<ControllerInfo>();
-
 		Collection<ControllerInfo> infos = registry.getControllers();
+
+		// Check if there are controllers available
+		if (infos.isEmpty())
+		{
+			logger.warn("Master does not have any controllers");
+			return result;
+		}
+
+		// Check if a Controller is already running this app
 		for (ControllerInfo info : infos)
 		{
 			Set<String> runningApps = info.getManagementData().getRunningApps();
@@ -33,10 +42,13 @@ public class SimpleLoadBalancer implements LoadBalancer
 			}
 		}
 
-		if (infos.isEmpty() == false)
-			result.add(infos.iterator().next());
-		else
-			logger.warn("Master doesn't have a Controller");
+		// Randomly select a new Controller
+		int size = infos.size();
+		ControllerInfo[] info = new ControllerInfo[size];
+		info = infos.toArray(info);
+
+		Random random = new Random();
+		result.add(info[Math.abs(random.nextInt()) % info.length]);
 
 		return result;
 	}
