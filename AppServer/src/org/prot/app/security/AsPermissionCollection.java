@@ -12,13 +12,18 @@ public class AsPermissionCollection extends PermissionCollection
 	private static final long serialVersionUID = 4860614223592800268L;
 
 	private Set<Permission> permissions = new HashSet<Permission>();
-	
+
 	private Set<Permission> cache = new HashSet<Permission>();
-	
+
+	public void addAll(PermissionCollection col)
+	{
+		permissions.addAll(Collections.list(col.elements()));
+	}
+
 	@Override
 	public void add(Permission permission)
 	{
-		permissions.add(permission); 
+		permissions.add(permission);
 	}
 
 	@Override
@@ -30,20 +35,20 @@ public class AsPermissionCollection extends PermissionCollection
 	@Override
 	public boolean implies(Permission permission)
 	{
-		if(cache.contains(permission))
+		if (cache.contains(permission))
 			return true;
-		
-		for(Permission perm : permissions)
+
+		for (Permission perm : permissions)
 		{
-			if(perm.implies(permission))
+			if (perm.implies(permission))
 			{
-				if(cache.contains(permission) == false)
-					cache.add(permission); 
-				
+				if (cache.contains(permission) == false)
+					cache.add(permission);
+
 				return true;
 			}
 		}
-		
-		return false; 
+
+		return false;
 	}
 }

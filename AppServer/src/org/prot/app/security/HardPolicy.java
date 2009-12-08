@@ -109,8 +109,8 @@ public class HardPolicy extends Policy
 	/**
 	 * Returns a CodeSource URL which includes the Java directory. The method
 	 * tries to read the path to the Java directory from the configuration. If
-	 * that fails the CodeSource URL is determined by using the
-	 * <code>getJdkUrl()</code> method.
+	 * that fails the CodeSource URL is by using the <code>getJdkUrl()</code>
+	 * method.
 	 * 
 	 * @see HardPolicy#getJdkUrl() getJdkUrl
 	 * @return CodeSource URL which implies the Java libs
@@ -446,14 +446,23 @@ public class HardPolicy extends Policy
 
 	public PermissionCollection getPermissions(CodeSource codesource)
 	{
-		logger.warn("Get permissions called - unsupported by this policy");
-		return globalPermission;
+		AsPermissionCollection perms = new AsPermissionCollection();
+		perms.addAll(globalPermission);
+
+		for (ProtectionDomain pd : pds)
+		{
+			if (pd.getCodeSource().implies(codesource))
+			{
+				perms.addAll(pd.getPermissions());
+			}
+		}
+
+		return perms;
 	}
 
 	public PermissionCollection getPermissions(ProtectionDomain domain)
 	{
-		logger.warn("Get permissions called - unsupported by this policy");
-		return globalPermission;
+		return getPermissions(domain.getCodeSource());
 	}
 
 	public boolean implies(ProtectionDomain domain, Permission permission)
