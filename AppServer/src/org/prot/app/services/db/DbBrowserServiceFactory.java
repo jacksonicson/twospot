@@ -4,6 +4,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 
 import org.apache.log4j.Logger;
+import org.prot.app.services.PrivilegedServiceException;
 import org.prot.appserver.config.Configuration;
 import org.springframework.remoting.rmi.RmiProxyFactoryBean;
 
@@ -54,8 +55,7 @@ public class DbBrowserServiceFactory
 
 	private static DbBrowserService createMockDbBrowserService()
 	{
-		// Service is privileged
-		return null;
+		throw new PrivilegedServiceException();
 	}
 
 	public static final DbBrowserService getDbBrowserService()

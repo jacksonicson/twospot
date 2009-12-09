@@ -31,6 +31,11 @@
 		</layout>
 	</appender>
 
+	<logger name="org.prot.appserver.services.log" additivity="true">
+		<level value="ALL" />
+		<appender-ref ref="ConsoleAppender" />
+	</logger>
+
 	<logger name="org.prot.appserver" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="Rolling" />
