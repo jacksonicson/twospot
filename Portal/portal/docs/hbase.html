@@ -1,0 +1,36 @@
+<h2>HBase</h2>
+
+<p>Aufgrund der Zielsetzung eine Platform für horizontal skalierbare Web-Anwendungen bereitzustellen, kommt in der TwoSpot-Plattform keine relationale Datenbank zum Einsatz. Anstelle dessen wird auf die Spalten-Basierte Datenbank HBase gesetzt. Diese basiert auf dem verteilten Dateisysteme HDFS, das den Kernbestandteil von Hadoop bildet.
+</p>
+
+<h3>Verwendung von HBase</h3>
+<p>Im Unterschied zu relationalen Datenbanken stellt HBase keine SQL-Schnittstelle zur Verfügung. Auch ein großteil der aus SQL-Datenbanken bekannten Funktionalität wie Primärschlüsse, Indices, Fremdschlüssel oder Constraints steht bei Verwendung der HBase-Datenbank nicht zur Verfügung.
+</p>
+
+<p>Der Zugriff auf die HBase-Datenbank aus TwoSpot-Anwendungen heraus erfolgt über JDO (Java Data Objects). JDO ist ein Standard der eine einheitliche Schnittstelle für das Arbeiten mit persistenten Daten beschreibt. Der Vorteil von JDO gegenüber JPA (Java Persistence API), Hibernate oder anderen OR-Mappern liegt in der Unabhängigkeit zu der zugrundeliegenden Speichertechnologie. Diese Eigenschaft wird auch als datastore-agnostic bezeichnet und bedeutet vereinfacht ausgedrückt, dass nicht nur relationale Datenbanken sondern jede beliebige Speicherlösung eingesetzt werden können. Beispiele hierfür sind Objektorientierte-, Dokumentenbasierte- oder auch Spalten-Basierte Datenbanken. Dementsprechend lässt sich JDO auch mit der HBase-Datenbank einsetzten. 
+</p>
+
+<h3>JDO in TwoSpot</h3>
+<p>
+Die TwoSpot-Plattform greift für die JDO-Implementierung auf das <a href="http://www.datanucleus.org/">DataNucleus-Framework</a> und das HBase- und H2-Plugin von DataNucleus zurück. Nachfolgend wird anhand eines einfachen Beispiels (Kommentarfunktion eines Blogs) gezeigt wie in TwoSpot Daten in die Datenbank geschrieben und wieder gelesen werden können. 
+</p>
+
+<p>
+Im ersten Schritt muss die Struktur der zu speichernden Daten beschrieben werden. Dies erfolgt durch die Definition einer Klasse mit Attributen. Nachfolgend ist enie Klasse dargestellt die einen Kommentar mit einem Namen enthält: 
+</p>
+
+<pre class="prettyprint lang-htm">
+
+</pre>
+
+<p>
+Anschließend müssen die Klasse und die persistenten Attribute annotiert werden. Die Klasse wird dabei mit <code>@PersistenceCapable</code> annotiert. Darüber erhält JDO die Information, dass es sich um eine persistente Klasse handelt. Alle persistenten Attribute werden mit <code>@Persistent<code> annotiert. Diese Attribute werden von JDO gespeichert. Es ist darüber hinauß sinnvoll nicht persistente Attribute mit <code>@NotPersistent</code> zu annotieren. Die annotierte <code>BlogEntry</code>-Klasse hat das folgende Aussehen:
+</p>
+
+<pre class="prettyprint lang-htm">
+
+</pre>
+
+<p>
+Um Instanzen der <code>BlogEntry</code>-Klasse zu speichern muss eine <code>PersisteceManagerFactory</code> erzeugt werden. 
+</p>
