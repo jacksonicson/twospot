@@ -39,7 +39,7 @@ public class UserServiceFactory
 					throw new NullPointerException();
 				}
 
-				UserService userService = new UserService(
+				UserServiceImpl userService = new UserServiceImpl(
 						(org.prot.controller.services.user.UserService) object);
 
 				// Object o = userService;
@@ -53,7 +53,7 @@ public class UserServiceFactory
 
 	private static UserService createMockUserService()
 	{
-		return new UserService(new MockUserService());
+		return new MockUserService();
 	}
 
 	public static UserService getUserService()

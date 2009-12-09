@@ -1,45 +1,34 @@
 package org.prot.app.services.user;
 
-import org.prot.controller.services.user.UserService;
-
 public class MockUserService implements UserService
 {
-	private String uid = null;
-	private String username = null;
 
 	@Override
-	public String getCurrentUser(String uid)
+	public String getCurrentUser()
 	{
-		// Check if the UID matches
-		if (this.uid.equals(uid))
-			return this.username;
-
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getLoginUrl(String redirectUrl, String cancelUrl)
 	{
-		// TODO - AppServer must implement some mock login system
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void registerUser(String token, String uid, String username)
+	public void registerUser(String uid, String username)
 	{
-		// Don't check the token - this is is only a mock implementation
-		this.uid = uid;
-		this.username = username;
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
-	public void unregisterUser(String token, String uid)
+	public void unregisterUser()
 	{
-		// Do nothing - user applications cannot executed privileged operations
-		this.uid = null;
-		this.username = null;
+		// TODO Auto-generated method stub
 
-		return;
 	}
 
 }
