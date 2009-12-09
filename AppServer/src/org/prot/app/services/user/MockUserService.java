@@ -44,7 +44,7 @@ public class MockUserService implements UserService
 		if (this.uid == null)
 			return null;
 
-		if (this.uid != uid)
+		if (this.uid.equals(uid) == false)
 			return null;
 
 		return currentUser;
