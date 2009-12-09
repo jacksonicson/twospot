@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="all" name="DevServerMock">
+
+	<import file="./classpath.xml" />
+
+	<property name="libs" value="../Libs" />
+	<property name="war" value="devserver.war" />
+
+	<property name="src" value="./src" />
+	<property name="build" value="./devserver/WEB-INF/classes" />
+
+	<target name="prepare">
+	</target>
+
+	<target name="cleanup">
+	</target>
+
+	<target name="enhance" description="DataNucleus enhancement">
+		<path id="enhancer.classpath">
+			<path refid="classpath" />
+
+			<fileset dir="../Libs/lib/datanucleus/">
+				<include name="**/*.jar" />
+			</fileset>
+
+			<pathelement location="${build}" />
+		</path>
+
+		<taskdef name="enhance"
+		         classpathref="enhancer.classpath"
+		         classname="org.datanucleus.enhancer.tools.EnhancerTask" />
+
+		<enhance classpathref="enhancer.classpath"
+		         failonerror="true"
+		         verbose="true">
+			<jvmarg line="-Dlog4j.configuration=${log4j.config.file}" />
+
+			<fileset dir="${build}">
+				<include name="**/*.class" />
+			</fileset>
+		</enhance>
+	</target>
+
+	<target name="build" depends="prepare">
+		<delete dir="${build}" />
+		<mkdir dir="${build}" />
+		<javac srcdir="${src}" destdir="${build}">
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+
+	<target name="package" depends="build,enhance">
+		<war destfile="${war}">
+			<fileset dir="devserver" />
+		</war>
+	</target>
+
+	<target name="mkcp">
+		<exec executable="python">
+			<arg value="../Build/buildclasspath.py" />
+		</exec>
+	</target>
+
+	<target name="all" depends="prepare,package,cleanup" />
+
+</project>

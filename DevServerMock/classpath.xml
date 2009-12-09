@@ -1,0 +1,4 @@
+<project><path id='classpath'><pathelement location="../Libs/gen/twospot-appserver.jar" />
+<pathelement location="../Libs/lib/jetty-7.0.0/jsp-api-2.1-7.0.0pre2.jar" />
+<pathelement location="../Libs/lib/jetty-7.0.0/servlet-api-2.5.jar" />
+</path></project>
