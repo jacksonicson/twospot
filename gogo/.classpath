@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="lib/asm-3.1.jar"/>
-	<classpathentry kind="lib" path="lib/datanucleus-core-2.0.0-m3.jar"/>
-	<classpathentry kind="lib" path="lib/datanucleus-enhancer-2.0.0-m3.jar"/>
-	<classpathentry kind="lib" path="lib/jdo2-api-2.3-eb.jar"/>
-	<classpathentry kind="lib" path="lib/jsp-api-2.1-7.0.0pre2.jar"/>
-	<classpathentry kind="lib" path="lib/servlet-api-2.5.jar"/>
-	<classpathentry kind="lib" path="lib/twospot-appserver.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Libs/gen/twospot-appserver.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/asm-3.1.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/jdo2-api-2.3-eb.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-core-2.0.0-m3.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jsp-api-2.1-7.0.0pre2.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/servlet-api-2.5.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>
