@@ -35,6 +35,7 @@
 	</target>
 
 	<target name="build">
+		<delete dir="${dest}" />
 		<mkdir dir="${dest}" />
 		<javac srcdir="${src}" destdir="${dest}">
 			<classpath refid="classpath" />

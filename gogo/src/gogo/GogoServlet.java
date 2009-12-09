@@ -35,9 +35,9 @@ public class GogoServlet extends HttpServlet
 			logService.info("User is not logged in! - redirecting");
 			String url = request.getRequestURL().toString();
 
-			// response.sendRedirect(userService.getLoginUrl(url, url));
+			response.sendRedirect(userService.getLoginUrl(url, url));
 
-			// return;
+			return;
 		}
 
 		logService.info("User is logged in: " + userService.getCurrentUser());
