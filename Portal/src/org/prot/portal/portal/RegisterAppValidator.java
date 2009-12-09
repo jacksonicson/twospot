@@ -44,14 +44,15 @@ public class RegisterAppValidator implements Validator
 			org.prot.app.services.user.UserService platUserService = UserServiceFactory.getUserService();
 			PlatformUser user = userService.getUser(platUserService.getCurrentUser());
 			Set<String> apps = appService.getApplications(platUserService.getCurrentUser());
-			if(user.getMaxApps() <= apps.size())
-				errors.rejectValue("appId", "", "Cannot create another App. Maximal number of Apps is: " + user.getMaxApps());
-				
+			if (user.getMaxApps() <= apps.size())
+				errors.rejectValue("appId", "", "Cannot create another App. Maximal number of Apps is: "
+						+ user.getMaxApps());
+
 			// Check if appId already exists
-			boolean exists = appService.existsApplication(registeredApp.getAppId()); 
-			if(exists == true)
+			boolean exists = appService.existsApplication(registeredApp.getAppId());
+			if (exists == true)
 			{
-				errors.rejectValue("appId", "", "AppId already exists"); 
+				errors.rejectValue("appId", "", "AppId already exists");
 			}
 		}
 	}
