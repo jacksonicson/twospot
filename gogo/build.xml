@@ -17,13 +17,11 @@
 			<pathelement location="${dest}" />
 		</path>
 
-		<taskdef name="enhance"
-		         classpathref="enhancer.classpath"
-		         classname="org.datanucleus.enhancer.tools.EnhancerTask" />
+		<taskdef name="enhance" classpathref="enhancer.classpath"
+			classname="org.datanucleus.enhancer.tools.EnhancerTask" />
 
-		<enhance classpathref="enhancer.classpath"
-		         failonerror="true"
-		         verbose="false">
+		<enhance classpathref="enhancer.classpath" failonerror="true"
+			verbose="false">
 
 			<jvmarg line="-Dlog4j.configuration=${log4j.config.file}" />
 
@@ -32,6 +30,12 @@
 			</fileset>
 
 		</enhance>
+	</target>
+
+	<target name="mkcp">
+		<exec executable="python">
+			<arg value="../Build/buildclasspath.py" />
+		</exec>
 	</target>
 
 	<target name="build">

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="internAll" name="GoGo Intern">
+
+	<property name="src" value="./src" />
+	<property name="dest" value="./WEB-INF/classes" />
+	<property name="libdir" value="./lib" />
+
+	<import file="./build.xml" />
+	<import file="./classpath.xml" />
+
+	<target name="updateJars">
+		<delete dir="./lib" />
+		<mkdir dir="./lib" />
+
+		<copy todir="./lib" flatten="true">
+			<fileset refid="libfiles">
+			</fileset>
+		</copy>
+
+	</target>
+
+	<target name="internAll" depends="updateJars,all" /> 
+	
+</project>
