@@ -13,7 +13,7 @@ public final class AppInfo
 	private static final Logger logger = Logger.getLogger(AppInfo.class);
 	
 	// Maximum time until the AppServer is idle
-	private static final int MAX_TIME_TO_IDLE = 120 * 1000;
+	private static final int MAX_TIME_TO_IDLE = 30 * 60 * 1000;
 
 	// AppId
 	private final String appId;
