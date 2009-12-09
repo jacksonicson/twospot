@@ -1,8 +1,14 @@
 package gogo;
 
+import gogo.data.BlogEntry;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Transaction;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,13 +34,34 @@ public class GogoServlet extends HttpServlet
 		{
 			logService.info("User is not logged in! - redirecting");
 			String url = request.getRequestURL().toString();
-			
+
 			// response.sendRedirect(userService.getLoginUrl(url, url));
-			
+
 			// return;
 		}
 
 		logService.info("User is logged in: " + userService.getCurrentUser());
+
+		// Use the DataStore
+		PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("etc/jdoDefault.properties");
+		PersistenceManager manager = pmf.getPersistenceManager();
+		Transaction tx = manager.currentTransaction();
+		tx.begin();
+
+		try
+		{
+
+			BlogEntry entry = new BlogEntry();
+			entry.setUsername("test");
+			entry.setMessage("test");
+
+			manager.makePersistent(entry);
+
+			tx.commit();
+		} catch (Exception e)
+		{
+			tx.rollback();
+		}
 
 		PrintWriter out = response.getWriter();
 		out.write("GoGo - Hello World");

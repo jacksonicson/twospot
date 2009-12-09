@@ -1,0 +1,7 @@
+./Libs/gen/twospot-appserver.jar
+./Libs/lib/datanucleus/deps/asm-3.1.jar
+./Libs/lib/datanucleus/deps/jdo2-api-2.3-eb.jar
+./Libs/lib/datanucleus/datanucleus-core-2.0.0-m3.jar
+./Libs/lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar
+./Libs/lib/jetty-7.0.0/jsp-api-2.1-7.0.0pre2.jar
+./Libs/lib/jetty-7.0.0/servlet-api-2.5.jar

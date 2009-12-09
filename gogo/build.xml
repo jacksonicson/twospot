@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="all" name="GoGo">
 
-	<path id="classpath">
-		<fileset dir="libs">
-			<include name="**/*.jar"/>
-		</fileset>
+	<!-- Directory of the DevServer-Libs -->
+	<property name="libs" value="." />
+
+	<path id="classpath2" location="${libs}">
+		<path refid="classpath" />
 	</path>
 	
-	<property name="libs" value="../Libs" />
-	<property name="war" value="devserver.war" />
+	<import file="./classpath.xml" />
 
 	<property name="src" value="./src" />
 	<property name="build" value="./WEB-INF/classes" />
@@ -25,9 +25,7 @@
 			<pathelement location="${build}" />
 		</path>
 
-		
 		<taskdef name="enhance" classpathref="enhancer.classpath" classname="org.datanucleus.enhancer.tools.EnhancerTask" />
-		
 
 		<enhance classpathref="enhancer.classpath" failonerror="true" verbose="true">
 			<jvmarg line="-Dlog4j.configuration=${log4j.config.file}" />
@@ -39,13 +37,10 @@
 	</target>
 
 	<target name="build" depends="prepare">
-		<mkdir dir="${build}"/>
+		<mkdir dir="${build}" />
 		<javac srcdir="${src}" destdir="${build}">
 			<classpath refid="classpath" />
 		</javac>
-	</target>
-
-	<target name="package" depends="build,enhance">
 	</target>
 
 	<target name="mkcp">
@@ -54,10 +49,6 @@
 		</exec>
 	</target>
 
-	<target name="deploy" depends="all">
-		<move file="${war}" todir="C:/temp/files/" />
-	</target>
-
-	<target name="all" depends="prepare,package,cleanup" />
+	<target name="all" depends="prepare,build,enhance,cleanup" />
 
 </project>
