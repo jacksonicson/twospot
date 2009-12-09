@@ -9,7 +9,7 @@ Es wird nicht der DNS-Server der FH verwendet. Bei Einsatz eines externen DNS-Se
 
 <p><b>Das Starten einer Anwendung dauert sehr lange</b></p>
 <p>
-Beim ersten Start einer Anwendung wird exklusiv ein neuer AppServer-Prozess gestartet. Nachdem der AppServer-Prozess gestartet wurde, werden alle Requests mit "normaler" Geschwindigkeit verarbeitet. Das Starten des AppServer-Prozesses dauert leider noch etwas länger, da die AppServer-Prozesse noch nicht recycled werden.
+Beim ersten Start einer Anwendung wird exklusiv ein neuer AppServer-Prozess gestartet. Nachdem der AppServer-Prozess gestartet wurde, werden alle Requests mit "normaler" Geschwindigkeit verarbeitet. Das Starten des AppServer-Prozesses dauert leider noch etwas länger, da die AppServer-Prozesse noch nicht im Cache gehalten werden.
 </p>
 <p>
 Die Startgeschwindigkeit ist zudem abhängig von der Anwendung selbst. Führt die Anwendung bei der Initialisierung sehr viel Code aus, so dauert der Start auch dementsprechend länger! Die Startgeschwindigkeit einer einfachen HelloWorld-Anwendung beträgt zwischen <b>7 und 15</b> Sekunden. 

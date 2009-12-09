@@ -2,20 +2,20 @@
 
 <h3>Setup</h3>
 <p>
-Das DevServer ZIP-Paket kann <a href="downloads.jsp">hier</a> heruntergeladen werden. Das Paket kann in ein beliebiges Verzeichnis extrahiert werden. Dieses muss anschließend in die <code>PATH</code>-Umgebungsvariable aufgenommen werden.
+Das DevServer ZIP-Paket kann <a href="downloads.jsp">hier</a> heruntergeladen werden. Das Paket kann in ein beliebiges Verzeichnis extrahiert werden und muss anschließend in die <code>PATH</code>-Umgebungsvariable aufgenommen werden.
 </p>
 
 <h3>Konfiguration</h3>
 <p>
-Vor dem Start des DevServers müssen eninige wenige Konfigurationseinstellungen vorgenommen werden. Diese betreffen im Wesentlichen das Scratch-Verzeichnis. Dieses wird vom DevServer für temporäre Dateien genutzt. Zum Beispiel werden JSP-Seiten in das Scratch-Verzecihnis kompiliert. 
+Bevor der DevServer gestartet werden kann, müssen einige wenige Konfigurationseinstellungen vorgenommen werden. Diese betreffen im Wesentlichen das Scratch-Verzeichnis. Dieses wird vom DevServer für temporäre Dateien genutzt. Zum Beispiel werden die Servlets der JSP-Seiten im dem Scratch-Verzeichnis angelegt und kompiliert.
 </p>
 
 <p>
-Die Konfigurationseinstellungen befinden sich in der <code>devserver/conf/appserver/etc/appServer.properties</code> Datei. Der anzupassende Schlüssel lautet <code>appServer.scratchdir</code> (Zeile 9). Das folgende Beispiel zeigt eine korrekt konfigurierte <code>appServer.properties</code>-Datei mit dem Scratch-Dir <code>C:/temp/scratch</code>.
+Die Konfigurationseinstellungen befinden sich in der <code>/conf/appserver/etc/appServer.properties</code>-Datei. Der anzupassende Schlüssel für das Scratch-Verzeichnis lautet <code>appServer.scratchdir</code> (Zeile 9). Das folgende Beispiel zeigt eine korrekt konfigurierte <code>appServer.properties</code>-Datei mit dem Scratch-Verzeichnis <code>C:/temp/scratch</code>.
 </p>
 
 <p>
-<p>Das Scratch-Verzeichnis muss bereits existieren! Es wird nicht vom DevServer erstellt!</p>
+<b>Das Scratch-Verzeichnis muss bereits existieren! Es wird nicht vom DevServer erstellt!</b>
 </p>
 
 <pre class="prettyprint">
@@ -26,7 +26,7 @@ appServer.mode=DEVELOPMENT
 # Defines the working directory in which the extracted application directores reside
 appserver.workDir=
 
-# Defines the scratch dir wich is used by the JSP-Compiler (TODO: Currently unused!!!)
+# Defines the scratch dir wich is used by the JSP-Compiler
 appServer.scratchdir=C:/temp/scratch
 
 ### Security options ###
@@ -39,28 +39,28 @@ appServer.security.DOSPrevention.time=40000
 </p>
 
 <pre class="prettypring">
-/home/alf/dev/gogo> twospot.py --runServer
+home/alf/dev/gogo> twospot.py --runServer
 </pre>
 
 <p>
-Nach dem Start ist der DevServer auf dem Port <b>8080</b> verfügbar. Die gogo-Anwendung ist dann z.B. über die http-Adresse <code>http://localhost:8080/</code> erreichbar.
+Nach dem Start ist der DevServer und die Anwendung auf dem Port <b>8080</b> erreichbar. Die Starseite der gogo-Anwendung ist z.B. über die http-Adresse <code>http://localhost:8080/</code> erreichbar.
 </p>
 
 <h3>Unterschiede zur Produktionsumgebung</h3>
 
 <h4>Security</h4>
 <p>
-Der AppServer der Produktionsumgebung aktiviert die Java Sicherheitsmechnismen. Die Anwendung wird somit in einer Sandbox ausgeführt. Grundsätzlich kann die Anwendung in keiner Form auf Funktionen des Betriebssystems zurückgreifen. Es ist also nicht möglich mit Dateien zu arbeiten. 
+In der Produktionsumgebung aktiviert der AppServer die Java Sicherheitsmechnismen. Die Anwendung wird somit in einer Sandbox ausgeführt. Grundsätzlich kann die Anwendung in keiner Form auf Funktionen des Betriebssystems zurückgreifen. Es ist also z.B. nicht möglich mit Dateien zu arbeiten.
 </p>
 
 <h4>Datenbank</h4>
 <p>
-Leider ist es nicht möglich die HBase-Datenbank mit dem DevServer auszuführen. Aus diesem Grund verwendet der DevServer die <a href="http://www.h2database.com">H2-Datenbank</a>. Der Zugriff auf die Datenbank erfolgt analog zur Produktionsumgebung über JDO. Bei der H2-Datenbank handelt es sich um eine typische relationale Datenbank mit einem wesentlich größeren Funktionsumfang als HBase. Eine genauere Beschreibung des Datenbankzugriffes ist <a href="hbase.jsp">hier</a> zu finden. 
+Leider ist es nicht möglich die HBase-Datenbank im DevServer auszuführen. Aus diesem Grund verwendet der DevServer die <a href="http://www.h2database.com">H2-Datenbank</a>. Der Zugriff auf die Datenbank erfolgt analog zur Produktionsumgebung über JDO. Bei der H2-Datenbank handelt es sich um eine typische relationale Datenbank mit einem wesentlich größeren Funktionsumfang als HBase. Eine genauere Beschreibung des Datenbankzugriffes ist <a href="hbase.jsp">hier</a> zu finden. Für die Anwendung ist die zugrundeliegende Datenbank aufgrund des Einsatzes von JDO weitgehend transparent.
 </p>
 
 <h4>UserService</h4>
 <p>
-Die TwoSpot-Plattform stellt einen zentralen Benutzerservice mit einer einfachen API zur Verfügung. Der DevServer enthält eine Mock-Implementierung der UserService-API. Die Mock-Implementierung simuliert den Benutzerservice, enthält aber keine Funktionen zur Authentifizierung.
+Die TwoSpot-Plattform stellt einen zentralen Benutzerservice mit einer einfachen API zur Verfügung. Der DevServer enthält eine Mock-Implementierung der UserService-API. Die Mock-Implementierung simuliert den Benutzerservice, enthält aber keine Funktionen zur Authentifizierung. Außerdem ist die Mock-Implementierung nur für den Betrieb mit <b>einem</b> Anwender bzw. einer Session konzipiert. Es können sicht also nicht mehere Anwender gleichzeitg am System anmelden!
 </p>
 
 <h4>LogService</h4>
