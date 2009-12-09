@@ -19,18 +19,98 @@ Die TwoSpot-Plattform greift für die JDO-Implementierung auf das <a href="http:/
 Im ersten Schritt muss die Struktur der zu speichernden Daten beschrieben werden. Dies erfolgt durch die Definition einer Klasse mit Attributen. Nachfolgend ist enie Klasse dargestellt die einen Kommentar mit einem Namen enthält: 
 </p>
 
-<pre class="prettyprint lang-htm">
+<pre class="prettyprint lang-java">
+public class BlogEntry
+{
+	private String username; 
+	
+	private String message;
 
+	public String getUsername()
+	{
+		return username;
+	}
+
+	public void setUsername(String username)
+	{
+		this.username = username;
+	}
+
+	public String getMessage()
+	{
+		return message;
+	}
+
+	public void setMessage(String message)
+	{
+		this.message = message;
+	}
+}
 </pre>
 
 <p>
-Anschließend müssen die Klasse und die persistenten Attribute annotiert werden. Die Klasse wird dabei mit <code>@PersistenceCapable</code> annotiert. Darüber erhält JDO die Information, dass es sich um eine persistente Klasse handelt. Alle persistenten Attribute werden mit <code>@Persistent<code> annotiert. Diese Attribute werden von JDO gespeichert. Es ist darüber hinauß sinnvoll nicht persistente Attribute mit <code>@NotPersistent</code> zu annotieren. Die annotierte <code>BlogEntry</code>-Klasse hat das folgende Aussehen:
+Anschließend müssen die Klasse und die persistenten Attribute annotiert werden. Die Klasse wird dabei mit <code>@PersistenceCapable</code> annotiert. Darüber erhält JDO die Information, dass es sich um eine persistente Klasse handelt. Alle persistenten Attribute werden mit <code>@Persistent</code> annotiert. Diese Attribute werden von JDO gespeichert. Es ist darüber hinauß sinnvoll nicht persistente Attribute mit <code>@NotPersistent</code> zu annotieren. Die annotierte <code>BlogEntry</code>-Klasse hat das folgende Aussehen:
 </p>
 
-<pre class="prettyprint lang-htm">
+<pre class="prettyprint lang-java">
+@PersistenceCapable
+public class BlogEntry
+{
+	@Persistent
+	private String username; 
+	
+	@Persistent
+	private String message;
 
+	public String getUsername()
+	{
+		return username;
+	}
+
+	public void setUsername(String username)
+	{
+		this.username = username;
+	}
+
+	public String getMessage()
+	{
+		return message;
+	}
+
+	public void setMessage(String message)
+	{
+		this.message = message;
+	}
+}
 </pre>
 
 <p>
-Um Instanzen der <code>BlogEntry</code>-Klasse zu speichern muss eine <code>PersisteceManagerFactory</code> erzeugt werden. 
+Um Instanzen der <code>BlogEntry</code>-Klasse zu speichern muss eine <code>PersisteceManagerFactory</code> erzeugt werden. Über diese kann ein <code>PersistenceManager</code> erzeugt werden. Mithilfe des <code>PersistenceManager</code>'s können persistence Objekte in der Datenbank gespeichert werden. 
 </p>
+<p>
+Der folgende Quellcodeausschnitt erstellt eine Instanz der <code>BlogEntry</code>-Klasse und speichert das Objet in der Datenbank. 
+</p>
+
+<pre class="prettyprint lang-java">
+PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("etc/jdoDefault.properties");
+PersistenceManager manager = pmf.getPersistenceManager();
+Transaction tx = manager.currentTransaction();
+tx.begin();
+
+try
+{
+
+	BlogEntry entry = new BlogEntry();
+	entry.setUsername("test");
+	entry.setMessage("test");
+
+	manager.makePersistent(entry);
+
+	tx.commit();
+} catch (Exception e)
+{
+	tx.rollback();
+}
+</pre>
+
+
