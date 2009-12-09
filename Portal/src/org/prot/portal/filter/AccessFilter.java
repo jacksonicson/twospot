@@ -39,14 +39,14 @@ public class AccessFilter extends GenericFilterBean
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 			ServletException
 	{
-		HttpServletRequest httpRequest = (HttpServletRequest)request;
-		String uri = httpRequest.getRequestURI(); 
-		int index = uri.lastIndexOf("/");
-		if(index != -1)
-			uri = uri.substring(index + 1); 
-		
-		String user = service.getCurrentUser();
-		logger.info("User: " + user);
+//		HttpServletRequest httpRequest = (HttpServletRequest)request;
+//		String uri = httpRequest.getRequestURI(); 
+//		int index = uri.lastIndexOf("/");
+//		if(index != -1)
+//			uri = uri.substring(index + 1); 
+//		
+//		String user = service.getCurrentUser();
+//		logger.info("User: " + user);
 		
 //		if(user == null)
 //		{
