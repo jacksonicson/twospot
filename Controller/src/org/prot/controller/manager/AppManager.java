@@ -1,6 +1,5 @@
 package org.prot.controller.manager;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -38,7 +37,7 @@ public class AppManager
 	public AppInfo requireApp(String appId)
 	{
 		logger.debug("Required AppId: " + appId);
-		
+
 		// Get or register the AppServer
 		AppInfo appInfo = registry.getOrRegisterApp(appId);
 
@@ -90,8 +89,6 @@ public class AppManager
 
 	public boolean checkToken(String token)
 	{
-		// return true;
-
 		logger.debug("Checking token: " + token);
 
 		// False if there is no token

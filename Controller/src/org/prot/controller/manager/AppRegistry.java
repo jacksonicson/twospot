@@ -1,24 +1,26 @@
 package org.prot.controller.manager;
 
+import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
-import java.util.Stack;
 
 import org.apache.log4j.Logger;
 
 class AppRegistry
 {
 	private static final Logger logger = Logger.getLogger(AppRegistry.class);
-	
+
 	private final int startPort = 9090;
 
 	private int currentPort = startPort;
 
-	private Stack<Integer> freePorts = new Stack<Integer>();
+	private Queue<Integer> freePorts = new LinkedList<Integer>();
 
 	private Map<String, AppInfo> appInfos = new HashMap<String, AppInfo>();
 
@@ -28,8 +30,35 @@ class AppRegistry
 		if (freePorts.isEmpty())
 			return this.currentPort++;
 
-		// Recycle a free port
-		return freePorts.pop();
+		// Find a free port
+		List<Integer> testedPorts = new ArrayList<Integer>();
+		int port = -1;
+		while (freePorts.isEmpty() == false)
+		{
+			port = freePorts.poll();
+			try
+			{
+				ServerSocket socket = new ServerSocket(port);
+				socket.close();
+			} catch (Exception e)
+			{
+				logger.warn("AppRegsitry could not reuse port: " + port);
+				testedPorts.add(port);
+				port = -1;
+				continue;
+			}
+
+			break;
+		}
+
+		// Add all failed ports to the queue
+		freePorts.addAll(testedPorts);
+
+		// Did we find a port - if not we use a new port!
+		if (port == -1)
+			port = this.currentPort++;
+
+		return port;
 	}
 
 	private void putApp(AppInfo appInfo)
@@ -95,10 +124,7 @@ class AppRegistry
 		{
 			for (AppInfo info : delete)
 			{
-				appInfos.remove(info.getAppId());
-
-				logger.debug("Releasing port: " + info.getPort());
-				freePorts.add(info.getPort());
+				deleteApp(info.getAppId());
 			}
 		}
 	}
@@ -108,7 +134,7 @@ class AppRegistry
 		Set<AppInfo> idleApps = null;
 		for (AppInfo info : appInfos.values())
 		{
-			AppState state = info.getStatus(); 
+			AppState state = info.getStatus();
 			if (info.isIdle() || state == AppState.FAILED || state == AppState.KILLED)
 			{
 				if (idleApps == null)
