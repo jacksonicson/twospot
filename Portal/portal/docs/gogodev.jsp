@@ -3,5 +3,5 @@
 <template:insert template='template.jsp'>
      <template:put name='header' content='./header.html' />
      <template:put name='navigation' content='./navigation.html' />
-     <template:put name='page' content='./helloworld_java.html' />
+     <template:put name='page' content='./gogodev.html' />
 </template:insert>
