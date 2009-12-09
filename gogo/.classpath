@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="libs/asm-3.1.jar"/>
+	<classpathentry kind="lib" path="libs/datanucleus-enhancer-2.0.0-m3.jar"/>
+	<classpathentry kind="lib" path="libs/jdo2-api-2.3-eb.jar"/>
+	<classpathentry kind="lib" path="libs/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="libs/twospot-appserver.jar"/>
+	<classpathentry kind="lib" path="libs/servlet-api-2.5.jar"/>
+	<classpathentry kind="output" path="WEB-INF/classes"/>
+</classpath>
