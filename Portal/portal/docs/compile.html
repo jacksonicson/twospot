@@ -1,6 +1,6 @@
-<h2>Kompilieren einer Anwendung</h2>
+ï»¿<h2>Kompilieren einer Anwendung</h2>
 
-<p>Um TwoSpot-Anwendungen zu komplilieren werden einige Bibliotheken benötigt. Diese befinden sich alle im <code>/dev</code>-Verzeichnis des DevServer's. Die JAR-Dateien sollten <b>nicht</b> in das <code>WEB-INF/lib</code>-Verzeichnis der Web-Anwendung übertragen werden, da sie bereits im DevServer selbst enthalten sind. 
+<p>Um TwoSpot-Anwendungen zu komplilieren werden einige Bibliotheken benÃ¶tigt. Diese befinden sich alle im <code>/dev</code>-Verzeichnis des DevServer's. Die JAR-Dateien sollten <b>nicht</b> in das <code>WEB-INF/lib</code>-Verzeichnis der Web-Anwendung Ã¼bertragen werden, da sie bereits im DevServer selbst enthalten sind. 
 </p>
 <p>
 Zum Kompilieren von TwoSpot-Anwendungen wird eine ANT-Buildfile eingesetzt. Eine Template-Version dieser Buildfile ist im nachfolgend dargestellt.
@@ -62,12 +62,12 @@ Zum Kompilieren von TwoSpot-Anwendungen wird eine ANT-Buildfile eingesetzt. Eine
     /WEB-INF
       /lib
       /classes (Dorthin werden die Quellcode-Dateien kompiliert)
-    /lib (Enthält alle JAR-Dateien aus dem /dev-Verzeichnis des DevServers)
+    /lib (EnthÃ¤lt alle JAR-Dateien aus dem /dev-Verzeichnis des DevServers)
     /build.xml (Die oben dargestellte build.xml-Datei)
     /app.yaml (Anwendungskonfiguration)
 </pre>
 
-<p>Um die Anwendung zu kompilieren muss lediglich das ANT-Script ausgeführt werden. Es wird dabei eine funktionierende ANT-Installation vorrausgesetzt:</p>
+<p>Um die Anwendung zu kompilieren muss lediglich das ANT-Script ausgefÃ¼hrt werden. Es wird dabei eine funktionierende ANT-Installation vorrausgesetzt:</p>
 
 <pre class="prettyprint lang-htm">
 ant -f build.xml

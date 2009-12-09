@@ -1,17 +1,17 @@
-<h2>DevServer</h2>
+ï»¿<h2>DevServer</h2>
 
 <h3>Setup</h3>
 <p>
-Das DevServer ZIP-Paket kann <a href="downloads.jsp">hier</a> heruntergeladen werden. Das Paket kann in ein beliebiges Verzeichnis extrahiert werden und muss anschließend in die <code>PATH</code>-Umgebungsvariable aufgenommen werden.
+Das DevServer ZIP-Paket kann <a href="downloads.jsp">hier</a> heruntergeladen werden. Das Paket kann in ein beliebiges Verzeichnis extrahiert werden und muss anschlieÃŸend in die <code>PATH</code>-Umgebungsvariable aufgenommen werden.
 </p>
 
 <h3>Konfiguration</h3>
 <p>
-Bevor der DevServer gestartet werden kann, müssen einige wenige Konfigurationseinstellungen vorgenommen werden. Diese betreffen im Wesentlichen das Scratch-Verzeichnis. Dieses wird vom DevServer für temporäre Dateien genutzt. Zum Beispiel werden die Servlets der JSP-Seiten im dem Scratch-Verzeichnis angelegt und kompiliert.
+Bevor der DevServer gestartet werden kann, mÃ¼ssen einige wenige Konfigurationseinstellungen vorgenommen werden. Diese betreffen im Wesentlichen das Scratch-Verzeichnis. Dieses wird vom DevServer fÃ¼r temporÃ¤re Dateien genutzt. Zum Beispiel werden die Servlets der JSP-Seiten im dem Scratch-Verzeichnis angelegt und kompiliert.
 </p>
 
 <p>
-Die Konfigurationseinstellungen befinden sich in der <code>/conf/appserver/etc/appServer.properties</code>-Datei. Der anzupassende Schlüssel für das Scratch-Verzeichnis lautet <code>appServer.scratchdir</code> (Zeile 9). Das folgende Beispiel zeigt eine korrekt konfigurierte <code>appServer.properties</code>-Datei mit dem Scratch-Verzeichnis <code>C:/temp/scratch</code>.
+Die Konfigurationseinstellungen befinden sich in der <code>/conf/appserver/etc/appServer.properties</code>-Datei. Der anzupassende SchlÃ¼ssel fÃ¼r das Scratch-Verzeichnis lautet <code>appServer.scratchdir</code> (Zeile 9). Das folgende Beispiel zeigt eine korrekt konfigurierte <code>appServer.properties</code>-Datei mit dem Scratch-Verzeichnis <code>C:/temp/scratch</code>.
 </p>
 
 <p>
@@ -35,7 +35,7 @@ appServer.security.DOSPrevention.time=40000
 </pre>
 
 <h3>Starten</h3>
-<p>Der Start des DevServers erfolgt über das <code>twospot.py</code> Tools-Script. Dieses muss in dem Verzeichnis der auszuführenden Anwendung gestartet werden. Im Beispiel befindet sich die Anwendung <b>gogo</b> im Verzeichnis <code>/home/alf/dev/gogo</code>. Der DevServer wird dann wie folgt gestartet: 
+<p>Der Start des DevServers erfolgt Ã¼ber das <code>twospot.py</code> Tools-Script. Dieses muss in dem Verzeichnis der auszufÃ¼hrenden Anwendung gestartet werden. Im Beispiel befindet sich die Anwendung <b>gogo</b> im Verzeichnis <code>/home/alf/dev/gogo</code>. Der DevServer wird dann wie folgt gestartet: 
 </p>
 
 <pre class="prettypring">
@@ -43,27 +43,27 @@ home/alf/dev/gogo> twospot.py --runServer
 </pre>
 
 <p>
-Nach dem Start ist der DevServer und die Anwendung auf dem Port <b>8080</b> erreichbar. Die Starseite der gogo-Anwendung ist z.B. über die http-Adresse <code>http://localhost:8080/</code> erreichbar.
+Nach dem Start ist der DevServer und die Anwendung auf dem Port <b>8080</b> erreichbar. Die Starseite der gogo-Anwendung ist z.B. Ã¼ber die http-Adresse <code>http://localhost:8080/</code> erreichbar.
 </p>
 
 <h3>Unterschiede zur Produktionsumgebung</h3>
 
 <h4>Security</h4>
 <p>
-In der Produktionsumgebung aktiviert der AppServer die Java Sicherheitsmechnismen. Die Anwendung wird somit in einer Sandbox ausgeführt. Grundsätzlich kann die Anwendung in keiner Form auf Funktionen des Betriebssystems zurückgreifen. Es ist also z.B. nicht möglich mit Dateien zu arbeiten.
+In der Produktionsumgebung aktiviert der AppServer die Java Sicherheitsmechnismen. Die Anwendung wird somit in einer Sandbox ausgefÃ¼hrt. GrundsÃ¤tzlich kann die Anwendung in keiner Form auf Funktionen des Betriebssystems zurÃ¼ckgreifen. Es ist also z.B. nicht mÃ¶glich mit Dateien zu arbeiten.
 </p>
 
 <h4>Datenbank</h4>
 <p>
-Leider ist es nicht möglich die HBase-Datenbank im DevServer auszuführen. Aus diesem Grund verwendet der DevServer die <a href="http://www.h2database.com">H2-Datenbank</a>. Der Zugriff auf die Datenbank erfolgt analog zur Produktionsumgebung über JDO. Bei der H2-Datenbank handelt es sich um eine typische relationale Datenbank mit einem wesentlich größeren Funktionsumfang als HBase. Eine genauere Beschreibung des Datenbankzugriffes ist <a href="hbase.jsp">hier</a> zu finden. Für die Anwendung ist die zugrundeliegende Datenbank aufgrund des Einsatzes von JDO weitgehend transparent.
+Leider ist es nicht mÃ¶glich die HBase-Datenbank im DevServer auszufÃ¼hren. Aus diesem Grund verwendet der DevServer die <a href="http://www.h2database.com">H2-Datenbank</a>. Der Zugriff auf die Datenbank erfolgt analog zur Produktionsumgebung Ã¼ber JDO. Bei der H2-Datenbank handelt es sich um eine typische relationale Datenbank mit einem wesentlich grÃ¶ÃŸeren Funktionsumfang als HBase. Eine genauere Beschreibung des Datenbankzugriffes ist <a href="hbase.jsp">hier</a> zu finden. FÃ¼r die Anwendung ist die zugrundeliegende Datenbank aufgrund des Einsatzes von JDO weitgehend transparent.
 </p>
 
 <h4>UserService</h4>
 <p>
-Die TwoSpot-Plattform stellt einen zentralen Benutzerservice mit einer einfachen API zur Verfügung. Der DevServer enthält eine Mock-Implementierung der UserService-API. Die Mock-Implementierung simuliert den Benutzerservice, enthält aber keine Funktionen zur Authentifizierung. Außerdem ist die Mock-Implementierung nur für den Betrieb mit <b>einem</b> Anwender bzw. einer Session konzipiert. Es können sicht also nicht mehere Anwender gleichzeitg am System anmelden!
+Die TwoSpot-Plattform stellt einen zentralen Benutzerservice mit einer einfachen API zur VerfÃ¼gung. Der DevServer enthÃ¤lt eine Mock-Implementierung der UserService-API. Die Mock-Implementierung simuliert den Benutzerservice, enthÃ¤lt aber keine Funktionen zur Authentifizierung. AuÃŸerdem ist die Mock-Implementierung nur fÃ¼r den Betrieb mit <b>einem</b> Anwender bzw. einer Session konzipiert. Es kÃ¶nnen sicht also nicht mehere Anwender gleichzeitg am System anmelden!
 </p>
 
 <h4>LogService</h4>
 <p>
-Auch für den LogService enthält der DevServer eine einfache Mock-Implementierung. Diese schreibt alle Logs über das <a href="">Log4j-Framework</a> auf die Standard-Ausgabe. Dies lässt sich über die Log4j-Konfiguration des DevServers allerdings ändern. Der name des Loggers lautet <code>org.prot.appserver.services.log</code>, die Log4j-Konfigurationsdatei befindet sich unter <code>/conf/appserver/etc/log4j.xml</code>.
+Auch fÃ¼r den LogService enthÃ¤lt der DevServer eine einfache Mock-Implementierung. Diese schreibt alle Logs Ã¼ber das <a href="">Log4j-Framework</a> auf die Standard-Ausgabe. Dies lÃ¤sst sich Ã¼ber die Log4j-Konfiguration des DevServers allerdings Ã¤ndern. Der name des Loggers lautet <code>org.prot.appserver.services.log</code>, die Log4j-Konfigurationsdatei befindet sich unter <code>/conf/appserver/etc/log4j.xml</code>.
 </p>

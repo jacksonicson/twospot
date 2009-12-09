@@ -1,22 +1,22 @@
-<h2>HBase</h2>
+ï»¿<h2>HBase</h2>
 
-<p>Aufgrund der Zielsetzung eine Platform für horizontal skalierbare Web-Anwendungen bereitzustellen, kommt in der TwoSpot-Plattform keine relationale Datenbank zum Einsatz. Anstelle dessen wird auf die Spalten-Basierte Datenbank HBase gesetzt. Diese basiert auf dem verteilten Dateisysteme HDFS, das den Kernbestandteil von Hadoop bildet.
+<p>Aufgrund der Zielsetzung eine Platform fÃ¼r horizontal skalierbare Web-Anwendungen bereitzustellen, kommt in der TwoSpot-Plattform keine relationale Datenbank zum Einsatz. Anstelle dessen wird auf die Spalten-Basierte Datenbank HBase gesetzt. Diese basiert auf dem verteilten Dateisysteme HDFS, das den Kernbestandteil von Hadoop bildet.
 </p>
 
 <h3>Verwendung von HBase</h3>
-<p>Im Unterschied zu relationalen Datenbanken stellt HBase keine SQL-Schnittstelle zur Verfügung. Auch ein großteil der aus SQL-Datenbanken bekannten Funktionalität wie Primärschlüsse, Indices, Fremdschlüssel oder Constraints steht bei Verwendung der HBase-Datenbank nicht zur Verfügung.
+<p>Im Unterschied zu relationalen Datenbanken stellt HBase keine SQL-Schnittstelle zur VerfÃ¼gung. Auch ein groÃŸteil der aus SQL-Datenbanken bekannten FunktionalitÃ¤t wie PrimÃ¤rschlÃ¼sse, Indices, FremdschlÃ¼ssel oder Constraints steht bei Verwendung der HBase-Datenbank nicht zur VerfÃ¼gung.
 </p>
 
-<p>Der Zugriff auf die HBase-Datenbank aus TwoSpot-Anwendungen heraus erfolgt über JDO (Java Data Objects). JDO ist ein Standard der eine einheitliche Schnittstelle für das Arbeiten mit persistenten Daten beschreibt. Der Vorteil von JDO gegenüber JPA (Java Persistence API), Hibernate oder anderen OR-Mappern liegt in der Unabhängigkeit zu der zugrundeliegenden Speichertechnologie. Diese Eigenschaft wird auch als datastore-agnostic bezeichnet und bedeutet vereinfacht ausgedrückt, dass nicht nur relationale Datenbanken sondern jede beliebige Speicherlösung eingesetzt werden können. Beispiele hierfür sind Objektorientierte-, Dokumentenbasierte- oder auch Spalten-Basierte Datenbanken. Dementsprechend lässt sich JDO auch mit der HBase-Datenbank einsetzten. 
+<p>Der Zugriff auf die HBase-Datenbank aus TwoSpot-Anwendungen heraus erfolgt Ã¼ber JDO (Java Data Objects). JDO ist ein Standard der eine einheitliche Schnittstelle fÃ¼r das Arbeiten mit persistenten Daten beschreibt. Der Vorteil von JDO gegenÃ¼ber JPA (Java Persistence API), Hibernate oder anderen OR-Mappern liegt in der UnabhÃ¤ngigkeit zu der zugrundeliegenden Speichertechnologie. Diese Eigenschaft wird auch als datastore-agnostic bezeichnet und bedeutet vereinfacht ausgedrÃ¼ckt, dass nicht nur relationale Datenbanken sondern jede beliebige SpeicherlÃ¶sung eingesetzt werden kÃ¶nnen. Beispiele hierfÃ¼r sind Objektorientierte-, Dokumentenbasierte- oder auch Spalten-Basierte Datenbanken. Dementsprechend lÃ¤sst sich JDO auch mit der HBase-Datenbank einsetzten. 
 </p>
 
 <h3>JDO in TwoSpot</h3>
 <p>
-Die TwoSpot-Plattform greift für die JDO-Implementierung auf das <a href="http://www.datanucleus.org/">DataNucleus-Framework</a> und das HBase- und H2-Plugin von DataNucleus zurück. Nachfolgend wird anhand eines einfachen Beispiels (Kommentarfunktion eines Blogs) gezeigt wie in TwoSpot Daten in die Datenbank geschrieben und wieder gelesen werden können. 
+Die TwoSpot-Plattform greift fÃ¼r die JDO-Implementierung auf das <a href="http://www.datanucleus.org/">DataNucleus-Framework</a> und das HBase- und H2-Plugin von DataNucleus zurÃ¼ck. Nachfolgend wird anhand eines einfachen Beispiels (Kommentarfunktion eines Blogs) gezeigt wie in TwoSpot Daten in die Datenbank geschrieben und wieder gelesen werden kÃ¶nnen. 
 </p>
 
 <p>
-Im ersten Schritt muss die Struktur der zu speichernden Daten beschrieben werden. Dies erfolgt durch die Definition einer Klasse mit Attributen. Nachfolgend ist enie Klasse dargestellt die einen Kommentar mit einem Namen enthält: 
+Im ersten Schritt muss die Struktur der zu speichernden Daten beschrieben werden. Dies erfolgt durch die Definition einer Klasse mit Attributen. Nachfolgend ist enie Klasse dargestellt die einen Kommentar mit einem Namen enthÃ¤lt: 
 </p>
 
 <pre class="prettyprint lang-java">
@@ -49,7 +49,7 @@ public class BlogEntry
 </pre>
 
 <p>
-Anschließend müssen die Klasse und die persistenten Attribute annotiert werden. Die Klasse wird dabei mit <code>@PersistenceCapable</code> annotiert. Darüber erhält JDO die Information, dass es sich um eine persistente Klasse handelt. Alle persistenten Attribute werden mit <code>@Persistent</code> annotiert. Diese Attribute werden von JDO gespeichert. Es ist darüber hinauß sinnvoll nicht persistente Attribute mit <code>@NotPersistent</code> zu annotieren. Die annotierte <code>BlogEntry</code>-Klasse hat das folgende Aussehen:
+AnschlieÃŸend mÃ¼ssen die Klasse und die persistenten Attribute annotiert werden. Die Klasse wird dabei mit <code>@PersistenceCapable</code> annotiert. DarÃ¼ber erhÃ¤lt JDO die Information, dass es sich um eine persistente Klasse handelt. Alle persistenten Attribute werden mit <code>@Persistent</code> annotiert. Diese Attribute werden von JDO gespeichert. Es ist darÃ¼ber hinauÃŸ sinnvoll nicht persistente Attribute mit <code>@NotPersistent</code> zu annotieren. Die annotierte <code>BlogEntry</code>-Klasse hat das folgende Aussehen:
 </p>
 
 <pre class="prettyprint lang-java">
@@ -85,7 +85,7 @@ public class BlogEntry
 </pre>
 
 <p>
-Um Instanzen der <code>BlogEntry</code>-Klasse zu speichern muss eine <code>PersisteceManagerFactory</code> erzeugt werden. Über diese kann ein <code>PersistenceManager</code> erzeugt werden. Mithilfe des <code>PersistenceManager</code>'s können persistence Objekte in der Datenbank gespeichert werden. 
+Um Instanzen der <code>BlogEntry</code>-Klasse zu speichern muss eine <code>PersisteceManagerFactory</code> erzeugt werden. Ãœber diese kann ein <code>PersistenceManager</code> erzeugt werden. Mithilfe des <code>PersistenceManager</code>'s kÃ¶nnen persistence Objekte in der Datenbank gespeichert werden. 
 </p>
 <p>
 Der folgende Quellcodeausschnitt erstellt eine Instanz der <code>BlogEntry</code>-Klasse und speichert das Objet in der Datenbank. 
