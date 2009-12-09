@@ -23,6 +23,9 @@
 
 	<target name="all" depends="updateJars">
 		<ant antfile="${gogodir}/build.xml" dir="${gogodir}" />
+		
+		<zip basedir="${gogodir}" destfile="gogo.zip" />
+		
 	</target>
 
 </project>
