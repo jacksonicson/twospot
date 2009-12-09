@@ -4,8 +4,8 @@
 <h1>DevServer - UserService (Mock) login page</h1>
 
 <form action="./loginServlet" method="POST"><input type="hidden"
-     name="okUrl" value='<%=request.getParameter("url")%> %>' /> <input
-     type="hidden" name="errUrl" value='<%=request.getParameter("cancel")%> %>' />
+     name="okUrl" value='<%=request.getParameter("url") %>' /> <input
+     type="hidden" name="errUrl" value='<%=request.getParameter("cancel") %>' />
 
 <table>
      <tr>
