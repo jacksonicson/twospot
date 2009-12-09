@@ -25,6 +25,21 @@
 					</fileset>-->
 		</copy>
 
+		<!-- copy Deps which are used for development -->
+		<mkdir dir="${dest}/dev" />
+		<copy todir="${dest}/dev" flatten="true">
+			<fileset dir="../Libs/"> <!-- TODO: Read this from the classpath definition -->
+				<include name="gen/twospot-appserver.jar" />
+				<include name="lib/datanucleus/deps/asm-3.1.jar" />
+				<include name="lib/datanucleus/deps/jdo2-api-2.3-eb.jar" />
+				<include name="lib/datanucleus/datanucleus-core-2.0.0-m3.jar" />
+				<include name="lib/datanucleus/datanucleus-core-2.0.0-m3.jar" />
+				<include name="lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar" />
+				<include name="lib/jetty-7.0.0/jsp-api-2.1-7.0.0pre2.jar" />
+				<include name="lib/jetty-7.0.0/servlet-api-2.5.jar" />
+			</fileset>
+		</copy>
+
 		<!-- copy the configuration (etc) -->
 		<mkdir dir="${dest}/conf" />
 		<copy todir="${dest}/conf/util">
@@ -47,7 +62,7 @@
 		<!-- Swap the configuration files -->
 		<delete file="${dest}/conf/appserver/etc/appServer.properties" />
 		<move file="${dest}/conf/appserver/etc/appServer.properties_dev" tofile="${dest}/conf/appserver/etc/appServer.properties" />
-		
+
 		<delete file="${dest}/conf/appserver/etc/jdoDefault.properties" />
 		<move file="${dest}/conf/appserver/etc/jdoDefault.properties_dev" tofile="${dest}/conf/appserver/etc/jdoDefault.properties" />
 

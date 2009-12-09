@@ -49,10 +49,26 @@ def createStartClasspath(eclipseProject, killPath):
         
     return output
 
+def createFileSet(eclipseProject, killPath):
+    output = ""
+    for extract in createClasspathList(eclipseProject, killPath):
+        print extract
+        output += '<includesfile file="..%s" />\n' % extract
+    
+    return output
+
 
 def main():
-    output = createAntClasspath(".classpath", False)
-    output = "<project><path id='classpath'>" + output + "</path></project>"
+    output = "<project>"
+    
+    cp = createAntClasspath(".classpath", False)
+    output += "<path id='classpath'>" + cp + "</path>"
+    
+    #fileset = createFileSet(".classpath", False)
+    #output += "<fileset id='libfiles'>" + fileset + "</fileset>"
+        
+    output += "</project>"
+    
     javaFile = open("classpath.xml", "w")
     javaFile.write(output);
     javaFile.close()
