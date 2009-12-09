@@ -1,5 +1,8 @@
 package org.prot.app.services.user;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 public class MockUserService implements UserService
 {
 	private String currentUser = null;
@@ -13,7 +16,17 @@ public class MockUserService implements UserService
 	@Override
 	public String getLoginUrl(String redirectUrl, String cancelUrl)
 	{
-		return "/twospot/login.jsp?okUrl=" + redirectUrl + "&errUrl=" + cancelUrl;
+		String uri = "/twospot";
+		try
+		{
+			uri += "/login.jsp?url=" + URLEncoder.encode(redirectUrl, "UTF-8");
+			uri += "&cancel=" + URLEncoder.encode(cancelUrl, "UTF-8");
+			return uri;
+
+		} catch (UnsupportedEncodingException e)
+		{
+			return null;
+		}
 	}
 
 	@Override

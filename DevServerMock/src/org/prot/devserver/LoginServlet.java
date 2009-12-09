@@ -1,6 +1,7 @@
 package org.prot.devserver;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -47,7 +48,8 @@ public class LoginServlet extends HttpServlet
 				// Set the UID cookie
 				Cookie uidCookie = new Cookie("UID", identifier);
 				response.addCookie(uidCookie);
-				
+
+				okUrl = URLDecoder.decode(okUrl, "UTF-8");
 				response.sendRedirect(okUrl);
 				return;
 			}
@@ -59,6 +61,7 @@ public class LoginServlet extends HttpServlet
 				return;
 			} else
 			{
+				errUrl = URLDecoder.decode(errUrl, "UTF-8");
 				response.sendRedirect(errUrl);
 				return;
 			}
