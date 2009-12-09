@@ -7,4 +7,13 @@
 <pathelement location="../Libs/lib/log4j-1.2.15/log4j-1.2.15.jar" />
 <pathelement location="../Libs/lib/jetty-7.0.0/jetty-continuation-7.0.0.v20091005.jar" />
 <pathelement location="../Libs/lib/zookeeper-3.2.1/zookeeper-3.2.1.jar" />
-</path></project>
+</path><fileset dir='../' id='libfiles'><include name="Libs/lib/jetty-7.0.0/jetty-client-7.0.0.v20091005.jar" />
+<include name="Libs/lib/jetty-7.0.0/jetty-http-7.0.0.v20091005.jar" />
+<include name="Libs/lib/jetty-7.0.0/jetty-io-7.0.0.v20091005.jar" />
+<include name="Libs/lib/jetty-7.0.0/jetty-util-7.0.0.v20091005.jar" />
+<include name="Libs/lib/jetty-7.0.0/servlet-api-2.5.jar" />
+<include name="Libs/lib/jetty-7.0.0/jetty-server-7.0.0.v20091005.jar" />
+<include name="Libs/lib/log4j-1.2.15/log4j-1.2.15.jar" />
+<include name="Libs/lib/jetty-7.0.0/jetty-continuation-7.0.0.v20091005.jar" />
+<include name="Libs/lib/zookeeper-3.2.1/zookeeper-3.2.1.jar" />
+</fileset></project>

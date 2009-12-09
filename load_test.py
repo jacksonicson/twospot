@@ -32,7 +32,7 @@ from urllib import urlencode
 # Modify these values to control how the testing is done
 
 # How many threads should be running at peak load.
-NUM_THREADS = 20
+NUM_THREADS = 30
 
 # How many minutes the test should run with all threads active.
 TIME_AT_PEAK_QPS = 0 # minutes
@@ -63,7 +63,7 @@ class TestIt(Thread):
 				# HTTP requests to exercise the server go here
 				# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				resp, content = h.request(
-					"http://localhost:8080/helloworld/")
+					"http://portal.twospot.informatik.fh-augsburg.de:6060/docs/devserver.jsp")
 				self.counter = self.counter + 1
 				if resp.status != 200:
 					print "Response not OK"
