@@ -52,27 +52,37 @@ def createStartClasspath(eclipseProject, killPath):
 def createFileSet(eclipseProject, killPath):
     output = ""
     for extract in createClasspathList(eclipseProject, killPath):
-        print extract
-        output += '<includesfile file="..%s" />\n' % extract
+        if len(extract) > 1:
+            if extract[0] == '/':
+                extract = extract[1:]
+                
+        output += '<include name="%s" />\n' % extract
     
     return output
 
 
-def main():
+def main(args):
+    # Remove the first argument (its the name of the script)
+    del args[0]
+    
+    # Check if there is there is an argument
+    namePrefix = ""
+    if len(args) > 0:
+        namePrefix = args[0]
+    
+    # Create the ANT-File classpath
     output = "<project>"
-    
     cp = createAntClasspath(".classpath", False)
-    output += "<path id='classpath'>" + cp + "</path>"
+    output += ("<path id='%sclasspath'>" % namePrefix) + cp + "</path>"
     
-    #fileset = createFileSet(".classpath", False)
-    #output += "<fileset id='libfiles'>" + fileset + "</fileset>"
-        
+    fileset = createFileSet(".classpath", False)
+    output += ("<fileset dir='../' id='%slibfiles'>" % namePrefix) + fileset + "</fileset>"
     output += "</project>"
-    
     javaFile = open("classpath.xml", "w")
     javaFile.write(output);
     javaFile.close()
     
+    # Warite the classpath to a txt file
     output = createStartClasspath(".classpath", False)
     javaFile = open("classpath.txt", "w")
     javaFile.write(output)
@@ -80,4 +90,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv)

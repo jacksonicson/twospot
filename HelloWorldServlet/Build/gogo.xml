@@ -3,29 +3,9 @@
 
 	<property name="gogodir" value="../GoGo/" />
 
-	<target name="updateJars">
-		<delete dir="${gogodir}/lib" />
-		<mkdir dir="${gogodir}/lib" />
-		<copy todir="${gogodir}/lib" flatten="true">
-			<fileset dir="../Libs/">
-				<!-- TODO: Read this from the classpath definition -->
-				<include name="gen/twospot-appserver.jar" />
-				<include name="lib/datanucleus/deps/asm-3.1.jar" />
-				<include name="lib/datanucleus/deps/jdo2-api-2.3-eb.jar" />
-				<include name="lib/datanucleus/datanucleus-core-2.0.0-m3.jar" />
-				<include name="lib/datanucleus/datanucleus-core-2.0.0-m3.jar" />
-				<include name="lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar" />
-				<include name="lib/jetty-7.0.0/jsp-api-2.1-7.0.0pre2.jar" />
-				<include name="lib/jetty-7.0.0/servlet-api-2.5.jar" />
-			</fileset>
-		</copy>
-	</target>
-
-	<target name="all" depends="updateJars">
-		<ant antfile="${gogodir}/build.xml" dir="${gogodir}" />
-		
+	<target name="all">
+		<ant antfile="${gogodir}/buildintern.xml" dir="${gogodir}" />
 		<zip basedir="${gogodir}" destfile="gogo.zip" />
-		
 	</target>
 
 </project>

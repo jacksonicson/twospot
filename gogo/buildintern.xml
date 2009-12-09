@@ -8,17 +8,24 @@
 	<import file="./build.xml" />
 	<import file="./classpath.xml" />
 
+	<target name="mkcp">
+		<exec executable="python">
+			<arg value="../Build/buildclasspath.py" />
+			<arg value="gogo_" />
+		</exec>
+	</target>
+
 	<target name="updateJars">
 		<delete dir="./lib" />
 		<mkdir dir="./lib" />
 
 		<copy todir="./lib" flatten="true">
-			<fileset refid="libfiles">
+			<fileset refid="gogo_libfiles">
 			</fileset>
 		</copy>
 
 	</target>
 
-	<target name="internAll" depends="updateJars,all" /> 
-	
+	<target name="internAll" depends="updateJars,all" />
+
 </project>

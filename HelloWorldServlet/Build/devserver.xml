@@ -3,6 +3,9 @@
 
 	<import file="./platform.xml" />
 
+	<!-- Import the GoGo classpath -->
+	<import file="../gogo/classpath.xml" />
+
 	<property name="dest" value="./devserver" />
 
 	<target name="prepare">
@@ -20,24 +23,12 @@
 			<fileset dir="../Libs">
 				<include name="**/*.jar" />
 			</fileset>
-			<!--<fileset dir="../Libs/gen">
-						<include name="**/*.jar" />
-					</fileset>-->
 		</copy>
 
 		<!-- copy Deps which are used for development -->
 		<mkdir dir="${dest}/dev" />
 		<copy todir="${dest}/dev" flatten="true">
-			<fileset dir="../Libs/"> <!-- TODO: Read this from the classpath definition -->
-				<include name="gen/twospot-appserver.jar" />
-				<include name="lib/datanucleus/deps/asm-3.1.jar" />
-				<include name="lib/datanucleus/deps/jdo2-api-2.3-eb.jar" />
-				<include name="lib/datanucleus/datanucleus-core-2.0.0-m3.jar" />
-				<include name="lib/datanucleus/datanucleus-core-2.0.0-m3.jar" />
-				<include name="lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar" />
-				<include name="lib/jetty-7.0.0/jsp-api-2.1-7.0.0pre2.jar" />
-				<include name="lib/jetty-7.0.0/servlet-api-2.5.jar" />
-			</fileset>
+			<fileset refid="gogo_libfiles" />
 		</copy>
 
 		<!-- copy the configuration (etc) -->
@@ -50,7 +41,8 @@
 		</copy>
 
 		<!-- copy the classpath -->
-		<copyfile src="../AppServer/classpath.txt" dest="${dest}/appserver_classpath.txt" />
+		<copyfile src="../AppServer/classpath.txt"
+		          dest="${dest}/appserver_classpath.txt" />
 
 		<!-- copy the tools python script -->
 		<copy todir="${dest}">
@@ -61,10 +53,12 @@
 
 		<!-- Swap the configuration files -->
 		<delete file="${dest}/conf/appserver/etc/appServer.properties" />
-		<move file="${dest}/conf/appserver/etc/appServer.properties_dev" tofile="${dest}/conf/appserver/etc/appServer.properties" />
+		<move file="${dest}/conf/appserver/etc/appServer.properties_dev"
+		      tofile="${dest}/conf/appserver/etc/appServer.properties" />
 
 		<delete file="${dest}/conf/appserver/etc/jdoDefault.properties" />
-		<move file="${dest}/conf/appserver/etc/jdoDefault.properties_dev" tofile="${dest}/conf/appserver/etc/jdoDefault.properties" />
+		<move file="${dest}/conf/appserver/etc/jdoDefault.properties_dev"
+		      tofile="${dest}/conf/appserver/etc/jdoDefault.properties" />
 
 		<!-- create a zip archive of the dest folder -->
 		<delete file="devserver.zip" />
