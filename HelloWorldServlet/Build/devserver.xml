@@ -60,6 +60,15 @@
 		<move file="${dest}/conf/appserver/etc/jdoDefault.properties_dev"
 		      tofile="${dest}/conf/appserver/etc/jdoDefault.properties" />
 
+
+		<!-- Copy the Mock implementation of core portal services -->
+		<mkdir dir="${dest}/devserver" />
+		<copy todir="${dest}/devserver">
+			<fileset dir="../DevServerMock/devserver">
+				<include name="**/*.*" />
+			</fileset>
+		</copy>
+
 		<!-- create a zip archive of the dest folder -->
 		<delete file="devserver.zip" />
 		<zip destfile="devserver.zip">
