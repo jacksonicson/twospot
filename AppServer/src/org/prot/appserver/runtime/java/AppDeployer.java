@@ -9,6 +9,7 @@ import org.eclipse.jetty.util.component.AbstractLifeCycle;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.prot.appserver.app.AppInfo;
 import org.prot.appserver.config.Configuration;
+import org.prot.appserver.config.ServerMode;
 
 public class AppDeployer extends AbstractLifeCycle
 {
@@ -35,6 +36,11 @@ public class AppDeployer extends AbstractLifeCycle
 	{
 		webAppContext = null;
 		deploy();
+
+		if (Configuration.getInstance().getServerMode() == ServerMode.DEVELOPMENT)
+		{
+			deployDevelopment();
+		}
 	}
 
 	public void doStop() throws Exception
@@ -43,6 +49,32 @@ public class AppDeployer extends AbstractLifeCycle
 		{
 			webAppContext.stop();
 		}
+	}
+
+	private void deployDevelopment() throws Exception
+	{
+		logger.info("Deploying development contexts");
+
+		WebAppContext devContext = new WebAppContext();
+		devContext.setWar("./devserver"); // WARN: Hardcoded
+		devContext.setContextPath("/twospot");
+
+		devContext.setTempDirectory(new File(Configuration.getInstance().getAppScratchDir()));
+
+		devContext.setExtractWAR(false);
+		devContext.setParentLoaderPriority(true); // Load everything from the
+		// server classpath
+		devContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
+				".*/jsp-api-[^/]*\\.jar$|.*/jsp-[^/]*\\.jar$");
+
+		devContext.setDefaultsDescriptor("/etc/webdefault.xml");
+
+		logger.debug("Adding and starting handler");
+		contexts.addHandler(devContext);
+		if (contexts.isStarted())
+			contexts.start();
+		logger.debug("Application handler started");
+
 	}
 
 	private void deploy() throws Exception
