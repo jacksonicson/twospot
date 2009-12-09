@@ -1,54 +1,46 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="all" name="GoGo">
 
-	<!-- Directory of the DevServer-Libs -->
-	<property name="libs" value="." />
-
-	<path id="classpath2" location="${libs}">
-		<path refid="classpath" />
-	</path>
-	
-	<import file="./classpath.xml" />
-
 	<property name="src" value="./src" />
-	<property name="build" value="./WEB-INF/classes" />
+	<property name="dest" value="./WEB-INF/classes" />
+	<property name="libdir" value="./lib" />
 
-	<target name="prepare">
-	</target>
+	<path id="classpath">
+		<fileset dir="${libdir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
 
-	<target name="cleanup">
-	</target>
-
-	<target name="enhance" description="DataNucleus enhancement">
+	<target name="enhance">
 		<path id="enhancer.classpath">
 			<path refid="classpath" />
-			<pathelement location="${build}" />
+			<pathelement location="${dest}" />
 		</path>
 
-		<taskdef name="enhance" classpathref="enhancer.classpath" classname="org.datanucleus.enhancer.tools.EnhancerTask" />
+		<taskdef name="enhance"
+		         classpathref="enhancer.classpath"
+		         classname="org.datanucleus.enhancer.tools.EnhancerTask" />
 
-		<enhance classpathref="enhancer.classpath" failonerror="true" verbose="true">
+		<enhance classpathref="enhancer.classpath"
+		         failonerror="true"
+		         verbose="false">
+
 			<jvmarg line="-Dlog4j.configuration=${log4j.config.file}" />
 
-			<fileset dir="${build}">
+			<fileset dir="${dest}">
 				<include name="**/*.class" />
 			</fileset>
+
 		</enhance>
 	</target>
 
-	<target name="build" depends="prepare">
-		<mkdir dir="${build}" />
-		<javac srcdir="${src}" destdir="${build}">
+	<target name="build">
+		<mkdir dir="${dest}" />
+		<javac srcdir="${src}" destdir="${dest}">
 			<classpath refid="classpath" />
 		</javac>
 	</target>
 
-	<target name="mkcp">
-		<exec executable="python">
-			<arg value="../Build/buildclasspath.py" />
-		</exec>
-	</target>
-
-	<target name="all" depends="prepare,build,enhance,cleanup" />
+	<target name="all" depends="build,enhance" />
 
 </project>
