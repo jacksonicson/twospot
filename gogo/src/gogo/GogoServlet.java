@@ -35,6 +35,13 @@ public class GogoServlet extends HttpServlet
 		// DEMO: Using the UserService
 		UserService userService = UserServiceFactory.getUserService();
 
+		// First get some URL params
+		String logout = request.getParameter("logout");
+
+		// If the logout param is present - logout
+		if (logout != null)
+			userService.unregisterUser();
+
 		// Check if the user is logged in?
 		if (userService.getCurrentUser() == null)
 		{
