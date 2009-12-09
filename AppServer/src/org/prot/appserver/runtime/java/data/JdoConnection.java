@@ -13,19 +13,19 @@ public class JdoConnection
 	private static PersistenceManagerFactory pmf;
 	private static PersistenceManager pm;
 
-	public void init()
-	{
-		logger.debug("Creating peristence manager factory");
-		pmf = JDOHelper.getPersistenceManagerFactory("etc/jdoDefault.properties");
-
-		logger.debug("Creating persistence manager");
-		pm = pmf.getPersistenceManager();
-
-		logger.debug("Persistence done");
-	}
-
 	public PersistenceManager getPersistenceManager()
 	{
+		if (pmf == null)
+		{
+			logger.debug("Creating peristence manager factory");
+			pmf = JDOHelper.getPersistenceManagerFactory("etc/jdoDefault.properties");
+
+			logger.debug("Creating persistence manager");
+			pm = pmf.getPersistenceManager();
+
+			logger.debug("Persistence done");
+		}
+
 		return pm;
 	}
 }

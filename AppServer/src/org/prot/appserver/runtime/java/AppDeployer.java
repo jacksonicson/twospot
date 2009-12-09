@@ -37,10 +37,11 @@ public class AppDeployer extends AbstractLifeCycle
 		webAppContext = null;
 		deploy();
 
+		// If we are running in development mode we also start a mock
+		// implementaition of the portal. This implementation contains only core
+		// services like the UserService (login gui)
 		if (Configuration.getInstance().getServerMode() == ServerMode.DEVELOPMENT)
-		{
 			deployDevelopment();
-		}
 	}
 
 	public void doStop() throws Exception

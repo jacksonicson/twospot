@@ -32,7 +32,7 @@
 		</property>
 
 		<property name="handler" ref="HandlerCollection" />
-		
+
 		<property name="sessionIdManager">
 			<bean class="org.eclipse.jetty.server.session.HashSessionIdManager">
 				<property name="random">
@@ -72,11 +72,11 @@
 	<!-- Deployment -->
 	<bean id="AppDeployer" class="org.prot.appserver.runtime.java.AppDeployer">
 		<property name="contexts" ref="ContextCollectionHandler" />
-		<!-- <property name="sessionManager" ref="SessionManager" /> -->
+		<property name="sessionManager" ref="SessionManager" />
 	</bean>
 
 	<!-- Session -->
-	<!--<bean id="SessionManager"
+	<bean id="SessionManager"
 		class="org.prot.appserver.runtime.java.DistributedSessionManager">
 		<property name="sessionDao" ref="SessionDao" />
 		<property name="idManager" ref="IdManager" />
@@ -90,10 +90,9 @@
 
 	<bean id="SessionDao" class="org.prot.appserver.runtime.java.data.JdoSessionDao">
 		<property name="connection">
-			<bean class="org.prot.appserver.runtime.java.data.JdoConnection"
-				init-method="init" />
+			<bean class="org.prot.appserver.runtime.java.data.JdoConnection" />
 		</property>
 	</bean>
 
---></beans>
+</beans>
 
