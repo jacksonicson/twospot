@@ -5,11 +5,14 @@ import java.net.URLEncoder;
 
 import javax.servlet.http.Cookie;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.HttpConnection;
 import org.prot.util.Cookies;
 
 public class MockUserService implements UserService
 {
+	private static final Logger logger = Logger.getLogger(MockUserService.class);
+
 	private String currentUser = null;
 	private String uid = null;
 
@@ -38,6 +41,7 @@ public class MockUserService implements UserService
 	public String getCurrentUser()
 	{
 		String uid = searchUID();
+
 		if (uid == null)
 			return null;
 

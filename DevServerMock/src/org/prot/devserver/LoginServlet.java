@@ -47,6 +47,7 @@ public class LoginServlet extends HttpServlet
 
 				// Set the UID cookie
 				Cookie uidCookie = new Cookie("UID", identifier);
+				uidCookie.setPath("/");
 				response.addCookie(uidCookie);
 
 				okUrl = URLDecoder.decode(okUrl, "UTF-8");
