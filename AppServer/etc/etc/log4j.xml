@@ -31,7 +31,7 @@
 		</layout>
 	</appender>
 
-	<logger name="org.prot.appserver.services.log" additivity="true">
+	<logger name="org.prot.app.services.log.LogServiceMock" additivity="false">
 		<level value="ALL" />
 		<appender-ref ref="ConsoleAppender" />
 	</logger>
