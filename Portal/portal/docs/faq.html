@@ -14,3 +14,27 @@ Beim ersten Start einer Anwendung wird exklusiv ein neuer AppServer-Prozess gest
 <p>
 Die Startgeschwindigkeit ist zudem abh&auml;ngig von der Anwendung selbst. F&uuml;hrt die Anwendung bei der Initialisierung sehr viel Code aus, so dauert der Start auch dementsprechend l&auml;nger! Die Startgeschwindigkeit einer einfachen HelloWorld-Anwendung betr&auml;gt zwischen <b>7 und 15</b> Sekunden. 
 </p>
+
+<br />
+<p><b>HTTP ERROR 500</b></p>
+<pre class="prettyprint lang-html">
+HTTP ERROR 500
+
+Problem accessing /xxx. Reason:
+
+Trying to contact region server xxx.xxx.xxx:xxx for region xxx.xxx.xxx,,1260477349406, row '', but failed after 2 attempts.
+Exceptions:
+org.apache.hadoop.hbase.NotServingRegionException: org.apache.hadoop.hbase.NotServingRegionException: gogo.user.BlogEntry,,1260477349406
+	at org.apache.hadoop.hbase.regionserver.HRegionServer.getRegion(HRegionServer.java:2307)
+	at org.apache.hadoop.hbase.regionserver.HRegionServer.openScanner(HRegionServer.java:1893)
+	at sun.reflect.GeneratedMethodAccessor7.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at org.apache.hadoop.hbase.ipc.HBaseRPC$Server.call(HBaseRPC.java:648)
+	at org.apache.hadoop.hbase.ipc.HBaseServer$Handler.run(HBaseServer.java:915)
+
+org.apache.hadoop.hbase.client.RegionOfflineException: region offline: gogo.user.BlogEntry,,1260477349406
+</pre>
+<p>
+Wird eine persistente Klasse das erste mal verwendet, wird in der HBase-Datenbank für die Klasse eine neue Region (Tabelle) anlegen. Diese Tabelle kann <b>nicht unmittelbar nach dem Estellen</b> gelesen oder beschrieben werden. Die Region muss erst an einen Region-Server zugewiesen werden. Dieser Prozess beansprucht einige wenige Sekunden!
+</p>   
