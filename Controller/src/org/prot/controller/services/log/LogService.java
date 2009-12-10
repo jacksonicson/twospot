@@ -10,5 +10,5 @@ public interface LogService
 	public void log(String token, String appId, String message, int severity);
 
 	@PrivilegedAppServer
-	public List<String> getMessages(String token, String appId, int severity);
+	public List<LogMessage> getMessages(String token, String appId, int severity);
 }

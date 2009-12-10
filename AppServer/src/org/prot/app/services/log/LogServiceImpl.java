@@ -1,5 +1,6 @@
 package org.prot.app.services.log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -23,10 +24,24 @@ public final class LogServiceImpl implements LogService
 		logService.log(token, appId, message, severity);
 	}
 
-	public List<String> getMessages(String appId, int severity)
+	public List<LogMessage> getMessages(String appId, int severity)
 	{
+		// TODO: This implementation is not very nice. The LogMessage class
+		// should be moved to the Utils where its available to the appserver,
+		// controller and apps
 		String token = Configuration.getInstance().getAuthenticationToken();
-		return logService.getMessages(token, appId, severity);
+		List<org.prot.controller.services.log.LogMessage> result = logService.getMessages(token, appId,
+				severity);
+		List<LogMessage> messages = new ArrayList<LogMessage>();
+		for (org.prot.controller.services.log.LogMessage copy : result)
+		{
+			LogMessage newMessage = new LogMessage();
+			newMessage.setMessage(copy.getMessage());
+			newMessage.setSeverity(copy.getSeverity());
+			messages.add(newMessage);
+		}
+
+		return messages;
 	}
 
 	public void debug(String message)

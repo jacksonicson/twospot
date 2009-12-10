@@ -1,6 +1,5 @@
 package org.prot.controller.services.log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
@@ -56,10 +55,13 @@ public class LogServiceImpl implements LogService
 	}
 
 	@Override
-	public List<String> getMessages(String token, String appId, int severity)
+	public List<LogMessage> getMessages(String token, String appId, int severity)
 	{
 		if (appManager.checkToken(token) == false)
+		{
+			logger.warn("Invalid token");
 			return null;
+		}
 
 		PersistenceManager pm = this.connection.getPersistenceManager();
 		try
@@ -71,16 +73,11 @@ public class LogServiceImpl implements LogService
 			if (severity != -1)
 				filter += " && severity == " + severity;
 			query.setFilter(filter);
+			query.setRange(0, 100);
 
 			List<LogMessage> logs = (List<LogMessage>) query.execute();
-			List<String> messages = new ArrayList<String>();
-			logger.info("Found messages: " + messages.size());
-			for (LogMessage message : logs)
-			{
-				messages.add(message.getMessage());
-			}
-
-			return messages;
+			logger.info("Found messages: " + logs.size());
+			return logs;
 
 		} finally
 		{

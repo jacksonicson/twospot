@@ -10,7 +10,7 @@ public interface LogService
 	public static final int WARN = 2;
 	public static final int ERROR = 3;
 
-	public List<String> getMessages(String appId, int severity);
+	public List<LogMessage> getMessages(String appId, int severity);
 
 	public void debug(String message);
 

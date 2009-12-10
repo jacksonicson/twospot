@@ -1,13 +1,17 @@
 package org.prot.controller.services.log;
 
+import java.io.Serializable;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable
-public class LogMessage
+public final class LogMessage implements Serializable
 {
+	private static final long serialVersionUID = 5182491041865229373L;
+
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.UUIDSTRING)
 	private String id;

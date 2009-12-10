@@ -21,7 +21,7 @@ public class LogServiceMock implements LogService
 	}
 
 	@Override
-	public List<String> getMessages(String appId, int severity)
+	public List<LogMessage> getMessages(String appId, int severity)
 	{
 		// This is a privileged method
 		return null;
