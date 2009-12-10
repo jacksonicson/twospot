@@ -61,13 +61,12 @@ public class UserServiceImpl implements UserService
 	@Override
 	public String getLoginUrl(String redirectUrl, String cancelUrl)
 	{
-		// TODO: Configuration
 		String url = "http://" + ReservedAppIds.APP_PORTAL + "."
 				+ Configuration.getConfiguration().getPlatformDomain();
 		String uri = "";
 		try
 		{
-			uri += "/login?url=" + URLEncoder.encode(redirectUrl, "UTF-8");
+			uri += "/login.htm?url=" + URLEncoder.encode(redirectUrl, "UTF-8");
 			uri += "&cancel=" + URLEncoder.encode(cancelUrl, "UTF-8");
 		} catch (UnsupportedEncodingException e)
 		{
