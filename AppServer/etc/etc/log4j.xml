@@ -62,7 +62,7 @@
 	</logger>
 
 	<logger name="org.eclipse" additivity="false">
-		<level value="DEBUG" />
+		<level value="INFO" />
 		<appender-ref ref="ConsoleAppender" />
 		<appender-ref ref="SocketAppender" />
 		<appender-ref ref="Rolling" />
