@@ -1,19 +1,19 @@
-﻿<h2>LogService</h2>
+<h2>LogService</h2>
 
 <p>
-Über den LogService können TwoSpot-Anwendungen Log-Statements ausgeben. Diese werden zentral in der Datenbank zusammengeführt und können über das <a href="../start.htm">Portal</a> für jede Anwendung eingesehen werden. 
+&uuml;ber den LogService k&ouml;nnen TwoSpot-Anwendungen Log-Statements ausgeben. Diese werden zentral in der Datenbank zusammengef&uuml;hrt und k&ouml;nnen &uuml;ber das <a href="../start.htm">Portal</a> f&uuml;r jede Anwendung eingesehen werden. 
 </p>
 
 <h3>Verwendung</h3>
 <p>
-Der Zugriff auf den LogService erfolgt über das Interface <code>LogService</code>. Eine TwoSpot-Anwendung kann über die Factory <code>LogServiceFactory</code> ein konkretes <code>LogService</code>-Objekt laden. Der folgende Codeausschnitt demonstriert dies: 
+Der Zugriff auf den LogService erfolgt &uuml;ber das Interface <code>LogService</code>. Eine TwoSpot-Anwendung kann &uuml;ber die Factory <code>LogServiceFactory</code> ein konkretes <code>LogService</code>-Objekt laden. Der folgende Codeausschnitt demonstriert dies: 
 </p>
 
 <pre class="prettyprint lang java">
 LogService log = LogServiceFactory.getLogService();
 </pre>
 
-<p>Über das <code>LogService</code>-Objekt lassen sich anschließend Log-Statements mit verschiedenen Prioritäten erstellen. Für jede Priorität existiert eine entsprechende Funktion: 
+<p>&uuml;ber das <code>LogService</code>-Objekt lassen sich anschlie�end Log-Statements mit verschiedenen Priorit&auml;ten erstellen. F&uuml;r jede Priorit&auml;t existiert eine entsprechende Funktion: 
 </p>
 <ul>
 	<li>void debug(String message);</li>

@@ -1,4 +1,4 @@
-﻿<html>
+<html>
   <head>
     <meta name="generator" content="HTML Tidy for Windows (vers 14 February 2006), see www.w3.org">
     <title></title>
@@ -8,7 +8,7 @@
       TwoSpot HelloWorld (Java)
     </h2>
 	
-	<p>Vor der Durchführung des Tutorials sollten die <a href="documentation.jsp">Software-Vorraussetzungen</a> überprüft werden</p>
+	<p>Vor der Durchf&uuml;hrung des Tutorials sollten die <a href="documentation.jsp">Software-Vorraussetzungen</a> &uuml;berpr&uuml;ft werden</p>
 	
     <h3>
       Setup
@@ -16,16 +16,16 @@
     <p>
     Die TwoSpot-Tools sind eine Sammlung von Python Hilfs-Scripten die der vereinfachten Anwendungsentwicklung dienen. &Uuml;ber die Tools lassen sich Anwendungen deployen und sie helfen beim Anlegen neuer Anwendungen. Sie lassen sich <a href="downloads.jsp">hier</a> herunterladen.    </p>
 <p>
-  Das ZIP-Archiv <code>tools.zip</code> kann ein beliebiges Verzeichnis extrahiert werden. Das Verzeichnis muss in die <code>PATH</code>-Umgebungsvariabel aufgenommen werden, damit der <code>twospot.py</code>-Befehl verwendet werden kann bzw. verfügbar ist.
+  Das ZIP-Archiv <code>tools.zip</code> kann ein beliebiges Verzeichnis extrahiert werden. Das Verzeichnis muss in die <code>PATH</code>-Umgebungsvariabel aufgenommen werden, damit der <code>twospot.py</code>-Befehl verwendet werden kann bzw. verf&uuml;gbar ist.
 </p>
     <p>
-      Vor dem Deployment einer Anwendung muss eine AppId registriert werden. Die Registrierung erfolgt über das TwoSpot-Portal, welches <a href="../../start.htm">hier</a> erreichbar ist. Nach der Registrierung lassen sich drei AppId's registrieren. Nachfolgend wird als AppId der Name <b>gogo</b> verwendet. Dieser muss durch die eigene AppId ersetzt werden.
+      Vor dem Deployment einer Anwendung muss eine AppId registriert werden. Die Registrierung erfolgt &uuml;ber das TwoSpot-Portal, welches <a href="../../start.htm">hier</a> erreichbar ist. Nach der Registrierung lassen sich drei AppId's registrieren. Nachfolgend wird als AppId der Name <b>gogo</b> verwendet. Dieser muss durch die eigene AppId ersetzt werden.
     </p>
     <h3>
       Dateistruktur
     </h3> 
     <p>
-      Die Dateistruktur von TwoSpot-Anwendungen weist eine große Ähnlichkeit zu gewöhnlichen Java Web-Anwendungen auf. Die Dateistruktur der leeren <code>gogo</code>-Anwendungen hat beispielsweise die Form:
+      Die Dateistruktur von TwoSpot-Anwendungen weist eine gro�e &auml;hnlichkeit zu gew&ouml;hnlichen Java Web-Anwendungen auf. Die Dateistruktur der leeren <code>gogo</code>-Anwendungen hat beispielsweise die Form:
     </p>
     <pre class="prettyprint lang-htm">
  /helloworld
@@ -42,19 +42,19 @@
     /...
 </pre>
     <p>
-      Die Verzeichnisstruktur lässt sich einfach über die Tools erstellen. Dazu muss der nachfolgende Befehl ausgeführt werden. Die Verzeichnisstruktur wird in dem Ausführungsverzeichnis angelegt, im Beispiel also <code>/home/alf/dev/gogo</code>
+      Die Verzeichnisstruktur l&auml;sst sich einfach &uuml;ber die Tools erstellen. Dazu muss der nachfolgende Befehl ausgef&uuml;hrt werden. Die Verzeichnisstruktur wird in dem Ausf&uuml;hrungsverzeichnis angelegt, im Beispiel also <code>/home/alf/dev/gogo</code>
     </p>
     <pre class="prettyprint">
 home/alf/dev/&gt; twospot.py --createProject=gogo --type=java
 </pre>
     <p>
-      Jede TwoSpot-Anwendung muss die Datei <code>app.yaml</code> enthalten. Dabei handelt es sich um eine Konfigurationsdatei die Informationen über die Anwendung (AppId, Typ der Runtime) und Konfigurationseinstellungen für den Application-Container beinhaltet. Beim Anlegen der Verzeichnisstruktur über die Tools wird die <code>app.yaml</code>-Datei automatisch erstellt. Für die <b>gogo</b>-Anwendung sind keine Änderungen an der Datei notwendig.
+      Jede TwoSpot-Anwendung muss die Datei <code>app.yaml</code> enthalten. Dabei handelt es sich um eine Konfigurationsdatei die Informationen &uuml;ber die Anwendung (AppId, Typ der Runtime) und Konfigurationseinstellungen f&uuml;r den Application-Container beinhaltet. Beim Anlegen der Verzeichnisstruktur &uuml;ber die Tools wird die <code>app.yaml</code>-Datei automatisch erstellt. F&uuml;r die <b>gogo</b>-Anwendung sind keine &auml;nderungen an der Datei notwendig.
     </p>
     <h3>
       Startseite
     </h3>
     <p>
-      Im Anwendungsverzeichnis kann nun eine einfache HTML- bzw. JSP-Seite erstellt werden. Für die <b>gogo</b>-Anwendung wurde die folgende <code>index.jsp</code>-Datei angelegt:
+      Im Anwendungsverzeichnis kann nun eine einfache HTML- bzw. JSP-Seite erstellt werden. F&uuml;r die <b>gogo</b>-Anwendung wurde die folgende <code>index.jsp</code>-Datei angelegt:
     </p>
     <pre class="prettyprint lang-htm">
 &lt;html&gt;
@@ -67,7 +67,7 @@ home/alf/dev/&gt; twospot.py --createProject=gogo --type=java
       Deployment
     </h3>
     <p>
-      Nach dem Anlegen der Startseite kann die TwoSpot-Anwendung in die Platform deployt werden. Das Deployment erfolgt ebenfalls über die Tools. Der folgende Befehl muss im Verzeichnis der <code>gogo</code>-Anwendung ausgeführt werden. Vor dem Upload der Dateien erfragt das Script den Benutzernamen und das Passwort. Damit wird die Berechtigung für das Deployment überprüft.
+      Nach dem Anlegen der Startseite kann die TwoSpot-Anwendung in die Platform deployt werden. Das Deployment erfolgt ebenfalls &uuml;ber die Tools. Der folgende Befehl muss im Verzeichnis der <code>gogo</code>-Anwendung ausgef&uuml;hrt werden. Vor dem Upload der Dateien erfragt das Script den Benutzernamen und das Passwort. Damit wird die Berechtigung f&uuml;r das Deployment &uuml;berpr&uuml;ft.
     </p>
     <pre class="prettyprint">
 home/alf/dev/gogo&gt; twospot.py --deploy
@@ -89,13 +89,13 @@ Uploading...
 Status: 200
 </pre>
     <p>
-      Ein erfolgreiches Deployment wird mit einem <code>Status 200</code> angezeigt. Die Anwendung ist anschließend unter der http-Adresse <code>http://appId.twospot.informatik.fh-augsburg.de:6060/index.jsp</code> erreichbar.
+      Ein erfolgreiches Deployment wird mit einem <code>Status 200</code> angezeigt. Die Anwendung ist anschlie�end unter der http-Adresse <code>http://appId.twospot.informatik.fh-augsburg.de:6060/index.jsp</code> erreichbar.
     </p>
     <p>
-      <b>Info: Beim ersten Anwendungsstart ist die Response-Time stark erhöt!</b>
+      <b>Info: Beim ersten Anwendungsstart ist die Response-Time stark erh&ouml;t!</b>
     </p>
     <p>
-      Die Quellocdes der gogo-Anwendung können <a href="downloads.jsp">hier</a> heruntergeladen werden.
+      Die Quellocdes der gogo-Anwendung k&ouml;nnen <a href="downloads.jsp">hier</a> heruntergeladen werden.
     </p>
   </body>
 </html>

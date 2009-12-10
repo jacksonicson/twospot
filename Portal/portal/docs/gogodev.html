@@ -1,16 +1,16 @@
-﻿<h2>GoGo-Anwendung im DevServer</h2>
+<h2>GoGo-Anwendung im DevServer</h2>
 
-<p>Nachfolgend werden die Schritte aufgeführt, um die GoGo-Anwendung im DevServer auszuführen.</p>
+<p>Nachfolgend werden die Schritte aufgef&uuml;hrt, um die GoGo-Anwendung im DevServer auszuf&uuml;hren.</p>
 
-<p>Im ersten Schritt müssen der DevServer und die GoGo-Anwendung <a href="downloads.jsp">hier</a> heruntergeladen werden.</p>
+<p>Im ersten Schritt m&uuml;ssen der DevServer und die GoGo-Anwendung <a href="downloads.jsp">hier</a> heruntergeladen werden.</p>
 
-<p>Nach dem Download muss der DevServer in ein beliebiges Verzeichnis entpackt werden. Das gewählte Verzeichnis muss anschließend in die <code>PATH</code>-Umgebungsvariable aufgenommen werden. Unter Windows erfolgt dies über die <b>System Properties</b>, <b>Environment Variables...</b>. An die <code>PATH</code>-Variable der <b>User variables</b> oder <b>system variables</b> muss das Verzeichnis des DevServers angefügt werden. Befindet sich der DevServer im Verzeichnis <code>C:/devserver</code> muss an eine <code>PATH</code>-Variable <code>;C:/devserver</code> angehängt werden. 
+<p>Nach dem Download muss der DevServer in ein beliebiges Verzeichnis entpackt werden. Das gew&auml;hlte Verzeichnis muss anschlie�end in die <code>PATH</code>-Umgebungsvariable aufgenommen werden. Unter Windows erfolgt dies &uuml;ber die <b>Systemeigenschaften</b>, Register <b>Erweitert</b>, <b>Umgebungsvariablen</b>. An die <code>PATH</code>-Variable der <b>Benutzervariablen</b> oder <b>Systemvariablen</b> muss das Verzeichnis des DevServers angef&uuml;gt werden. Befindet sich der DevServer im Verzeichnis <code>C:/devserver</code> muss an eine <code>PATH</code>-Variable <code>;C:/devserver</code> angeh&auml;ngt werden. 
 </p>
 
-<p>Anschließend muss das Scratch-Verzeichnis im DevServer konfiguriert werden. Die entsprechende Konfigurationsdatei befindet sich im <code>/conf/appserver/etc/</code>-Verzeichnis und heißt <code>appServer.properties</code>. Der Schlüssel <code>appServer.scratchdir</code> muss auf ein existierendes Verzeichnis z.B. <code>C:/temp/scratch</code> zeigen. 
+<p>Anschlie�end muss das Scratch-Verzeichnis im DevServer konfiguriert werden. Die entsprechende Konfigurationsdatei befindet sich im <code>/conf/appserver/etc/</code>-Verzeichnis und hei�t <code>appServer.properties</code>. Der Schl&uuml;ssel <code>appServer.scratchdir</code> muss auf ein existierendes Verzeichnis z.B. <code>C:/temp/scratch</code> zeigen. 
 </p>
 
-<p>Die Konfiguration des DevServers ist damit abgeschlossen. Nun kann die GoGo-Anwendung in ein beliebiges Verzeichnis extrahiert werden. Nach der Extraktion kann die GoGo-Anendung mit dem DevServer gestartet werden. Dazu wird der Befehl <code>twospot.py --runServer</code> <b>im Verzeichnis der GoGo-Anwendung</b> ausgeführt.
+<p>Die Konfiguration des DevServers ist damit abgeschlossen. Nun kann die GoGo-Anwendung in ein beliebiges Verzeichnis extrahiert werden. Nach der Extraktion kann die GoGo-Anendung mit dem DevServer gestartet werden. Dazu wird der Befehl <code>twospot.py --runServer</code> <b>im Verzeichnis der GoGo-Anwendung</b> ausgef&uuml;hrt.
 </p>
 
 <p>Nach dem Start des DevServers ist die Startseite der GoGo-Anwendung unter der http-Adresse <code>http://localhsot:8080</code> erreichbar. 
