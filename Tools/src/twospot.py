@@ -135,8 +135,9 @@ def deploy(directory):
         print "adding files from: %s to: %s" % (root, relRoot)
 
         # Add the directory to the zip file
-        if relRoot is not "":
-            zip.write(root, relRoot)
+        # This does not work with all operating systems!
+        #if relRoot is not "":
+        #    zip.write(root, relRoot)
             
         # Iterate over all files in the directory
         for file in files:
