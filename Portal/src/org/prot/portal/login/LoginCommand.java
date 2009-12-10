@@ -3,7 +3,7 @@ package org.prot.portal.login;
 public class LoginCommand
 {
 	private String redirectUrl;
-	
+
 	private String cancelUrl;
 
 	private String username;

@@ -15,6 +15,7 @@
 <p>Login</p>
 <form:form action="loginHandler.htm" method="POST" commandName="loginCommand">
      <form:hidden path="redirectUrl" />
+     <form:hidden path="cancelUrl" />
      <table>
           <form:errors>
                <tr>

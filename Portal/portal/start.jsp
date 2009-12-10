@@ -12,7 +12,7 @@
 <h2>Navigation</h2>
 <ul>
      <li><a href="/">Twospot</a></li>
-     <li><a href="/login.htm">Login</a></li>
+     <li><a href="/login.htm?cancel=/start.htm">Login</a></li>
      <li><a href="/registerHandler.htm">Register</a></li>
 </ul>
 
