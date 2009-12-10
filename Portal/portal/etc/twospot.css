@@ -35,6 +35,41 @@ code,pre {
 	width:300px;
 }
 
+.appId_input {
+	width:150px;
+}
+
+.log_table {
+	width:600px;
+	border: 0;
+	border-color:#FFF;
+}
+
+.log_table_err_0 {
+    width:30px;	
+	background-color:#39F
+}
+
+.log_table_err_1 {
+    width:30px;	
+	background-color:#9F0
+}
+
+.log_table_err_2 {
+    width:30px;	
+	background-color:#F90
+}
+
+.log_table_err_3 {
+    width:30px;	
+	background-color:#F30
+}
+
+.log_table_msg {
+	width:auto;
+	font-size:smaller;
+}
+
 pre {
 	font-size: 9pt;
 	background-color: #fafafa;
@@ -113,7 +148,7 @@ center {
 #page {
 	width: 700px;
 	position: absolute;
-	left: 190px;
+	left: 90px;
 	top: 50px;
 	padding-bottom: 30px;
 }

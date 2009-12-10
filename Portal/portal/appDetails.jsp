@@ -7,22 +7,29 @@
 
 <html>
 <head>
-<title>Portal</title>
+<title>TwoSpot - Portal</title>
+<link href="./etc/twospot.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
 
-<ul>
-     <li><a href="/portal.htm">Portal</a></li>
-</ul>
+<div id="header">
+<h1>TwoSpot - Portal</h1>
+</div>
 
-<p>Details for the Application: ${appId}</p>
+<div id="page">
+<p><a href="/portal.htm">Back</a></p>
+
+
+<h2>Details of AppId: ${appId}</h2>
 
 <p>
 <ul>
      <li><a href="/logs.htm?appId=${appId}">Logfiles</a></li>
-     <li><a href="/dbBrowser.htm?appId=${appId}">Database browser</a></li>
+     <li><a href="/dbBrowser.htm?appId=${appId}">Datastore browser</a></li>
 </ul>
 </p>
+
+</div>
 
 </body>
 </html>

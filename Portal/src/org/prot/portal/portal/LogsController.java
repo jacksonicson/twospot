@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.prot.app.services.log.LogMessage;
 import org.prot.app.services.log.LogService;
 import org.prot.app.services.log.LogServiceFactory;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,7 +19,7 @@ public class LogsController implements Controller
 	{
 		String appId = request.getParameter("appId");
 
-		List<String> messages = LogServiceFactory.getLogService().getMessages(appId, LogService.ALL);
+		List<LogMessage> messages = LogServiceFactory.getLogService().getMessages(appId, LogService.ALL);
 
 		return new ModelAndView("logs", "logMessages", messages);
 	}

@@ -6,30 +6,36 @@
 
 <html>
 <head>
-<title>Portal</title>
+<title>TwoSpot - Portal</title>
+<link href="./etc/twospot.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
 
-<p>Navigation</p>
-<ul>
-     <li><a href="/portal.htm">Portal</a></li>
-     <li><a href="/logout.htm">Logout</a></li>
-</ul>
+<div id="header">
+<h1>TwoSpot - Portal</h1>
+</div>
 
+<div id="page">
 <p>Create a new Application</p>
 <form:form action="/registerApp.htm" method="POST"
      commandName="registerAppCommand">
      <table>
+	     <form:errors path="appId">
+                <tr>
+                    <td colspan="2" class="error"><form:errors path="appId" /></td>
+                </tr>
+           </form:errors>
           <tr>
-               <td>AppId<form:errors path="appId" /></td>
-               <td><form:input path="appId" /></td>
+               <td>AppId:</td>
+               <td><form:input path="appId" size="10" cssClass="appId_input"/></td>
           </tr>
           <tr>
-               <td colspan="2"><input type="submit" value="Ok" /></td>
+               <td colspan="2" align="right"><input type="submit" value="Ok" /><input type="button" onClick="window.location='/portal.htm'" value="Back" /></td>
           </tr>
      </table>
 </form:form>
 
+</div>
 
 </body>
 </html>

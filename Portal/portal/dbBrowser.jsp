@@ -7,19 +7,19 @@
 
 <html>
 <head>
-<title>Portal</title>
+<title>TwoSpot - Portal</title>
+<link href="./etc/twospot.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
-
-<ul>
-     <li><a href="/portal.htm">Portal</a></li>
-</ul>
-
-<p>Database browser: ${appId}</p>
-
-
-<form:form action="/dbQueryForm.htm" commandName="queryCommand">
-
+<div id="header">
+    <h1>TwoSpot - Portal</h1>
+</div>
+<div id="page">
+    <p><a href="portal.htm">Portal</a></p>
+    <h2>Database browser: ${appId}</h2>
+    
+    <form:form action="/dbQueryForm.htm" commandName="queryCommand">
+	
      <form:hidden path="appId" />
      <table>
           <tr>
@@ -38,6 +38,8 @@
      </table>
 </form:form>
 
+<br/>
+
 <table border="1">
      <tr>
           <c:forEach var="head" items="${dataTableHead}">
@@ -53,6 +55,8 @@
           </tr>
      </c:forEach>
 </table>
+
+</div>
 
 </body>
 </html>
