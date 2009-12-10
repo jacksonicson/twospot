@@ -93,7 +93,10 @@ public final class UserServiceImpl implements UserService
 		// If there is no UID there is no user session
 		final String uid = searchUID();
 		if (uid == null)
+		{
+			logger.debug("Cannot unregister user - uid is null");
 			return;
+		}
 
 		AccessController.doPrivileged(new PrivilegedAction<String>()
 		{

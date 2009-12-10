@@ -27,7 +27,7 @@ public class HardPolicy extends Policy
 	private static final Logger logger = Logger.getLogger(HardPolicy.class);
 
 	// If debug all permissions are granted!
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 
 	// Codesource of the java libs (rt.jar)
 	private Set<CodeSource> csJava = new HashSet<CodeSource>();
@@ -440,7 +440,7 @@ public class HardPolicy extends Policy
 
 		// PropertyPermissins
 		appPermissions.add(new PropertyPermission("*", "read"));
-		
+
 		// ReflectionPermissions
 		appPermissions.add(new ReflectPermission("suppressAccessChecks"));
 
@@ -534,7 +534,8 @@ public class HardPolicy extends Policy
 			}
 		}
 
-		// Requested CodeSource does not match any configured CodeSource
+		// Requested CodeSource does not match any configured CodeSource.
+		// Therefore no erros have been displayed until now.
 		if (implied == false)
 			logger.warn("CodeSource did not match: " + permission + " on: " + cs.getLocation());
 
