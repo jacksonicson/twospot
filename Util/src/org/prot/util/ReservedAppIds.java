@@ -36,15 +36,29 @@ public final class ReservedAppIds
 		return privilegedAppIds.contains(appId);
 	}
 
+	/**
+	 * Checks if the AppId is valid <b>and</b> if the AppId is reserved.
+	 * 
+	 * @see ReservedAppIds#validateAppId(String)
+	 * @param appId
+	 * @return
+	 */
 	public static boolean validateNewAppId(String appId)
 	{
 		// Check if this appId is reserved
 		if (ReservedAppIds.isReserved(appId))
 			return false;
-		
+
 		return validateAppId(appId);
 	}
-	
+
+	/**
+	 * Checks if the AppId is valid. This method does <b>not</b> check if the
+	 * AppId is reserved!
+	 * 
+	 * @param appId
+	 * @return
+	 */
 	public static boolean validateAppId(String appId)
 	{
 		logger.debug("Validating AppId: " + appId);

@@ -43,11 +43,14 @@ public class JavaRuntime implements AppRuntime
 		deployer.setAppInfo(appInfo);
 
 		// Start the server
+		logger.debug("Creating server"); 
 		Server server = (Server) factory.getBean("Server");
 
 		// Activate the slf4j logging facade (which is bound to log4j)
+		logger.debug("Configuring slf4j logging"); 
 		org.eclipse.jetty.util.log.Log.setLog(new Slf4jLog());
 
+		// Add the deployer to the server
 		server.addBean(deployer);
 		try
 		{

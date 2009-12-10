@@ -4,8 +4,13 @@ import java.util.Set;
 
 public class ManagementData
 {
+	// Requests per second which are processed by the Controller
 	private long rps;
 
+	// Memory consumed by the AppServer
+	private double memLoad; 
+	
+	// AppId's which are running under the Controller
 	private Set<String> runningApps;
 
 	public long getRps()

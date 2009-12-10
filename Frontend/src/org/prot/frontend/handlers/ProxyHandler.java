@@ -17,6 +17,7 @@ import org.prot.frontend.cache.AppCache;
 import org.prot.manager.data.ControllerInfo;
 import org.prot.manager.services.FrontendService;
 import org.prot.util.AppIdExtractor;
+import org.prot.util.ReservedAppIds;
 
 public class ProxyHandler extends AbstractHandler
 {
@@ -52,6 +53,21 @@ public class ProxyHandler extends AbstractHandler
 			return;
 		}
 
+		if (appId.equals(ReservedAppIds.FRONTEND_DEPLOY))
+			handleDeploy(baseRequest, request, response);
+		else
+			handleApp(appId, target, baseRequest, request, response);
+	}
+
+	private void handleDeploy(Request baseRequest, HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException
+	{
+		// TODO: Send this to the FileServer!
+	}
+
+	private void handleApp(String appId, String target, Request baseRequest, HttpServletRequest request,
+			HttpServletResponse response) throws IOException, ServletException
+	{
 		try
 		{
 			// Check if the cache holds a controller for this app
