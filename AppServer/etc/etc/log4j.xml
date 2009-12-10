@@ -69,9 +69,7 @@
 	</logger>
 
 	<root>
-		<priority value="ALL" />
-		<appender-ref ref="ConsoleAppender" />
-		<!-- <appender-ref ref="FileAppender" /> -->
+		<priority value="ERROR" />
 		<appender-ref ref="SocketAppender" />
 		<appender-ref ref="Rolling" />
 	</root>

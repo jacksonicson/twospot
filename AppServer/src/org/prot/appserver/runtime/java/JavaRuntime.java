@@ -46,7 +46,6 @@ public class JavaRuntime implements AppRuntime
 		Server server = (Server) factory.getBean("Server");
 
 		// Activate the slf4j logging facade (which is bound to log4j)
-		Slf4jLog log = new Slf4jLog();
 		org.eclipse.jetty.util.log.Log.setLog(new Slf4jLog());
 
 		server.addBean(deployer);
