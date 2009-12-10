@@ -55,9 +55,11 @@ public class AppConfigurer
 	{
 		AppInfo appInfo = new AppInfo();
 
+		// Extract the AppId
 		String appId = (String) yaml.get("appId");
-		appInfo.setAppId(appId);
+		appInfo.setAppId(appId.trim());
 
+		// Extract the Runtime
 		String runtime = (String) yaml.get("runtime");
 		appInfo.setRuntime(runtime);
 
