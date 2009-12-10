@@ -1,14 +1,17 @@
 package gogo.data;
 
+import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable
 public class BlogEntry
 {
-	@Persistent
-	private String username; 
-	
+	@Persistent(valueStrategy = IdGeneratorStrategy.UUIDSTRING)
+	@PrimaryKey
+	private String username;
+
 	@Persistent
 	private String message;
 

@@ -40,7 +40,12 @@ public class GogoServlet extends HttpServlet
 
 		// If the logout param is present - logout
 		if (logout != null)
+		{
+			logService.debug("Unregistering user");
 			userService.unregisterUser();
+		}
+
+		response.getWriter().print("Hello world");
 
 		// Check if the user is logged in?
 		if (userService.getCurrentUser() == null)
@@ -63,7 +68,7 @@ public class GogoServlet extends HttpServlet
 			return;
 		}
 
-		// The previous if block did not return therefore the user is logged in.
+		// The previous if block did not return therefore the user is logged in
 		// Log his username.
 		logService.info("User is logged in: " + userService.getCurrentUser());
 
@@ -78,11 +83,11 @@ public class GogoServlet extends HttpServlet
 		// Get the current transaction
 		Transaction tx = manager.currentTransaction();
 
-		// Start a new transaction
-		tx.begin();
-
 		try
 		{
+			// Start a new transaction
+			tx.begin();
+
 			// Create a new object of BlogEntry
 			BlogEntry entry = new BlogEntry();
 
@@ -110,19 +115,21 @@ public class GogoServlet extends HttpServlet
 		// Tell the query the class
 		query.setClass(BlogEntry.class);
 
-		// Read the first 300 entries
-		query.setRange(0, 300);
+		query.setRange(0, 100);
 
 		// Execute the query
 		List<BlogEntry> result = (List<BlogEntry>) query.execute();
 
 		// Print everything to the response
 		PrintWriter out = response.getWriter();
-		out.print("GoGo-Datastore: \n");
+		response.setContentType("text/html");
+		out.print("<h1>GoGo-Datastore:</h1>");
 
 		for (BlogEntry entry : result)
 		{
-			out.print("Name: " + entry.getUsername() + " Message: " + entry.getMessage() + "\n\n");
+			out.print("<p>");
+			out.print("Message: " + entry.getMessage() + "\n\n");
+			out.print("</p>");
 		}
 	}
 }
