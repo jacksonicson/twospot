@@ -41,7 +41,7 @@ public class JavaRuntime implements AppRuntime
 		AppDeployer deployer = (AppDeployer) factory.getBean("AppDeployer");
 		deployer.setAppInfo(appInfo);
 
-		// Start server
+		// Start the server
 		Server server = (Server) factory.getBean("Server");
 		server.addBean(deployer);
 		try

@@ -6,7 +6,7 @@ import javax.jdo.Transaction;
 
 import org.apache.log4j.Logger;
 import org.prot.appserver.runtime.java.SessionData;
-import org.prot.controller.services.log.JdoConnection;
+import org.prot.util.jdo.JdoConnection;
 
 public class JdoSessionDao implements SessionDao
 {
@@ -164,7 +164,7 @@ public class JdoSessionDao implements SessionDao
 	{
 		// Creating transferable object
 		SessionId id = new SessionId(sessionId);
-		
+
 		PersistenceManager pm = connection.getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
 		tx.begin();
@@ -186,7 +186,7 @@ public class JdoSessionDao implements SessionDao
 	public void deleteSessionId(String sessionId)
 	{
 		SessionId id = new SessionId(sessionId);
-		
+
 		PersistenceManager pm = connection.getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
 		tx.begin();
@@ -220,7 +220,7 @@ public class JdoSessionDao implements SessionDao
 			logger.debug("exists sessionId: " + (data != null));
 
 			return (data != null);
-			
+
 		} catch (Exception e)
 		{
 			logger.error("Could not load SessionId: " + sessionId, e);

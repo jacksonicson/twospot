@@ -90,7 +90,7 @@
 
 	<bean id="SessionDao" class="org.prot.appserver.runtime.java.data.JdoSessionDao">
 		<property name="connection">
-			<bean class="org.prot.appserver.runtime.java.data.JdoConnection" />
+			<bean class="org.prot.util.jdo.JdoConnection" />
 		</property>
 	</bean>
 
