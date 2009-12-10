@@ -6,6 +6,7 @@ import javax.jdo.Transaction;
 
 import org.apache.log4j.Logger;
 import org.prot.appserver.runtime.java.SessionData;
+import org.prot.controller.services.log.JdoConnection;
 
 public class JdoSessionDao implements SessionDao
 {

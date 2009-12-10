@@ -57,18 +57,15 @@ public class AppDeployer extends AbstractLifeCycle
 		logger.info("Deploying development contexts");
 
 		WebAppContext devContext = new WebAppContext();
+		
 		devContext.setWar("./devserver"); // WARN: Hardcoded
 		devContext.setContextPath("/twospot");
-
+		devContext.setDefaultsDescriptor("/etc/webdefault.xml");
 		devContext.setTempDirectory(new File(Configuration.getInstance().getAppScratchDir()));
-
 		devContext.setExtractWAR(false);
 		devContext.setParentLoaderPriority(true); // Load everything from the
-		// server classpath
 		devContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
 				".*/jsp-api-[^/]*\\.jar$|.*/jsp-[^/]*\\.jar$");
-
-		devContext.setDefaultsDescriptor("/etc/webdefault.xml");
 
 		logger.debug("Adding and starting handler");
 		contexts.addHandler(devContext);
@@ -82,8 +79,13 @@ public class AppDeployer extends AbstractLifeCycle
 	{
 		logger.debug("Deploying application");
 
+		// Get the configuration
+		JavaConfiguration runtimeConfig = (JavaConfiguration) appInfo.getRuntimeConfiguration();
+		Configuration configuration = Configuration.getInstance();
+
+		// Create a new Context for the web application
 		webAppContext = new WebAppContext();
-		webAppContext.setWar(Configuration.getInstance().getAppDirectory());
+		webAppContext.setWar(configuration.getAppDirectory());
 		webAppContext.setContextPath("/");
 
 		// Configure the system classes (application can see this classes)
@@ -95,29 +97,33 @@ public class AppDeployer extends AbstractLifeCycle
 		webAppContext.setServerClasses(ownServerClasses);
 
 		// Configure the session handler (Depends on the app configuration)
-		JavaConfiguration configuration = (JavaConfiguration) appInfo.getRuntimeConfiguration();
-		if (configuration.isUseDistributedSessions())
+		if (runtimeConfig.isUseDistributedSessions())
 		{
 			SessionHandler sessionHandler = new SessionHandler(sessionManager);
 			webAppContext.setSessionHandler(sessionHandler);
 			logger.info("Using distributed sesssion manager");
 		}
 
+		// Custom error handling
 		webAppContext.setErrorHandler(new ErrorHandler());
 
 		// Set the scratch directory for this web application
-		webAppContext.setTempDirectory(new File(Configuration.getInstance().getAppScratchDir()));
+		webAppContext.setTempDirectory(new File(configuration.getAppScratchDir()));
 
+		// Don't extract web archives
 		webAppContext.setExtractWAR(false);
-		webAppContext.setParentLoaderPriority(true); // Load everything from the
-		// server classpath
+
+		// Used by the web archiver (don't use that)
 		webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
 				".*/jsp-api-[^/]*\\.jar$|.*/jsp-[^/]*\\.jar$");
 
-		// webAppContext.setMaxFormContentSize(3 * 1024 * 1024);
+		// All classes from the parent class loader are visible
+		webAppContext.setParentLoaderPriority(false);
 
+		// Default web application configuration descriptor
 		webAppContext.setDefaultsDescriptor("/etc/webdefault.xml");
 
+		// Register and start the context
 		logger.debug("Adding and starting handler");
 		contexts.addHandler(webAppContext);
 		if (contexts.isStarted())

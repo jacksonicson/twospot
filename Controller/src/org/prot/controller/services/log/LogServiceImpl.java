@@ -9,6 +9,7 @@ import javax.jdo.Transaction;
 
 import org.apache.log4j.Logger;
 import org.prot.controller.manager.AppManager;
+import org.prot.util.jdo.JdoConnection;
 
 public class LogServiceImpl implements LogService
 {
