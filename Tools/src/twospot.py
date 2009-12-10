@@ -96,17 +96,17 @@ def upload(warFile, appId):
 
 def testApp(directory):
     required = [
-                "/WEB-INF",
-                "/app.yaml"
+                "WEB-INF",
+                "app.yaml"
                 ]
     
     for test in required:
-        testDir = directory + test
-        if not os.path.exists(directory + test):
+        testDir = directory + os.sep + test
+        if not os.path.exists(testDir):
             raise InvalidApplication("Missing application directory: %s" % testDir);
 
     # Parse the YAML-File
-    yaml = parseAppYaml(directory + "/app.yaml")
+    yaml = parseAppYaml(directory + os.sep + "app.yaml")
     print "App-Configuration: %s" % yaml
     
     return yaml 
@@ -120,19 +120,19 @@ def deploy(directory):
     # Is the directory an application directory?
     yaml = testApp(directory)
 
-    zipFile = directory + "/.deploy"
+    zipFile = directory + os.sep + ".deploy"
     if os.path.exists(zipFile):
         print "deleting old deployment"
         os.remove(zipFile)
     
-    zipFile = directory + "/.deploy"
+    zipFile = directory + os.sep + ".deploy"
     zip = zipfile.ZipFile(zipFile, "w")
     
     # Iterate over all files
     for root, dirs, files in os.walk(directory):
         # Get the relatve directory
         relRoot = root.replace(directory, "")
-        print "adding files from: %s" % relRoot
+        print "adding files from: %s to: %s" % (root, relRoot)
 
         # Add the directory to the zip file
         if relRoot is not "":
@@ -147,7 +147,7 @@ def deploy(directory):
             
             # Add the file to the zip file
             print "   adding file: %s" % file
-            zip.write(root + "/" + file, relRoot + "/" + file)
+            zip.write(root + os.sep + file, relRoot + os.sep + file)
     
     zip.close()
     
@@ -162,7 +162,7 @@ def createProject(directory, projectType, projectName):
         raise InvalidDirectory("Destination path is not a directory")  
     
     # Create the application folder
-    directory += "/" + projectName
+    directory += os.sep + projectName
     if os.path.exists(directory):
         raise InvalidDirectory("Directory already exists")
     
@@ -170,13 +170,13 @@ def createProject(directory, projectType, projectName):
     
     # Create the folder structure
     if projectType == "java":
-        os.mkdir(directory + "/WEB-INF")
-        os.mkdir(directory + "/WEB-INF/lib")
-        os.mkdir(directory + "/WEB-INF/classes")
+        os.mkdir(directory + os.sep + "WEB-INF")
+        os.mkdir(directory + os.sep + "/WEB-INF/lib")
+        os.mkdir(directory + os.sep + "/WEB-INF/classes")
     elif projectType == "python":
-        os.mkdir(directory + "/WEB-INF")
-        os.mkdir(directory + "/WEB-INF/python")
-        os.mkdir(directory + "/WEB-INF/python/" + projectName)
+        os.mkdir(directory + os.sep + "/WEB-INF")
+        os.mkdir(directory + os.sep + "/WEB-INF/python")
+        os.mkdir(directory + os.sep + "/WEB-INF/python/" + projectName)
     else:
         raise InvalidProjectType("Valid project types are java, python")
     
@@ -193,7 +193,7 @@ def createProject(directory, projectType, projectName):
             "  file: %s/TODO.py" % projectName
             ]
     
-    file = open(directory + "/app.yaml", "w")
+    file = open(directory + os.sep + "app.yaml", "w")
     file.writelines(yaml)
     file.close; 
     
@@ -219,7 +219,7 @@ def runServer(directory):
     workDir = directory
 
     # Load the classpath from classpath.txt
-    file = open(sys.path[0] + "/appserver_classpath.txt", "r")
+    file = open(sys.path[0] + os.sep + "appserver_classpath.txt", "r")
     lines = file.readlines()
     classpath = ".;"
     for line in lines:
@@ -309,7 +309,7 @@ def main(args):
         global SERVER
         SERVER = options.server
     
-    # Call functions
+   # Call functions
     if options.projectName:
         createProject(options.dir, options.projectType, options.projectName)
     
