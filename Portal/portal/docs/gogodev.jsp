@@ -1,4 +1,4 @@
-﻿<%@ taglib uri='/WEB-INF/tlds/template.tld' prefix='template'%>
+<%@ taglib uri='/WEB-INF/tlds/template.tld' prefix='template'%>
 
 <template:insert template='template.jsp'>
      <template:put name='header' content='./header.html' />
