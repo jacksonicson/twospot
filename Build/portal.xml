@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="all" name="Portal">
+
+	<target name="all">
+		<ant antfile="../Portal/build.xml" dir="../Portal/" />
+		<move file="../Portal/portalnull.war" todir="." />
+	</target>
+
+</project>

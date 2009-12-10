@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="all" name="DevServer">
+
+	<import file="./platform.xml" />
+
+	<!-- Import the GoGo classpath -->
+	<import file="../gogo/classpath.xml" />
+
+	<property name="dest" value="./devserver" />
+
+	<target name="prepare">
+		<mkdir dir="${dest}" />
+	</target>
+
+	<target name="cleanup">
+		<delete dir="${dest}" />
+	</target>
+
+	<target name="package">
+		<!-- copy the libs -->
+		<mkdir dir="${dest}/Libs" />
+		<copy todir="${dest}/Libs/">
+			<fileset dir="../Libs">
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+
+		<!-- copy Deps which are used for development -->
+		<mkdir dir="${dest}/dev" />
+		<copy todir="${dest}/dev" flatten="true">
+			<fileset refid="gogo_libfiles" />
+		</copy>
+
+		<!-- copy the configuration (etc) -->
+		<mkdir dir="${dest}/conf" />
+		<copy todir="${dest}/conf/util">
+			<fileset dir="../Util/etc/" />
+		</copy>
+		<copy todir="${dest}/conf/appserver">
+			<fileset dir="../AppServer/etc/" />
+		</copy>
+
+		<!-- copy the classpath -->
+		<copyfile src="../AppServer/classpath.txt"
+		          dest="${dest}/appserver_classpath.txt" />
+
+		<!-- copy the tools python script -->
+		<copy todir="${dest}">
+			<fileset dir="../Tools/src">
+				<include name="**/*.*" />
+			</fileset>
+		</copy>
+
+		<!-- Swap the configuration files -->
+		<delete file="${dest}/conf/appserver/etc/appServer.properties" />
+		<move file="${dest}/conf/appserver/etc/appServer.properties_dev"
+		      tofile="${dest}/conf/appserver/etc/appServer.properties" />
+
+		<delete file="${dest}/conf/appserver/etc/jdoDefault.properties" />
+		<move file="${dest}/conf/appserver/etc/jdoDefault.properties_dev"
+		      tofile="${dest}/conf/appserver/etc/jdoDefault.properties" />
+
+
+		<!-- Copy the Mock implementation of core portal services -->
+		<mkdir dir="${dest}/devserver" />
+		<copy todir="${dest}/devserver">
+			<fileset dir="../DevServerMock/devserver">
+				<include name="**/*.*" />
+			</fileset>
+		</copy>
+
+		<!-- create a zip archive of the dest folder -->
+		<delete file="devserver.zip" />
+		<zip destfile="devserver.zip">
+			<fileset dir="${dest}" />
+		</zip>
+	</target>
+
+	<target name="all" depends="mkcp,prepare,build,package,cleanup" />
+
+</project>

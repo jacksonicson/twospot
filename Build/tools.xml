@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="all" name="Tools">
+
+	<target name="all">
+		<zip destfile="tools.zip">
+			<fileset dir="../Tools/src">
+				<include name="**/*" />
+			</fileset>
+		</zip>
+
+		<copy file="tools.zip" todir="../Portal/war/docs/dwls/" />
+	</target>
+
+</project>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="all" name="Platform">
+
+	<property name="dest" value="./package" />
+
+	<target name="clean">
+		<delete dir="${dest}" />
+	</target>
+
+	<target name="prepare">
+		<delete dir="${dest}" />
+		<mkdir dir="${dest}" />
+	</target>
+
+	<target name="package">
+		<!-- copy the libs -->
+		<mkdir dir="${dest}/Libs" />
+		<copy todir="${dest}/Libs/">
+			<fileset dir="../Libs">
+				<include name="**/*.jar" />
+			</fileset>
+			<!--<fileset dir="../Libs/gen">
+				<include name="**/*.jar" />
+			</fileset>-->
+		</copy>
+
+		<!-- copy the configuration (etc) -->
+		<mkdir dir="${dest}/conf" />
+		<copy todir="${dest}/conf/util">
+			<fileset dir="../Util/etc/" />
+		</copy>
+		<copy todir="${dest}/conf/appserver">
+			<fileset dir="../AppServer/etc/" />
+		</copy>
+		<copy todir="${dest}/conf/controller">
+			<fileset dir="../Controller/etc/" />
+		</copy>
+		<copy todir="${dest}/conf/frontend">
+			<fileset dir="../Frontend/etc/" />
+		</copy>
+		<copy todir="${dest}/conf/master">
+			<fileset dir="../Master/etc/" />
+		</copy>
+		<copy todir="${dest}/conf/fileserver">
+			<fileset dir="../HttpFileServer/etc/" />
+		</copy>
+
+		<!-- copy the classpath -->
+		<copyfile src="../AppServer/classpath.txt" dest="${dest}/appserver_classpath.txt" />
+		<copyfile src="../Controller/classpath.txt" dest="${dest}/controller_classpath.txt" />
+		<copyfile src="../Master/classpath.txt" dest="${dest}/master_classpath.txt" />
+		<copyfile src="../Frontend/classpath.txt" dest="${dest}/frontend_classpath.txt" />
+		<copyfile src="../HttpFileServer/classpath.txt" dest="${dest}/httpserver_classpath.txt" />
+
+		<!-- copy the python script with the bootstrap routines -->
+		<copy todir="${dest}">
+			<fileset dir=".">
+				<include name="start.py" />
+				<include name="twospot.bat" />
+				<include name="twospot.sh" />
+			</fileset>
+		</copy>
+
+		<!-- create a zip archive of the dest folder -->
+		<delete file="twospot.zip" />
+		<zip destfile="twospot.zip">
+			<fileset dir="${dest}" />
+		</zip>
+	</target>
+
+	<target name="mkcp">
+		<!-- The order of this items is important. For example the Controller
+			 requires the classpath from the AppServer -->
+		<ant antfile="../Util/build.xml" dir="../Util/" target="mkcp" />
+		<ant antfile="../AppServer/build.xml" dir="../AppServer/" target="mkcp" />
+		<ant antfile="../Controller/build.xml" dir="../Controller/" target="mkcp" />
+		<ant antfile="../Master/build.xml" dir="../Master/" target="mkcp" />
+		<ant antfile="../Frontend/build.xml" dir="../Frontend/" target="mkcp" />
+		<ant antfile="../HttpFileServer/build.xml" dir="../HttpFileServer/" target="mkcp" />
+		<ant antfile="../DevServerMock/build.xml" dir="../HttpFileServer/" target="mkcp" />
+	</target>
+
+	<target name="build">
+		<ant antfile="../Util/build.xml" dir="../Util/" />
+		<ant antfile="../Controller/build.xml" dir="../Controller/" />
+		<ant antfile="../Master/build.xml" dir="../Master/" />
+		<ant antfile="../Frontend/build.xml" dir="../Frontend/" />
+		<ant antfile="../AppServer/build.xml" dir="../AppServer/" />
+		<ant antfile="../HttpFileServer/build.xml" dir="../HttpFileServer/" />
+		<ant antfile="../DevServerMock/build.xml" dir="../DevServerMock/" />
+	</target>
+
+	<target name="all" depends="mkcp,prepare,build,package,clean" />
+
+</project>
