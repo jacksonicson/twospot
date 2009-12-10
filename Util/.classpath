@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="/Libs/lib/log4j-1.2.15/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-continuation-7.0.0.v20091005.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/zookeeper-3.2.1/zookeeper-3.2.1.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/jdo2-api-2.3-eb.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
