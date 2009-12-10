@@ -62,5 +62,7 @@
 	<classpathentry kind="lib" path="/Libs/gen/twospot-controller.jar"/>
 	<classpathentry kind="lib" path="/Libs/gen/twospot-util.jar"/>
 	<classpathentry kind="lib" path="/Util/etc"/>
+	<classpathentry kind="lib" path="/Libs/lib/slf4j/slf4j-api-1.5.10.jar" sourcepath="/Libs/lib/slf4j/slf4j-api-1.5.10-sources.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/slf4j/slf4j-log4j12-1.5.10.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

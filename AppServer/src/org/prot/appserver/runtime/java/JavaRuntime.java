@@ -5,6 +5,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.util.log.Slf4jLog;
 import org.prot.appserver.app.AppInfo;
 import org.prot.appserver.config.Configuration;
 import org.prot.appserver.runtime.AppRuntime;
@@ -43,6 +44,11 @@ public class JavaRuntime implements AppRuntime
 
 		// Start the server
 		Server server = (Server) factory.getBean("Server");
+
+		// Activate the slf4j logging facade (which is bound to log4j)
+		Slf4jLog log = new Slf4jLog();
+		org.eclipse.jetty.util.log.Log.setLog(new Slf4jLog());
+
 		server.addBean(deployer);
 		try
 		{
