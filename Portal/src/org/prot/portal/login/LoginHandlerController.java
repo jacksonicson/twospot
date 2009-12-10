@@ -13,6 +13,7 @@ import org.prot.util.Cookies;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
+import org.springframework.web.servlet.view.RedirectView;
 
 public class LoginHandlerController extends SimpleFormController
 {
@@ -52,13 +53,15 @@ public class LoginHandlerController extends SimpleFormController
 
 		// Set the UID cookie
 		Cookie uidCookie = new Cookie(Cookies.USER_ID, uid);
+		uidCookie.setPath("/");
+		uidCookie.setDomain(".twospot.local");
 		response.addCookie(uidCookie);
 
 		// Redirect (if there is a destination url)
 		if (loginCommand.getRedirectUrl() != null && loginCommand.getRedirectUrl().isEmpty() == false)
 		{
 			logger.debug("Redirecting from login to: " + loginCommand.getRedirectUrl());
-			response.sendRedirect(loginCommand.getRedirectUrl());
+			return new ModelAndView(new RedirectView(loginCommand.getRedirectUrl()));
 		}
 
 		return super.onSubmit(request, response, command, errors);
