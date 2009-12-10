@@ -4,7 +4,7 @@
 </p>
 
 <h3>Verwendung von HBase</h3>
-<p>Im Unterschied zu relationalen Datenbanken stellt HBase keine SQL-Schnittstelle zur Verf&uuml;gung. Auch ein groﬂteil der aus SQL-Datenbanken bekannten Funktionalit&auml;t wie Prim&auml;rschl&uuml;sse, Indices, Fremdschl&uuml;ssel oder Constraints steht bei Verwendung der HBase-Datenbank nicht zur Verf&uuml;gung.
+<p>Im Unterschied zu relationalen Datenbanken stellt HBase keine SQL-Schnittstelle zur Verf&uuml;gung. Auch ein gro&szlig;teil der aus SQL-Datenbanken bekannten Funktionalit&auml;t wie Prim&auml;rschl&uuml;sse, Indices, Fremdschl&uuml;ssel oder Constraints steht bei Verwendung der HBase-Datenbank nicht zur Verf&uuml;gung.
 </p>
 
 <p>Der Zugriff auf die HBase-Datenbank aus TwoSpot-Anwendungen heraus erfolgt &uuml;ber JDO (Java Data Objects). JDO ist ein Standard der eine einheitliche Schnittstelle f&uuml;r das Arbeiten mit persistenten Daten beschreibt. Der Vorteil von JDO gegen&uuml;ber JPA (Java Persistence API), Hibernate oder anderen OR-Mappern liegt in der Unabh&auml;ngigkeit zu der zugrundeliegenden Speichertechnologie. Diese Eigenschaft wird auch als datastore-agnostic bezeichnet und bedeutet vereinfacht ausgedr&uuml;ckt, dass nicht nur relationale Datenbanken sondern jede beliebige Speicherl&ouml;sung eingesetzt werden k&ouml;nnen. Beispiele hierf&uuml;r sind Objektorientierte-, Dokumentenbasierte- oder auch Spalten-Basierte Datenbanken. Dementsprechend l&auml;sst sich JDO auch mit der HBase-Datenbank einsetzten. 
@@ -49,7 +49,7 @@ public class BlogEntry
 </pre>
 
 <p>
-Anschlieﬂend m&uuml;ssen die Klasse und die persistenten Attribute annotiert werden. Die Klasse wird dabei mit <code>@PersistenceCapable</code> annotiert. Dar&uuml;ber erh&auml;lt JDO die Information, dass es sich um eine persistente Klasse handelt. Alle persistenten Attribute werden mit <code>@Persistent</code> annotiert. Diese Attribute werden von JDO gespeichert. Es ist dar&uuml;ber hinauﬂ sinnvoll nicht persistente Attribute mit <code>@NotPersistent</code> zu annotieren. Die annotierte <code>BlogEntry</code>-Klasse hat das folgende Aussehen:
+Anschlie&szlig;end m&uuml;ssen die Klasse und die persistenten Attribute annotiert werden. Die Klasse wird dabei mit <code>@PersistenceCapable</code> annotiert. Dar&uuml;ber erh&auml;lt JDO die Information, dass es sich um eine persistente Klasse handelt. Alle persistenten Attribute werden mit <code>@Persistent</code> annotiert. Diese Attribute werden von JDO gespeichert. Es ist dar&uuml;ber hinau&szlig; sinnvoll nicht persistente Attribute mit <code>@NotPersistent</code> zu annotieren. Die annotierte <code>BlogEntry</code>-Klasse hat das folgende Aussehen:
 </p>
 
 <pre class="prettyprint lang-java">
