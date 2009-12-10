@@ -7,8 +7,14 @@ public class ManagementData
 	// Requests per second which are processed by the Controller
 	private long rps;
 
-	// Memory consumed by the AppServer
+	// Memory consumed by the AppServer's
 	private double memLoad; 
+	
+	// Average CPU usage
+	private double averageCpu; 
+	
+	// Data transfered by the Controller (in and out) (bytes per second)
+	private long networkTraffic;
 	
 	// AppId's which are running under the Controller
 	private Set<String> runningApps;
