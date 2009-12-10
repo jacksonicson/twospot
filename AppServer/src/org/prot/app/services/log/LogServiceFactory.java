@@ -44,7 +44,6 @@ public class LogServiceFactory
 				// Object o = userService;
 				return service;
 			}
-
 		});
 
 		return logService;

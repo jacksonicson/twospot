@@ -28,18 +28,16 @@ public class LogServiceImpl implements LogService
 	@Override
 	public void log(String token, String appId, String message, int severity)
 	{
-		if (appManager.checkToken(token) == false)
-			return;
-
 		PersistenceManager pm = this.connection.getPersistenceManager();
 		try
 		{
 			Transaction tx = pm.currentTransaction();
 
+			logger.debug("Writing log for: " + appId + " message: " + message + " severity: " + severity);
 			LogMessage log = new LogMessage();
 			log.setAppId(appId);
 			log.setMessage(message);
-			log.setSeverity(0);
+			log.setSeverity(severity);
 
 			try
 			{
@@ -76,6 +74,7 @@ public class LogServiceImpl implements LogService
 
 			List<LogMessage> logs = (List<LogMessage>) query.execute();
 			List<String> messages = new ArrayList<String>();
+			logger.info("Found messages: " + messages.size());
 			for (LogMessage message : logs)
 			{
 				messages.add(message.getMessage());

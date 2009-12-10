@@ -1,6 +1,7 @@
 package org.prot.app.security;
 
 import java.io.FilePermission;
+import java.lang.reflect.ReflectPermission;
 import java.net.MalformedURLException;
 import java.net.SocketPermission;
 import java.net.URL;
@@ -26,7 +27,7 @@ public class HardPolicy extends Policy
 	private static final Logger logger = Logger.getLogger(HardPolicy.class);
 
 	// If debug all permissions are granted!
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 
 	// Codesource of the java libs (rt.jar)
 	private Set<CodeSource> csJava = new HashSet<CodeSource>();
@@ -439,6 +440,9 @@ public class HardPolicy extends Policy
 
 		// PropertyPermissins
 		appPermissions.add(new PropertyPermission("*", "read"));
+		
+		// ReflectionPermissions
+		appPermissions.add(new ReflectPermission("suppressAccessChecks"));
 
 		// Create the ProtectionDomains for the App-URL and Scratch-URL
 		ProtectionDomain pdApp = new ProtectionDomain(csApp, appPermissions);
