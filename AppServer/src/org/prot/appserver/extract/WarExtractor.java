@@ -24,13 +24,17 @@ public class WarExtractor implements AppExtractor
 	private String createFolder(String destPath) throws IOException
 	{
 		String folder = destPath;
-		logger.debug("Using app-folder: " + folder);
+		logger.debug("Using App-folder: " + folder);
 
+		// Delete folder if it already exists!
 		File file = new File(folder);
 		if (file.exists())
 			file.delete();
 
+		// Create the folder
 		file.mkdir();
+
+		// Return path to the folder
 		return folder;
 	}
 
@@ -38,20 +42,31 @@ public class WarExtractor implements AppExtractor
 	{
 		ZipInputStream zipIn = new ZipInputStream(new ByteArrayInputStream(warFile));
 		ZipEntry entry;
-		
-		logger.debug("Reading zip entries");
-		int fileCounter = 0; 
+
+		logger.debug("Reading ZIP entries");
+		int fileCounter = 0;
 		while ((entry = zipIn.getNextEntry()) != null)
 		{
-			logger.debug("zip entry: " + entry.isDirectory() + " - " + entry.getName());
+			logger.debug("ZIP entry: " + entry.isDirectory() + " - " + entry.getName());
 			if (entry.isDirectory())
 			{
-				File dir = new File(folder + "/" + entry.getName());
-				dir.mkdir();
+				// Ignore directory entries (Directory structure is created for
+				// each file)
+				// ZIP-Files don't require folde entries!
 			} else
 			{
-				fileCounter++; 
-				FileOutputStream fos = new FileOutputStream(folder + "/" + entry.getName());
+				// Destination file for the ZIP-File
+				File dest = new File(folder, entry.getName());
+
+				// Get the parent directory
+				File parentDir = dest.getParentFile();
+
+				// Create folder structure to the parent directory
+				parentDir.mkdirs();
+
+				// Extract the file
+				fileCounter++;
+				FileOutputStream fos = new FileOutputStream(dest);
 				BufferedOutputStream fo = new BufferedOutputStream(fos);
 
 				byte buffer[] = new byte[1024];
@@ -65,6 +80,7 @@ public class WarExtractor implements AppExtractor
 				fo.close();
 			}
 		}
-		logger.debug(fileCounter + " files extracted");
+
+		logger.debug("Done with " + fileCounter + " files extracted");
 	}
 }
