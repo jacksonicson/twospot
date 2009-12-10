@@ -32,7 +32,7 @@ public class AccessFilter extends GenericFilterBean
 		String uri = httpRequest.getRequestURI();
 
 		String[] clean = { "/docs/", "index.htm", "login.htm", "start.htm", "loginHandler.htm",
-				"registerHandler.htm", "/" };
+				"registerHandler.htm", "/etc", "/" };
 
 		for (String test : clean)
 		{
