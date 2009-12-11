@@ -25,7 +25,9 @@
       Dateistruktur
     </h3> 
     <p>
-      Die Dateistruktur von TwoSpot-Anwendungen weist eine gro&szlig;e &auml;hnlichkeit zu gew&ouml;hnlichen Java Web-Anwendungen auf. Die Dateistruktur der leeren <code>gogo</code>-Anwendungen hat beispielsweise die Form:
+      Die Dateistruktur von TwoSpot-Anwendungen weist eine gro&szlig;e &Auml;hnlichkeit
+      zu gew&ouml;hnlichen Java Web-Anwendungen auf. Die Dateistruktur der leeren <code>gogo</code>-Anwendungen
+      hat beispielsweise die Form:
     </p>
     <pre class="prettyprint lang-htm">
  /helloworld
@@ -42,13 +44,20 @@
     /...
 </pre>
     <p>
-      Die Verzeichnisstruktur l&auml;sst sich einfach &uuml;ber die Tools erstellen. Dazu muss der nachfolgende Befehl ausgef&uuml;hrt werden. Die Verzeichnisstruktur wird in dem Ausf&uuml;hrungsverzeichnis angelegt, im Beispiel also <code>/home/alf/dev/gogo</code>
-    </p>
+      Die Verzeichnisstruktur l&auml;sst sich einfach &uuml;ber die Tools erstellen.
+      Dazu muss der nachfolgende Befehl ausgef&uuml;hrt werden. Die Verzeichnisstruktur
+      wird in dem Ausf&uuml;hrungsverzeichnis angelegt, im Beispiel also <code>/home/alf/dev/gogo</code>.</p>
     <pre class="prettyprint">
 home/alf/dev/&gt; twospot.py --createProject=gogo --type=java
 </pre>
     <p>
-      Jede TwoSpot-Anwendung muss die Datei <code>app.yaml</code> enthalten. Dabei handelt es sich um eine Konfigurationsdatei die Informationen &uuml;ber die Anwendung (AppId, Typ der Runtime) und Konfigurationseinstellungen f&uuml;r den Application-Container beinhaltet. Beim Anlegen der Verzeichnisstruktur &uuml;ber die Tools wird die <code>app.yaml</code>-Datei automatisch erstellt. F&uuml;r die <b>gogo</b>-Anwendung sind keine &auml;nderungen an der Datei notwendig.
+      Jede TwoSpot-Anwendung muss die Datei <code>app.yaml</code> enthalten.
+      Dabei handelt es sich um eine Konfigurationsdatei die Informationen &uuml;ber
+      die Anwendung (AppId, Typ der Runtime) und Konfigurationseinstellungen
+      f&uuml;r den Application-Container beinhaltet. Beim Anlegen der Verzeichnisstruktur
+      mithilfe der Tools wird die <code>app.yaml</code>-Datei automatisch erstellt.
+      F&uuml;r die <b>gogo</b>-Anwendung sind keine &Auml;nderungen an der Datei
+      notwendig.
     </p>
     <h3>
       Startseite
@@ -89,13 +98,11 @@ Uploading...
 Status: 200
 </pre>
     <p>
-      Ein erfolgreiches Deployment wird mit einem <code>Status 200</code> angezeigt. Die Anwendung ist anschlie&szlig;end unter der http-Adresse <code>http://appId.twospot.informatik.fh-augsburg.de:6060/index.jsp</code> erreichbar.
+      Ein erfolgreiches Deployment wird mit einem <code>Status 200</code> beendet.
+      Die Anwendung ist anschlie&szlig;end unter der http-Adresse <code>http://appId.twospot.informatik.fh-augsburg.de:6060/index.jsp</code> erreichbar.
     </p>
     <p>
-      <b>Info: Beim ersten Anwendungsstart ist die Response-Time stark erh&ouml;t!</b>
-    </p>
-    <p>
-      Die Quellocdes der gogo-Anwendung k&ouml;nnen <a href="downloads.jsp">hier</a> heruntergeladen werden.
-    </p>
-  </body>
+      Die Quellocdes der gogo-Anwendung k&ouml;nnen <a href="downloads.jsp">hier</a> heruntergeladen
+      werden.</p>
+</body>
 </html>

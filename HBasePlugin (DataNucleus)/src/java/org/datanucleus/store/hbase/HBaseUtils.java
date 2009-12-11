@@ -49,23 +49,23 @@ public class HBaseUtils
 	private static String namespace = NAMESPACE_USER_TAGBLES;
 
 	// Use -1 for infinite field size
-	private static long maxFieldSize = 1 * 1024* 1024;
-	
+	private static long maxFieldSize = -1;
+
 	public static void setNamespace(String namespace)
 	{
 		HBaseUtils.namespace = namespace;
 	}
-	
+
 	public static void setMaxFieldSize(long size)
 	{
 		maxFieldSize = size;
 	}
-	
+
 	public static boolean checkFieldSize(long size)
 	{
-		if(maxFieldSize == -1)
+		if (maxFieldSize == -1)
 			return true;
-		
+
 		return size <= maxFieldSize;
 	}
 
