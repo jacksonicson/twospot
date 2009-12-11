@@ -3,6 +3,11 @@ p {
 	font-size: small;
 }
 
+.hint {
+	color:#666;
+	font-size:smaller;
+}
+
 a,a:link {
 	color: #00c
 }
