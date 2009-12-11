@@ -4,8 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.prot.app.services.platform.PlatformService;
-import org.prot.app.services.platform.PlatformServiceFactory;
+import org.eclipse.jetty.http.HttpStatus;
 import org.prot.app.services.user.UserService;
 import org.prot.app.services.user.UserServiceFactory;
 import org.prot.portal.services.AppService;
@@ -25,6 +24,8 @@ public class AppDeploymentController implements Controller
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
 			throws Exception
 	{
+		logger.debug("Deploying application");
+
 		// Get current user
 		UserService userService = UserServiceFactory.getUserService();
 		String user = userService.getCurrentUser();
@@ -66,23 +67,16 @@ public class AppDeploymentController implements Controller
 		// Ok - Ready for deployment
 		logger.info("Deploying " + appId + " now");
 
-		// Load the whole application package
-		int status = 505;
-		if (request.getContentLength() > 0)
+		// Announce the deployment
+		String token = deploymentService.announceDeployment(appId, version);
+		if (token == null)
 		{
-			// Stream everything to the fileserver (don't buffer the whole file)
-			status = deploymentService.deployApplication(appId, version, request.getInputStream());
-
-			// Inform the platform about the deployment
-			logger.info("Imform platform about the deployment");
-			PlatformService pservice = PlatformServiceFactory.getPlatformService();
-			pservice.appDeployed(appId, version);
+			response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500);
+			return null;
 		}
 
-		response.setStatus(status);
-		response.getWriter().write("ok");
-
-		// Don't render anything
+		response.setStatus(HttpStatus.OK_200);
+		response.getWriter().print(token);
 		return null;
 	}
 

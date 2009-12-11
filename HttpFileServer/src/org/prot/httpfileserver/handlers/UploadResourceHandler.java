@@ -72,9 +72,9 @@ public class UploadResourceHandler extends AbstractHandler
 	void renameTempFile(File resource, String name) throws IOException
 	{
 		File dest = new File(baseResource.getFile().getAbsolutePath() + "/" + name + ".war");
-		if(dest.exists())
-			dest.delete(); 
-		
+		if (dest.exists())
+			dest.delete();
+
 		resource.renameTo(dest);
 	}
 
@@ -87,6 +87,12 @@ public class UploadResourceHandler extends AbstractHandler
 	boolean validateVersionInfo(String version)
 	{
 		// TODO: Validation code
+		return true;
+	}
+
+	boolean validateToken(String token)
+	{
+		// TODO: Validate token
 		return true;
 	}
 
@@ -103,15 +109,17 @@ public class UploadResourceHandler extends AbstractHandler
 		// Check if its a POST request
 		if (HttpMethods.POST.equalsIgnoreCase(request.getMethod()) == false)
 		{
+			// If not send an error
 			response.sendError(404);
 			return;
 		}
 
 		// Extract the appId and version
-		// URL-format: http://host:port/appId/version/*
+		// URL-format: http://host:port/appId/version/token/*
 		String uri = request.getRequestURI();
 		String appId = null;
 		String version = null;
+		String token = null;
 
 		// Remove the first slash of the uri
 		if (uri.startsWith("/"))
@@ -126,30 +134,40 @@ public class UploadResourceHandler extends AbstractHandler
 		} else
 		{
 			logger.debug("missing appId information");
-			respondError(baseRequest, response, HttpStatus.NOT_FOUND_404);
+			respondError(baseRequest, response, HttpStatus.BAD_REQUEST_400);
 			return;
 		}
-
-		// Kill everything afther the next slash
-		index = uri.indexOf('/');
-		if (index >= 0)
-			uri = uri.substring(0, index);
 
 		// Check if there is a version and extract it
-		if (uri.equals(""))
+		index = uri.indexOf('/');
+		if (index >= 0)
 		{
-			logger.debug("missing version information");
-			respondError(baseRequest, response, HttpStatus.NOT_FOUND_404);
-			return;
+			version = uri.substring(0, index);
+			uri = uri.substring(index + 1);
 		} else
 		{
-			version = uri;
+			logger.debug("missing version information");
+			respondError(baseRequest, response, HttpStatus.BAD_REQUEST_400);
+			return;
 		}
 
-		// Validate appId and version
-		if (!validateAppId(appId) || !validateVersionInfo(version))
+		// Check if there is a token and extract it
+		index = uri.indexOf('/');
+		if (index >= 0)
 		{
-			logger.debug("invalid appId or version info");
+			token = uri.substring(0, index);
+			uri = uri.substring(index + 1);
+		} else
+		{
+			logger.debug("missing token information");
+			respondError(baseRequest, response, HttpStatus.BAD_REQUEST_400);
+			return;
+		}
+
+		// Validate appId, version and token
+		if (!validateAppId(appId) || !validateVersionInfo(version) || !validateToken(token))
+		{
+			logger.debug("invalid appId, version info or token");
 			respondError(baseRequest, response, HttpStatus.BAD_REQUEST_400);
 			return;
 		}
@@ -175,9 +193,10 @@ public class UploadResourceHandler extends AbstractHandler
 			IO.copy(baseRequest.getInputStream(), destOut);
 			destOut.close();
 			renameTempFile(dest, appId + version);
-			
+
+			logger.debug("Upload complete"); 
 			response.getWriter().print("upload done");
-			
+
 		} catch (IOException e)
 		{
 			logger.error("Error while uploading a file", e);

@@ -40,16 +40,23 @@
 			<list>
 				<ref bean="DownloadResourceHandler" />
 				<ref bean="UploadResourceHandler" />
+				<ref bean="AnnounceUploadHandler" />
 			</list>
 		</property>
 	</bean>
 
-	<bean id="DownloadResourceHandler" class="org.prot.httpfileserver.handlers.DownloadResourceHandler">
+	<bean id="DownloadResourceHandler"
+		class="org.prot.httpfileserver.handlers.DownloadResourceHandler">
 		<property name="resourceBase" value="C:/temp/files" />
 	</bean>
 
 	<bean id="UploadResourceHandler" class="org.prot.httpfileserver.handlers.UploadResourceHandler">
 		<property name="resourceBase" value="C:/temp/files" />
 	</bean>
+
+	<bean id="AnnounceUploadHandler" class="org.prot.httpfileserver.handlers.AnnounceUploadHandler">
+
+	</bean>
+
 </beans>
 

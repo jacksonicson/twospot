@@ -30,7 +30,8 @@
 		<property name="appDao" ref="AppDao" />
 	</bean>
 
-	<bean id="DeploymentService" class="org.prot.portal.services.DeploymentService" />
+	<bean id="DeploymentService" class="org.prot.portal.services.DeploymentService">
+	</bean>
 
 	<!-- Web -->
 
@@ -42,6 +43,7 @@
 
 				<!-- Deploy -->
 				<prop key="/deploy.htm">AppDeployment</prop>
+				<prop key="/deployDone.htm">AppDeploymentDone</prop>
 
 				<!-- Login, Logout and Register -->
 				<prop key="/registerHandler.htm">RegisterHandler</prop>
@@ -79,6 +81,11 @@
 
 	<!-- Deployment -->
 	<bean name="AppDeployment" class="org.prot.portal.app.AppDeploymentController">
+		<property name="appService" ref="AppService" />
+		<property name="deploymentService" ref="DeploymentService" />
+	</bean>
+
+	<bean name="AppDeploymentDone" class="org.prot.portal.app.AppDeploymentDoneController">
 		<property name="appService" ref="AppService" />
 		<property name="deploymentService" ref="DeploymentService" />
 	</bean>

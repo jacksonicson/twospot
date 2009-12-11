@@ -13,12 +13,19 @@ public class DeployServiceImpl implements DeployService
 	private AppServerWatcher management;
 
 	@Override
+	public String announceDeploy(String token, String appId, String version)
+	{
+		// TODO: Communicate with the FileServer to get a token!
+		return "TODO-Key-From-FileServer";
+	}
+
+	@Override
 	public void appDeployed(String token, String appId, String version)
 	{
 		// Check the token
-		if(appManager.checkToken(token) == false)
+		if (appManager.checkToken(token) == false)
 			return;
-		
+
 		// Store the info in the management component
 		management.notifyDeployment(appId);
 	}

@@ -12,7 +12,8 @@ import zipfile
 # Properties (TODO: This is the portal app)
 ###########################################
 
-SERVER = 'portal.twospot.informatik.fh-augsburg.de'
+SERVER_PORTAL = 'portal.twospot.local'
+SERVER_DEPLOY = 'deploy.twospot.local'
 PORT = 6060
 TIMEOUT = 10
 
@@ -58,13 +59,14 @@ def parseAppYaml(pathToYaml):
 
 
 
-def upload(warFile, appId):
+def upload(warFile, appId, version='null'):
     # Read username and password
     username = raw_input("username: ")
     password = getpass("password:")
     
-    # Login
-    con = httplib.HTTPConnection(SERVER, PORT, timeout=TIMEOUT)
+    # Login ###
+    print "Logging in..."
+    con = httplib.HTTPConnection(SERVER_PORTAL, PORT, timeout=TIMEOUT)
     params = urllib.urlencode({'username':username, 'password':password})
     headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
     con.request('POST', '/loginHandler.htm', params, headers)
@@ -76,22 +78,46 @@ def upload(warFile, appId):
     
     print "  Logged in with (uid): " + c['UID'].value
     
-    # Reading (r) a binary file (b)
-    file = open(warFile, mode='rb')
     
-    # Send the request (file)
-    print "Uploading..."
-    con = httplib.HTTPConnection(SERVER, PORT, timeout=TIMEOUT)
+    # Register ###
+    print "Register upload..."
+    con = httplib.HTTPConnection(SERVER_PORTAL, PORT, timeout=TIMEOUT)
     headers = {'cookie':'UID=' + c["UID"].value}
-    con.request('GET', '/deploy.htm?id=' + appId + '&ver=null', file, headers)
+    con.request('GET', '/deploy.htm?id=' + appId + '&ver=' + version, '', headers)
     response = con.getresponse()
     
     print "Status: %i" % response.status
     if response.status != 200:
         print "Reason: %s" % response.reason
+        return
     
+    token = response.read()
     
+    # Deploy ###
+    print "Uploading..."
+    file = open(warFile, mode='rb')
+    con = httplib.HTTPConnection(SERVER_DEPLOY, PORT, timeout=TIMEOUT)
+    con.request('POST', '/' + appId + '/' + version + '/' + token + '/', file, headers)
+    response = con.getresponse()
+    
+    print "Status: %i" % response.status
+    if response.status != 200:
+        print "Reason: %s" % response.reason
+        return
+    
+    # Commit ###
+    print "Committing upload..."
+    con = httplib.HTTPConnection(SERVER_PORTAL, PORT, timeout=TIMEOUT)
+    headers = {'cookie':'UID=' + c["UID"].value}
+    con.request('GET', '/deployDone.htm?id=' + appId + '&ver=' + version, '', headers)
+    response = con.getresponse()
+    token = response.read()
+    headers = {'cookie':'UID=' + c["UID"].value}
 
+    print "Status: %i" % response.status
+    if response.status != 200:
+        print "Reason: %s" % response.reason
+        return
 
 
 def testApp(directory):
