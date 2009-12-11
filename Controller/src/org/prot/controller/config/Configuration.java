@@ -28,6 +28,9 @@ public class Configuration
 	// Contains an additional classpath which is added to the classpath file
 	private String additionalClasspath = "";
 
+	// Connection URL for the fileserver
+	private String fileServerURL;
+
 	public static Configuration getConfiguration()
 	{
 		if (configuration == null)
@@ -54,6 +57,8 @@ public class Configuration
 			this.classpathPrefix = properties.getProperty("appserver.classpath.prefix");
 
 			this.additionalClasspath = properties.getProperty("appserver.classpath.additional");
+
+			this.fileServerURL = properties.getProperty("fileserver.url");
 
 		} catch (IOException e)
 		{
@@ -89,5 +94,10 @@ public class Configuration
 	public String getAdditionalClasspath()
 	{
 		return additionalClasspath;
+	}
+
+	public String getFileServerURL()
+	{
+		return fileServerURL;
 	}
 }

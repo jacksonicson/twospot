@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.http.HttpMethods;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.util.resource.Resource;
 
@@ -33,6 +34,10 @@ public class DownloadResourceHandler extends ResourceHandler
 
 	protected Resource getResource(HttpServletRequest request) throws MalformedURLException
 	{
+		// Check Method
+		if (request.getMethod().equals(HttpMethods.GET) == false)
+			return null;
+
 		String uri = request.getRequestURI();
 
 		// Kill the first slash

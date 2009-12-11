@@ -1,6 +1,16 @@
 package org.prot.controller.services.deploy;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+
 import org.apache.log4j.Logger;
+import org.prot.controller.config.Configuration;
 import org.prot.controller.management.AppServerWatcher;
 import org.prot.controller.manager.AppManager;
 
@@ -15,8 +25,36 @@ public class DeployServiceImpl implements DeployService
 	@Override
 	public String announceDeploy(String token, String appId, String version)
 	{
-		// TODO: Communicate with the FileServer to get a token!
-		return "TODO-Key-From-FileServer";
+		// Check the token
+		if (appManager.checkToken(token) == false)
+			return null;
+
+		logger.debug("Announcing deployment");
+		try
+		{
+			Configuration config = Configuration.getConfiguration();
+			URL url = new URL(config + "/announce");
+			URLConnection urlCon = url.openConnection();
+			HttpURLConnection httpCon = (HttpURLConnection) urlCon;
+			httpCon.setDoInput(true);
+
+			InputStream in = httpCon.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+			String deployToken = reader.readLine();
+
+			logger.debug("Deployment token: " + deployToken);
+
+			return deployToken;
+
+		} catch (MalformedURLException e)
+		{
+			logger.error("Could genearte an upload token", e);
+			return null;
+		} catch (IOException e)
+		{
+			logger.error("Connection with the FileServer failed", e);
+			return null;
+		}
 	}
 
 	@Override

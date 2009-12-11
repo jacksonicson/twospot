@@ -92,6 +92,7 @@ def upload(warFile, appId, version='null'):
         return
     
     token = response.read()
+    print "  Upload token: %s" % token 
     
     # Deploy ###
     print "Uploading..."

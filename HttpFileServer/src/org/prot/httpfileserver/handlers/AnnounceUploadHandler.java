@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.http.HttpMethods;
+import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
@@ -18,12 +20,24 @@ public class AnnounceUploadHandler extends AbstractHandler
 	public void handle(String target, Request baseRequest, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException
 	{
-		logger.debug("Announcing upload");
-
-		if(baseRequest.isHandled())
+		if (baseRequest.isHandled())
 			return;
-		
-		response.getWriter().print("" + System.currentTimeMillis());
-		baseRequest.setHandled(true);
+
+		if (baseRequest.getMethod().equals(HttpMethods.GET) == false)
+			return;
+
+		String uri = baseRequest.getRequestURI();
+		if (uri.startsWith("/"))
+			uri = uri.substring(0);
+
+		if (uri.indexOf("announce") != -1)
+		{
+			String token = "" + System.currentTimeMillis();
+			logger.debug("Announced upload token is " + token);
+
+			response.getWriter().print(token);
+			response.setStatus(HttpStatus.OK_200);
+			baseRequest.setHandled(true);
+		}
 	}
 }

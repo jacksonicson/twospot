@@ -108,11 +108,7 @@ public class UploadResourceHandler extends AbstractHandler
 	{
 		// Check if its a POST request
 		if (HttpMethods.POST.equalsIgnoreCase(request.getMethod()) == false)
-		{
-			// If not send an error
-			response.sendError(404);
 			return;
-		}
 
 		// Extract the appId and version
 		// URL-format: http://host:port/appId/version/token/*
@@ -194,7 +190,7 @@ public class UploadResourceHandler extends AbstractHandler
 			destOut.close();
 			renameTempFile(dest, appId + version);
 
-			logger.debug("Upload complete"); 
+			logger.debug("Upload complete");
 			response.getWriter().print("upload done");
 
 		} catch (IOException e)
