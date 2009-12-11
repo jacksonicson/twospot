@@ -134,13 +134,13 @@ class HbaseDbDao implements DbDao
 
 					for (Result result = it.next(); result != null; result = it.next())
 					{
-						tablet.nextRow();
-
 						NavigableMap<byte[], byte[]> map = result.getFamilyMap(famkey);
 						for (byte[] column : map.keySet())
 						{
 							tablet.put(new String(column), deserialize(map.get(column)));
 						}
+						
+						tablet.nextRow();
 					}
 
 				} catch (MasterNotRunningException e)
