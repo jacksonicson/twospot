@@ -93,7 +93,7 @@ public class GogoServlet extends HttpServlet
 
 			// Fill the object with some data
 			entry.setUsername(userService.getCurrentUser());
-			entry.setMessage("blablabla: " + System.currentTimeMillis());
+			entry.setMessage("" + System.currentTimeMillis());
 
 			// Save the object into the datastore
 			manager.makePersistent(entry);
@@ -115,7 +115,10 @@ public class GogoServlet extends HttpServlet
 		// Tell the query the class
 		query.setClass(BlogEntry.class);
 
+		// Don't fetch more than 100 objects
 		query.setRange(0, 100);
+
+		query.setFilter("key != null");
 
 		// Execute the query
 		List<BlogEntry> result = (List<BlogEntry>) query.execute();
@@ -128,7 +131,7 @@ public class GogoServlet extends HttpServlet
 		for (BlogEntry entry : result)
 		{
 			out.print("<p>");
-			out.print("Message: " + entry.getMessage() + "\n\n");
+			out.print("User: " + entry.getUsername() + " Message: " + entry.getMessage() + "\n\n");
 			out.print("</p>");
 		}
 	}

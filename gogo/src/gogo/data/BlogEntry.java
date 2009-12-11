@@ -10,6 +10,9 @@ public class BlogEntry
 {
 	@Persistent(valueStrategy = IdGeneratorStrategy.UUIDSTRING)
 	@PrimaryKey
+	private String key;
+	
+	@Persistent
 	private String username;
 
 	@Persistent
@@ -34,4 +37,16 @@ public class BlogEntry
 	{
 		this.message = message;
 	}
+
+	public String getKey()
+	{
+		return key;
+	}
+
+	public void setKey(String key)
+	{
+		this.key = key;
+	}
+	
+	
 }
