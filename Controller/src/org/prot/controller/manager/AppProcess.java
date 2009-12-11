@@ -74,6 +74,9 @@ class AppProcess
 		// build command
 		List<String> command = new LinkedList<String>();
 		command.add("java");
+
+		command.addAll(loadVmOptions());
+
 		command.add("-classpath");
 		command.add(loadClasspath());
 
@@ -150,6 +153,22 @@ class AppProcess
 		}
 
 		return classpath;
+	}
+
+	private List<String> loadVmOptions()
+	{
+		String config = Configuration.getConfiguration().getVmOptions();
+		logger.debug("Using JVM options: " + config);
+
+		String[] options = config.split("\\s");
+		List<String> list = new ArrayList<String>();
+		for (String option : options)
+		{
+			logger.trace("JVM option: " + option);
+			list.add(option);
+		}
+
+		return list;
 	}
 
 	private String loadClasspath()

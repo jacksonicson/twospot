@@ -31,6 +31,9 @@ public class Configuration
 	// Connection URL for the fileserver
 	private String fileServerURL;
 
+	// VM options which are used when starting the AppServer
+	private String vmOptions;
+
 	public static Configuration getConfiguration()
 	{
 		if (configuration == null)
@@ -59,6 +62,8 @@ public class Configuration
 			this.additionalClasspath = properties.getProperty("appserver.classpath.additional");
 
 			this.fileServerURL = properties.getProperty("fileserver.url");
+
+			this.vmOptions = properties.getProperty("appserver.vm.options");
 
 		} catch (IOException e)
 		{
@@ -100,4 +105,10 @@ public class Configuration
 	{
 		return fileServerURL;
 	}
+
+	public String getVmOptions()
+	{
+		return vmOptions;
+	}
+
 }

@@ -32,7 +32,8 @@ public class WarExtractor implements AppExtractor
 			file.delete();
 
 		// Create the folder
-		file.mkdir();
+		if (file.exists() == false)
+			file.mkdir();
 
 		// Return path to the folder
 		return folder;
