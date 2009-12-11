@@ -20,11 +20,16 @@ public class AnnounceUploadHandler extends AbstractHandler
 	public void handle(String target, Request baseRequest, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException
 	{
+		// Don't handle requests twice
 		if (baseRequest.isHandled())
 			return;
 
+		// Check HTTP Method
 		if (baseRequest.getMethod().equals(HttpMethods.GET) == false)
+		{
+			logger.debug("Could not generate token - use HTTP GET");
 			return;
+		}
 
 		String uri = baseRequest.getRequestURI();
 		if (uri.startsWith("/"))

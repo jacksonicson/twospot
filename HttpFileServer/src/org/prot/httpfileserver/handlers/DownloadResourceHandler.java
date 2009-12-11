@@ -36,8 +36,12 @@ public class DownloadResourceHandler extends ResourceHandler
 	{
 		// Check Method
 		if (request.getMethod().equals(HttpMethods.GET) == false)
+		{
+			logger.debug("Could not download file - use HTTP GET");
 			return null;
+		}
 
+		// Get the request uri
 		String uri = request.getRequestURI();
 
 		// Kill the first slash
@@ -60,7 +64,7 @@ public class DownloadResourceHandler extends ResourceHandler
 				uri = uri.substring(0, index);
 
 			if (uri == "")
-				version = "nulL";
+				version = "null";
 			else
 				version = uri;
 
@@ -73,7 +77,7 @@ public class DownloadResourceHandler extends ResourceHandler
 		// Debug
 		logger.debug("Resource with AppId: " + appId + " Version: " + version);
 
-		// Create file
+		// Load the file
 		String file = appId + version + ".war";
 		return getResource("/" + file);
 	}

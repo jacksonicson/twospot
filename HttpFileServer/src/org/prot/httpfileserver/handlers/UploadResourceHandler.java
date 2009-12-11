@@ -56,6 +56,8 @@ public class UploadResourceHandler extends AbstractHandler
 
 		if (!baseResource.exists() || !baseResource.isDirectory())
 			baseResource = null;
+
+		logger.info("Using resouce base: " + baseResource);
 	}
 
 	File createTempFile(String name) throws IOException
@@ -64,6 +66,7 @@ public class UploadResourceHandler extends AbstractHandler
 		if (target.exists())
 			target.delete();
 
+		logger.debug("Creating temp file: " + target.getAbsolutePath());
 		target.createNewFile();
 
 		return target;
@@ -75,24 +78,22 @@ public class UploadResourceHandler extends AbstractHandler
 		if (dest.exists())
 			dest.delete();
 
+		logger.debug("Renaming temp file to: " + dest.getAbsolutePath());
 		resource.renameTo(dest);
 	}
 
 	boolean validateAppId(String appId)
 	{
-		// TODO: Validation code
 		return true;
 	}
 
 	boolean validateVersionInfo(String version)
 	{
-		// TODO: Validation code
 		return true;
 	}
 
 	boolean validateToken(String token)
 	{
-		// TODO: Validate token
 		return true;
 	}
 
@@ -108,7 +109,10 @@ public class UploadResourceHandler extends AbstractHandler
 	{
 		// Check if its a POST request
 		if (HttpMethods.POST.equalsIgnoreCase(request.getMethod()) == false)
+		{
+			logger.debug("Could not upload - use HTTP-POST");
 			return;
+		}
 
 		// Extract the appId and version
 		// URL-format: http://host:port/appId/version/token/*
@@ -170,6 +174,7 @@ public class UploadResourceHandler extends AbstractHandler
 
 		// Filename
 		String filename = appId + version;
+		logger.debug("Filename: " + filename);
 
 		// Debug
 		logger.debug("AppId: " + appId + " Version: " + version + " File: " + filename);
@@ -185,12 +190,15 @@ public class UploadResourceHandler extends AbstractHandler
 			}
 
 			File dest = createTempFile(filename);
+
+			logger.debug("Copying...");
 			FileOutputStream destOut = new FileOutputStream(dest);
 			IO.copy(baseRequest.getInputStream(), destOut);
 			destOut.close();
+
 			renameTempFile(dest, appId + version);
 
-			logger.debug("Upload complete");
+			logger.debug("Upload completed");
 			response.getWriter().print("upload done");
 
 		} catch (IOException e)
