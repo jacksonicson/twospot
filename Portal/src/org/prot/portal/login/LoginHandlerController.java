@@ -1,5 +1,6 @@
 package org.prot.portal.login;
 
+import java.net.URL;
 import java.util.Random;
 
 import javax.servlet.http.Cookie;
@@ -51,10 +52,19 @@ public class LoginHandlerController extends SimpleFormController
 		UserService userService = UserServiceFactory.getUserService();
 		userService.registerUser(uid, loginCommand.getUsername());
 
+		// Determine the current URL without the AppId for the Cookie
+		URL url = new URL(request.getRequestURL().toString());
+		String host = url.getHost();
+		if(host.indexOf("portal") != 0)
+			logger.error("Could not determine the domain for the login cookie"); 
+		else
+			host = host.substring("portal".length());
+		logger.debug("Cookie domain: " + host);
+			
 		// Set the UID cookie
 		Cookie uidCookie = new Cookie(Cookies.USER_ID, uid);
 		uidCookie.setPath("/");
-		uidCookie.setDomain(".twospot.local");
+		uidCookie.setDomain(host);
 		response.addCookie(uidCookie);
 
 		// Redirect (if there is a destination url)
