@@ -8,6 +8,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.prot.appserver.app.AppInfo;
 import org.prot.appserver.config.Configuration;
+import org.prot.appserver.management.AppManagement;
 import org.prot.appserver.runtime.AppRuntime;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -71,5 +72,11 @@ public class PythonRuntime implements AppRuntime
 				config.addWebConfig(webConfig);
 			}
 		}
+	}
+
+	@Override
+	public AppManagement getManagement()
+	{
+		return null;
 	}
 }

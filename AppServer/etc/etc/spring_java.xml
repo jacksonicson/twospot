@@ -47,17 +47,24 @@
 	<bean id="DosPrevention" class="org.prot.app.security.DosPrevention">
 	</bean>
 
+	<bean id="CountingRequestLog" class="org.prot.appserver.runtime.java.CountingRequestLog" />
+
+	<bean id="JettyAppManagement" class="org.prot.appserver.runtime.java.JettyAppManagement">
+		<property name="countingRequestLog" ref="CountingRequestLog" />
+	</bean>
+
 	<!-- Request handling -->
 	<bean id="HandlerCollection" class="org.eclipse.jetty.server.handler.HandlerCollection">
 		<property name="handlers">
 			<list>
-				<ref bean="Statshandler" />
+				<ref bean="DosPreventionHandler" />
+				<ref bean="RequestLogHandler" />
 			</list>
 		</property>
 	</bean>
 
-	<bean id="Statshandler" class="org.prot.appserver.management.StatsHandler">
-		<property name="handler" ref="DosPreventionHandler" />
+	<bean id="RequestLogHandler" class="org.eclipse.jetty.server.handler.RequestLogHandler">
+		<property name="requestLog" ref="CountingRequestLog" />
 	</bean>
 
 	<bean id="DosPreventionHandler" class="org.prot.app.security.DosPreventionHandler">

@@ -8,6 +8,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.log.Slf4jLog;
 import org.prot.appserver.app.AppInfo;
 import org.prot.appserver.config.Configuration;
+import org.prot.appserver.management.AppManagement;
 import org.prot.appserver.runtime.AppRuntime;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -17,6 +18,8 @@ public class JavaRuntime implements AppRuntime
 	private static final Logger logger = Logger.getLogger(JavaRuntime.class);
 
 	private static final String IDENTIFIER = "JAVA";
+
+	private JettyAppManagement jettyAppManagement;
 
 	@Override
 	public String getIdentifier()
@@ -43,11 +46,15 @@ public class JavaRuntime implements AppRuntime
 		deployer.setAppInfo(appInfo);
 
 		// Start the server
-		logger.debug("Creating server"); 
+		logger.debug("Creating server");
 		Server server = (Server) factory.getBean("Server");
 
+		// Create the management components
+		logger.debug("Creating management");
+		jettyAppManagement = (JettyAppManagement) factory.getBean("JettyAppManagement");
+
 		// Activate the slf4j logging facade (which is bound to log4j)
-		logger.debug("Configuring slf4j logging"); 
+		logger.debug("Configuring slf4j logging");
 		org.eclipse.jetty.util.log.Log.setLog(new Slf4jLog());
 
 		// Add the deployer to the server
@@ -95,5 +102,11 @@ public class JavaRuntime implements AppRuntime
 		}
 
 		logger.debug("Using distributed sessions: " + configuration.isUseDistributedSessions());
+	}
+
+	@Override
+	public AppManagement getManagement()
+	{
+		return jettyAppManagement;
 	}
 }

@@ -9,6 +9,8 @@ import org.prot.appserver.config.AppConfigurer;
 import org.prot.appserver.config.Configuration;
 import org.prot.appserver.config.ConfigurationException;
 import org.prot.appserver.extract.AppExtractor;
+import org.prot.appserver.management.AppManagement;
+import org.prot.appserver.management.AppManager;
 import org.prot.appserver.runtime.AppRuntime;
 import org.prot.appserver.runtime.NoSuchRuntimeException;
 import org.prot.appserver.runtime.RuntimeRegistry;
@@ -26,22 +28,28 @@ public class ServerLifecycle
 	private AppExtractor appExtractor;
 	private AppConfigurer appConfigurer;
 	private RuntimeRegistry runtimeRegistry;
+	private AppManager appManager;
 
 	private AppInfo appInfo = null;
 
 	public void start()
 	{
-		logger.info("Starting AppServer");
+		logger.info("Starting AppServer...");
 
 		configuration = Configuration.getInstance();
 
 		loadApp();
+
 		extractApp();
+
 		configure();
+
+		manageApp();
+
 		launchRuntime();
 	}
 
-	public void loadApp()
+	private final void loadApp()
 	{
 		logger.info("Loading app archive");
 
@@ -59,7 +67,7 @@ public class ServerLifecycle
 		}
 	}
 
-	public void extractApp()
+	private final void extractApp()
 	{
 		byte[] archive = appInfo.getWarFile();
 		String destPath = configuration.getAppDirectory();
@@ -80,7 +88,7 @@ public class ServerLifecycle
 		}
 	}
 
-	public void configure()
+	private final void configure()
 	{
 		logger.info("Loading app configuration");
 
@@ -100,7 +108,28 @@ public class ServerLifecycle
 		}
 	}
 
-	public void launchRuntime()
+	private final void manageApp()
+	{
+		try
+		{
+			logger.debug("Registering runtime in the AppManager");
+
+			AppRuntime runtime = runtimeRegistry.getRuntime(appInfo.getRuntime());
+			AppManagement management = runtime.getManagement();
+			appManager.manage(management);
+
+		} catch (NoSuchRuntimeException e)
+		{
+			logger.error("Could not get runtime", e);
+
+			// Use the original stdio to tell the controller
+			IODirector.getInstance().forcedStdOutPrintln(SERVER_FAILED);
+
+			System.exit(1);
+		}
+	}
+
+	private final void launchRuntime()
 	{
 		logger.info("Launching runtime");
 
@@ -150,5 +179,10 @@ public class ServerLifecycle
 	public void setAppConfigurer(AppConfigurer appConfigurer)
 	{
 		this.appConfigurer = appConfigurer;
+	}
+
+	public void setAppManager(AppManager appManager)
+	{
+		this.appManager = appManager;
 	}
 }
