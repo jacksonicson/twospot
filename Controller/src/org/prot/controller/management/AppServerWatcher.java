@@ -60,6 +60,14 @@ public class AppServerWatcher
 		return manager.getAppIds();
 	}
 
+	public Set<PerformanceData> getAppsPerformance()
+	{
+		Set<PerformanceData> appsPerformance = new HashSet<PerformanceData>();
+		appsPerformance.addAll(performanceData.values());
+
+		return appsPerformance;
+	}
+
 	public long getRps()
 	{
 		return 0;
@@ -87,7 +95,6 @@ public class AppServerWatcher
 	private void updateApp(String appId, IAppServerStats stats)
 	{
 		PerformanceData perfData = getOrCreatePerformanceData(appId);
-
 		perfData.setRps(stats.getRequestsPerSecond());
 	}
 

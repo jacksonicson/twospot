@@ -2,6 +2,8 @@ package org.prot.appserver.runtime.java;
 
 import org.prot.appserver.management.AppManagement;
 
+import ort.prot.util.server.CountingRequestLog;
+
 public class JettyAppManagement implements AppManagement
 {
 	private CountingRequestLog countingRequestLog;

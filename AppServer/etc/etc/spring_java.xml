@@ -47,7 +47,7 @@
 	<bean id="DosPrevention" class="org.prot.app.security.DosPrevention">
 	</bean>
 
-	<bean id="CountingRequestLog" class="org.prot.appserver.runtime.java.CountingRequestLog" />
+	<bean id="CountingRequestLog" class="ort.prot.util.server.CountingRequestLog" />
 
 	<bean id="JettyAppManagement" class="org.prot.appserver.runtime.java.JettyAppManagement">
 		<property name="countingRequestLog" ref="CountingRequestLog" />

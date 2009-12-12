@@ -1,26 +1,30 @@
 package org.prot.controller.management;
 
+import java.io.Serializable;
+
 import org.prot.controller.manager.appserver.IAppServerStats;
 
-public class PerformanceData
+public class PerformanceData implements Serializable
 {
-	private IAppServerStats connection;
+	private static final long serialVersionUID = 8203276272151895670L;
+
+	private transient IAppServerStats connection;
 
 	private final String appId;
 
-	private long rps;
+	private double rps;
 
 	public PerformanceData(String appId)
 	{
 		this.appId = appId;
 	}
 
-	public long getRps()
+	public double getRps()
 	{
 		return rps;
 	}
 
-	public void setRps(long rps)
+	public void setRps(double rps)
 	{
 		this.rps = rps;
 	}
