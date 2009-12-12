@@ -6,7 +6,7 @@ public interface UserService
 
 	public String getLoginUrl(String redirectUrl, String cancelUrl);
 
-	public void registerUser(final String uid, final String username);
+	public void registerUser(String uid, String username);
 
 	public void unregisterUser();
 }

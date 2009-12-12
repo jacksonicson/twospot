@@ -20,20 +20,27 @@ public final class UserServiceImpl implements UserService
 	{
 		HttpConnection httpConnection = HttpConnection.getCurrentConnection();
 		Cookie[] cookies = httpConnection.getRequest().getCookies();
+		httpConnection.getRequest().setCookies(cookies);
 
 		// If there is no cookie there is no active session
 		if (cookies == null)
+		{
+			logger.debug("Could not find any cookies");
 			return null;
+		}
 
 		// Search the cookie named USER_ID
 		for (Cookie cookie : cookies)
 		{
 			if (cookie.getName().equals(Cookies.USER_ID))
 			{
-				return cookie.getValue();
+				String uid = cookie.getValue();
+				logger.debug("UID cookie found: " + uid);
+				return uid;
 			}
 		}
 
+		logger.debug("Could not find a UID cookie");
 		return null;
 	}
 
@@ -45,22 +52,21 @@ public final class UserServiceImpl implements UserService
 	public String getCurrentUser()
 	{
 		final String uid = searchUID();
-		logger.debug("UID: " + uid);
-
 		if (uid == null)
 			return null;
 
-		String o = AccessController.doPrivileged(new PrivilegedAction<String>()
+		String user = AccessController.doPrivileged(new PrivilegedAction<String>()
 		{
 			@Override
 			public String run()
 			{
-				return proxy.getCurrentUser(uid);
+				String user = proxy.getCurrentUser(uid);
+				logger.debug("Current user: " + user);
+				return user;
 			}
-
 		});
 
-		return (String) o;
+		return (String) user;
 	}
 
 	public String getLoginUrl(String redirectUrl, String cancelUrl)
@@ -81,20 +87,15 @@ public final class UserServiceImpl implements UserService
 				proxy.registerUser(token, uid, username);
 				return null;
 			}
-
 		});
-
 	}
 
 	public void unregisterUser()
 	{
-		final String token = Configuration.getInstance().getAuthenticationToken();
-
-		// If there is no UID there is no user session
 		final String uid = searchUID();
 		if (uid == null)
 		{
-			logger.debug("Cannot unregister user - uid is null");
+			logger.debug("Cannot unregister user - UID is null");
 			return;
 		}
 
@@ -103,10 +104,25 @@ public final class UserServiceImpl implements UserService
 			@Override
 			public String run()
 			{
-				proxy.unregisterUser(token, uid);
+				logger.debug("Unregistering user UID: " + uid);
+				proxy.unregisterUser(uid);
 				return null;
 			}
 
 		});
+
+		// Delete the UID-Cookie
+		HttpConnection httpConnection = HttpConnection.getCurrentConnection();
+		Cookie[] cookies = httpConnection.getRequest().getCookies();
+		for (Cookie cookie : cookies)
+		{
+			if (cookie.getName().equals(Cookies.USER_ID))
+			{
+				cookie.setMaxAge(0);
+				cookie.setValue(null);
+				httpConnection.getResponse().addCookie(cookie);
+				break;
+			}
+		}
 	}
 }

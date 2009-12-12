@@ -125,21 +125,16 @@ public class UserServiceImpl implements UserService
 	}
 
 	@Override
-	public void unregisterUser(String token, String uid)
+	public void unregisterUser(String uid)
 	{
 		if (uid == null)
-		{
-			logger.debug("Cannot unregister user with uid=null");
 			return;
-		}
 
-		logger.debug("UnregisterUser");
+		logger.debug("Unregistering user: " + uid);
 
 		PersistenceManager persistenceManager = jdoConnection.getPersistenceManager();
 		try
 		{
-			logger.debug("Unregistering user: " + uid);
-
 			// Query database
 			Query query = persistenceManager.newQuery(UserSession.class);
 			query.setFilter("sessionId == '" + uid + "'");

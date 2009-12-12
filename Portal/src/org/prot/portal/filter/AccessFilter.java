@@ -30,14 +30,19 @@ public class AccessFilter extends GenericFilterBean
 	{
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		String uri = httpRequest.getRequestURI();
+		if (uri.startsWith("/"))
+			uri = uri.substring(1);
 
-		String[] clean = { "/docs/", "index.htm", "login.htm", "start.htm", "loginHandler.htm",
-				"registerHandler.htm", "/etc", "/" };
+		String[] clean = { "docs", "index.htm", "login.htm", "start.htm", "loginHandler.htm",
+				"registerHandler.htm", "etc" };
 
 		for (String test : clean)
 		{
-			if (uri.indexOf(test) != -1)
+			// Special case here - if URI is empty its the start page which is
+			// also clean
+			if (uri.indexOf(test) != -1 || uri.isEmpty())
 			{
+				logger.debug("Clean url: " + uri);
 				chain.doFilter(request, response);
 				return;
 			}
@@ -45,11 +50,11 @@ public class AccessFilter extends GenericFilterBean
 
 		// Check if user is logged in
 		String user = service.getCurrentUser();
-		logger.info("User in the access filter: " + user);
+		logger.debug("User in the access filter: " + user);
 
 		if (user == null)
 		{
-			logger.info("Restricted access to: " + uri);
+			logger.debug("Restricted access to: " + uri);
 			response.getWriter().print("Access restricted");
 			return;
 		}

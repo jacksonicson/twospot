@@ -71,6 +71,7 @@ public class AppDeploymentController implements Controller
 		String token = deploymentService.announceDeployment(appId, version);
 		if (token == null)
 		{
+			logger.error("Could not aquire a token");
 			response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500);
 			return null;
 		}

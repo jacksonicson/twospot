@@ -33,7 +33,10 @@ public class DeployServiceImpl implements DeployService
 		try
 		{
 			Configuration config = Configuration.getConfiguration();
-			URL url = new URL(config + "/announce");
+			String fileServerUrl = config.getFileServerURL() + "/announce";
+			logger.debug("Using FileServer URL: " + fileServerUrl);
+
+			URL url = new URL(fileServerUrl);
 			URLConnection urlCon = url.openConnection();
 			HttpURLConnection httpCon = (HttpURLConnection) urlCon;
 			httpCon.setDoInput(true);
@@ -48,7 +51,7 @@ public class DeployServiceImpl implements DeployService
 
 		} catch (MalformedURLException e)
 		{
-			logger.error("Could genearte an upload token", e);
+			logger.error("Could not aquire an upload token", e);
 			return null;
 		} catch (IOException e)
 		{

@@ -24,17 +24,14 @@
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-jodatime-2.0.0-m2.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-jpa-2.0.0-m3.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-management-1.0.2.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/AppServer"/>
 	<classpathentry kind="lib" path="/Libs/lib/log4j-1.2.15/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-core.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-web.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-webmvc.jar" sourcepath="D:/work/mscNotes/3party/src"/>
 	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/spring.jar" sourcepath="D:/work/mscNotes/3party/src"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Util"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-client-7.0.0.v20091005.jar" sourcepath="D:/work/jetty7src/jetty-client/src"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-io-7.0.0.v20091005.jar" sourcepath="D:/work/jetty7src/jetty-io/src"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-http-7.0.0.v20091005.jar" sourcepath="D:/work/jetty7src/jetty-http/src"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Controller"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-servlet-7.0.0.v20091005.jar" sourcepath="D:/work/jetty7src/jetty-servlet/src/main/java"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jetty-servlets-7.0.0.v20091005.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jasper/el-api.jar"/>
@@ -43,5 +40,8 @@
 	<classpathentry kind="lib" path="/Libs/lib/jasper/jasper.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jasper/jsp-api.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jasper/tomcat-juli.jar"/>
+	<classpathentry kind="lib" path="/Libs/gen/twospot-appserver.jar"/>
+	<classpathentry kind="lib" path="/Libs/gen/twospot-controller.jar"/>
+	<classpathentry kind="lib" path="/Libs/gen/twospot-util.jar"/>
 	<classpathentry kind="output" path="portal/WEB-INF/classes"/>
 </classpath>

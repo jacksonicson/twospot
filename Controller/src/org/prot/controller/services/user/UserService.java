@@ -8,9 +8,8 @@ public interface UserService
 
 	public String getLoginUrl(String redirectUrl, String cancelUrl);
 
-	@PrivilegedAppServer
-	public void registerUser(String token, String uid, String username);
+	public void unregisterUser(String uid);
 
 	@PrivilegedAppServer
-	public void unregisterUser(String token, String uid);
+	public void registerUser(String token, String uid, String username);
 }
