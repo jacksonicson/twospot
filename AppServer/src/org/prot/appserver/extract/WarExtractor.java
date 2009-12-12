@@ -21,6 +21,27 @@ public class WarExtractor implements AppExtractor
 		decompress(archive, folder);
 	}
 
+	private boolean deleteFolder(File folder)
+	{
+		boolean success = true;
+
+		// Iterate over the content
+		for (String content : folder.list())
+		{
+			// File on the new path
+			File file = new File(folder, content);
+
+			// Check if its a folder
+			if (file.isDirectory())
+				deleteFolder(file);
+
+			// Finally delete the file or folder
+			success &= file.delete();
+		}
+
+		return success;
+	}
+
 	private String createFolder(String destPath) throws IOException
 	{
 		String folder = destPath;
@@ -29,11 +50,19 @@ public class WarExtractor implements AppExtractor
 		// Delete folder if it already exists!
 		File file = new File(folder);
 		if (file.exists())
-			file.delete();
+		{
+			if (deleteFolder(file))
+			{
+				logger.debug("Existing app directory deleted");
+			} else
+			{
+				logger.error("Could not delete existing app directory");
+				System.exit(1);
+			}
+		}
 
 		// Create the folder
-		if (file.exists() == false)
-			file.mkdir();
+		file.mkdir();
 
 		// Return path to the folder
 		return folder;
