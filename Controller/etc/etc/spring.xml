@@ -35,7 +35,9 @@
 	<bean id="OutsideConnector" class="org.eclipse.jetty.server.nio.SelectChannelConnector">
 		<property name="host" value="${http.controller.interface}" />
 		<property name="port" value="${http.controller.port}" />
-		<property name="acceptors" value="1" />
+		<property name="acceptors" value="3" />
+
+		<property name="statsOn" value="true" />
 	</bean>
 
 
@@ -50,10 +52,22 @@
 			</list>
 		</property>
 
-		<property name="handler" ref="RequestHandler" />
+		<property name="handler" ref="HandlerList" />
 	</bean>
 
 
+	<bean id="HandlerList" class="org.eclipse.jetty.server.handler.HandlerCollection">
+		<property name="handlers">
+			<list>
+				<ref bean="RequestHandler" />
+				<ref bean="LogHandler" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- Statistics -->
+	<bean id="LogHandler" class="org.eclipse.jetty.server.handler.RequestLogHandler">
+	</bean>
 
 	<!-- Request handling -->
 
@@ -199,6 +213,8 @@
 				<entry key="bean:name=resources">
 					<bean class="org.prot.controller.management.jmx.JmxResources">
 						<property name="management" ref="AppServerWatcher" />
+						<property name="connector" ref="OutsideConnector" />
+						<property name="logHandler" ref="LogHandler" />
 					</bean>
 				</entry>
 			</map>
