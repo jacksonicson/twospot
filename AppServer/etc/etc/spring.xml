@@ -2,9 +2,6 @@
 <!DOCTYPE beans SYSTEM "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
 
 <beans>
-	<!-- Configuration -->
-	<bean id="Configuration" class="org.prot.appserver.Configuration" />
-
 	<!-- Lifecycle manager -->
 	<bean id="Lifecycle" class="org.prot.appserver.ServerLifecycle"
 		init-method="start">
