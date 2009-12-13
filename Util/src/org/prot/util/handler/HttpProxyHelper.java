@@ -35,15 +35,15 @@ public class HttpProxyHelper<M>
 
 	protected void setupInvalidHeaders()
 	{
-		invalidHeaders.add(HttpHeaders.PROXY_CONNECTION);
-		invalidHeaders.add(HttpHeaders.CONNECTION);
-		invalidHeaders.add(HttpHeaders.KEEP_ALIVE);
-		invalidHeaders.add(HttpHeaders.TRANSFER_ENCODING);
-		invalidHeaders.add(HttpHeaders.TE);
-		invalidHeaders.add(HttpHeaders.TRAILER);
-		invalidHeaders.add(HttpHeaders.PROXY_AUTHORIZATION);
-		invalidHeaders.add(HttpHeaders.PROXY_AUTHENTICATE);
-		invalidHeaders.add(HttpHeaders.UPGRADE);
+		invalidHeaders.add(HttpHeaders.PROXY_CONNECTION.toLowerCase());
+		invalidHeaders.add(HttpHeaders.CONNECTION.toLowerCase());
+		invalidHeaders.add(HttpHeaders.KEEP_ALIVE.toLowerCase());
+		invalidHeaders.add(HttpHeaders.TRANSFER_ENCODING.toLowerCase());
+		invalidHeaders.add(HttpHeaders.TE.toLowerCase());
+		invalidHeaders.add(HttpHeaders.TRAILER.toLowerCase());
+		invalidHeaders.add(HttpHeaders.PROXY_AUTHORIZATION.toLowerCase());
+		invalidHeaders.add(HttpHeaders.PROXY_AUTHENTICATE.toLowerCase());
+		invalidHeaders.add(HttpHeaders.UPGRADE.toLowerCase());
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class HttpProxyHelper<M>
 	 * @param exchange
 	 *            the HttpExchange object
 	 */
-	protected void sentRequest(M management, HttpExchange exchange)
+	protected void requestSent(M management, HttpExchange exchange)
 	{
 		// This is a template method
 	}
@@ -113,7 +113,6 @@ public class HttpProxyHelper<M>
 		// Check if its a CONNECT request
 		if (request.getMethod().equalsIgnoreCase("CONNECT"))
 		{
-			// TODO: Implement this
 			response.sendError(HttpStatus.NOT_IMPLEMENTED_501);
 			jetRequest.setHandled(true);
 			return;
@@ -236,7 +235,6 @@ public class HttpProxyHelper<M>
 		for (Enumeration<?> headerNames = request.getHeaderNames(); headerNames.hasMoreElements();)
 		{
 			String name = (String) headerNames.nextElement();
-			name = name.toLowerCase();
 
 			if (isFilteredHeader(name))
 				continue;
@@ -279,7 +277,7 @@ public class HttpProxyHelper<M>
 
 		// Send the request
 		httpClient.send(exchange);
-		sentRequest(obj, exchange);
+		requestSent(obj, exchange);
 	}
 
 	public void setHttpClient(HttpClient httpClient)
