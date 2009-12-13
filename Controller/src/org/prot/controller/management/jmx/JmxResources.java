@@ -24,6 +24,8 @@ public class JmxResources implements IJmxResources
 
 	private OperatingSystemMXBean operatingSystem;
 
+	private long requestTime = System.currentTimeMillis();
+
 	public void init()
 	{
 		operatingSystem = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
@@ -44,10 +46,11 @@ public class JmxResources implements IJmxResources
 	}
 
 	@Override
-	public long requestsPerSecond()
+	public double requestsPerSecond()
 	{
-		long rps = countingRequestLog.getCounter();
-		return rps;
+		long requests = countingRequestLog.getCounter();
+		long time = System.currentTimeMillis() - requestTime;
+		return requests / (time / 1000d);
 	}
 
 	@Override

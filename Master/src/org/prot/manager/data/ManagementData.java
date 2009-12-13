@@ -10,7 +10,7 @@ public class ManagementData
 	private static final Logger logger = Logger.getLogger(ManagementData.class);
 
 	// Requests per second which are processed by the Controller
-	private long rps;
+	private double rps;
 
 	// Memory consumed by the AppServer's
 	private long memLoad;
@@ -27,12 +27,12 @@ public class ManagementData
 	// Performance data of each AppServer
 	private Set<PerformanceData> performanceData;
 
-	public long getRps()
+	public double getRps()
 	{
 		return rps;
 	}
 
-	public void setRps(long rps)
+	public void setRps(double rps)
 	{
 		this.rps = rps;
 	}

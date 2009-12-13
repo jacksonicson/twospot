@@ -18,15 +18,17 @@ public class SimpleLoadBalancer implements LoadBalancer
 	@Override
 	public Set<ControllerInfo> selectController(String appId)
 	{
-		Set<ControllerInfo> result = new HashSet<ControllerInfo>();
+		// Get infos about the available controllers
 		Collection<ControllerInfo> infos = registry.getControllers();
 
 		// Check if there are controllers available
 		if (infos.isEmpty())
 		{
 			logger.warn("Master does not have any controllers");
-			return result;
+			return new HashSet<ControllerInfo>();
 		}
+
+		Set<ControllerInfo> result = new HashSet<ControllerInfo>();
 
 		// Check if a Controller is already running this app
 		for (ControllerInfo info : infos)

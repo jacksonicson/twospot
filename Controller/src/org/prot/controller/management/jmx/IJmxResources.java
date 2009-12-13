@@ -10,7 +10,7 @@ public interface IJmxResources
 
 	public long freeMemory();
 
-	public long requestsPerSecond();
+	public double requestsPerSecond();
 
 	public Set<String> getApps();
 
