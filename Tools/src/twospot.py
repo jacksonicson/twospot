@@ -54,6 +54,12 @@ class AuthenticationFailed(Exception):
     def __str__(self):
         return repr(self.value)
 
+class InvalidDirectoryName(Exception):
+    def __init__(self, value):
+        self.value = value
+    
+    def __str__(self):
+        return repr(self.value)
 
 
 def parseAppYaml(pathToYaml):
@@ -246,13 +252,14 @@ def runServer(directory):
     index = directory.find(appId)
     if index != -1:
         directory = directory[0:index]
+    else:
+        raise InvalidDirectoryName("The application directoy has to be equal to the AppId %s" % appId)
     
     # Launch the server process
-    # -appId ff2 -appSrvPort 9090 -stdio true -controller false -workDir C:/temp/tests/
-    appSrvPort = '8080'
-    stdio = 'true'
-    controller = 'false'
-    workDir = directory
+    appSrvPort = '8080'     # The port on which the DevServer listens
+    stdio = 'true'          # Enable stdio outputs
+    controller = 'false'    # DevServer doesn't require a Controller
+    workDir = directory     # Directory which contains the application directory which name is equal to the AppId
 
     # Load the classpath from classpath.txt
     file = open(sys.path[0] + os.sep + "appserver_classpath.txt", "r")
