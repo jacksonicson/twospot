@@ -12,8 +12,12 @@ import zipfile
 # Properties (TODO: This is the portal app)
 ###########################################
 
-SERVER_PORTAL = 'portal.twospot.local'
-SERVER_DEPLOY = 'deploy.twospot.local'
+# Development
+#SERVER_PORTAL = 'portal.twospot.local'
+#SERVER_DEPLOY = 'deploy.twospot.local'
+# Deploy
+SERVER_PORTAL = 'portal.twospot.informatik.fh-augsburg.de'
+SERVER_DEPLOY = 'deploy.twospot.informatik.fh-augsburg.de'
 PORT = 6060
 TIMEOUT = 10
 
@@ -173,9 +177,13 @@ def deploy(directory):
                 print "   skipping: %s" % file
                 continue
             
-            # Add the file to the zip file
-            print "   adding file: %s" % file
-            zip.write(root + os.sep + file, relRoot + os.sep + file)
+            # Check if its a file
+            if os.path.isfile(root + os.sep + file):          
+                # Add the file to the zip file
+                print "   adding file: %s" % file
+                zip.write(root + os.sep + file, relRoot + os.sep + file)
+            else:
+                print "   skipping dir: %s" % file
     
     zip.close()
     
