@@ -66,7 +66,10 @@
 	</bean>
 
 	<!-- Statistics -->
+	<bean id="CountingRequestLog" class="ort.prot.util.server.CountingRequestLog"></bean>
+
 	<bean id="LogHandler" class="org.eclipse.jetty.server.handler.RequestLogHandler">
+		<property name="requestLog" ref="CountingRequestLog" />
 	</bean>
 
 	<!-- Request handling -->
@@ -211,10 +214,10 @@
 					</bean>
 				</entry>
 				<entry key="bean:name=resources">
-					<bean class="org.prot.controller.management.jmx.JmxResources">
-						<property name="management" ref="AppServerWatcher" />
-						<property name="connector" ref="OutsideConnector" />
-						<property name="logHandler" ref="LogHandler" />
+					<bean class="org.prot.controller.management.jmx.JmxResources"
+						init-method="init">
+						<property name="appServerWatcher" ref="AppServerWatcher" />
+						<property name="countingRequestLog" ref="CountingRequestLog" />
 					</bean>
 				</entry>
 			</map>

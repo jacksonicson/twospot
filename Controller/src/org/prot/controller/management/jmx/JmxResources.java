@@ -64,4 +64,14 @@ public class JmxResources implements IJmxResources
 	{
 		return NAME;
 	}
+
+	public void setAppServerWatcher(AppServerWatcher appServerWatcher)
+	{
+		this.appServerWatcher = appServerWatcher;
+	}
+
+	public void setCountingRequestLog(CountingRequestLog countingRequestLog)
+	{
+		this.countingRequestLog = countingRequestLog;
+	}
 }
