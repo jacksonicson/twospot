@@ -5,6 +5,6 @@ import java.util.List;
 interface DbDao
 {
 	public List<String> getTables(String appId);
-	
-	public DataTablet getTableData(String tableName);
+
+	public DataTablet getTableData(String tableName, String start, long count);
 }

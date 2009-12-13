@@ -4,18 +4,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 import org.prot.controller.manager.AppManager;
 import org.prot.controller.manager.appserver.IAppServerStats;
+import org.prot.util.scheduler.Scheduler;
+import org.prot.util.scheduler.SchedulerTask;
 
 public class AppServerWatcher
 {
 	private static final Logger logger = Logger.getLogger(AppServerWatcher.class);
-
-	private Timer timer = new Timer(true);
 
 	private AppManager manager;
 
@@ -25,7 +23,7 @@ public class AppServerWatcher
 
 	public void init()
 	{
-		this.timer.scheduleAtFixedRate(new Watcher(), 0, 5000);
+		Scheduler.addTask(new Watcher());
 	}
 
 	private final PerformanceData getOrCreatePerformanceData(String appId)
@@ -64,7 +62,6 @@ public class AppServerWatcher
 	{
 		Set<PerformanceData> appsPerformance = new HashSet<PerformanceData>();
 		appsPerformance.addAll(performanceData.values());
-
 		return appsPerformance;
 	}
 
@@ -128,12 +125,18 @@ public class AppServerWatcher
 		return null;
 	}
 
-	class Watcher extends TimerTask
+	class Watcher extends SchedulerTask
 	{
 		@Override
 		public void run()
 		{
 			updateManagementData();
+		}
+
+		@Override
+		public long getInterval()
+		{
+			return 5000;
 		}
 	}
 

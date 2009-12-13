@@ -1,6 +1,7 @@
 package org.prot.controller.security;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.List;
 import java.util.Vector;
 
@@ -21,7 +22,7 @@ public class RequestManager
 	private static final Logger logger = Logger.getLogger(RequestManager.class);
 
 	private static final long MAX_REQUEST_RUNTIME = 45000;
-	
+
 	private AppManager appManager;
 
 	private ControllerProxy controllerProxy;
@@ -82,6 +83,22 @@ public class RequestManager
 	{
 		logger.debug("Removing request: " + info.getRequestId());
 		running.remove(info);
+	}
+
+	public boolean requestError(RequestInfo info, Throwable t)
+	{
+		requestFinished(info);
+
+		if (t instanceof ConnectException)
+		{
+			String appId = info.getAppId();
+			logger.debug("Reporting stale AppServer for AppId: " + appId);
+
+			appManager.reportStaleApp(appId);
+			return true;
+		}
+
+		return false;
 	}
 
 	public RequestManager()

@@ -1,5 +1,6 @@
 package org.prot.controller.management.jmx;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -31,26 +32,34 @@ public class JmxResources implements IJmxResources
 	@Override
 	public double loadAverage()
 	{
-		return operatingSystem.getSystemLoadAverage();
+		double load = operatingSystem.getSystemLoadAverage();
+		logger.debug("Reporting load average: " + load);
+		return load;
 	}
 
 	@Override
 	public long freeMemory()
 	{
-		return operatingSystem.getFreePhysicalMemorySize();
+		long free = operatingSystem.getFreePhysicalMemorySize();
+		logger.debug("Reporting free memory: " + free);
+		return free;
 	}
 
 	@Override
 	public long requestsPerSecond()
 	{
-		return countingRequestLog.getCounter();
+		long rps = countingRequestLog.getCounter();
+		logger.debug("Reporting requests per second: " + rps);
+		return rps;
 	}
 
 	@Override
 	public Set<String> getApps()
 	{
-		return appServerWatcher.getRunningApps();
-
+		logger.debug("Reporting apps");
+		Set<String> apps = new HashSet<String>();
+		apps.addAll(appServerWatcher.getRunningApps());
+		return apps;
 	}
 
 	@Override

@@ -16,8 +16,7 @@ public class DbServiceImpl implements DbService
 		if (appManager.checkToken(token) == false)
 			return null;
 
-		// TODO: use the startkey and counter
-		return dbDao.getTableData(tableName);
+		return dbDao.getTableData(tableName, startKey, count);
 	}
 
 	@Override

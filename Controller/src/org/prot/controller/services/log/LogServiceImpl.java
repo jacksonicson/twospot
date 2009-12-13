@@ -7,14 +7,14 @@ import javax.jdo.Query;
 import javax.jdo.Transaction;
 
 import org.apache.log4j.Logger;
-import org.prot.controller.manager.AppManager;
+import org.prot.controller.manager.TokenChecker;
 import org.prot.util.jdo.JdoConnection;
 
 public class LogServiceImpl implements LogService
 {
 	private static final Logger logger = Logger.getLogger(LogServiceImpl.class);
 
-	private AppManager appManager;
+	private TokenChecker tokenChecker;
 
 	private JdoConnection connection;
 
@@ -57,7 +57,7 @@ public class LogServiceImpl implements LogService
 	@Override
 	public List<LogMessage> getMessages(String token, String appId, int severity)
 	{
-		if (appManager.checkToken(token) == false)
+		if (tokenChecker.checkToken(token) == false)
 		{
 			logger.warn("Invalid token");
 			return null;
@@ -66,8 +66,6 @@ public class LogServiceImpl implements LogService
 		PersistenceManager pm = this.connection.getPersistenceManager();
 		try
 		{
-			Transaction tx = pm.currentTransaction();
-
 			Query query = pm.newQuery(LogMessage.class);
 			String filter = "appId == '" + appId + "'";
 			if (severity != -1)
@@ -85,9 +83,8 @@ public class LogServiceImpl implements LogService
 		}
 	}
 
-	public void setAppManager(AppManager appManager)
+	public void setTokenChecker(TokenChecker tokenChecker)
 	{
-		this.appManager = appManager;
+		this.tokenChecker = tokenChecker;
 	}
-
 }

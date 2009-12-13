@@ -26,8 +26,6 @@ public class RequestHandler extends AbstractHandler
 
 	private RequestManager requestManager;
 
-	private ControllerProxy controllerProxy;
-
 	public void init()
 	{
 		// Do nothing
@@ -105,11 +103,6 @@ public class RequestHandler extends AbstractHandler
 	public void setAppManager(AppManager appManager)
 	{
 		this.appManager = appManager;
-	}
-
-	public void setControllerProxy(ControllerProxy controllerProxy)
-	{
-		this.controllerProxy = controllerProxy;
 	}
 
 	public void setRequestManager(RequestManager requestManager)

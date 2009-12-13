@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
 class HbaseDbDao implements DbDao
 {
 	private static final Logger logger = Logger.getLogger(HbaseDbDao.class);
-	
+
 	private String toHex(byte[] data)
 	{
 		String hex = "";
@@ -109,10 +109,10 @@ class HbaseDbDao implements DbDao
 	}
 
 	@Override
-	public DataTablet getTableData(final String tableName)
+	public DataTablet getTableData(final String tableName, final String startKey, final long count)
 	{
 		final DataTablet tablet = new DataTablet();
-		
+
 		// TODO: The Hbase-API should do this in critical sections ... but it
 		// doesn't
 		// See also: http://www.jpox.org/servlet/jira/browse/NUCHBASE-12
@@ -128,19 +128,23 @@ class HbaseDbDao implements DbDao
 					byte[] famkey = htable.getTableDescriptor().getFamiliesKeys().iterator().next();
 					Scan scan = new Scan();
 					scan.addFamily(famkey);
+					if (startKey != null)
+						scan.setStartRow(startKey.getBytes());
 
 					ResultScanner scanner = htable.getScanner(scan);
 					Iterator<Result> it = scanner.iterator();
 
-					for (Result result = it.next(); result != null; result = it.next())
+					int counter = 0;
+					for (Result result = it.next(); result != null && counter < count; result = it.next())
 					{
 						NavigableMap<byte[], byte[]> map = result.getFamilyMap(famkey);
 						for (byte[] column : map.keySet())
 						{
 							tablet.put(new String(column), deserialize(map.get(column)));
 						}
-						
+
 						tablet.nextRow();
+						counter++;
 					}
 
 				} catch (MasterNotRunningException e)
@@ -179,7 +183,7 @@ class HbaseDbDao implements DbDao
 
 					// Create a connection to the hbase
 					HBaseAdmin admin = new HBaseAdmin(config);
-					
+
 					// List all tables
 					HTableDescriptor[] list = admin.listTables();
 
@@ -190,7 +194,7 @@ class HbaseDbDao implements DbDao
 						String name = new String(descriptor.getName());
 
 						logger.debug("Checking name: " + name);
-						
+
 						// Check if table name starts with the AppId
 						if (name.startsWith(appId))
 						{

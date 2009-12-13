@@ -5,13 +5,12 @@ import java.net.URLEncoder;
 import java.util.Collection;
 
 import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
 
 import org.apache.log4j.Logger;
 import org.prot.controller.config.Configuration;
-import org.prot.controller.manager.AppManager;
+import org.prot.controller.manager.TokenChecker;
 import org.prot.util.ReservedAppIds;
 import org.prot.util.jdo.JdoConnection;
 
@@ -19,9 +18,7 @@ public class UserServiceImpl implements UserService
 {
 	private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
 
-	private AppManager appManager;
-
-	private PersistenceManagerFactory pmFactory;
+	private TokenChecker tokenChecker;
 
 	private JdoConnection jdoConnection;
 
@@ -84,7 +81,7 @@ public class UserServiceImpl implements UserService
 	@Override
 	public synchronized void registerUser(String token, String session, String username)
 	{
-		if (appManager.checkToken(token) == false)
+		if (tokenChecker.checkToken(token) == false)
 			return;
 
 		// Create a new UserSession object
@@ -162,8 +159,8 @@ public class UserServiceImpl implements UserService
 		}
 	}
 
-	public void setAppManager(AppManager appManager)
+	public void setTokenChecker(TokenChecker tokenChecker)
 	{
-		this.appManager = appManager;
+		this.tokenChecker = tokenChecker;
 	}
 }

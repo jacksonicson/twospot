@@ -51,12 +51,13 @@ public class ExceptionSafeProxy implements InvocationHandler
 			connection.destroy();
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			logger.debug("Disconnect failed");
+			logger.trace(e);
 		}
 		proxy = null;
 		connection = null;
 	}
-	
+
 	private static final int getControllerRmiPort()
 	{
 		return Configuration.getConfiguration().getRmiControllerPort();
@@ -71,7 +72,8 @@ public class ExceptionSafeProxy implements InvocationHandler
 		// TODO: not static
 		try
 		{
-			connection.setServiceUrl("service:jmx:rmi:///jndi/rmi://" + address + ":" + getControllerRmiPort() + "/controller");
+			connection.setServiceUrl("service:jmx:rmi:///jndi/rmi://" + address + ":"
+					+ getControllerRmiPort() + "/controller");
 			connection.afterPropertiesSet();
 
 			proxy = new MBeanProxyFactoryBean();
@@ -83,15 +85,18 @@ public class ExceptionSafeProxy implements InvocationHandler
 
 		} catch (MalformedURLException e)
 		{
-			logger.debug("could not connect with controller", e);
+			logger.debug("could not connect with controller");
+			logger.trace(e);
 			disconnect();
 		} catch (IOException e)
 		{
-			logger.debug("could not connect with controller", e);
+			logger.debug("could not connect with controller");
+			logger.trace(e);
 			disconnect();
 		} catch (MalformedObjectNameException e)
 		{
-			logger.debug("could not connect with controller", e);
+			logger.debug("could not connect with controller");
+			logger.trace(e);
 			disconnect();
 		}
 	}
@@ -109,7 +114,8 @@ public class ExceptionSafeProxy implements InvocationHandler
 		{
 			obj = null;
 			disconnect();
-			logger.debug("exception in proxy - connection with service failed", e);
+			logger.debug("exception in proxy - connection with service failed");
+			logger.trace(e);
 			throw new ConnectException();
 		}
 

@@ -77,7 +77,6 @@
 	<bean id="RequestHandler" class="org.prot.controller.handler.RequestHandler"
 		init-method="init">
 		<property name="appManager" ref="AppManager" />
-		<property name="controllerProxy" ref="ControllerProxy" />
 		<property name="requestManager" ref="RequestManager" />
 	</bean>
 
@@ -93,7 +92,6 @@
 
 	<bean id="ControllerProxy" class="org.prot.controller.handler.ControllerProxy">
 		<property name="httpClient" ref="HttpClient" />
-		<property name="appManager" ref="AppManager" />
 		<property name="requestManager" ref="RequestManager" />
 	</bean>
 
@@ -119,7 +117,7 @@
 
 		<property name="service">
 			<bean class="org.prot.controller.services.user.UserServiceImpl">
-				<property name="appManager" ref="AppManager" />
+				<property name="tokenChecker" ref="AppManager" />
 			</bean>
 		</property>
 
@@ -166,7 +164,7 @@
 
 		<property name="service">
 			<bean class="org.prot.controller.services.log.LogServiceImpl">
-				<property name="appManager" ref="AppManager" />
+				<property name="tokenChecker" ref="AppManager" />
 			</bean>
 		</property>
 
@@ -222,22 +220,6 @@
 				</entry>
 			</map>
 		</property>
-	</bean>
-
-
-	<!-- Platform services -->
-	<bean id="ControllerService"
-		class="org.prot.controller.services.controller.ControllerServiceImpl">
-		<property name="manager" ref="AppManager" />
-	</bean>
-
-	<bean id="ControllerServiceExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
-		<property name="serviceName" value="ControllerService" />
-		<property name="service" ref="ControllerService" />
-		<property name="serviceInterface"
-			value="org.prot.controller.services.controller.ControllerService" />
-
-		<property name="registryPort" value="${rmi.controller.registry.port}" />
 	</bean>
 
 </beans>

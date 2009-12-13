@@ -53,8 +53,8 @@ public class ControllerWatcher
 		// Used to collect all deployments
 		Set<String> deployments = new HashSet<String>();
 
-		logger.debug("Loading management data"); 
-		
+		logger.debug("Loading management data");
+
 		// Iterate over all known controllers
 		Collection<ControllerInfo> controllers = registry.getControllers();
 		for (ControllerInfo info : controllers)
@@ -79,10 +79,16 @@ public class ControllerWatcher
 				}
 
 				// Aquire management data
-				ManagementData management = info.getManagementData();
 				IJmxResources resources = connection.getJmxResources();
+
+				ManagementData management = info.getManagementData();
 				management.setRunningApps(resources.getApps());
 				management.setRps(resources.requestsPerSecond());
+				resources.getAppsPerformance();
+				resources.freeMemory();
+				resources.loadAverage();
+
+				logger.debug("RPS: " + management.getRps());
 
 			} catch (Exception e)
 			{

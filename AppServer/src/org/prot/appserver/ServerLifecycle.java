@@ -44,9 +44,9 @@ public class ServerLifecycle
 
 		configure();
 
-		manageApp();
-
 		launchRuntime();
+
+		manageApp();
 	}
 
 	private final void loadApp()

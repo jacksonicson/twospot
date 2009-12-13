@@ -41,7 +41,8 @@ public class ExceptionSafeFrontendProxy implements InvocationHandler
 			{
 				RmiProxyFactoryBean proxyFactory = new RmiProxyFactoryBean();
 
-				logger.debug("Connecting with master: " + Configuration.getConfiguration().getManagerAddress());
+				logger.debug("Connecting with master: "
+						+ Configuration.getConfiguration().getManagerAddress());
 
 				proxyFactory.setServiceInterface(clazz);
 				proxyFactory.setServiceUrl("rmi://" + Configuration.getConfiguration().getManagerAddress()
@@ -71,7 +72,8 @@ public class ExceptionSafeFrontendProxy implements InvocationHandler
 		} catch (Exception e)
 		{
 			obj = null;
-			logger.debug("exception in proxy - connection with service failed", e);
+			logger.debug("exception in proxy - connection with service failed");
+			logger.trace(e);
 		}
 
 		return result;
