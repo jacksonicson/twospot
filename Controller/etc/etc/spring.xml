@@ -101,9 +101,17 @@
 	</bean>
 
 
+	<bean id="AppRegistry" class="org.prot.controller.manager.AppRegistry">
+	</bean>
+
+	<bean id="AppMonitor" class="org.prot.controller.manager.AppMonitor">
+		<constructor-arg index="0" ref="ThreadPool" />
+	</bean>
+
 	<bean id="AppManager" class="org.prot.controller.manager.AppManager"
 		init-method="init">
-		<property name="threadPool" ref="ThreadPool" />
+		<property name="appRegistry" ref="AppRegistry" />
+		<property name="appMonitor" ref="AppMonitor" />
 	</bean>
 
 	<bean id="TokenChecker" class="org.prot.controller.manager.TokenCheckerProxy">

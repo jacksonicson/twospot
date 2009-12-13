@@ -3,7 +3,6 @@ package org.prot.controller.manager;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jetty.util.thread.ThreadPool;
 import org.prot.util.scheduler.Scheduler;
 import org.prot.util.scheduler.SchedulerTask;
 
@@ -13,18 +12,12 @@ public class AppManager
 
 	private static final long MAINTENANCE_TIME = 5000;
 
-	private ThreadPool threadPool;
-
 	private AppRegistry registry;
 
 	private AppMonitor monitor;
 
 	public void init()
 	{
-		// Create AppMonitor and AppReigstry
-		monitor = new AppMonitor(threadPool);
-		registry = new AppRegistry();
-
 		// Schedule the maintaince task
 		Scheduler.addTask(new MaintenanceTask());
 	}
@@ -167,11 +160,6 @@ public class AppManager
 			monitor.killProcess(killed);
 	}
 
-	public void setThreadPool(ThreadPool threadPool)
-	{
-		this.threadPool = threadPool;
-	}
-
 	class MaintenanceTask extends SchedulerTask
 	{
 		@Override
@@ -186,5 +174,15 @@ public class AppManager
 			logger.debug("Controller does maintenance work");
 			doMaintenance();
 		}
+	}
+
+	public void setRegistry(AppRegistry registry)
+	{
+		this.registry = registry;
+	}
+
+	public void setMonitor(AppMonitor monitor)
+	{
+		this.monitor = monitor;
 	}
 }
