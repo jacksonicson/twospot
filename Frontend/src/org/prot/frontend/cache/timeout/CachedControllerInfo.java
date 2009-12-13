@@ -8,7 +8,7 @@ public class CachedControllerInfo extends ControllerInfo
 
 	public CachedControllerInfo(ControllerInfo info)
 	{
-		super(info); 
+		super(info);
 	}
 
 	public long getTimestamp()

@@ -52,8 +52,6 @@ public class ProxyHandler extends AbstractHandler
 
 		if (appId == null)
 		{
-			logger.debug("Missing AppId: " + request.getRequestURL().toString());
-
 			// Error: Missing AppId
 			response.sendError(HttpStatus.NOT_FOUND_404, "Missing AppId (scheme://AppId.domain...)");
 			baseRequest.setHandled(true);
@@ -131,7 +129,6 @@ public class ProxyHandler extends AbstractHandler
 		try
 		{
 			// Check if the cache holds a controller for this app
-			appCache.updateCache();
 			ControllerInfo info = appCache.getController(appId);
 
 			// Cache missed
@@ -153,14 +150,24 @@ public class ProxyHandler extends AbstractHandler
 			}
 
 			// Build the destination url
-			String url = request.getScheme() + "://" + info.getAddress() + ":" + info.getPort();
-			String uri = "/" + appId + baseRequest.getUri().toString();
-			url = url + uri;
+			String address = info.getAddress();
+			String uri = baseRequest.getUri().toString();
+			StringBuilder builder = new StringBuilder(5 + 3 + address.length() + 1 + 4 + 1 + 10
+					+ uri.length() + 10);
+			builder.append(request.getScheme());
+			builder.append("://");
+			builder.append(address);
+			builder.append(":");
+			builder.append(info.getPort());
+			builder.append("/");
+			builder.append(appId);
+			builder.append(uri);
 
-			logger.debug("Forwarding request to: " + url);
+			// Create the URI
+			HttpURI httpUri = new HttpURI(builder.toString());
 
 			// Forward the request
-			frontendProxy.forwardRequest(baseRequest, request, response, new HttpURI(url), response);
+			frontendProxy.forwardRequest(baseRequest, request, response, httpUri, response);
 
 		} catch (Exception e)
 		{
