@@ -69,8 +69,8 @@ public class ProxyHandler extends AbstractHandler
 	private void handleDeploy(Request baseRequest, HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException
 	{
-		logger.debug("Frontend handles deployment: " + baseRequest.getUri()); 
-		
+		logger.debug("Frontend handles deployment: " + baseRequest.getUri());
+
 		URL url = new URL("http://localhost:5050" + baseRequest.getUri());
 		URLConnection urlCon = url.openConnection();
 		HttpURLConnection httpCon = (HttpURLConnection) urlCon;
