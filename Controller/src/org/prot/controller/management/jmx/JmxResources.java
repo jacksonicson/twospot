@@ -33,7 +33,6 @@ public class JmxResources implements IJmxResources
 	public double loadAverage()
 	{
 		double load = operatingSystem.getSystemLoadAverage();
-		logger.debug("Reporting load average: " + load);
 		return load;
 	}
 
@@ -41,7 +40,6 @@ public class JmxResources implements IJmxResources
 	public long freeMemory()
 	{
 		long free = operatingSystem.getFreePhysicalMemorySize();
-		logger.debug("Reporting free memory: " + free);
 		return free;
 	}
 
@@ -49,23 +47,24 @@ public class JmxResources implements IJmxResources
 	public long requestsPerSecond()
 	{
 		long rps = countingRequestLog.getCounter();
-		logger.debug("Reporting requests per second: " + rps);
 		return rps;
 	}
 
 	@Override
 	public Set<String> getApps()
 	{
-		logger.debug("Reporting apps");
 		Set<String> apps = new HashSet<String>();
 		apps.addAll(appServerWatcher.getRunningApps());
+
 		return apps;
 	}
 
 	@Override
 	public Set<PerformanceData> getAppsPerformance()
 	{
-		return appServerWatcher.getAppsPerformance();
+		Set<PerformanceData> performance = new HashSet<PerformanceData>();
+		performance.addAll(appServerWatcher.getAppsPerformance());
+		return performance;
 	}
 
 	@Override
