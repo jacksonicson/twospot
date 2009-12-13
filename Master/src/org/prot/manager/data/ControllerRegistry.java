@@ -1,6 +1,5 @@
 package org.prot.manager.data;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +16,6 @@ public class ControllerRegistry
 
 	public synchronized void update(List<ControllerInfo> infos)
 	{
-		// TODO: Handle deletes!!!
 		logger.debug("Updating controller registry");
 
 		// Contains alls addresses from the controllers
@@ -53,8 +51,10 @@ public class ControllerRegistry
 			controllers.remove(delete);
 	}
 
-	public Collection<ControllerInfo> getControllers()
+	public synchronized Set<ControllerInfo> getControllers()
 	{
-		return controllers.values();
+		Set<ControllerInfo> controllers = new HashSet<ControllerInfo>();
+		controllers.addAll(this.controllers.values());
+		return controllers;
 	}
 }

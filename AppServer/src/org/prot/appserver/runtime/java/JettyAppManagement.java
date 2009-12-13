@@ -10,7 +10,7 @@ public class JettyAppManagement implements AppManagement
 
 	private long lastReset = 0;
 
-	public void init()
+	public JettyAppManagement()
 	{
 		this.lastReset = System.currentTimeMillis();
 	}
@@ -18,6 +18,7 @@ public class JettyAppManagement implements AppManagement
 	@Override
 	public long connectionCount()
 	{
+		// TODO:
 		return -1;
 	}
 
@@ -30,7 +31,10 @@ public class JettyAppManagement implements AppManagement
 	@Override
 	public double requestsPerSecond()
 	{
-		return countingRequestLog.getCounter() / (System.currentTimeMillis() - lastReset + 1);
+		long count = countingRequestLog.getCounter();
+		long time = System.currentTimeMillis() - lastReset;
+		reset();
+		return count / (time / 1000d);
 	}
 
 	@Override

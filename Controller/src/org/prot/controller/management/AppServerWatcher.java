@@ -65,11 +65,6 @@ public class AppServerWatcher
 		return appsPerformance;
 	}
 
-	public long getRps()
-	{
-		return 0;
-	}
-
 	private void updateManagementData()
 	{
 		Set<String> appIds = manager.getAppIds();

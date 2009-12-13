@@ -20,7 +20,7 @@ public class ControllerInfo implements Serializable
 
 	public ControllerInfo()
 	{
-		// empty constructor is necessary
+		// empty constructor is required
 	}
 
 	public ControllerInfo(ControllerInfo info)

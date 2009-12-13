@@ -13,12 +13,6 @@ public class ControllerProxy extends HttpProxyHelper<RequestInfo>
 	private RequestManager requestManager;
 
 	@Override
-	protected void requestFinished(RequestInfo management)
-	{
-		requestManager.requestFinished(management);
-	}
-
-	@Override
 	protected void sentRequest(RequestInfo management, HttpExchange exchange)
 	{
 		management.setExchange(exchange);

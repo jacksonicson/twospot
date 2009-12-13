@@ -56,7 +56,7 @@ public class ControllerWatcher
 		logger.debug("Loading management data");
 
 		// Iterate over all known controllers
-		Collection<ControllerInfo> controllers = registry.getControllers();
+		Set<ControllerInfo> controllers = registry.getControllers();
 		for (ControllerInfo info : controllers)
 		{
 			try
@@ -80,15 +80,8 @@ public class ControllerWatcher
 
 				// Aquire management data
 				IJmxResources resources = connection.getJmxResources();
-
 				ManagementData management = info.getManagementData();
-				management.setRunningApps(resources.getApps());
-				management.setRps(resources.requestsPerSecond());
-				resources.getAppsPerformance();
-				resources.freeMemory();
-				resources.loadAverage();
-
-				logger.debug("RPS: " + management.getRps());
+				update(management, resources);
 
 			} catch (Exception e)
 			{
@@ -102,6 +95,17 @@ public class ControllerWatcher
 		// Inform all controllers about the deployments
 		if (deployments.isEmpty() == false)
 			executeRedeployedApps(deployments);
+	}
+
+	private void update(ManagementData management, IJmxResources resources)
+	{
+		management.setRunningApps(resources.getApps());
+		management.setRps(resources.requestsPerSecond());
+		management.setMemLoad(resources.freeMemory());
+		management.setAverageCpu(resources.loadAverage());
+		management.setPerformanceData(resources.getAppsPerformance());
+		
+		management.dump();
 	}
 
 	private void executeRedeployedApps(Set<String> redeployedApps)

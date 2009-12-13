@@ -37,6 +37,10 @@ public class AppManager
 		// Todo-Information
 		Todo todo = null;
 
+		// Performance
+		if (appInfo.getStatus() == AppState.ONLINE)
+			return appInfo;
+
 		// Simple state machine for managing the AppServer lifecycle
 		synchronized (appInfo)
 		{

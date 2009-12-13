@@ -75,8 +75,7 @@
 
 	<!-- Request handling -->
 
-	<bean id="RequestHandler" class="org.prot.controller.handler.RequestHandler"
-		init-method="init">
+	<bean id="RequestHandler" class="org.prot.controller.handler.RequestHandler">
 		<property name="appManager" ref="AppManager" />
 		<property name="requestManager" ref="RequestManager" />
 	</bean>

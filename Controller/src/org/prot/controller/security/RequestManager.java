@@ -2,8 +2,6 @@ package org.prot.controller.security;
 
 import java.io.IOException;
 import java.net.ConnectException;
-import java.util.List;
-import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,15 +17,11 @@ public class RequestManager
 {
 	private static final Logger logger = Logger.getLogger(RequestManager.class);
 
-	private static final long MAX_REQUEST_RUNTIME = 45000;
-
 	private AppManager appManager;
 
 	private ControllerProxy controllerProxy;
 
 	private static long requestCounter = 0;
-
-	private List<RequestInfo> running = new Vector<RequestInfo>();
 
 	private final long newRequestId()
 	{
@@ -45,24 +39,9 @@ public class RequestManager
 		info.setResponse(response);
 		info.setDestination(dest);
 
-		// Start the request
-		start(info);
-		running.add(info);
+		startReal(info);
 
 		return info;
-	}
-
-	private void start(RequestInfo info)
-	{
-		// private HashMap<String, Set<RequestInfo>> map = new HashMap<String,
-		// Set<RequestInfo>>();
-		// for (RequestInfo test : running)
-		// {
-		// Set<RequestInfo> infos = map.get(test.getAppId());
-		// if (infos == null)
-		// infos = new HashSet<RequestInfo>();
-		//
-		// }
 	}
 
 	private void startReal(RequestInfo info)
@@ -71,8 +50,6 @@ public class RequestManager
 		{
 			controllerProxy.forwardRequest(info.getBaseRequest(), info.getRequest(), info.getResponse(), info
 					.getDestination(), info);
-
-			running.add(info);
 
 		} catch (Exception e)
 		{
@@ -91,30 +68,18 @@ public class RequestManager
 		}
 	}
 
-	public void requestFinished(RequestInfo info)
-	{
-		logger.debug("Removing request: " + info.getRequestId());
-		running.remove(info);
-	}
-
 	public boolean requestError(RequestInfo info, Throwable t)
 	{
-		requestFinished(info);
-
 		if (t instanceof ConnectException)
 		{
 			String appId = info.getAppId();
-			logger.debug("Reporting stale AppServer for AppId: " + appId);
+			logger.debug("Reporting a stale AppServer with AppId: " + appId);
 
 			appManager.reportStaleApp(appId);
 			return true;
 		}
 
 		return false;
-	}
-
-	public RequestManager()
-	{
 	}
 
 	public void setAppManager(AppManager appManager)
