@@ -1,11 +1,7 @@
 package org.prot.util;
 
-import org.apache.log4j.Logger;
-
 public final class AppIdExtractor
 {
-	private static final Logger logger = Logger.getLogger(AppIdExtractor.class);
-
 	/**
 	 * Extracts the AppId from URL's of the type: scheme://appId.domain:port/xxx
 	 * 
@@ -15,28 +11,23 @@ public final class AppIdExtractor
 	 */
 	public static String fromDomain(String url)
 	{
-		int index = -1;
-
 		// Remove the scheme part
-		index = url.indexOf("://");
-		if (index != -1)
-			url = url.substring(index + 3);
+		int start = url.indexOf("://");
+		if (start == -1)
+			return null;
+		start += 3;
 
 		// Find the first dot and remove everything after it
-		index = url.indexOf(".");
-		if (index != -1)
-			url = url.substring(0, index);
-		else
-			url = "";
-
-		// Check if the result is a valid AppId
-		if (!ReservedAppIds.validateAppId(url))
+		int dest = url.indexOf(".", start);
+		if (dest == -1)
 			return null;
 
-		logger.debug("Extracted AppId: " + url);
+		// Extract the AppId and check its length
+		int length = dest - start;
+		if (length >= ReservedAppIds.MIN_LENGTH && length <= ReservedAppIds.MAX_LENGTH)
+			return url.substring(start, dest);
 
-		// Return the AppId
-		return url;
+		return null;
 	}
 
 	/**
@@ -60,31 +51,27 @@ public final class AppIdExtractor
 
 	public static String fromUri(String uri)
 	{
-		logger.debug("Extracting AppId from URI: " + uri);
-
 		int index = -1;
 
 		// Remove the first slash
+		int startIndex = 0;
 		if (uri.startsWith("/"))
-			uri = uri.substring(1);
+			startIndex = 1;
 
-		// Extract everything before the next slasth
-		index = uri.indexOf("/");
+		// Extract everything before the next slash
+		index = uri.indexOf("/", startIndex);
 		if (index != -1)
 		{
 			if (index == 0)
-				uri = "";
+				return null;
 			else
-				uri = uri.substring(0, index);
+			{
+				int length = index - startIndex;
+				if (length >= ReservedAppIds.MIN_LENGTH && length <= ReservedAppIds.MAX_LENGTH)
+					return uri.substring(startIndex, index);
+			}
 		}
 
-		// Check if the result is a valid AppId
-		if (!ReservedAppIds.validateAppId(uri))
-			return null;
-
-		logger.debug("Extracted AppId: " + uri);
-
-		// Return the AppId
-		return uri;
+		return null;
 	}
 }

@@ -3,15 +3,15 @@ package org.prot.util;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
 public final class ReservedAppIds
 {
-	private static final Logger logger = Logger.getLogger(ReservedAppIds.class);
-
 	public final static String APP_PORTAL = "portal";
 
 	public final static String FRONTEND_DEPLOY = "deploy";
+
+	public final static int MIN_LENGTH = 3;
+
+	public final static int MAX_LENGTH = 10;
 
 	private final static Set<String> reservedAppIds = new HashSet<String>();
 	static
@@ -26,12 +26,12 @@ public final class ReservedAppIds
 		privilegedAppIds.add(APP_PORTAL);
 	}
 
-	public static boolean isReserved(String appId)
+	public static final boolean isReserved(String appId)
 	{
 		return reservedAppIds.contains(appId);
 	}
 
-	public static boolean isPrivilged(String appId)
+	public static final boolean isPrivilged(String appId)
 	{
 		return privilegedAppIds.contains(appId);
 	}
@@ -43,31 +43,13 @@ public final class ReservedAppIds
 	 * @param appId
 	 * @return
 	 */
-	public static boolean validateNewAppId(String appId)
+	public static final boolean validateNewAppId(String appId)
 	{
 		// Check if this appId is reserved
 		if (ReservedAppIds.isReserved(appId))
 			return false;
 
-		return validateAppId(appId);
-	}
-
-	/**
-	 * Checks if the AppId is valid. This method does <b>not</b> check if the
-	 * AppId is reserved!
-	 * 
-	 * @param appId
-	 * @return
-	 */
-	public static boolean validateAppId(String appId)
-	{
-		logger.debug("Validating AppId: " + appId);
-
-		// Check the length
-		if (appId.length() > 10)
-			return false;
-
-		if (appId.length() < 3)
+		if (appId.length() < MIN_LENGTH || appId.length() > MAX_LENGTH)
 			return false;
 
 		// Check each character of the appId
@@ -78,7 +60,6 @@ public final class ReservedAppIds
 				return false;
 		}
 
-		// Everything seems ok
 		return true;
 	}
 }
