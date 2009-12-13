@@ -2,10 +2,7 @@ package org.prot.controller.security;
 
 import java.io.IOException;
 import java.net.ConnectException;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,8 +14,6 @@ import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.server.Request;
 import org.prot.controller.handler.ControllerProxy;
 import org.prot.controller.manager.AppManager;
-import org.prot.util.scheduler.Scheduler;
-import org.prot.util.scheduler.SchedulerTask;
 
 public class RequestManager
 {
@@ -59,14 +54,15 @@ public class RequestManager
 
 	private void start(RequestInfo info)
 	{
-//		private HashMap<String, Set<RequestInfo>> map = new HashMap<String, Set<RequestInfo>>();
-//		for (RequestInfo test : running)
-//		{
-//			Set<RequestInfo> infos = map.get(test.getAppId());
-//			if (infos == null)
-//				infos = new HashSet<RequestInfo>();
-//
-//		}
+		// private HashMap<String, Set<RequestInfo>> map = new HashMap<String,
+		// Set<RequestInfo>>();
+		// for (RequestInfo test : running)
+		// {
+		// Set<RequestInfo> infos = map.get(test.getAppId());
+		// if (infos == null)
+		// infos = new HashSet<RequestInfo>();
+		//
+		// }
 	}
 
 	private void startReal(RequestInfo info)
@@ -119,44 +115,6 @@ public class RequestManager
 
 	public RequestManager()
 	{
-		Scheduler.addTask(new CheckRequestsTask());
-	}
-
-	class CheckRequestsTask extends SchedulerTask
-	{
-		@Override
-		public long getInterval()
-		{
-			return 1000;
-		}
-
-		@Override
-		public void run()
-		{
-			try
-			{
-				long currentTime = System.currentTimeMillis();
-				for (RequestInfo test : running)
-				{
-					// Test timestamps
-					long dif = currentTime - test.getTimestamp();
-					if (dif > MAX_REQUEST_RUNTIME)
-					{
-						logger.info("Killing appserver - reason: DOS prevention, request time: " + dif);
-
-						// if (test.getExchange() != null)
-						// test.getExchange().cancel();
-
-						// appManager.killApp(test.getAppId());
-						// running.remove(test);
-						break;
-					}
-				}
-			} catch (Exception e)
-			{
-				logger.error("Error while killing an AppServer", e);
-			}
-		}
 	}
 
 	public void setAppManager(AppManager appManager)
