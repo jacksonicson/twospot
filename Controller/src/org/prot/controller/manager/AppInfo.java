@@ -36,7 +36,7 @@ public final class AppInfo
 	// Continuations for requests which are waiting for this appserver
 	private List<Continuation> continuations = new ArrayList<Continuation>();
 
-	void tick()
+	void touch()
 	{
 		this.lastUsed = System.currentTimeMillis();
 	}

@@ -29,8 +29,6 @@ public class AppManager
 
 	public AppInfo requireApp(String appId)
 	{
-		logger.debug("Required AppId: " + appId);
-
 		// Get or register the AppServer
 		AppInfo appInfo = registry.getOrRegisterApp(appId);
 
@@ -159,7 +157,7 @@ public class AppManager
 	private void doMaintenance()
 	{
 		// Find and kill all idle AppServers
-		Set<AppInfo> killed = registry.tick();
+		Set<AppInfo> killed = registry.findIdleApps();
 		if (killed != null)
 			monitor.killProcess(killed);
 	}

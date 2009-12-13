@@ -117,7 +117,7 @@
 		<property name="appManager" ref="AppManager" />
 	</bean>
 
-	<bean id="RequestManager" class="org.prot.controller.security.RequestManager">
+	<bean id="RequestManager" class="org.prot.controller.handler.RequestManager">
 		<property name="appManager" ref="AppManager" />
 		<property name="controllerProxy" ref="ControllerProxy" />
 	</bean>

@@ -26,11 +26,12 @@ public class AppServerWatcher
 		Scheduler.addTask(new Watcher());
 	}
 
-	private final PerformanceData getOrCreatePerformanceData(String appId)
+	private PerformanceData getOrCreatePerformanceData(String appId)
 	{
 		PerformanceData data = performanceData.get(appId);
 		if (data == null)
 		{
+			logger.debug("Creating new performance data object");
 			data = new PerformanceData(appId);
 			performanceData.put(appId, data);
 		}
@@ -78,7 +79,7 @@ public class AppServerWatcher
 				updateApp(appId, stats);
 			} catch (Exception e)
 			{
-				// Do nothing - connection lost
+				continue;
 			}
 		}
 	}
@@ -104,6 +105,8 @@ public class AppServerWatcher
 		// Connection does not exist - create a new proxy
 		try
 		{
+			logger.info("Connecting with the AppServer's management interface");
+
 			Object o = ExceptionSafeProxy.newInstance(getClass().getClassLoader(), IAppServerStats.class,
 					appId);
 			IAppServerStats connection = (IAppServerStats) o;

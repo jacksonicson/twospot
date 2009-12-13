@@ -1,27 +1,15 @@
 package org.prot.controller.handler;
 
-import org.apache.log4j.Logger;
-import org.eclipse.jetty.client.HttpExchange;
-import org.prot.controller.security.RequestInfo;
-import org.prot.controller.security.RequestManager;
 import org.prot.util.handler.HttpProxyHelper;
 
-public class ControllerProxy extends HttpProxyHelper<RequestInfo>
+public class ControllerProxy extends HttpProxyHelper<String>
 {
-	private static final Logger logger = Logger.getLogger(ControllerProxy.class);
-
 	private RequestManager requestManager;
 
 	@Override
-	protected void sentRequest(RequestInfo management, HttpExchange exchange)
+	protected boolean error(String appId, Throwable t)
 	{
-		management.setExchange(exchange);
-	}
-
-	@Override
-	protected boolean error(RequestInfo management, Throwable t)
-	{
-		return requestManager.requestError(management, t);
+		return requestManager.requestError(appId, t);
 	}
 
 	public void setRequestManager(RequestManager requestManager)

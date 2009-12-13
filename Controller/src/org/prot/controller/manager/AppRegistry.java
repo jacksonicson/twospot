@@ -31,34 +31,32 @@ class AppRegistry
 			return this.currentPort++;
 
 		// Find a free port
-		List<Integer> testedPorts = new ArrayList<Integer>();
-		int port = -1;
-		while (freePorts.isEmpty() == false)
+		synchronized (freePorts)
 		{
-			port = freePorts.poll();
-			try
+			Integer foundPort = null;
+			for (Integer test : freePorts)
 			{
-				ServerSocket socket = new ServerSocket(port);
-				socket.close();
-			} catch (Exception e)
-			{
-				logger.warn("AppRegsitry could not reuse port: " + port);
-				testedPorts.add(port);
-				port = -1;
-				continue;
+				try
+				{
+					ServerSocket socket = new ServerSocket(test);
+					socket.close();
+					foundPort = test;
+					break;
+				} catch (Exception e)
+				{
+					logger.warn("AppRegsitry could not reuse port: " + test);
+					continue;
+				}
 			}
 
-			break;
+			if (foundPort != null)
+			{
+				freePorts.remove(foundPort);
+				return foundPort;
+			}
 		}
 
-		// Add all failed ports to the queue
-		freePorts.addAll(testedPorts);
-
-		// Did we find a port - if not we use a new port!
-		if (port == -1)
-			port = this.currentPort++;
-
-		return port;
+		return this.currentPort++;
 	}
 
 	private void putApp(AppInfo appInfo)
@@ -86,12 +84,12 @@ class AppRegistry
 		AppInfo appInfo = appInfos.get(appId);
 		if (appInfo != null)
 		{
-			appInfo.tick();
+			appInfo.touch();
 			return appInfo;
 		}
 
 		appInfo = new AppInfo(appId, getPort());
-		appInfo.tick();
+		appInfo.touch();
 		putApp(appInfo);
 
 		return appInfo;
@@ -99,55 +97,70 @@ class AppRegistry
 
 	private void cleanup()
 	{
-		List<AppInfo> copy = null;
+		List<AppInfo> copy = new ArrayList<AppInfo>();
 		synchronized (this)
 		{
-			copy = new ArrayList<AppInfo>();
 			copy.addAll(appInfos.values());
 		}
 
-		Set<AppInfo> delete = new HashSet<AppInfo>();
+		Set<AppInfo> toDelete = new HashSet<AppInfo>();
 		for (AppInfo info : copy)
 		{
-			AppState state = info.getStatus();
-			switch (state)
+			synchronized (info)
 			{
-			case KILLED:
-			case STALE:
-			case FAILED:
-				delete.add(info);
-				continue;
+				AppState state = info.getStatus();
+				switch (state)
+				{
+				case KILLED:
+				case STALE:
+				case FAILED:
+					toDelete.add(info);
+					continue;
+				}
 			}
 		}
 
 		synchronized (this)
 		{
-			for (AppInfo info : delete)
+			for (AppInfo info : toDelete)
 			{
 				deleteApp(info.getAppId());
 			}
 		}
 	}
 
-	Set<AppInfo> tick()
+	Set<AppInfo> findIdleApps()
 	{
 		Set<AppInfo> idleApps = null;
-		for (AppInfo info : appInfos.values())
-		{
-			AppState state = info.getStatus();
-			if (info.isIdle() || state == AppState.FAILED || state == AppState.KILLED)
-			{
-				if (idleApps == null)
-					idleApps = new HashSet<AppInfo>();
 
-				info.setStatus(AppState.KILLED);
-				idleApps.add(info);
+		// Create a copy to prevent concurrent modifications
+		Set<AppInfo> values = new HashSet<AppInfo>();
+		synchronized (appInfos)
+		{
+			values.addAll(appInfos.values());
+		}
+
+		// Check for idle apps
+		for (AppInfo info : values)
+		{
+			synchronized (info)
+			{
+				AppState state = info.getStatus();
+				if (info.isIdle() || state == AppState.FAILED || state == AppState.KILLED)
+				{
+					if (idleApps == null)
+						idleApps = new HashSet<AppInfo>();
+
+					info.setStatus(AppState.KILLED);
+					idleApps.add(info);
+				}
 			}
 		}
 
 		// Remove everything
 		cleanup();
 
+		// Return list of idle apps
 		return idleApps;
 	}
 

@@ -13,7 +13,6 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.prot.controller.manager.AppInfo;
 import org.prot.controller.manager.AppManager;
-import org.prot.controller.security.RequestManager;
 import org.prot.util.AppIdExtractor;
 
 public class RequestHandler extends AbstractHandler
@@ -33,15 +32,17 @@ public class RequestHandler extends AbstractHandler
 		int port = appInfo.getPort();
 		String uri = request.getUri().toString();
 
-		// Extract the application specific URI
-		if (uri.startsWith("/"))
-			uri = uri.substring(1);
-		uri = uri.substring(appInfo.getAppId().length());
+		// Build the complete URL (In this case string concat seems to be
+		// inefficient)
+		StringBuilder builder = new StringBuilder(scheme.length() + 4 + uri.length() + 10);
+		builder.append(scheme);
+		builder.append("://");
+		builder.append(APP_SERVER_HOST);
+		builder.append(":");
+		builder.append(port);
+		builder.append(uri.substring(1 + appInfo.getAppId().length()));
 
-		// Build the complete URL
-		String url = scheme + "://" + APP_SERVER_HOST + ":" + port + uri;
-
-		return new HttpURI(url);
+		return new HttpURI(builder.toString());
 	}
 
 	@Override
@@ -60,8 +61,7 @@ public class RequestHandler extends AbstractHandler
 		}
 
 		// Inform the AppManager
-		AppInfo appInfo = null;
-		appInfo = this.appManager.requireApp(appId);
+		AppInfo appInfo = appManager.requireApp(appId);
 
 		// The AppServer is not avialable - a continuation is used to restart
 		// this request when the AppServer is online. If a continuation is used
@@ -75,11 +75,11 @@ public class RequestHandler extends AbstractHandler
 		switch (appInfo.getStatus())
 		{
 		case FAILED:
-			response.sendError(HttpStatus.NOT_FOUND_404, "AppServer has failed");
+			response.sendError(HttpStatus.NOT_FOUND_404, "AppServer failed");
 			baseRequest.setHandled(true);
 			return;
 		case STALE:
-			response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500, "AppServer is stale");
+			response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500, "Stale AppServer");
 			baseRequest.setHandled(true);
 			return;
 		}
