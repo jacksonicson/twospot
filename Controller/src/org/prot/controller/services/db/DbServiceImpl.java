@@ -2,18 +2,18 @@ package org.prot.controller.services.db;
 
 import java.util.List;
 
-import org.prot.controller.manager.AppManager;
+import org.prot.controller.manager.TokenChecker;
 
 public class DbServiceImpl implements DbService
 {
-	private AppManager appManager;
+	private TokenChecker tokenChecker;
 
 	private DbDao dbDao;
 
 	@Override
 	public DataTablet getTableData(String token, String tableName, String startKey, long count)
 	{
-		if (appManager.checkToken(token) == false)
+		if (tokenChecker.checkToken(token) == false)
 			return null;
 
 		return dbDao.getTableData(tableName, startKey, count);
@@ -22,19 +22,19 @@ public class DbServiceImpl implements DbService
 	@Override
 	public List<String> getTables(String token, String appId)
 	{
-		if (appManager.checkToken(token) == false)
+		if (tokenChecker.checkToken(token) == false)
 			return null;
 
 		return dbDao.getTables(appId);
 	}
 
-	public void setAppManager(AppManager appManager)
-	{
-		this.appManager = appManager;
-	}
-
 	public void setDbDao(DbDao dbDao)
 	{
 		this.dbDao = dbDao;
+	}
+
+	public void setTokenChecker(TokenChecker tokenChecker)
+	{
+		this.tokenChecker = tokenChecker;
 	}
 }

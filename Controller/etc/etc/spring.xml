@@ -10,6 +10,7 @@
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 	</bean>
 
+
 	<!-- HTTP-Client -->
 	<bean id="HttpClient" class="org.eclipse.jetty.client.HttpClient"
 		init-method="start">
@@ -105,6 +106,10 @@
 		<property name="threadPool" ref="ThreadPool" />
 	</bean>
 
+	<bean id="TokenChecker" class="org.prot.controller.manager.TokenCheckerProxy">
+		<property name="appManager" ref="AppManager" />
+	</bean>
+
 	<bean id="RequestManager" class="org.prot.controller.security.RequestManager">
 		<property name="appManager" ref="AppManager" />
 		<property name="controllerProxy" ref="ControllerProxy" />
@@ -117,7 +122,7 @@
 
 		<property name="service">
 			<bean class="org.prot.controller.services.user.UserServiceImpl">
-				<property name="tokenChecker" ref="AppManager" />
+				<property name="tokenChecker" ref="TokenChecker" />
 			</bean>
 		</property>
 
@@ -132,7 +137,7 @@
 
 		<property name="service">
 			<bean class="org.prot.controller.services.deploy.DeployServiceImpl">
-				<property name="appManager" ref="AppManager" />
+				<property name="tokenChecker" ref="TokenChecker" />
 				<property name="management" ref="AppServerWatcher" />
 			</bean>
 		</property>
@@ -149,7 +154,7 @@
 
 		<property name="service">
 			<bean class="org.prot.controller.services.db.DbServiceImpl">
-				<property name="appManager" ref="AppManager" />
+				<property name="tokenChecker" ref="TokenChecker" />
 				<property name="dbDao" ref="DbDao" />
 			</bean>
 		</property>
@@ -164,7 +169,7 @@
 
 		<property name="service">
 			<bean class="org.prot.controller.services.log.LogServiceImpl">
-				<property name="tokenChecker" ref="AppManager" />
+				<property name="tokenChecker" ref="TokenChecker" />
 			</bean>
 		</property>
 

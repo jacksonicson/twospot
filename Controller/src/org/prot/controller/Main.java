@@ -33,7 +33,6 @@ public class Main
 		factory.getBean("RequestManager");
 
 		// Start the RMI-Services
-		factory.getBean("ControllerServiceExporter");
 		factory.getBean("DeployServiceExporter");
 		factory.getBean("UserServiceExporter");
 		factory.getBean("DbServiceExporter");

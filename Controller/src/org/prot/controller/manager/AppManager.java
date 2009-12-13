@@ -7,7 +7,7 @@ import org.eclipse.jetty.util.thread.ThreadPool;
 import org.prot.util.scheduler.Scheduler;
 import org.prot.util.scheduler.SchedulerTask;
 
-public class AppManager implements TokenChecker
+public class AppManager
 {
 	private static final Logger logger = Logger.getLogger(AppManager.class);
 
@@ -87,8 +87,7 @@ public class AppManager implements TokenChecker
 		return appInfo;
 	}
 
-	@Override
-	public boolean checkToken(String token)
+	boolean checkToken(String token)
 	{
 		logger.debug("Checking token: " + token);
 

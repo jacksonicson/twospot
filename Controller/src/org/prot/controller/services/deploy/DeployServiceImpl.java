@@ -12,13 +12,13 @@ import java.net.URLConnection;
 import org.apache.log4j.Logger;
 import org.prot.controller.config.Configuration;
 import org.prot.controller.management.AppServerWatcher;
-import org.prot.controller.manager.AppManager;
+import org.prot.controller.manager.TokenChecker;
 
 public class DeployServiceImpl implements DeployService
 {
 	private static final Logger logger = Logger.getLogger(DeployServiceImpl.class);
 
-	private AppManager appManager;
+	private TokenChecker tokenChecker;
 
 	private AppServerWatcher management;
 
@@ -26,7 +26,7 @@ public class DeployServiceImpl implements DeployService
 	public String announceDeploy(String token, String appId, String version)
 	{
 		// Check the token
-		if (appManager.checkToken(token) == false)
+		if (tokenChecker.checkToken(token) == false)
 			return null;
 
 		logger.debug("Announcing deployment");
@@ -64,7 +64,7 @@ public class DeployServiceImpl implements DeployService
 	public void appDeployed(String token, String appId, String version)
 	{
 		// Check the token
-		if (appManager.checkToken(token) == false)
+		if (tokenChecker.checkToken(token) == false)
 			return;
 
 		// Store the info in the management component
@@ -76,8 +76,8 @@ public class DeployServiceImpl implements DeployService
 		this.management = management;
 	}
 
-	public void setAppManager(AppManager appManager)
+	public void setTokenChecker(TokenChecker tokenChecker)
 	{
-		this.appManager = appManager;
+		this.tokenChecker = tokenChecker;
 	}
 }
