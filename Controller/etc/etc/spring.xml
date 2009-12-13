@@ -110,8 +110,8 @@
 
 	<bean id="AppManager" class="org.prot.controller.manager.AppManager"
 		init-method="init">
-		<property name="appRegistry" ref="AppRegistry" />
-		<property name="appMonitor" ref="AppMonitor" />
+		<property name="registry" ref="AppRegistry" />
+		<property name="monitor" ref="AppMonitor" />
 	</bean>
 
 	<bean id="TokenChecker" class="org.prot.controller.manager.TokenCheckerProxy">
