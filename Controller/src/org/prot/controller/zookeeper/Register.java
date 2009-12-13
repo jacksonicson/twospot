@@ -41,10 +41,10 @@ public class Register implements Job
 
 		return null;
 	}
-	
+
 	private String generateUUID()
 	{
-		return java.util.UUID.randomUUID().toString(); 
+		return java.util.UUID.randomUUID().toString();
 	}
 
 	@Override
@@ -61,10 +61,22 @@ public class Register implements Job
 		ObjectOutputStream out = new ObjectOutputStream(bo);
 		out.writeObject(controller);
 
-		String path = zk.create(ZNodes.ZNODE_CONTROLLER + "/" + generateUUID(), bo.toByteArray(), zooHelper.getACL(),
-				CreateMode.EPHEMERAL);
+		String path = ZNodes.ZNODE_CONTROLLER + "/" + generateUUID();
+		if (zk.exists(path, false) != null)
+		{
+			logger.warn("Could not register within ZooKeeper. Registration path already exists: " + path);
+			return false;
+		}
 
-		logger.info("Controller registered within ZooKeeper: " + path);
+		try
+		{
+			String createdPath = zk.create(path, bo.toByteArray(), zooHelper.getACL(), CreateMode.EPHEMERAL);
+			logger.info("Controller registered within ZooKeeper: " + createdPath);
+		} catch (KeeperException exists)
+		{
+			logger.error("Could not register within ZooKeeper. Registration path already exists: " + path);
+			return false;
+		}
 
 		return true;
 	}

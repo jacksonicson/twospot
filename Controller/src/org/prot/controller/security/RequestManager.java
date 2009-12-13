@@ -2,7 +2,10 @@ package org.prot.controller.security;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,11 +52,24 @@ public class RequestManager
 
 		// Start the request
 		start(info);
+		running.add(info);
 
 		return info;
 	}
 
 	private void start(RequestInfo info)
+	{
+//		private HashMap<String, Set<RequestInfo>> map = new HashMap<String, Set<RequestInfo>>();
+//		for (RequestInfo test : running)
+//		{
+//			Set<RequestInfo> infos = map.get(test.getAppId());
+//			if (infos == null)
+//				infos = new HashSet<RequestInfo>();
+//
+//		}
+	}
+
+	private void startReal(RequestInfo info)
 	{
 		try
 		{
@@ -128,11 +144,11 @@ public class RequestManager
 					{
 						logger.info("Killing appserver - reason: DOS prevention, request time: " + dif);
 
-						if (test.getExchange() != null)
-							test.getExchange().cancel();
+						// if (test.getExchange() != null)
+						// test.getExchange().cancel();
 
-						appManager.killApp(test.getAppId());
-						running.remove(test);
+						// appManager.killApp(test.getAppId());
+						// running.remove(test);
 						break;
 					}
 				}
