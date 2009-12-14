@@ -133,7 +133,7 @@ public class AppServerWatcher
 		@Override
 		public long getInterval()
 		{
-			return 5000;
+			return 50;
 		}
 	}
 

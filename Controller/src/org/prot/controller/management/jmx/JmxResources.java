@@ -50,6 +50,7 @@ public class JmxResources implements IJmxResources
 	{
 		long requests = countingRequestLog.getCounter();
 		long time = System.currentTimeMillis() - requestTime;
+		requestTime = System.currentTimeMillis();
 		return requests / (time / 1000d);
 	}
 
