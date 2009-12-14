@@ -20,51 +20,44 @@ public class UserServiceImpl implements UserService
 
 	private TokenChecker tokenChecker;
 
-	private JdoConnection jdoConnection;
-
-	public UserServiceImpl()
-	{
-		jdoConnection = new JdoConnection();
-	}
-
 	@Override
-	public synchronized String getCurrentUser(String uid)
+	public String getCurrentUser(String uid)
 	{
 		assert (uid != null);
 
 		// Query database
-		PersistenceManager persistenceManager = jdoConnection.getPersistenceManager();
+		PersistenceManager persistenceManager = JdoConnection.getPersistenceManager();
+
 		try
 		{
-			Query query = persistenceManager.newQuery(UserSession.class);
-			query.setFilter("sessionId == '" + uid + "'");
-			query.setUnique(true);
-
-			UserSession session = (UserSession) query.execute();
+			UserSession session = (UserSession) persistenceManager.getObjectById(UserSession.class, uid);
+			persistenceManager.flush();
 			if (session != null)
 			{
-				logger.warn("User session is not null");
-				return session.getUsername();
+				String user = session.getUsername();
+				session = null;
+				return user;
 			}
 
-			logger.warn("Could not find a user session for: " + uid);
 			return null;
 		} finally
 		{
-			jdoConnection.releasePersistenceManager(persistenceManager);
+			persistenceManager.close();
 		}
 	}
 
 	@Override
 	public String getLoginUrl(String redirectUrl, String cancelUrl)
 	{
-		String url = "http://" + ReservedAppIds.APP_PORTAL + "."
-				+ Configuration.getConfiguration().getPlatformDomain();
-		String uri = "";
+		StringBuilder url = new StringBuilder();
+		url.append("http://");
+		url.append(ReservedAppIds.APP_PORTAL);
+		url.append(".");
+		url.append(Configuration.getConfiguration().getPlatformDomain());
 		try
 		{
-			uri += "/login.htm?url=" + URLEncoder.encode(redirectUrl, "UTF-8");
-			uri += "&cancel=" + URLEncoder.encode(cancelUrl, "UTF-8");
+			url.append("/login.htm?url=" + URLEncoder.encode(redirectUrl, "UTF-8"));
+			url.append("&cancel=" + URLEncoder.encode(cancelUrl, "UTF-8"));
 		} catch (UnsupportedEncodingException e)
 		{
 			// Return null - we don't want to direct the user to invalid
@@ -72,10 +65,7 @@ public class UserServiceImpl implements UserService
 			return null;
 		}
 
-		url = url + uri;
-		logger.debug("Built login url: " + url);
-
-		return url;
+		return url.toString();
 	}
 
 	@Override
@@ -89,7 +79,7 @@ public class UserServiceImpl implements UserService
 		userSession.setSessionId(session);
 		userSession.setUsername(username);
 
-		PersistenceManager persistenceManager = jdoConnection.getPersistenceManager();
+		PersistenceManager persistenceManager = JdoConnection.getPersistenceManager();
 		try
 		{
 			Transaction tx = persistenceManager.currentTransaction();
@@ -114,10 +104,15 @@ public class UserServiceImpl implements UserService
 			{
 				logger.error("Could not persistate user session", e);
 				tx.rollback();
+			} finally
+			{
+				if (tx.isActive())
+					tx.rollback();
 			}
+
 		} finally
 		{
-			jdoConnection.releasePersistenceManager(persistenceManager);
+			persistenceManager.close();
 		}
 	}
 
@@ -129,7 +124,7 @@ public class UserServiceImpl implements UserService
 
 		logger.debug("Unregistering user: " + uid);
 
-		PersistenceManager persistenceManager = jdoConnection.getPersistenceManager();
+		PersistenceManager persistenceManager = JdoConnection.getPersistenceManager();
 		try
 		{
 			// Query database
@@ -155,7 +150,7 @@ public class UserServiceImpl implements UserService
 			logger.error("Could not unregister user", e);
 		} finally
 		{
-			jdoConnection.releasePersistenceManager(persistenceManager);
+			persistenceManager.close();
 		}
 	}
 

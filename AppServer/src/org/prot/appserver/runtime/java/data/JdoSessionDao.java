@@ -12,27 +12,31 @@ public class JdoSessionDao implements SessionDao
 {
 	private static final Logger logger = Logger.getLogger(JdoSessionDao.class);
 
-	private JdoConnection connection;
-
 	@Override
 	public boolean exists(String sessionId)
 	{
-		PersistenceManager pm = connection.getPersistenceManager();
-
-		Query query = pm.newQuery();
-		query.setClass(SessionData.class);
-		query.setFilter("sessionId == '" + sessionId + "'");
-		query.setUnique(true);
+		PersistenceManager pm = JdoConnection.getPersistenceManager();
 
 		try
 		{
-			SessionData data = (SessionData) query.execute();
-			logger.debug("exists: " + (data != null));
+			Query query = pm.newQuery();
+			query.setClass(SessionData.class);
+			query.setFilter("sessionId == '" + sessionId + "'");
+			query.setUnique(true);
 
-			return (data != null);
-		} catch (Exception e)
+			try
+			{
+				SessionData data = (SessionData) query.execute();
+				return (data != null);
+
+			} catch (Exception e)
+			{
+				logger.error("Could not load SessionData", e);
+			}
+
+		} finally
 		{
-			logger.error("Could not load SessionData: " + sessionId, e);
+			pm.close();
 		}
 
 		return false;
@@ -41,17 +45,16 @@ public class JdoSessionDao implements SessionDao
 	@Override
 	public boolean isStale(String sessionId, long timestamp)
 	{
-		PersistenceManager pm = connection.getPersistenceManager();
-		Query query = pm.newQuery();
-		query.setClass(SessionData.class);
-		query.setFilter("sessionId == '" + sessionId + "'");
-		query.setUnique(true);
+		PersistenceManager pm = JdoConnection.getPersistenceManager();
 
 		try
 		{
-			logger.debug("loading stale state");
+			Query query = pm.newQuery();
+			query.setClass(SessionData.class);
+			query.setFilter("sessionId == '" + sessionId + "'");
+			query.setUnique(true);
+
 			SessionData data = (SessionData) query.execute();
-			logger.debug("stale: " + data);
 
 			if (data == null)
 				return true;
@@ -60,7 +63,10 @@ public class JdoSessionDao implements SessionDao
 
 		} catch (Exception e)
 		{
-			logger.error("Could not load SessionData: " + sessionId, e);
+			logger.error("Could not load SessionData", e);
+		} finally
+		{
+			pm.close();
 		}
 
 		return true;
@@ -69,25 +75,26 @@ public class JdoSessionDao implements SessionDao
 	@Override
 	public SessionData loadSession(String sessionId)
 	{
-		PersistenceManager pm = connection.getPersistenceManager();
-		Query query = pm.newQuery();
-		query.setClass(SessionData.class);
-		query.setFilter("sessionId == '" + sessionId + "'");
-		query.setUnique(true);
+		PersistenceManager pm = JdoConnection.getPersistenceManager();
 
 		try
 		{
-			logger.debug("loading session");
-			SessionData data = (SessionData) query.execute();
-			logger.debug("done: " + data.getClass());
+			Query query = pm.newQuery();
+			query.setClass(SessionData.class);
+			query.setFilter("sessionId == '" + sessionId + "'");
+			query.setUnique(true);
 
-			logger.debug("restoring session");
+			SessionData data = (SessionData) query.execute();
+
 			data.restoreSerialization();
 
 			return data;
 		} catch (Exception e)
 		{
-			logger.error("Could not load SessionData: " + sessionId, e);
+			logger.error("Could not load SessionData", e);
+		} finally
+		{
+			pm.close();
 		}
 
 		return null;
@@ -96,66 +103,80 @@ public class JdoSessionDao implements SessionDao
 	@Override
 	public void saveSession(SessionData sessionData)
 	{
-		PersistenceManager pm = connection.getPersistenceManager();
+		PersistenceManager pm = JdoConnection.getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
-		tx.begin();
 		try
 		{
-			logger.debug("preparing session");
-			sessionData.prepareSerialization();
+			tx.begin();
 
-			logger.debug("persisting session");
+			sessionData.prepareSerialization();
 			pm.makePersistent(sessionData);
-			logger.debug("done");
 
 			tx.commit();
 		} catch (Exception e)
 		{
-			logger.error("Could not save the session: " + sessionData.getSessionId());
+			logger.error("Could not save the session", e);
 			tx.rollback();
+
+		} finally
+		{
+			if (tx.isActive())
+				tx.rollback();
+
+			pm.close();
 		}
 	}
 
 	@Override
 	public void deleteSession(SessionData sessionData)
 	{
-		PersistenceManager pm = connection.getPersistenceManager();
+		PersistenceManager pm = JdoConnection.getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
-		tx.begin();
 		try
 		{
-			logger.debug("deleting session");
+			tx.begin();
+
 			pm.deletePersistent(sessionData);
-			logger.debug("done");
 
 			tx.commit();
 		} catch (Exception e)
 		{
-			logger.error("Could not save the session: " + sessionData.getSessionId());
+			logger.error("Could not save the session", e);
 			tx.rollback();
+		} finally
+		{
+			if (tx.isActive())
+				tx.rollback();
+
+			pm.close();
 		}
 	}
 
 	@Override
 	public void updateSession(SessionData sessionData)
 	{
-		PersistenceManager pm = connection.getPersistenceManager();
+		PersistenceManager pm = JdoConnection.getPersistenceManager();
+
 		Transaction tx = pm.currentTransaction();
-		tx.begin();
 		try
 		{
-			logger.debug("preparing session");
-			sessionData.prepareSerialization();
+			tx.begin();
 
-			logger.debug("updating session");
+			sessionData.prepareSerialization();
 			pm.makePersistent(sessionData);
-			logger.debug("done");
 
 			tx.commit();
 		} catch (Exception e)
 		{
-			logger.error("Could not save the session: " + sessionData.getSessionId());
+			logger.error("Could not save the session", e);
 			tx.rollback();
+
+		} finally
+		{
+			if (tx.isActive())
+				tx.rollback();
+
+			pm.close();
 		}
 	}
 
@@ -165,20 +186,26 @@ public class JdoSessionDao implements SessionDao
 		// Creating transferable object
 		SessionId id = new SessionId(sessionId);
 
-		PersistenceManager pm = connection.getPersistenceManager();
+		PersistenceManager pm = JdoConnection.getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
-		tx.begin();
 		try
 		{
-			logger.debug("persisting sessionId");
+			tx.begin();
+
 			pm.makePersistent(id);
-			logger.debug("done");
 
 			tx.commit();
 		} catch (Exception e)
 		{
-			logger.error("Could not save the sessionId: " + sessionId);
+			logger.error("Could not save the sessionId", e);
 			tx.rollback();
+		} finally
+		{
+
+			if (tx.isActive())
+				tx.rollback();
+
+			pm.close();
 		}
 	}
 
@@ -187,50 +214,53 @@ public class JdoSessionDao implements SessionDao
 	{
 		SessionId id = new SessionId(sessionId);
 
-		PersistenceManager pm = connection.getPersistenceManager();
+		PersistenceManager pm = JdoConnection.getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
-		tx.begin();
 		try
 		{
-			logger.debug("deleting session");
+			tx.begin();
+
 			pm.deletePersistent(id);
-			logger.debug("done");
 
 			tx.commit();
 		} catch (Exception e)
 		{
-			logger.error("Could not save the sessionId: " + sessionId);
+			logger.error("Could not save the sessionId", e);
 			tx.rollback();
+		} finally
+		{
+			if (tx.isActive())
+				tx.rollback();
+
+			pm.close();
 		}
 	}
 
 	@Override
 	public boolean existsSessionId(String sessionId)
 	{
-		PersistenceManager pm = connection.getPersistenceManager();
-
-		Query query = pm.newQuery();
-		query.setClass(SessionId.class);
-		query.setFilter("sessionId == '" + sessionId + "'");
-		query.setUnique(true);
+		PersistenceManager pm = JdoConnection.getPersistenceManager();
 
 		try
 		{
+			Query query = pm.newQuery();
+			query.setClass(SessionId.class);
+			query.setFilter("sessionId == '" + sessionId + "'");
+			query.setUnique(true);
+
 			SessionId data = (SessionId) query.execute();
-			logger.debug("exists sessionId: " + (data != null));
 
 			return (data != null);
 
 		} catch (Exception e)
 		{
-			logger.error("Could not load SessionId: " + sessionId, e);
+			logger.error("Could not load SessionId", e);
+
+		} finally
+		{
+			pm.close();
 		}
 
 		return false;
-	}
-
-	public synchronized void setConnection(JdoConnection connection)
-	{
-		this.connection = connection;
 	}
 }

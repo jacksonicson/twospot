@@ -1,11 +1,11 @@
-package org.prot.controller.management;
+package org.prot.controller.management.appserver;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 import org.apache.log4j.Logger;
-import org.prot.controller.manager.appserver.IAppServerStats;
+import org.prot.appserver.management.IAppServerStats;
 import org.springframework.remoting.rmi.RmiProxyFactoryBean;
 
 public class ExceptionSafeProxy implements InvocationHandler

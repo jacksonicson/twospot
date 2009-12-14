@@ -1,19 +1,15 @@
 package org.prot.manager.watcher;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
-import org.prot.controller.management.jmx.IJmxDeployment;
-import org.prot.controller.management.jmx.IJmxResources;
+import org.prot.controller.management.services.IJmxResources;
 import org.prot.manager.data.ControllerInfo;
 import org.prot.manager.data.ControllerRegistry;
 import org.prot.manager.data.ManagementData;
+import org.prot.util.scheduler.Scheduler;
+import org.prot.util.scheduler.SchedulerTask;
 
 public class ControllerWatcher
 {
@@ -21,124 +17,80 @@ public class ControllerWatcher
 
 	private ControllerRegistry registry;
 
-	private Timer timer;
-
-	private Map<String, JmxControllerConnection> connections = new HashMap<String, JmxControllerConnection>();
+	private Map<String, JmxController> connections = new HashMap<String, JmxController>();
 
 	public void init()
 	{
-		timer = new Timer();
-		timer.scheduleAtFixedRate(new WatchTask(), 0, 2000);
+		Scheduler.addTask(new WatchTask());
 	}
 
-	private JmxControllerConnection getConnection(String address)
+	private JmxController getJmxController(String address)
 	{
-		JmxControllerConnection connection = connections.get(address);
+		JmxController connection = connections.get(address);
 		if (connection == null)
 		{
-			connection = new JmxControllerConnection(address);
+			connection = new JmxController(address);
 			connections.put(address, connection);
 		}
 
 		return connection;
 	}
 
-	private void removeConnection(String address)
+	private void removeJmxController(String address)
 	{
+		JmxController connection = getJmxController(address);
+		connection.release();
 		connections.remove(address);
 	}
 
-	private void collectManagementData()
+	private void update()
 	{
-		// Used to collect all deployments
-		Set<String> deployments = new HashSet<String>();
-
-		logger.debug("Loading management data");
-
-		// Iterate over all known controllers
-		Set<ControllerInfo> controllers = registry.getControllers();
-		for (ControllerInfo info : controllers)
+		// Iterate over all controllers
+		for (ControllerInfo info : registry.getControllers())
 		{
 			try
 			{
-				logger.debug("Loading management data from Controller: " + info.getServiceAddress());
+				logger.debug("Querying Controller: " + info.getServiceAddress());
 
-				// Get the connection to the controller
-				JmxControllerConnection connection = getConnection(info.getServiceAddress());
-
-				// Get redeployed apps
-				IJmxDeployment deploy = connection.getJmxDeployment();
-				Set<String> ctrlRedeployedApps = deploy.fetchDeployedApps();
-				for (String app : ctrlRedeployedApps)
-				{
-					if (deployments.contains(app) == false)
-					{
-						logger.debug("Redeployed app: " + app);
-						deployments.add(app);
-					}
-				}
-
-				// Aquire management data
-				IJmxResources resources = connection.getJmxResources();
+				// Get JMX connection
+				JmxController connection = getJmxController(info.getServiceAddress());
 				ManagementData management = info.getManagementData();
-				update(management, resources);
+
+				// Update resource data
+				IJmxResources resources = connection.getJmxResources();
+				updateResources(management, resources);
 
 			} catch (Exception e)
 			{
-				// Connection lost - remove the connection
-				logger.info("Removing controller from list: " + info.getServiceAddress());
-				logger.debug("Cause: " + e);
-				removeConnection(info.getServiceAddress());
+				removeJmxController(info.getServiceAddress());
 			}
 		}
-
-		// Inform all controllers about the deployments
-		if (deployments.isEmpty() == false)
-			executeRedeployedApps(deployments);
 	}
 
-	private void update(ManagementData management, IJmxResources resources)
+	private void updateResources(ManagementData management, IJmxResources resources)
 	{
-		management.setRunningApps(resources.getApps());
+		management.updateRunningApps(resources.getApps());
+		management.updatePerformanceData(resources.getAppsPerformance());
+
 		management.setRps(resources.requestsPerSecond());
 		management.setMemLoad(resources.freeMemory());
 		management.setAverageCpu(resources.loadAverage());
-		management.setPerformanceData(resources.getAppsPerformance());
-		
+
 		management.dump();
 	}
 
-	private void executeRedeployedApps(Set<String> redeployedApps)
-	{
-		// Iterate over all known controllers
-		Collection<ControllerInfo> controllers = registry.getControllers();
-		for (ControllerInfo info : controllers)
-		{
-			try
-			{
-				// Get the JMX-Connection to the controller
-				JmxControllerConnection connection = getConnection(info.getServiceAddress());
-
-				// Inform the controller about the deployment
-				logger.info("Informing Controller about the deployments");
-				connection.getJmxDeployment().notifyDeployment(redeployedApps);
-
-			} catch (Exception e)
-			{
-				// Connection lost - remove the connection
-				logger.info("Removing controller from list: " + info.getServiceAddress());
-				logger.debug("Cause", e);
-				removeConnection(info.getServiceAddress());
-			}
-		}
-	}
-
-	class WatchTask extends TimerTask
+	class WatchTask extends SchedulerTask
 	{
 		@Override
 		public void run()
 		{
-			collectManagementData();
+			update();
+		}
+
+		@Override
+		public long getInterval()
+		{
+			return 5000;
 		}
 	}
 

@@ -16,32 +16,18 @@ public class JettyAppManagement implements AppManagement
 	}
 
 	@Override
-	public long connectionCount()
-	{
-		// TODO:
-		return -1;
-	}
-
-	@Override
-	public long requestCount()
-	{
-		return countingRequestLog.getCounter();
-	}
-
-	@Override
 	public double requestsPerSecond()
 	{
 		long count = countingRequestLog.getCounter();
 		long time = System.currentTimeMillis() - lastReset;
-		reset();
+		lastReset = System.currentTimeMillis();
 		return count / (time / 1000d);
 	}
 
 	@Override
-	public void reset()
+	public long averageRequestTime()
 	{
-		countingRequestLog.reset();
-		lastReset = System.currentTimeMillis();
+		return 0;
 	}
 
 	public void setCountingRequestLog(CountingRequestLog countingRequestLog)

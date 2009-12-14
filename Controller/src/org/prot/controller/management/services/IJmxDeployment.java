@@ -1,10 +1,10 @@
-package org.prot.controller.management.jmx;
+package org.prot.controller.management.services;
 
 import java.util.Set;
 
 public interface IJmxDeployment
 {
-	public Set<String> fetchDeployedApps();
+	public String[] fetchDeployedApps();
 
 	public void notifyDeployment(Set<String> appIds);
 

@@ -11,7 +11,7 @@ import java.net.URLConnection;
 
 import org.apache.log4j.Logger;
 import org.prot.controller.config.Configuration;
-import org.prot.controller.management.AppServerWatcher;
+import org.prot.controller.management.appserver.AppServerWatcher;
 import org.prot.controller.manager.TokenChecker;
 
 public class DeployServiceImpl implements DeployService
@@ -68,7 +68,7 @@ public class DeployServiceImpl implements DeployService
 			return;
 
 		// Store the info in the management component
-		management.notifyDeployment(appId);
+		management.applicationDeployed(appId);
 	}
 
 	public void setManagement(AppServerWatcher management)

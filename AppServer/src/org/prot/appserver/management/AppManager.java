@@ -1,7 +1,5 @@
 package org.prot.appserver.management;
 
-import org.prot.controller.manager.appserver.IAppServerStats;
-
 public class AppManager implements IAppServerStats
 {
 	private AppManagement managedApp = new MockManagement();
@@ -14,6 +12,12 @@ public class AppManager implements IAppServerStats
 	@Override
 	public double getRequestsPerSecond()
 	{
-		return managedApp.requestsPerSecond(); 
+		return managedApp.requestsPerSecond();
+	}
+
+	@Override
+	public long averageRequestTime()
+	{
+		return managedApp.averageRequestTime();
 	}
 }

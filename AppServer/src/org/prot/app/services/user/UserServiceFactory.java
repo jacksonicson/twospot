@@ -42,7 +42,6 @@ public class UserServiceFactory
 				UserServiceImpl userService = new UserServiceImpl(
 						(org.prot.controller.services.user.UserService) object);
 
-				// Object o = userService;
 				return userService;
 			}
 
@@ -60,6 +59,8 @@ public class UserServiceFactory
 	{
 		if (userService == null)
 		{
+			logger.debug("Creating new UserService");
+
 			switch (Configuration.getInstance().getServerMode())
 			{
 			case DEVELOPMENT:

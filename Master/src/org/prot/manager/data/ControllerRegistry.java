@@ -16,7 +16,7 @@ public class ControllerRegistry
 
 	public synchronized void update(List<ControllerInfo> infos)
 	{
-		logger.debug("Updating controller registry");
+		logger.info("Updaging controller registry...");
 
 		// Contains alls addresses from the controllers
 		Set<String> availableAddresses = new HashSet<String>();
@@ -30,7 +30,6 @@ public class ControllerRegistry
 			if (controllers.containsKey(address))
 			{
 				logger.info("Updating Controller: " + address);
-
 				ControllerInfo toUpdate = controllers.get(address);
 				toUpdate.update(info);
 			} else
@@ -48,13 +47,14 @@ public class ControllerRegistry
 
 		// Delete all remaining controllers
 		for (String delete : allControllers)
+		{
+			logger.info("Deleting Controller: " + delete);
 			controllers.remove(delete);
+		}
 	}
 
-	public synchronized Set<ControllerInfo> getControllers()
+	public ControllerInfo[] getControllers()
 	{
-		Set<ControllerInfo> controllers = new HashSet<ControllerInfo>();
-		controllers.addAll(this.controllers.values());
-		return controllers;
+		return (ControllerInfo[]) controllers.values().toArray();
 	}
 }

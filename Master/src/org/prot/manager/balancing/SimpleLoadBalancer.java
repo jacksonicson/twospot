@@ -1,6 +1,5 @@
 package org.prot.manager.balancing;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -19,10 +18,10 @@ public class SimpleLoadBalancer implements LoadBalancer
 	public Set<ControllerInfo> selectController(String appId)
 	{
 		// Get infos about the available controllers
-		Collection<ControllerInfo> infos = registry.getControllers();
+		ControllerInfo[] infos = registry.getControllers();
 
 		// Check if there are controllers available
-		if (infos.isEmpty())
+		if (infos.length == 0)
 		{
 			logger.warn("Master does not have any controllers");
 			return new HashSet<ControllerInfo>();
@@ -33,24 +32,24 @@ public class SimpleLoadBalancer implements LoadBalancer
 		// Check if a Controller is already running this app
 		for (ControllerInfo info : infos)
 		{
-			Set<String> runningApps = info.getManagementData().getRunningApps();
+			String[] runningApps = info.getManagementData().getRunningApps();
 			if (runningApps == null)
 				continue;
 
-			if (runningApps.contains(appId))
+			for (String app : runningApps)
 			{
-				result.add(info);
-				return result;
+				if (app.equals(appId))
+				{
+					result.add(info);
+					return result;
+				}
 			}
 		}
 
 		// Randomly select a new Controller
-		int size = infos.size();
-		ControllerInfo[] info = new ControllerInfo[size];
-		info = infos.toArray(info);
-
+		int size = infos.length;
 		Random random = new Random();
-		result.add(info[Math.abs(random.nextInt()) % info.length]);
+		result.add(infos[Math.abs(random.nextInt()) % size]);
 
 		return result;
 	}

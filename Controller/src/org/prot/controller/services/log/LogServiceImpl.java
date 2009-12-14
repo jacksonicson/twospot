@@ -1,5 +1,6 @@
 package org.prot.controller.services.log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
@@ -16,23 +17,13 @@ public class LogServiceImpl implements LogService
 
 	private TokenChecker tokenChecker;
 
-	private JdoConnection connection;
-
-	LogServiceImpl()
-	{
-		this.connection = new JdoConnection();
-		this.connection.init();
-	}
-
 	@Override
 	public void log(String token, String appId, String message, int severity)
 	{
-		PersistenceManager pm = this.connection.getPersistenceManager();
+		PersistenceManager pm = JdoConnection.getPersistenceManager();
+		Transaction tx = pm.currentTransaction();
 		try
 		{
-			Transaction tx = pm.currentTransaction();
-
-			logger.debug("Writing log for: " + appId + " message: " + message + " severity: " + severity);
 			LogMessage log = new LogMessage();
 			log.setAppId(appId);
 			log.setMessage(message);
@@ -45,12 +36,14 @@ public class LogServiceImpl implements LogService
 				tx.commit();
 			} catch (Exception e)
 			{
-				tx.rollback();
 				logger.error("Could not write log message", e);
 			}
 		} finally
 		{
-			this.connection.releasePersistenceManager(pm);
+			if (tx.isActive())
+				tx.rollback();
+
+			pm.close();
 		}
 	}
 
@@ -58,28 +51,36 @@ public class LogServiceImpl implements LogService
 	public List<LogMessage> getMessages(String token, String appId, int severity)
 	{
 		if (tokenChecker.checkToken(token) == false)
-		{
-			logger.warn("Invalid token");
 			return null;
-		}
 
-		PersistenceManager pm = this.connection.getPersistenceManager();
+		PersistenceManager pm = JdoConnection.getPersistenceManager();
 		try
 		{
-			Query query = pm.newQuery(LogMessage.class);
-			String filter = "appId == '" + appId + "'";
+			StringBuilder queryBuilder = new StringBuilder();
+			queryBuilder.append("appId == '");
+			queryBuilder.append(appId);
+			queryBuilder.append("'");
+
 			if (severity != -1)
-				filter += " && severity == " + severity;
-			query.setFilter(filter);
-			query.setRange(0, 100);
+			{
+				queryBuilder.append(" && severity == ");
+				queryBuilder.append(severity);
+			}
+
+			Query query = pm.newQuery(LogMessage.class);
+			query.setFilter(queryBuilder.toString());
+			query.setRange(0, 30);
 
 			List<LogMessage> logs = (List<LogMessage>) query.execute();
-			logger.info("Found messages: " + logs.size());
-			return logs;
+			List<LogMessage> ret = new ArrayList<LogMessage>(logs.size());
+			for (LogMessage msg : logs)
+				ret.add(pm.detachCopy(msg));
+
+			return ret;
 
 		} finally
 		{
-			this.connection.releasePersistenceManager(pm);
+			pm.close();
 		}
 	}
 

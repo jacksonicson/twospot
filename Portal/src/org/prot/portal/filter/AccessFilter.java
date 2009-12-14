@@ -36,21 +36,19 @@ public class AccessFilter extends GenericFilterBean
 		String[] clean = { "docs", "index.htm", "login.htm", "start.htm", "loginHandler.htm",
 				"registerHandler.htm", "etc" };
 
+		// Check if user is logged in
+		String user = service.getCurrentUser();
+
 		for (String test : clean)
 		{
 			// Special case here - if URI is empty its the start page which is
 			// also clean
 			if (uri.indexOf(test) != -1 || uri.isEmpty())
 			{
-				logger.debug("Clean url: " + uri);
 				chain.doFilter(request, response);
 				return;
 			}
 		}
-
-		// Check if user is logged in
-		String user = service.getCurrentUser();
-		logger.debug("User in the access filter: " + user);
 
 		if (user == null)
 		{

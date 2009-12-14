@@ -1,6 +1,8 @@
-package org.prot.controller.manager.appserver;
+package org.prot.appserver.management;
 
 public interface IAppServerStats
 {
 	public double getRequestsPerSecond();
+
+	public long averageRequestTime();
 }

@@ -1,7 +1,6 @@
 package org.prot.manager;
 
 import org.apache.log4j.xml.DOMConfigurator;
-import org.prot.controller.management.jmx.IJmxDeployment;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

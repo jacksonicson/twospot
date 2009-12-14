@@ -18,7 +18,7 @@ public class DosPrevention
 	// Request counter
 	private static long requestIdCounter = 0;
 
-	// Map which manages all running requestss
+	// Manages all running requestss
 	private Map<Long, Long> requests = new ConcurrentHashMap<Long, Long>();
 
 	public DosPrevention()

@@ -4,9 +4,5 @@ public interface AppManagement
 {
 	public double requestsPerSecond();
 
-	public long connectionCount();
-
-	public long requestCount();
-
-	public void reset();
+	public long averageRequestTime();
 }

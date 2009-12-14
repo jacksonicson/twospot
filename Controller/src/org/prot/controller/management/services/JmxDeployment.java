@@ -1,10 +1,9 @@
-package org.prot.controller.management.jmx;
+package org.prot.controller.management.services;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.prot.controller.management.AppServerWatcher;
+import org.prot.controller.management.appserver.AppServerWatcher;
 import org.prot.controller.manager.AppManager;
 
 public class JmxDeployment implements IJmxDeployment
@@ -22,16 +21,9 @@ public class JmxDeployment implements IJmxDeployment
 	}
 
 	@Override
-	public Set<String> fetchDeployedApps()
+	public String[] fetchDeployedApps()
 	{
-		Set<String> apps = new HashSet<String>();
-		apps.addAll(management.fetchDeployedApps());
-		return apps;
-	}
-
-	public void setManagement(AppServerWatcher management)
-	{
-		this.management = management;
+		return management.fetchDeployedApps();
 	}
 
 	@Override
@@ -39,7 +31,7 @@ public class JmxDeployment implements IJmxDeployment
 	{
 		for (String appId : appIds)
 		{
-			logger.info("Kill AppId: " + appId + " due to the redeployment"); 
+			logger.info("Deploying: " + appId);
 			manager.killApp(appId);
 		}
 	}
@@ -47,5 +39,10 @@ public class JmxDeployment implements IJmxDeployment
 	public void setManager(AppManager manager)
 	{
 		this.manager = manager;
+	}
+
+	public void setManagement(AppServerWatcher management)
+	{
+		this.management = management;
 	}
 }

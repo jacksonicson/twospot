@@ -20,14 +20,10 @@ public final class UserServiceImpl implements UserService
 	{
 		HttpConnection httpConnection = HttpConnection.getCurrentConnection();
 		Cookie[] cookies = httpConnection.getRequest().getCookies();
-		httpConnection.getRequest().setCookies(cookies);
 
 		// If there is no cookie there is no active session
 		if (cookies == null)
-		{
-			logger.debug("Could not find any cookies");
 			return null;
-		}
 
 		// Search the cookie named USER_ID
 		for (Cookie cookie : cookies)
@@ -35,12 +31,10 @@ public final class UserServiceImpl implements UserService
 			if (cookie.getName().equals(Cookies.USER_ID))
 			{
 				String uid = cookie.getValue();
-				logger.debug("UID cookie found: " + uid);
 				return uid;
 			}
 		}
 
-		logger.debug("Could not find a UID cookie");
 		return null;
 	}
 
@@ -61,7 +55,6 @@ public final class UserServiceImpl implements UserService
 			public String run()
 			{
 				String user = proxy.getCurrentUser(uid);
-				logger.debug("Current user: " + user);
 				return user;
 			}
 		});
@@ -94,17 +87,13 @@ public final class UserServiceImpl implements UserService
 	{
 		final String uid = searchUID();
 		if (uid == null)
-		{
-			logger.debug("Cannot unregister user - UID is null");
 			return;
-		}
 
 		AccessController.doPrivileged(new PrivilegedAction<String>()
 		{
 			@Override
 			public String run()
 			{
-				logger.debug("Unregistering user UID: " + uid);
 				proxy.unregisterUser(uid);
 				return null;
 			}

@@ -1,9 +1,12 @@
 package org.prot.manager.data;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.prot.controller.management.PerformanceData;
+import org.prot.controller.management.appserver.PerformanceData;
 
 public class ManagementData
 {
@@ -22,10 +25,36 @@ public class ManagementData
 	private long networkTraffic;
 
 	// AppId's which are running under the Controller
-	private Set<String> runningApps;
+	private Set<String> runningApps = new HashSet<String>();
 
 	// Performance data of each AppServer
-	private Set<PerformanceData> performanceData;
+	private Map<String, PerformanceData> performanceData = new HashMap<String, PerformanceData>();
+
+	public void updateRunningApps(String[] update)
+	{
+		for (String app : update)
+		{
+			if (!runningApps.contains(app))
+				runningApps.add(app);
+		}
+	}
+
+	public void updatePerformanceData(PerformanceData[] update)
+	{
+		for (PerformanceData test : update)
+		{
+			String appId = test.getAppId();
+			if (performanceData.containsKey(appId))
+			{
+				PerformanceData toUpdate = performanceData.get(appId);
+				toUpdate.setAverageRequestTime(test.getAverageRequestTime());
+				toUpdate.setRequestsPerSecond(test.getRequestsPerSecond());
+			} else
+			{
+				performanceData.put(appId, test);
+			}
+		}
+	}
 
 	public double getRps()
 	{
@@ -37,14 +66,9 @@ public class ManagementData
 		this.rps = rps;
 	}
 
-	public Set<String> getRunningApps()
+	public String[] getRunningApps()
 	{
-		return runningApps;
-	}
-
-	public void setRunningApps(Set<String> runningApps)
-	{
-		this.runningApps = runningApps;
+		return (String[]) runningApps.toArray();
 	}
 
 	public long getMemLoad()
@@ -77,14 +101,9 @@ public class ManagementData
 		this.networkTraffic = networkTraffic;
 	}
 
-	public Set<PerformanceData> getPerformanceData()
+	public PerformanceData[] getPerformanceData()
 	{
-		return performanceData;
-	}
-
-	public void setPerformanceData(Set<PerformanceData> performanceData)
-	{
-		this.performanceData = performanceData;
+		return (PerformanceData[]) performanceData.values().toArray();
 	}
 
 	public void dump()
@@ -97,10 +116,10 @@ public class ManagementData
 		for (String app : runningApps)
 			logger.info("Running AppId: " + app);
 
-		for (PerformanceData per : performanceData)
+		for (PerformanceData per : performanceData.values())
 		{
 			logger.info("Details for: " + per.getAppId());
-			logger.info("Requests per second: " + per.getRps());
+			logger.info("Requests per second: " + per.getRequestsPerSecond());
 		}
 	}
 }

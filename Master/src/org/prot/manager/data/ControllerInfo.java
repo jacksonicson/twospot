@@ -16,15 +16,16 @@ public class ControllerInfo implements Serializable
 
 	private String serviceName;
 
-	private transient ManagementData managementData = new ManagementData();
+	private transient ManagementData managementData;
 
 	public ControllerInfo()
 	{
-		// empty constructor is required
+		managementData = new ManagementData();
 	}
 
 	public ControllerInfo(ControllerInfo info)
 	{
+		this();
 		update(info);
 	}
 

@@ -1,11 +1,8 @@
-package org.prot.controller.management.jmx;
-
-import java.util.HashSet;
-import java.util.Set;
+package org.prot.controller.management.services;
 
 import org.apache.log4j.Logger;
-import org.prot.controller.management.AppServerWatcher;
-import org.prot.controller.management.PerformanceData;
+import org.prot.controller.management.appserver.AppServerWatcher;
+import org.prot.controller.management.appserver.PerformanceData;
 
 import ort.prot.util.server.CountingRequestLog;
 import sun.management.ManagementFactory;
@@ -16,8 +13,6 @@ public class JmxResources implements IJmxResources
 {
 	private static final Logger logger = Logger.getLogger(JmxResources.class);
 
-	private static final String NAME = "Resources";
-
 	private AppServerWatcher appServerWatcher;
 
 	private CountingRequestLog countingRequestLog;
@@ -26,55 +21,52 @@ public class JmxResources implements IJmxResources
 
 	private long requestTime = System.currentTimeMillis();
 
-	public void init()
+	public JmxResources()
 	{
 		operatingSystem = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 	}
 
 	@Override
+	public String getName()
+	{
+		return "Resources";
+	}
+
+	@Override
 	public double loadAverage()
 	{
-		double load = operatingSystem.getSystemLoadAverage();
-		return load;
+		return operatingSystem.getSystemLoadAverage();
 	}
 
 	@Override
 	public long freeMemory()
 	{
-		long free = operatingSystem.getFreePhysicalMemorySize();
-		return free;
+		return operatingSystem.getFreePhysicalMemorySize();
 	}
 
 	@Override
 	public double requestsPerSecond()
 	{
 		long requests = countingRequestLog.getCounter();
+
 		long time = System.currentTimeMillis() - requestTime;
 		requestTime = System.currentTimeMillis();
-		return requests / (time / 1000d);
+
+		double rps = requests / (time / 1000d);
+
+		return rps;
 	}
 
 	@Override
-	public Set<String> getApps()
+	public String[] getApps()
 	{
-		Set<String> apps = new HashSet<String>();
-		apps.addAll(appServerWatcher.getRunningApps());
-
-		return apps;
+		return appServerWatcher.getRunningApps();
 	}
 
 	@Override
-	public Set<PerformanceData> getAppsPerformance()
+	public PerformanceData[] getAppsPerformance()
 	{
-		Set<PerformanceData> performance = new HashSet<PerformanceData>();
-		performance.addAll(appServerWatcher.getAppsPerformance());
-		return performance;
-	}
-
-	@Override
-	public String getName()
-	{
-		return NAME;
+		return appServerWatcher.getAppsPerformance();
 	}
 
 	public void setAppServerWatcher(AppServerWatcher appServerWatcher)
