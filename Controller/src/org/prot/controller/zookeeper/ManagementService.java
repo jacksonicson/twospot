@@ -3,8 +3,6 @@ package org.prot.controller.zookeeper;
 import org.apache.log4j.Logger;
 import org.prot.util.zookeeper.ZooHelper;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 public class ManagementService
 {
 	private static final Logger logger = Logger.getLogger(ManagementService.class);
@@ -14,19 +12,27 @@ public class ManagementService
 
 	private String networkInterface;
 
+	private WatchApp watchApp = new WatchApp();
+
 	public void init()
 	{
 		zooHelper.getQueue().insert(new Register(networkInterface));
+		zooHelper.getQueue().insert(watchApp);
 	}
 
 	public void registerApp(String appId)
 	{
-		throw new NotImplementedException();
+		zooHelper.getQueue().insertAndWait(new RegisterApp(appId));
 	}
 
-	public void deleteApp(String appId)
+	public void deployApp(String appId, String version)
 	{
-		throw new NotImplementedException();
+		zooHelper.getQueue().insert(new DeployApp(appId));
+	}
+
+	public void addDeploymentListener(DeploymentListener listener, String appId)
+	{
+		watchApp.addDeploymentListener(listener, appId);
 	}
 
 	public void setZooHelper(ZooHelper zooHelper)

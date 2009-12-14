@@ -11,8 +11,8 @@ import java.net.URLConnection;
 
 import org.apache.log4j.Logger;
 import org.prot.controller.config.Configuration;
-import org.prot.controller.management.appserver.AppServerWatcher;
 import org.prot.controller.manager.TokenChecker;
+import org.prot.controller.zookeeper.ManagementService;
 
 public class DeployServiceImpl implements DeployService
 {
@@ -20,7 +20,17 @@ public class DeployServiceImpl implements DeployService
 
 	private TokenChecker tokenChecker;
 
-	private AppServerWatcher management;
+	private ManagementService managementService;
+
+	@Override
+	public void register(String token, String appId, String version)
+	{
+		// Check the token
+		if (tokenChecker.checkToken(token) == false)
+			return;
+
+		managementService.registerApp(appId);
+	}
 
 	@Override
 	public String announceDeploy(String token, String appId, String version)
@@ -67,17 +77,17 @@ public class DeployServiceImpl implements DeployService
 		if (tokenChecker.checkToken(token) == false)
 			return;
 
-		// Kill all local AppServers
-		// Update ZooKeeper
-	}
-
-	public void setManagement(AppServerWatcher management)
-	{
-		this.management = management;
+		// Update ZooKeeper data
+		managementService.deployApp(appId, version);
 	}
 
 	public void setTokenChecker(TokenChecker tokenChecker)
 	{
 		this.tokenChecker = tokenChecker;
+	}
+
+	public void setManagementService(ManagementService managementService)
+	{
+		this.managementService = managementService;
 	}
 }

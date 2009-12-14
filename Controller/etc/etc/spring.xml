@@ -111,6 +111,7 @@
 		init-method="init">
 		<property name="registry" ref="AppRegistry" />
 		<property name="monitor" ref="AppMonitor" />
+		<property name="managementService" ref="ManagementService" />
 	</bean>
 
 	<bean id="TokenChecker" class="org.prot.controller.manager.TokenCheckerProxy">
@@ -146,6 +147,7 @@
 			<bean class="org.prot.controller.services.deploy.DeployServiceImpl">
 				<property name="tokenChecker" ref="TokenChecker" />
 				<property name="management" ref="AppServerWatcher" />
+				<property name="managementService" ref="ManagementService" />
 			</bean>
 		</property>
 
@@ -186,7 +188,8 @@
 	</bean>
 
 	<!-- Management -->
-	<bean id="AppServerWatcher" class="org.prot.controller.management.appserver.AppServerWatcher"
+	<bean id="AppServerWatcher"
+		class="org.prot.controller.management.appserver.AppServerWatcher"
 		init-method="init">
 		<property name="manager" ref="AppManager" />
 	</bean>

@@ -22,10 +22,14 @@ public class JobQueue implements Runnable
 		this.zooHelper = zooHelper;
 
 		insert(new CreateZNodeStructure());
+	}
 
-//		logger.info("Starting ZooKeeper JobQueue");
-//		Thread thread = new Thread(this);
-//		thread.start();
+	public boolean insertAndWait(Job job)
+	{
+		// Cannot retry blocking jobs
+		assert (job.isRetryable() == false);
+
+		return execute(job);
 	}
 
 	public void insert(Job job)
@@ -35,7 +39,7 @@ public class JobQueue implements Runnable
 			jobQueue.add(job);
 			jobQueue.notify();
 		}
-		
+
 		run();
 	}
 
@@ -47,35 +51,36 @@ public class JobQueue implements Runnable
 
 	public void run()
 	{
-//		while (true)
+		// while (true)
 		{
 
 			Job todo = null;
 
 			synchronized (jobQueue)
 			{
-//				while (jobQueue.isEmpty())
-//				{
-//					try
-//					{
-//						jobQueue.wait();
-//					} catch (InterruptedException e)
-//					{
-//						logger.error("ZooKeeper JobQueue failed", e);
-//						System.exit(1);
-//					}
-//				}
+				// while (jobQueue.isEmpty())
+				// {
+				// try
+				// {
+				// jobQueue.wait();
+				// } catch (InterruptedException e)
+				// {
+				// logger.error("ZooKeeper JobQueue failed", e);
+				// System.exit(1);
+				// }
+				// }
 
 				todo = jobQueue.get(0);
+				jobQueue.remove(0);
 			}
 
 			boolean deleteJob = execute(todo);
 
-			if (deleteJob)
+			if (!deleteJob)
 			{
 				synchronized (jobQueue)
 				{
-					jobQueue.remove(todo);
+					jobQueue.add(todo);
 				}
 			}
 		}
@@ -87,14 +92,14 @@ public class JobQueue implements Runnable
 
 		// Setup the job
 		job.init(zooHelper);
-		
+
 		// Retry this job?
 		boolean deleteJob = false;
 		try
 		{
 			// Execute the job
 			deleteJob = job.execute(zooHelper);
-			
+
 		} catch (KeeperException e)
 		{
 			// Handle ZooKeeper errors
@@ -114,9 +119,9 @@ public class JobQueue implements Runnable
 		{
 			e.printStackTrace();
 		}
-		
+
 		// Check if job is retryable
-		if(!deleteJob && !job.isRetryable())
+		if (!deleteJob && !job.isRetryable())
 			deleteJob = true;
 
 		return deleteJob;

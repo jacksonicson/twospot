@@ -3,20 +3,20 @@ package org.prot.controller.zookeeper;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
-import org.apache.zookeeper.data.Stat;
 import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
 
-public class DeployApp implements Job
+public class RegisterApp implements Job
 {
-	private static final Logger logger = Logger.getLogger(DeployApp.class);
+	private static final Logger logger = Logger.getLogger(RegisterApp.class);
 
 	private final String appId;
 
-	public DeployApp(String appId)
+	public RegisterApp(String appId)
 	{
 		this.appId = appId;
 	}
@@ -27,32 +27,14 @@ public class DeployApp implements Job
 		ZooKeeper zk = zooHelper.getZooKeeper();
 
 		String path = ZNodes.ZNODE_APPS + "/" + appId;
-		Stat stat = null;
 		try
 		{
-			stat = zk.exists(path, true);
-			if (stat == null)
-			{
-				logger.fatal("ZooKeeper has no such app: " + appId);
-				zooHelper.getQueue().insert(new RegisterApp(appId));
-				return false;
-			}
-
-			byte[] data = {};
-			zk.setData(path, data, stat.getVersion());
-			logger.debug("App deployed under: " + path);
-
-		} catch (KeeperException e)
+			String createdPath = zk.create(path, appId.getBytes(), zooHelper.getACL(), CreateMode.PERSISTENT);
+			logger.info("AppId registered within ZooKeeper: " + createdPath);
+		} catch (KeeperException exists)
 		{
-			// Retry
+			logger.error("Could not register within ZooKeeper. Registration path already exists: " + path);
 			return false;
-		} catch (InterruptedException e)
-		{
-			// Retry
-			return false;
-		} catch (IllegalArgumentException e)
-		{
-			logger.error("Could not update deployment data in ZooKeeper for: " + appId);
 		}
 
 		return true;
@@ -67,6 +49,6 @@ public class DeployApp implements Job
 	@Override
 	public boolean isRetryable()
 	{
-		return true;
+		return false;
 	}
 }

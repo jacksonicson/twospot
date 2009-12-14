@@ -3,10 +3,12 @@ package org.prot.controller.manager;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.prot.controller.zookeeper.DeploymentListener;
+import org.prot.controller.zookeeper.ManagementService;
 import org.prot.util.scheduler.Scheduler;
 import org.prot.util.scheduler.SchedulerTask;
 
-public class AppManager
+public class AppManager implements DeploymentListener
 {
 	private static final Logger logger = Logger.getLogger(AppManager.class);
 
@@ -15,6 +17,8 @@ public class AppManager
 	private AppRegistry registry;
 
 	private AppMonitor monitor;
+
+	private ManagementService managementService;
 
 	public void init()
 	{
@@ -150,6 +154,9 @@ public class AppManager
 		// Enqueue the process start
 		monitor.startProcess(appInfo);
 
+		// Watch for application updates
+		managementService.addDeploymentListener(this, appInfo.getAppId());
+
 		// Wait until the AppServer is online
 		return monitor.waitForApplication(appInfo);
 	}
@@ -173,9 +180,16 @@ public class AppManager
 		@Override
 		public void run()
 		{
-			logger.debug("Controller does maintenance work");
+			logger.debug("Maintenance");
 			doMaintenance();
 		}
+	}
+
+	@Override
+	public void appDeployed(String appId)
+	{
+		logger.info("App deployed - killing all AppServer instances: " + appId);
+		killApp(appId);
 	}
 
 	public void setRegistry(AppRegistry registry)
@@ -186,5 +200,10 @@ public class AppManager
 	public void setMonitor(AppMonitor monitor)
 	{
 		this.monitor = monitor;
+	}
+
+	public void setManagementService(ManagementService managementService)
+	{
+		this.managementService = managementService;
 	}
 }
