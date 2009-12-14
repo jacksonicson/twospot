@@ -6,9 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
 import javax.servlet.ServletException;
@@ -75,64 +73,74 @@ public class GogoServlet extends HttpServlet
 		// DEMO: Use the DataStore for writing
 		// Create a new PersistenceManagerFactory (Don't search for the
 		// jdoDefault.properties it's builtin)
-		PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("etc/jdoDefault.properties");
-
 		// Creaet a new PersistenceManager
-		PersistenceManager manager = pmf.getPersistenceManager();
-
-		// Get the current transaction
-		Transaction tx = manager.currentTransaction();
+		PersistenceManager manager = DataConnection.getManager();
 
 		try
 		{
-			// Start a new transaction
-			tx.begin();
+			// Get the current transaction
+			Transaction tx = manager.currentTransaction();
 
-			// Create a new object of BlogEntry
-			BlogEntry entry = new BlogEntry();
+			try
+			{
+				// Start a new transaction
+				tx.begin();
 
-			// Fill the object with some data
-			entry.setUsername(userService.getCurrentUser());
-			entry.setMessage("" + System.currentTimeMillis());
+				// Create a new object of BlogEntry
+				BlogEntry entry = new BlogEntry();
 
-			// Save the object into the datastore
-			manager.makePersistent(entry);
+				// Fill the object with some data
+				entry.setUsername(userService.getCurrentUser());
+				entry.setMessage("" + System.currentTimeMillis());
 
-			// Commit the transaction
-			tx.commit();
-		} catch (Exception e)
+				// Save the object into the datastore
+				manager.makePersistent(entry);
+
+				// Commit the transaction
+				tx.commit();
+			} catch (Exception e)
+			{
+				logService.error(e.toString());
+
+				// Rollback the transaction
+				tx.rollback();
+			} finally
+			{
+				// Check if transaction is still active, if yes rollback
+				if (tx.isActive())
+					tx.rollback();
+			}
+
+			// DEMO: Use the DataStore for reading
+			// Create a new query
+			Query query = manager.newQuery();
+
+			// Tell the query the class
+			query.setClass(BlogEntry.class);
+
+			// Don't fetch more than 100 objects
+			query.setRange(0, 100);
+
+			query.setFilter("key != null");
+
+			// Execute the query
+			List<BlogEntry> result = (List<BlogEntry>) query.execute();
+
+			// Print everything to the response
+			PrintWriter out = response.getWriter();
+			response.setContentType("text/html");
+			out.print("<h1>GoGo-Datastore:</h1>");
+
+			for (BlogEntry entry : result)
+			{
+				out.print("<p>");
+				out.print("User: " + entry.getUsername() + " Message: " + entry.getMessage() + "\n\n");
+				out.print("</p>");
+			}
+		} finally
 		{
-			logService.error(e.toString());
-
-			// Rollback the transaction
-			tx.rollback();
-		}
-
-		// DEMO: Use the DataStore for reading
-		// Create a new query
-		Query query = manager.newQuery();
-
-		// Tell the query the class
-		query.setClass(BlogEntry.class);
-
-		// Don't fetch more than 100 objects
-		query.setRange(0, 100);
-
-		query.setFilter("key != null");
-
-		// Execute the query
-		List<BlogEntry> result = (List<BlogEntry>) query.execute();
-
-		// Print everything to the response
-		PrintWriter out = response.getWriter();
-		response.setContentType("text/html");
-		out.print("<h1>GoGo-Datastore:</h1>");
-
-		for (BlogEntry entry : result)
-		{
-			out.print("<p>");
-			out.print("User: " + entry.getUsername() + " Message: " + entry.getMessage() + "\n\n");
-			out.print("</p>");
+			// Finally close the persistence manager
+			manager.close();
 		}
 	}
 }
