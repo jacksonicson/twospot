@@ -55,6 +55,6 @@ public class ControllerRegistry
 
 	public ControllerInfo[] getControllers()
 	{
-		return (ControllerInfo[]) controllers.values().toArray();
+		return controllers.values().toArray(new ControllerInfo[0]);
 	}
 }

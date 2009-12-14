@@ -35,6 +35,7 @@ public class WatchApp implements Job, Watcher
 
 			watching.add(appId);
 
+			logger.info("Watching add: " + appId);
 			zooHelper.getQueue().insert(this);
 		}
 	}
@@ -62,6 +63,8 @@ public class WatchApp implements Job, Watcher
 			Stat stat = new Stat();
 			byte[] data = zk.getData(path, false, stat);
 			String appId = new String(data);
+
+			logger.debug("Watch triggered: " + appId);
 
 			if (watching.contains(appId))
 				appDeployed(appId);
@@ -92,12 +95,16 @@ public class WatchApp implements Job, Watcher
 			List<String> childs = zk.getChildren(path, false);
 			for (String child : childs)
 			{
+				logger.debug("Child: " + child);
+
 				Stat stat = new Stat();
-				byte[] data = zk.getData(child, false, stat);
+				byte[] data = zk.getData(path + "/" + child, false, stat);
 
 				String childAppId = new String(data);
-				if (watching.contains(childAppId))
+				logger.debug("AppId: " + childAppId);
+				if (watching.contains(child))
 				{
+					logger.debug("Watching ZooKeeper node: " + child);
 					zk.exists(path + "/" + child, this);
 				}
 			}

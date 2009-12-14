@@ -48,6 +48,7 @@ public class JmxResources implements IJmxResources
 	public double requestsPerSecond()
 	{
 		long requests = countingRequestLog.getCounter();
+		countingRequestLog.reset();
 
 		long time = System.currentTimeMillis() - requestTime;
 		requestTime = System.currentTimeMillis();

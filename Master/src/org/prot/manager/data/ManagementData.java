@@ -32,6 +32,22 @@ public class ManagementData
 
 	public void updateRunningApps(String[] update)
 	{
+		// Remove old entries
+		for (String running : runningApps.toArray(new String[0]))
+		{
+			boolean found = false;
+			for (String test : update)
+				if (test.equals(running))
+				{
+					found = true;
+					break;
+				}
+
+			if (found == false)
+				runningApps.remove(running);
+		}
+
+		// Add new entries
 		for (String app : update)
 		{
 			if (!runningApps.contains(app))
@@ -68,7 +84,7 @@ public class ManagementData
 
 	public String[] getRunningApps()
 	{
-		return (String[]) runningApps.toArray();
+		return (String[]) runningApps.toArray(new String[0]);
 	}
 
 	public long getMemLoad()
@@ -103,7 +119,7 @@ public class ManagementData
 
 	public PerformanceData[] getPerformanceData()
 	{
-		return (PerformanceData[]) performanceData.values().toArray();
+		return (PerformanceData[]) performanceData.values().toArray(new PerformanceData[0]);
 	}
 
 	public void dump()
@@ -118,8 +134,9 @@ public class ManagementData
 
 		for (PerformanceData per : performanceData.values())
 		{
-			logger.info("Details for: " + per.getAppId());
-			logger.info("Requests per second: " + per.getRequestsPerSecond());
+			logger.info("   Details for: " + per.getAppId());
+			logger.info("   Requests per second: " + per.getRequestsPerSecond());
+			logger.info("   Requests per second: " + per.getAverageRequestTime());
 		}
 	}
 }

@@ -33,13 +33,12 @@ public class DeployApp implements Job
 			stat = zk.exists(path, true);
 			if (stat == null)
 			{
-				logger.fatal("ZooKeeper has no such app: " + appId);
+				logger.fatal("ZooKeeper has no such app - creating node first: " + appId);
 				zooHelper.getQueue().insert(new RegisterApp(appId));
 				return false;
 			}
 
-			byte[] data = {};
-			zk.setData(path, data, stat.getVersion());
+			zk.setData(path, appId.getBytes(), stat.getVersion());
 			logger.debug("App deployed under: " + path);
 
 		} catch (KeeperException e)

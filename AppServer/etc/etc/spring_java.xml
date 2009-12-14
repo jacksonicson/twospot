@@ -10,7 +10,7 @@
 		<property name="port" value="9090" />
 
 		<property name="acceptors" value="1" />
-		<property name="statsOn" value="false" />
+		<property name="statsOn" value="true" />
 
 
 		<property name="maxIdleTime" value="5000" />
@@ -51,6 +51,7 @@
 
 	<bean id="JettyAppManagement" class="org.prot.appserver.runtime.java.JettyAppManagement">
 		<property name="countingRequestLog" ref="CountingRequestLog" />
+		<property name="connector" ref="Connector" />
 	</bean>
 
 	<!-- Request handling -->

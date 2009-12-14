@@ -164,9 +164,9 @@ public class AppManager implements DeploymentListener
 	private void doMaintenance()
 	{
 		// Find and kill all idle AppServers
-		Set<AppInfo> killed = registry.findIdleApps();
-		if (killed != null)
-			monitor.killProcess(killed);
+		Set<AppInfo> dead = registry.findDeadApps();
+		if (dead != null)
+			monitor.killProcess(dead);
 	}
 
 	class MaintenanceTask extends SchedulerTask

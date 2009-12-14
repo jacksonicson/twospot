@@ -146,7 +146,6 @@
 		<property name="service">
 			<bean class="org.prot.controller.services.deploy.DeployServiceImpl">
 				<property name="tokenChecker" ref="TokenChecker" />
-				<property name="management" ref="AppServerWatcher" />
 				<property name="managementService" ref="ManagementService" />
 			</bean>
 		</property>
@@ -220,15 +219,8 @@
 
 		<property name="beans">
 			<map>
-				<entry key="bean:name=deployment">
-					<bean class="org.prot.controller.management.services.JmxDeployment">
-						<property name="management" ref="AppServerWatcher" />
-						<property name="manager" ref="AppManager" />
-					</bean>
-				</entry>
 				<entry key="bean:name=resources">
-					<bean class="org.prot.controller.management.services.JmxResources"
-						init-method="init">
+					<bean class="org.prot.controller.management.services.JmxResources">
 						<property name="appServerWatcher" ref="AppServerWatcher" />
 						<property name="countingRequestLog" ref="CountingRequestLog" />
 					</bean>

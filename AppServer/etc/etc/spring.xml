@@ -44,7 +44,7 @@
 		<property name="service" ref="AppManager" />
 
 		<property name="serviceInterface"
-			value="org.prot.controller.manager.appserver.IAppServerStats" />
+			value="org.prot.appserver.management.IAppServerStats" />
 
 		<!-- TODO -->
 		<property name="registryPort" value="2299" />

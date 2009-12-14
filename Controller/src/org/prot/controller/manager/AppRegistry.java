@@ -129,7 +129,7 @@ class AppRegistry
 		}
 	}
 
-	Set<AppInfo> findIdleApps()
+	Set<AppInfo> findDeadApps()
 	{
 		Set<AppInfo> idleApps = null;
 

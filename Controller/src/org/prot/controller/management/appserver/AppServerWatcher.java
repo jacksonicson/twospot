@@ -26,7 +26,7 @@ public class AppServerWatcher
 
 	public String[] getRunningApps()
 	{
-		return (String[]) manager.getAppIds().toArray();
+		return (String[]) manager.getAppIds().toArray(new String[0]);
 	}
 
 	private PerformanceData getPerformanceData(String appId)
@@ -43,8 +43,15 @@ public class AppServerWatcher
 
 	public PerformanceData[] getAppsPerformance()
 	{
-		PerformanceData[] performanceData = (PerformanceData[]) (this.performanceData.values().toArray());
+		PerformanceData[] performanceData = (PerformanceData[]) (this.performanceData.values()
+				.toArray(new PerformanceData[0]));
 		return performanceData;
+	}
+
+	public void remove(String appId)
+	{
+		performanceData.remove(appId);
+		connections.remove(appId);
 	}
 
 	private void updateManagementData()
@@ -52,8 +59,20 @@ public class AppServerWatcher
 		for (String appId : manager.getAppIds())
 		{
 			IAppServerStats remObject = getRemoteObject(appId);
+			if (remObject == null)
+				continue;
+
 			PerformanceData perfData = getPerformanceData(appId);
-			updateApp(perfData, remObject);
+			if (perfData == null)
+				continue;
+
+			try
+			{
+				updateApp(perfData, remObject);
+			} catch (NullPointerException e)
+			{
+				remove(appId);
+			}
 		}
 	}
 
