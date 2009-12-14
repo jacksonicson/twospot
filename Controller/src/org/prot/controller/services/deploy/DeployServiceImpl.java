@@ -67,8 +67,8 @@ public class DeployServiceImpl implements DeployService
 		if (tokenChecker.checkToken(token) == false)
 			return;
 
-		// Store the info in the management component
-		management.applicationDeployed(appId);
+		// Kill all local AppServers
+		// Update ZooKeeper
 	}
 
 	public void setManagement(AppServerWatcher management)

@@ -1,9 +1,7 @@
 package org.prot.controller.management.appserver;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.prot.appserver.management.IAppServerStats;
@@ -21,23 +19,9 @@ public class AppServerWatcher
 
 	private Map<String, IAppServerStats> connections = new HashMap<String, IAppServerStats>();
 
-	private Set<String> deployedApplications = new HashSet<String>();
-
 	public void init()
 	{
 		Scheduler.addTask(new Watcher());
-	}
-
-	public void applicationDeployed(String appId)
-	{
-		deployedApplications.add(appId);
-	}
-
-	public String[] fetchDeployedApps()
-	{
-		String[] copy = (String[]) deployedApplications.toArray();
-		deployedApplications.clear();
-		return copy;
 	}
 
 	public String[] getRunningApps()
