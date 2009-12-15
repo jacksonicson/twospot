@@ -51,6 +51,9 @@ public class HBaseUtils
 	// Use -1 for infinite field size
 	private static long maxFieldSize = -1;
 
+	// Max rows to fetch with a scanner
+	private static long MAX_ROWS = 100;
+
 	public static void setNamespace(String namespace)
 	{
 		HBaseUtils.namespace = namespace;
@@ -162,7 +165,9 @@ public class HBaseUtils
 			}
 			ResultScanner scanner = table.getScanner(scan);
 			Iterator<Result> it = scanner.iterator();
-			while (it.hasNext())
+
+			int counter = 0;
+			while (it.hasNext() && counter++ < MAX_ROWS)
 			{
 				final Result result = it.next();
 				results.add(om.findObjectUsingAID(clr.classForName(acmd.getFullClassName()),
