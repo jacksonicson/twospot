@@ -25,6 +25,7 @@ public class LogServiceImpl implements LogService
 		try
 		{
 			LogMessage log = new LogMessage();
+			log.setKey(LogMessage.buildKey(appId, ""));
 			log.setAppId(appId);
 			log.setMessage(message);
 			log.setSeverity(severity);
@@ -69,14 +70,14 @@ public class LogServiceImpl implements LogService
 
 			Query query = pm.newQuery(LogMessage.class);
 			query.setFilter(queryBuilder.toString());
-			query.setRange(0, 30);
+			// WARN: Use a range here - but hte HbasePlugin doesn't support
+			// this!
 
-			List<LogMessage> logs = (List<LogMessage>) query.execute();
-			List<LogMessage> ret = new ArrayList<LogMessage>(logs.size());
-			for (LogMessage msg : logs)
-				ret.add(pm.detachCopy(msg));
+			Object result = query.execute();
+			if (result == null)
+				return new ArrayList<LogMessage>();
 
-			return ret;
+			return (List<LogMessage>) result;
 
 		} finally
 		{

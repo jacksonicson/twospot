@@ -30,12 +30,16 @@ public class UserServiceImpl implements UserService
 
 		try
 		{
-			UserSession session = (UserSession) persistenceManager.getObjectById(UserSession.class, uid);
+			Query query = persistenceManager.newQuery(UserSession.class);
+			query.setFilter("sessionId == '" + uid + "'");
+			query.setUnique(true);
+
+			UserSession session = (UserSession) query.execute();
 			persistenceManager.flush();
+
 			if (session != null)
 			{
 				String user = session.getUsername();
-				session = null;
 				return user;
 			}
 
