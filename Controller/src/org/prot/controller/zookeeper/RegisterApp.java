@@ -27,9 +27,11 @@ public class RegisterApp implements Job
 		ZooKeeper zk = zooHelper.getZooKeeper();
 
 		String path = ZNodes.ZNODE_APPS + "/" + appId;
+		byte[] content = path.getBytes();
+
 		try
 		{
-			String createdPath = zk.create(path, appId.getBytes(), zooHelper.getACL(), CreateMode.PERSISTENT);
+			String createdPath = zk.create(path, content, zooHelper.getACL(), CreateMode.PERSISTENT);
 			logger.info("AppId registered within ZooKeeper: " + createdPath);
 		} catch (KeeperException exists)
 		{

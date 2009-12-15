@@ -18,10 +18,10 @@ public class RegisterAppController extends SimpleFormController
 	protected void doSubmitAction(Object command) throws Exception
 	{
 		RegisterAppCommand regAppCommand = (RegisterAppCommand) command;
-
 		PlatformService platformService = PlatformServiceFactory.getPlatformService();
-		platformService.register(regAppCommand.getAppId(), null);
-		appService.registerApplication(regAppCommand.getAppId());
+
+		if (platformService.register(regAppCommand.getAppId(), null))
+			appService.registerApplication(regAppCommand.getAppId());
 	}
 
 	public void setAppService(AppService appService)

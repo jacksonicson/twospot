@@ -23,13 +23,13 @@ public class DeployServiceImpl implements DeployService
 	private ManagementService managementService;
 
 	@Override
-	public void register(String token, String appId, String version)
+	public boolean register(String token, String appId, String version)
 	{
 		// Check the token
 		if (tokenChecker.checkToken(token) == false)
-			return;
+			return false;
 
-		managementService.registerApp(appId);
+		return managementService.registerApp(appId);
 	}
 
 	@Override

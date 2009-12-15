@@ -17,13 +17,13 @@ import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
 import org.prot.util.zookeeper.data.Controller;
 
-public class Register implements Job
+public class RegisterController implements Job
 {
-	private static final Logger logger = Logger.getLogger(Register.class);
+	private static final Logger logger = Logger.getLogger(RegisterController.class);
 
 	private String networkInterface;
 
-	public Register(String networkInterface)
+	public RegisterController(String networkInterface)
 	{
 		this.networkInterface = networkInterface;
 	}

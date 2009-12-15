@@ -18,7 +18,7 @@ public class MockDeployService implements DeployService
 	}
 
 	@Override
-	public void register(String arg0, String arg1, String arg2)
+	public boolean register(String arg0, String arg1, String arg2)
 	{
 		throw new PrivilegedServiceException();
 	}

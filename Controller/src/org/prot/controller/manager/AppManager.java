@@ -24,6 +24,9 @@ public class AppManager implements DeploymentListener
 	{
 		// Schedule the maintaince task
 		Scheduler.addTask(new MaintenanceTask());
+
+		// Register listeners
+		managementService.addDeploymentListener(this);
 	}
 
 	private enum Todo
@@ -155,7 +158,7 @@ public class AppManager implements DeploymentListener
 		monitor.startProcess(appInfo);
 
 		// Watch for application updates
-		managementService.addDeploymentListener(this, appInfo.getAppId());
+		managementService.watchApp(appInfo.getAppId());
 
 		// Wait until the AppServer is online
 		return monitor.waitForApplication(appInfo);
@@ -165,8 +168,14 @@ public class AppManager implements DeploymentListener
 	{
 		// Find and kill all idle AppServers
 		Set<AppInfo> dead = registry.findDeadApps();
+
 		if (dead != null)
+		{
+			for (AppInfo info : dead)
+				managementService.removeWatch(info.getAppId());
+
 			monitor.killProcess(dead);
+		}
 	}
 
 	class MaintenanceTask extends SchedulerTask

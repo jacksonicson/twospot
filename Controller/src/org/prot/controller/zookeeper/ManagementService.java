@@ -16,13 +16,13 @@ public class ManagementService
 
 	public void init()
 	{
-		zooHelper.getQueue().insert(new Register(networkInterface));
+		zooHelper.getQueue().insert(new RegisterController(networkInterface));
 		zooHelper.getQueue().insert(watchApp);
 	}
 
-	public void registerApp(String appId)
+	public boolean registerApp(String appId)
 	{
-		zooHelper.getQueue().insertAndWait(new RegisterApp(appId));
+		return zooHelper.getQueue().insertAndWait(new RegisterApp(appId));
 	}
 
 	public void deployApp(String appId, String version)
@@ -30,9 +30,19 @@ public class ManagementService
 		zooHelper.getQueue().insert(new DeployApp(appId));
 	}
 
-	public void addDeploymentListener(DeploymentListener listener, String appId)
+	public void addDeploymentListener(DeploymentListener listener)
 	{
-		watchApp.addDeploymentListener(listener, appId);
+		watchApp.addDeploymentListener(listener);
+	}
+
+	public void watchApp(String appId)
+	{
+		watchApp.watchApp(appId);
+	}
+
+	public void removeWatch(String appId)
+	{
+		watchApp.removeWatch(appId);
 	}
 
 	public void setZooHelper(ZooHelper zooHelper)

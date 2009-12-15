@@ -31,12 +31,12 @@ public final class PlatformService
 		deployService.appDeployed(token, appId, version);
 	}
 
-	public void register(String appId, String version)
+	public boolean register(String appId, String version)
 	{
 		final String token = Configuration.getInstance().getAuthenticationToken();
 		if (token == null)
 			throw new PrivilegedServiceException();
 
-		deployService.register(token, appId, version);
+		return deployService.register(token, appId, version);
 	}
 }

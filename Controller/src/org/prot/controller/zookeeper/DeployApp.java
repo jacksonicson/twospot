@@ -26,32 +26,40 @@ public class DeployApp implements Job
 	{
 		ZooKeeper zk = zooHelper.getZooKeeper();
 
-		String path = ZNodes.ZNODE_APPS + "/" + appId;
-		Stat stat = null;
 		try
 		{
-			stat = zk.exists(path, true);
+			String path = ZNodes.ZNODE_APPS + "/" + appId;
+
+			// Check if the path exists, don't watch the node
+			Stat stat = zk.exists(path, false);
 			if (stat == null)
 			{
-				logger.fatal("ZooKeeper has no such app - creating node first: " + appId);
-				zooHelper.getQueue().insert(new RegisterApp(appId));
+				logger.error("ZooKeeper has no such app - creating node first: " + appId);
+
+				// Enqueue a register task before this task
+				zooHelper.getQueue().insertBefore(this, new RegisterApp(appId));
+
+				// Reschedule this task
 				return false;
 			}
 
+			// Update node data
 			zk.setData(path, appId.getBytes(), stat.getVersion());
-			logger.debug("App deployed under: " + path);
+
+			logger.debug("ZooKeeper updated: " + path);
 
 		} catch (KeeperException e)
 		{
-			// Retry
+			logger.error(e);
 			return false;
 		} catch (InterruptedException e)
 		{
-			// Retry
+			logger.error(e);
 			return false;
 		} catch (IllegalArgumentException e)
 		{
-			logger.error("Could not update deployment data in ZooKeeper for: " + appId);
+			logger.fatal(e);
+			System.exit(1);
 		}
 
 		return true;

@@ -26,18 +26,27 @@ public class WatchApp implements Job, Watcher
 
 	private List<DeploymentListener> listeners = new ArrayList<DeploymentListener>();
 
-	public void addDeploymentListener(DeploymentListener listener, String appId)
+	public void addDeploymentListener(DeploymentListener listener)
 	{
 		synchronized (listeners)
 		{
-			if (listeners.contains(listener) == false)
-				listeners.add(listener);
-
-			watching.add(appId);
-
-			logger.info("Watching add: " + appId);
-			zooHelper.getQueue().insert(this);
+			listeners.add(listener);
 		}
+	}
+
+	public void watchApp(String appId)
+	{
+		logger.debug("Watching AppId: " + appId);
+
+		watching.add(appId);
+		zooHelper.getQueue().insert(this);
+	}
+
+	public void removeWatch(String appId)
+	{
+		logger.debug("Don't watch AppId: " + appId);
+
+		watching.remove(appId);
 	}
 
 	private void appDeployed(String appId)
@@ -58,16 +67,22 @@ public class WatchApp implements Job, Watcher
 		try
 		{
 			ZooKeeper zk = zooHelper.getZooKeeper();
+
+			// Geht the path to the node which data has changed
 			String path = event.getPath();
 
+			// Extract the node data
 			Stat stat = new Stat();
 			byte[] data = zk.getData(path, false, stat);
 			String appId = new String(data);
 
-			logger.debug("Watch triggered: " + appId);
-
+			// The ZooKeeper API cannot remove watches. We have to check here if
+			// the app is still watched
 			if (watching.contains(appId))
+			{
+				logger.debug("Deployed AppId: " + appId);
 				appDeployed(appId);
+			}
 
 		} catch (InterruptedException e)
 		{
@@ -78,10 +93,11 @@ public class WatchApp implements Job, Watcher
 		} catch (KeeperException e)
 		{
 			logger.error(e);
+		} finally
+		{
+			// Reschedule this task
+			zooHelper.getQueue().insert(this);
 		}
-
-		// Reschedule this task
-		zooHelper.getQueue().insert(this);
 	}
 
 	@Override
@@ -89,33 +105,46 @@ public class WatchApp implements Job, Watcher
 	{
 		ZooKeeper zk = zooHelper.getZooKeeper();
 
-		String path = ZNodes.ZNODE_APPS;
 		try
 		{
-			List<String> childs = zk.getChildren(path, false);
-			for (String child : childs)
+			String path = ZNodes.ZNODE_APPS;
+
+			// Iterate over all watched apps
+			for (String watch : this.watching)
 			{
-				logger.debug("Child: " + child);
-
-				Stat stat = new Stat();
-				byte[] data = zk.getData(path + "/" + child, false, stat);
-
-				String childAppId = new String(data);
-				logger.debug("AppId: " + childAppId);
-				if (watching.contains(child))
+				// Assumend path to the node
+				final String watchPath = path + "/" + watch; 
+				
+				// Check if a node for the AppId exists
+				Stat stat = zk.exists(watchPath, false);
+				if (stat == null)
 				{
-					logger.debug("Watching ZooKeeper node: " + child);
-					zk.exists(path + "/" + child, this);
+					logger.error("Cannot watch AppId: " + watch);
+					continue;
+				}
+
+				// Get the node data
+				stat = new Stat();
+				byte[] data = zk.getData(watchPath, false, stat);
+				String childAppId = new String(data);
+
+				// Check if we are watching this node
+				if (watching.contains(childAppId))
+				{
+					logger.debug("Watching ZooKeeper node: " + watchPath);
+					
+					// Watch the node
+					zk.exists(watchPath, this);
 				}
 			}
 
 		} catch (KeeperException e)
 		{
-			// Retry
+			logger.error(e);
 			return false;
 		} catch (InterruptedException e)
 		{
-			// Retry
+			logger.error(e);
 			return false;
 		}
 
