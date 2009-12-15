@@ -1,11 +1,14 @@
 package org.prot.frontend.cache.timeout;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
+import org.prot.frontend.ExceptionSafeFrontendProxy;
 import org.prot.frontend.cache.AppCache;
 import org.prot.manager.data.ControllerInfo;
+import org.prot.manager.services.FrontendService;
 import org.prot.util.scheduler.Scheduler;
 import org.prot.util.scheduler.SchedulerTask;
 
@@ -15,21 +18,42 @@ public class TimeoutAppCache implements AppCache
 
 	private static final int CONTROLLER_LIFETIME = 5 * 1000;
 
-	private Map<String, CacheEntry> cache = new HashMap<String, CacheEntry>();
+	private Map<String, CacheEntry> cache = new ConcurrentHashMap<String, CacheEntry>();
+
+	private FrontendService frontendService;
 
 	public TimeoutAppCache()
 	{
 		Scheduler.addTask(new Updater());
+
+		frontendService = (FrontendService) ExceptionSafeFrontendProxy.newInstance(getClass()
+				.getClassLoader(), FrontendService.class);
 	}
 
-	@Override
-	public void cacheController(String appId, ControllerInfo controller)
+	private void updateControllers(String appId)
 	{
-		CacheEntry entry = new CacheEntry();
-		entry.addController(controller);
-		entry.setAppId(appId);
+		CacheEntry entry = cache.get(appId);
+		if (entry == null)
+		{
+			synchronized (cache)
+			{
+				if (!cache.containsKey(appId))
+				{
+					entry = new CacheEntry(appId);
+					cache.put(appId, entry);
+				}
+			}
+		}
 
-		cache.put(appId, entry);
+		synchronized (entry)
+		{
+			if (entry.hasControllers())
+				return;
+
+			Set<ControllerInfo> infoset = frontendService.selectController(appId);
+			if (infoset != null)
+				entry.updateControllers(infoset);
+		}
 	}
 
 	@Override
@@ -37,19 +61,25 @@ public class TimeoutAppCache implements AppCache
 	{
 		CacheEntry entry = cache.get(appId);
 		if (entry == null)
-			return null;
+		{
+			updateControllers(appId);
+			entry = new CacheEntry(appId);
+		}
 
-		return entry.pickController();
+		ControllerInfo info = entry.pickController();
+		if (info == null)
+		{
+			updateControllers(appId);
+			info = entry.pickController();
+		}
+
+		return info;
 	}
 
 	public void updateCache()
 	{
 		for (CacheEntry entry : cache.values())
-		{
-			// Remove all Controller entries which are older than the given
-			// treshold
 			entry.removeOlderThan(CONTROLLER_LIFETIME);
-		}
 	}
 
 	class Updater extends SchedulerTask

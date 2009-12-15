@@ -8,7 +8,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,10 +18,8 @@ import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.prot.frontend.ExceptionSafeFrontendProxy;
 import org.prot.frontend.cache.AppCache;
 import org.prot.manager.data.ControllerInfo;
-import org.prot.manager.services.FrontendService;
 import org.prot.util.AppIdExtractor;
 import org.prot.util.ReservedAppIds;
 
@@ -33,14 +30,6 @@ public class ProxyHandler extends AbstractHandler
 	private AppCache appCache;
 
 	private FrontendProxy frontendProxy;
-
-	private FrontendService frontendService;
-
-	public void init()
-	{
-		frontendService = (FrontendService) ExceptionSafeFrontendProxy.newInstance(getClass()
-				.getClassLoader(), FrontendService.class);
-	}
 
 	@Override
 	public void handle(String target, Request baseRequest, HttpServletRequest request,
@@ -130,23 +119,12 @@ public class ProxyHandler extends AbstractHandler
 		{
 			// Check if the cache holds a controller for this app
 			ControllerInfo info = appCache.getController(appId);
-
-			// Cache missed
 			if (info == null)
 			{
-				// Ask the manager and cache the result
-				Set<ControllerInfo> infoset = frontendService.selectController(appId);
-				if (infoset != null && infoset.size() > 0)
-				{
-					appCache.cacheController(appId, infoset.iterator().next());
-					info = appCache.getController(appId);
-				} else
-				{
-					response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
-							"Manager unreachable or did not return a Controller.");
-					baseRequest.setHandled(true);
-					return;
-				}
+				response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
+						"Manager unreachable or did not return a Controller.");
+				baseRequest.setHandled(true);
+				return;
 			}
 
 			// Build the destination url

@@ -1,8 +1,8 @@
 package org.prot.frontend.cache.timeout;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -12,55 +12,78 @@ public class CacheEntry
 {
 	private static final Logger logger = Logger.getLogger(CacheEntry.class);
 
-	private int index = 0;
-	private List<CachedControllerInfo> controllers = new ArrayList<CachedControllerInfo>();
+	private final String appId;
 
-	private String appId;
+	private Map<String, CachedControllerInfo> controllers = new HashMap<String, CachedControllerInfo>();
 
-	synchronized void addController(ControllerInfo controller)
+	public CacheEntry(String appId)
 	{
-		CachedControllerInfo cController = new CachedControllerInfo(controller);
-		cController.setTimestamp(System.currentTimeMillis());
-		controllers.add(cController);
+		this.appId = appId;
+	}
+
+	boolean hasControllers()
+	{
+		return controllers.size() > 0;
+	}
+
+	synchronized void updateControllers(Set<ControllerInfo> infos)
+	{
+		logger.debug("Updating controllers");
+
+		Set<String> addresses = new HashSet<String>();
+
+		// Add all new Controllers
+		for (ControllerInfo info : infos)
+		{
+			String address = info.getAddress();
+			addresses.add(address);
+
+			if (!controllers.containsKey(address))
+			{
+				CachedControllerInfo newEntry = new CachedControllerInfo(info);
+				newEntry.setTimestamp(System.currentTimeMillis());
+				controllers.put(address, newEntry);
+			}
+		}
+
+		// Remove all old Controllers
+		for (String test : controllers.keySet().toArray(new String[0]))
+		{
+			if (!addresses.contains(test))
+			{
+				logger.debug("Removing controller");
+				controllers.remove(test);
+			}
+		}
+
+		logger.debug("SIZE: " + controllers.keySet().size());
 	}
 
 	synchronized void removeOlderThan(long threshold)
 	{
-		Set<CachedControllerInfo> toDel = new HashSet<CachedControllerInfo>();
+		logger.debug("Removing old Controllers");
+
 		long currentTime = System.currentTimeMillis();
-		for (CachedControllerInfo controller : controllers)
+		for (CachedControllerInfo controller : controllers.values().toArray(new CachedControllerInfo[0]))
 		{
 			if ((currentTime - controller.getTimestamp()) > threshold)
-			{
-				toDel.add(controller);
-			}
-		}
-
-		for (CachedControllerInfo controller : toDel)
-		{
-			logger.debug("removing controller info");
-			controllers.remove(controller);
+				controllers.remove(controller.getAddress());
 		}
 	}
 
-	synchronized ControllerInfo pickController()
+	ControllerInfo pickController()
 	{
 		if (controllers.isEmpty())
 			return null;
 
 		// Cycles through all controllers to balance the requests
-		CachedControllerInfo info = controllers.get(index++ % controllers.size());
-		return info;
+		String[] keys = controllers.keySet().toArray(new String[0]);
+		return controllers.get(keys[0]);
 	}
 
 	String getAppId()
 	{
 		return appId;
-	}
-
-	void setAppId(String appId)
-	{
-		this.appId = appId;
 	}
 
 	public int hashCode()

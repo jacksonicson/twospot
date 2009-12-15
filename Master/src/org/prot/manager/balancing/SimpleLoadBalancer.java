@@ -25,7 +25,7 @@ public class SimpleLoadBalancer implements LoadBalancer
 		if (infos.length == 0)
 		{
 			logger.warn("Master does not have any controllers");
-			return new HashSet<ControllerInfo>();
+			return null;
 		}
 
 		Set<ControllerInfo> result = new HashSet<ControllerInfo>();
@@ -61,7 +61,10 @@ public class SimpleLoadBalancer implements LoadBalancer
 				}
 			}
 
-			result.add(best);
+			// If we found another Controller
+			if (best != null)
+				result.add(best);
+
 			return result;
 		}
 

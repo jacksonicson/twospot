@@ -56,8 +56,7 @@
 		</property>
 	</bean>
 
-	<bean id="Handler" class="org.prot.frontend.handlers.ProxyHandler"
-		init-method="init">
+	<bean id="Handler" class="org.prot.frontend.handlers.ProxyHandler">
 		<property name="appCache" ref="AppCache" />
 		<property name="frontendProxy" ref="FrontendProxy" />
 	</bean>

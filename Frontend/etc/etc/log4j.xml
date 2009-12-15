@@ -19,7 +19,7 @@
 	</appender>
 
 	<logger name="org.prot.frontend" additivity="false">
-		<level value="ERROR" />
+		<level value="DEBUG" />
 		<appender-ref ref="ConsoleAppender" />
 		<appender-ref ref="Rolling" />
 	</logger>
