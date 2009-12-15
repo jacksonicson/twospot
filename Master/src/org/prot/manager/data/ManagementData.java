@@ -65,6 +65,7 @@ public class ManagementData
 				PerformanceData toUpdate = performanceData.get(appId);
 				toUpdate.setAverageRequestTime(test.getAverageRequestTime());
 				toUpdate.setRequestsPerSecond(test.getRequestsPerSecond());
+				toUpdate.setLoad(test.getLoad());
 			} else
 			{
 				performanceData.put(appId, test);
@@ -120,6 +121,11 @@ public class ManagementData
 	public PerformanceData[] getPerformanceData()
 	{
 		return (PerformanceData[]) performanceData.values().toArray(new PerformanceData[0]);
+	}
+
+	public PerformanceData getPerformanceData(String appId)
+	{
+		return performanceData.get(appId);
 	}
 
 	public void dump()

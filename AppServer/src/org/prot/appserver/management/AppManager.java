@@ -20,4 +20,10 @@ public class AppManager implements IAppServerStats
 	{
 		return managedApp.averageRequestTime();
 	}
+
+	@Override
+	public double ping()
+	{
+		return managedApp.ping();
+	}
 }

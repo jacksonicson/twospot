@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.prot.controller.management.appserver.PerformanceData;
 import org.prot.manager.data.ControllerInfo;
 import org.prot.manager.data.ControllerRegistry;
 
@@ -28,22 +29,40 @@ public class SimpleLoadBalancer implements LoadBalancer
 		}
 
 		Set<ControllerInfo> result = new HashSet<ControllerInfo>();
+		boolean requireMore = false;
 
 		// Check if a Controller is already running this app
 		for (ControllerInfo info : infos)
 		{
-			String[] runningApps = info.getManagementData().getRunningApps();
-			if (runningApps == null)
-				continue;
-
-			for (String app : runningApps)
+			PerformanceData data = info.getManagementData().getPerformanceData(appId);
+			if (data != null)
 			{
-				if (app.equals(appId))
+				requireMore |= data.getLoad() > 0.6;
+				result.add(info);
+			}
+		}
+
+		if (requireMore)
+		{
+			logger.info("App requires more appservers");
+
+			ControllerInfo best = null;
+			double bestLoad = Double.MAX_VALUE;
+			for (ControllerInfo info : infos)
+			{
+				if (result.contains(info))
+					continue;
+
+				double cpu = info.getManagementData().getAverageCpu();
+				if (bestLoad > cpu)
 				{
-					result.add(info);
-					return result;
+					bestLoad = cpu;
+					best = info;
 				}
 			}
+
+			result.add(best);
+			return result;
 		}
 
 		// Randomly select a new Controller

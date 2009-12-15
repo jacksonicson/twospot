@@ -23,10 +23,6 @@ public class JettyAppManagement implements AppManagement
 	{
 		long count = countingRequestLog.getCounter();
 		long time = System.currentTimeMillis() - lastReset;
-
-		lastReset = System.currentTimeMillis();
-		countingRequestLog.reset();
-
 		return count / (time / 1000d);
 	}
 
@@ -34,6 +30,22 @@ public class JettyAppManagement implements AppManagement
 	public long averageRequestTime()
 	{
 		return -1;
+	}
+
+	@Override
+	public double ping()
+	{
+		double rps = requestsPerSecond();
+		double load = (rps / 500d);
+
+		long time = System.currentTimeMillis() - lastReset;
+		if (time > 10000)
+		{
+			lastReset = System.currentTimeMillis();
+			countingRequestLog.reset();
+		}
+
+		return load;
 	}
 
 	public void setCountingRequestLog(CountingRequestLog countingRequestLog)

@@ -13,4 +13,10 @@ class MockManagement implements AppManagement
 	{
 		return 0;
 	}
+
+	@Override
+	public double ping()
+	{
+		return 0d;
+	}
 }

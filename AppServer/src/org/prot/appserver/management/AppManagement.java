@@ -5,4 +5,6 @@ public interface AppManagement
 	public double requestsPerSecond();
 
 	public long averageRequestTime();
+
+	public double ping();
 }

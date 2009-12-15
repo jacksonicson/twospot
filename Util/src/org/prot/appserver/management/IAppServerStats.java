@@ -5,4 +5,6 @@ public interface IAppServerStats
 	public double getRequestsPerSecond();
 
 	public long averageRequestTime();
+
+	public double ping();
 }

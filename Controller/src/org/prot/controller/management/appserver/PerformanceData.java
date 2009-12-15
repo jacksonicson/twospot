@@ -12,6 +12,8 @@ public class PerformanceData implements Serializable
 
 	private double averageRequestTime;
 
+	private double load;
+
 	public PerformanceData(String appId)
 	{
 		this.appId = appId;
@@ -35,6 +37,16 @@ public class PerformanceData implements Serializable
 	public void setAverageRequestTime(double averageRequestTime)
 	{
 		this.averageRequestTime = averageRequestTime;
+	}
+
+	public double getLoad()
+	{
+		return load;
+	}
+
+	public void setLoad(double load)
+	{
+		this.load = load;
 	}
 
 	public String getAppId()

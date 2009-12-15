@@ -80,6 +80,7 @@ public class AppServerWatcher
 	{
 		perfData.setRequestsPerSecond(remoteObject.getRequestsPerSecond());
 		perfData.setAverageRequestTime(remoteObject.averageRequestTime());
+		perfData.setLoad(remoteObject.ping());
 	}
 
 	private IAppServerStats getRemoteObject(String appId)
