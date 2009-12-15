@@ -1,9 +1,9 @@
 package org.prot.frontend.cache.timeout;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.prot.manager.data.ControllerInfo;
@@ -14,7 +14,7 @@ public class CacheEntry
 
 	private final String appId;
 
-	private Map<String, CachedControllerInfo> controllers = new HashMap<String, CachedControllerInfo>();
+	private Map<String, CachedControllerInfo> controllers = new ConcurrentHashMap<String, CachedControllerInfo>();
 
 	public CacheEntry(String appId)
 	{
@@ -26,7 +26,7 @@ public class CacheEntry
 		return controllers.size() > 0;
 	}
 
-	synchronized void updateControllers(Set<ControllerInfo> infos)
+	void updateControllers(Set<ControllerInfo> infos)
 	{
 		logger.debug("Updating controllers");
 
@@ -59,10 +59,8 @@ public class CacheEntry
 		logger.debug("SIZE: " + controllers.keySet().size());
 	}
 
-	synchronized void removeOlderThan(long threshold)
+	void removeOlderThan(long threshold)
 	{
-		logger.debug("Removing old Controllers");
-
 		long currentTime = System.currentTimeMillis();
 		for (CachedControllerInfo controller : controllers.values().toArray(new CachedControllerInfo[0]))
 		{

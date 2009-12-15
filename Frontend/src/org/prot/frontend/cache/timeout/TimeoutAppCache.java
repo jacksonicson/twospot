@@ -63,7 +63,7 @@ public class TimeoutAppCache implements AppCache
 		if (entry == null)
 		{
 			updateControllers(appId);
-			entry = new CacheEntry(appId);
+			entry = cache.get(appId);
 		}
 
 		ControllerInfo info = entry.pickController();
