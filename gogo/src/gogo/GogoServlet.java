@@ -3,6 +3,7 @@ package gogo;
 import gogo.data.BlogEntry;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -21,6 +22,18 @@ import org.prot.app.services.user.UserServiceFactory;
 
 public class GogoServlet extends HttpServlet
 {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+			IOException
+	{
+		InputStream in = request.getInputStream();
+		byte[] buffer = new byte[64];
+		int len;
+		while ((len = in.read(buffer)) > 0)
+		{
+			// Do nothing
+		}
+	}
+
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException
 	{

@@ -10,14 +10,17 @@ import org.prot.util.handler.HttpProxyHelper;
 
 public class FrontendProxy extends HttpProxyHelper<HttpServletResponse>
 {
+	public FrontendProxy()
+	{
+		super(false);
+	}
 
 	@Override
 	protected void expired(HttpServletResponse response)
 	{
 		try
 		{
-			response.sendError(HttpStatus.REQUEST_TIMEOUT_408,
-					"Connection with the Controller timed out");
+			response.sendError(HttpStatus.REQUEST_TIMEOUT_408, "Connection with the Controller timed out");
 		} catch (IOException e1)
 		{
 			// Do nothing

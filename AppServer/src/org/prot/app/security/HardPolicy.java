@@ -423,7 +423,7 @@ public class HardPolicy extends Policy
 
 		// FilePermissions
 		appPermissions.add(new FilePermission(appDir, "read"));
-		appPermissions.add(new FilePermission(scratchDir, "read,write,execute,delete"));
+		appPermissions.add(new FilePermission(scratchDir, "read,write,delete"));
 
 		// TODO: DON'T GRANT THIS!!!!!
 		appPermissions.add(new SocketPermission("*", "connect,resolve"));

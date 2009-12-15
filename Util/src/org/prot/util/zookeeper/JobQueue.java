@@ -43,6 +43,22 @@ public class JobQueue implements Runnable
 		run();
 	}
 
+	public void insertBefore(Job target, Job toInsert)
+	{
+		synchronized (jobQueue)
+		{
+			int index = jobQueue.indexOf(target);
+			index--;
+			if (index < 0)
+				index = 0;
+
+			jobQueue.add(index, toInsert);
+			jobQueue.notify();
+		}
+
+		run();
+	}
+
 	private void reconnect()
 	{
 		Reconnect reconnect = new Reconnect();
@@ -71,16 +87,15 @@ public class JobQueue implements Runnable
 				// }
 
 				todo = jobQueue.get(0);
-				jobQueue.remove(0);
 			}
 
 			boolean deleteJob = execute(todo);
 
-			if (!deleteJob)
+			if (deleteJob)
 			{
 				synchronized (jobQueue)
 				{
-					jobQueue.add(todo);
+					jobQueue.remove(todo);
 				}
 			}
 		}

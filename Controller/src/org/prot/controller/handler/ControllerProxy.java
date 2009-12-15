@@ -6,6 +6,11 @@ public class ControllerProxy extends HttpProxyHelper<String>
 {
 	private RequestManager requestManager;
 
+	public ControllerProxy()
+	{
+		super(true);
+	}
+
 	@Override
 	protected boolean error(String appId, Throwable t)
 	{

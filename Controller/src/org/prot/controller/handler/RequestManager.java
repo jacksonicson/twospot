@@ -52,6 +52,11 @@ public class RequestManager
 			logger.debug("Reporting stale AppServer: " + appId);
 			appManager.reportStaleApp(appId);
 			return true;
+		} else if (t instanceof IOException)
+		{
+			logger.debug("IOException in Controller");
+			// Do nothing
+			return true;
 		}
 
 		return false;

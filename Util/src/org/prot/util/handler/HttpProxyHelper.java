@@ -33,6 +33,13 @@ public class HttpProxyHelper<M>
 
 	private final Set<String> invalidHeaders = new HashSet<String>();
 
+	private final boolean LIMIT_TRAFFIC;
+
+	public HttpProxyHelper(boolean limitTraffic)
+	{
+		LIMIT_TRAFFIC = limitTraffic;
+	}
+
 	protected void setupInvalidHeaders()
 	{
 		invalidHeaders.add(HttpHeaders.PROXY_CONNECTION.toLowerCase());
@@ -104,6 +111,78 @@ public class HttpProxyHelper<M>
 		forwardRequest(jetRequest, request, response, url, null);
 	}
 
+	class CountingInputStream extends InputStream
+	{
+		private long byteCounter = 0;
+
+		private static final long limit = 1 * 1024 * 1024;
+
+		private final InputStream target;
+
+		public CountingInputStream(InputStream in)
+		{
+			this.target = in;
+		}
+
+		public long skip(long n) throws IOException
+		{
+			return target.skip(n);
+		}
+
+		public int available() throws IOException
+		{
+			return target.available();
+		}
+
+		public void close() throws IOException
+		{
+			target.close();
+		}
+
+		public synchronized void mark(int readlimit)
+		{
+			target.mark(readlimit);
+		}
+
+		public synchronized void reset() throws IOException
+		{
+			target.reset();
+		}
+
+		public boolean markSupported()
+		{
+			return target.markSupported();
+		}
+
+		public final int read(byte b[]) throws IOException
+		{
+			byteCounter += b.length;
+			if (byteCounter > limit)
+				throw new IOException("Limited input stream");
+
+			return target.read(b, 0, b.length);
+		}
+
+		public final int read(byte b[], int off, int len) throws IOException
+		{
+			byteCounter += len;
+			if (byteCounter > limit)
+				throw new IOException("Limited input stream");
+
+			return target.read(b, off, len);
+		}
+
+		@Override
+		public final int read() throws IOException
+		{
+			byteCounter++;
+			if (byteCounter > limit)
+				throw new IOException("Limited input stream");
+
+			return target.read();
+		}
+	}
+
 	public void forwardRequest(final Request jetRequest, final HttpServletRequest request,
 			final HttpServletResponse response, final HttpURI url, final M obj) throws Exception
 	{
@@ -119,7 +198,12 @@ public class HttpProxyHelper<M>
 		}
 
 		// Get the input and output streams
-		final InputStream in = request.getInputStream();
+		final InputStream in;
+		if (LIMIT_TRAFFIC)
+			in = new CountingInputStream(request.getInputStream());
+		else
+			in = request.getInputStream();
+
 		final OutputStream out = response.getOutputStream();
 
 		// Get a continuation for this request
