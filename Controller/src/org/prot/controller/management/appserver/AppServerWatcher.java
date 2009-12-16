@@ -73,7 +73,7 @@ public class AppServerWatcher
 		}
 
 		// Iterate over all AppIds and poll them
-		for (String appId : connections.keySet())
+		for (String appId : manager.getAppIds().toArray(new String[0]))
 		{
 			IAppServerStats remObject = getRemoteObject(appId);
 			if (remObject == null)
@@ -98,6 +98,7 @@ public class AppServerWatcher
 
 	private void updateApp(PerformanceData perfData, IAppServerStats remoteObject)
 	{
+		logger.debug("Updating management data from");
 		perfData.setRequestsPerSecond(remoteObject.getRequestsPerSecond());
 		perfData.setAverageRequestTime(remoteObject.averageRequestTime());
 		perfData.setLoad(remoteObject.ping());
@@ -139,7 +140,7 @@ public class AppServerWatcher
 		@Override
 		public long getInterval()
 		{
-			return 5000;
+			return 1000;
 		}
 	}
 

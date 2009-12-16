@@ -1,5 +1,7 @@
 package org.prot.appserver.runtime.java;
 
+import org.apache.log4j.Logger;
+import org.eclipse.jetty.server.AbstractConnector;
 import org.eclipse.jetty.server.Connector;
 import org.prot.appserver.management.AppManagement;
 
@@ -7,6 +9,8 @@ import ort.prot.util.server.CountingRequestLog;
 
 public class JettyAppManagement implements AppManagement
 {
+	private static final Logger logger = Logger.getLogger(JettyAppManagement.class);
+
 	private CountingRequestLog countingRequestLog;
 
 	private Connector connector;
@@ -21,6 +25,10 @@ public class JettyAppManagement implements AppManagement
 	@Override
 	public double requestsPerSecond()
 	{
+		AbstractConnector co2 = (AbstractConnector) connector;
+		logger.debug("Qeueue size: " + co2.isLowResources());
+		
+
 		long count = countingRequestLog.getCounter();
 		long time = System.currentTimeMillis() - lastReset;
 		return count / (time / 1000d);
@@ -35,6 +43,7 @@ public class JettyAppManagement implements AppManagement
 	@Override
 	public double ping()
 	{
+		logger.debug("Ping");
 		double rps = requestsPerSecond();
 		double load = (rps / 500d);
 

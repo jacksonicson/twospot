@@ -16,11 +16,9 @@
 	<bean id="OutsideConnector" class="org.eclipse.jetty.server.nio.SelectChannelConnector">
 		<property name="host" value="${http.frontend.interface}" />
 		<property name="port" value="${http.frontend.port}" />
-		<property name="acceptors" value="10" />
+		<property name="acceptors" value="2" />
 		<property name="acceptQueueSize" value="5000" />
 		<property name="statsOn" value="false" />
-		<property name="lowResourcesConnections" value="500000000" />
-		<property name="lowResourcesMaxIdleTime" value="500000000" />
 	</bean>
 
 
@@ -28,7 +26,7 @@
 	<!-- ThreadPool -->
 	<bean id="ThreadPool" class="org.eclipse.jetty.util.thread.QueuedThreadPool">
 		<property name="minThreads" value="20" />
-		<property name="maxThreads" value="300" />
+		<property name="maxThreads" value="50" />
 	</bean>
 
 

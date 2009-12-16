@@ -27,7 +27,7 @@
 	<!-- ThreadPool -->
 	<bean id="ThreadPool" class="org.eclipse.jetty.util.thread.QueuedThreadPool">
 		<property name="minThreads" value="10" />
-		<property name="maxThreads" value="100" />
+		<property name="maxThreads" value="50" />
 	</bean>
 
 
