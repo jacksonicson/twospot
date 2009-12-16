@@ -20,9 +20,11 @@ public class SimpleLoadBalancer implements LoadBalancer
 		logger.debug("Finding best Controller");
 
 		ControllerInfo[] infos = registry.getControllers();
-		double[] ranking = new double[infos.length];
-		int bestIndex = 0;
-		double bestRanking = 0;
+
+		double bestRanking = Double.MAX_VALUE;
+		ControllerInfo bestController = null;
+
+		// Find the best Controller by a ranking algorithm
 		for (int i = 0; i < infos.length; i++)
 		{
 			ControllerInfo info = infos[i];
@@ -33,22 +35,24 @@ public class SimpleLoadBalancer implements LoadBalancer
 			rank += 1.0 * management.getAverageCpu();
 			rank += 0.0 * management.getMemLoad(); // TODO: Range 0 to 1
 			rank += 1.0 * management.getRunningApps().length; // TODO: Difficult
-			// to decide ...
-			// depens on mem
-			// and cpu
+			rank += 0.9 * info.assignedSize();
 			rank += 0.005 * management.getRps();
-			ranking[i] = rank;
-
 			logger.debug("Ranking for " + info.getAddress() + " = " + rank);
 
-			if (bestRanking > ranking[i])
+			// Update best Controller
+			if (bestRanking > rank)
 			{
-				bestIndex = i;
-				bestRanking = ranking[i];
+				bestRanking = rank;
+				bestController = info;
 			}
 		}
 
-		return infos[bestIndex];
+		// Assign AppId to Controller
+		bestController.assign(appId);
+
+		logger.debug("Selected controller: " + bestController.getAddress());
+
+		return bestController;
 	}
 
 	@Override
@@ -60,7 +64,7 @@ public class SimpleLoadBalancer implements LoadBalancer
 		// Check if there are controllers available
 		if (infos.length == 0)
 		{
-			logger.warn("Master does not have any controllers");
+			logger.warn("Master does not know any controllers");
 			return null;
 		}
 
@@ -72,15 +76,19 @@ public class SimpleLoadBalancer implements LoadBalancer
 		boolean requireMore = false;
 		for (ControllerInfo info : infos)
 		{
-			PerformanceData data = info.getManagementData().getPerformanceData(appId);
-			if (data != null)
+			if (info.getManagementData().isRunning(appId))
 			{
-				logger.debug("Found Controller which is running the app");
-
+				PerformanceData data = info.getManagementData().getPerformanceData(appId);
 				// Check if the AppServer is overloaded
-				requireMore |= data.getLoad() > 0.6;
+				if (data != null)
+					requireMore |= data.getLoad() > 0.6;
 
 				// Add the AppServer to the list
+				result.add(info);
+
+			} else if (info.isAssigned(appId))
+			{
+				logger.debug("Assigned controller: " + info.getAddress());
 				result.add(info);
 			}
 		}
@@ -89,10 +97,11 @@ public class SimpleLoadBalancer implements LoadBalancer
 		if (!requireMore && !result.isEmpty())
 			return result;
 		else
-			logger.info("App requires more AppServers");
+			logger.info("App requires a new AppServer. Is overloaded?: " + requireMore);
 
 		// Find a good Controller and return the new Set
 		result.add(findBestController(appId));
+
 		return result;
 	}
 

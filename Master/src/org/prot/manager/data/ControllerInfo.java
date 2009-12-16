@@ -1,6 +1,9 @@
 package org.prot.manager.data;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class ControllerInfo implements Serializable
 {
@@ -18,6 +21,8 @@ public class ControllerInfo implements Serializable
 
 	private transient ManagementData managementData;
 
+	private transient Map<String, AssignedApp> assigned = new HashMap<String, AssignedApp>();
+
 	public ControllerInfo()
 	{
 		managementData = new ManagementData();
@@ -27,6 +32,47 @@ public class ControllerInfo implements Serializable
 	{
 		this();
 		update(info);
+	}
+
+	public void assign(String appId)
+	{
+		assigned.put(appId, new AssignedApp(appId));
+	}
+
+	public int assignedSize()
+	{
+		// Remove all old assignments
+		synchronized (assigned)
+		{
+			for (Iterator<String> it = assigned.keySet().iterator(); it.hasNext();)
+			{
+				String appId = it.next();
+				AssignedApp app = assigned.get(appId);
+				if (app.isOld())
+					it.remove();
+			}
+		}
+
+		// Determine size
+		return assigned.size();
+	}
+
+	public boolean isAssigned(String appId)
+	{
+		AssignedApp assignedApp = assigned.get(appId);
+		if (assignedApp == null)
+			return false;
+
+		synchronized (assigned)
+		{
+			if (assignedApp.isOld())
+			{
+				assigned.remove(appId);
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	public void update(ControllerInfo info)

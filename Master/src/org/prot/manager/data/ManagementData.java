@@ -142,6 +142,11 @@ public class ManagementData
 		return performanceData.get(appId);
 	}
 
+	public boolean isRunning(String appId)
+	{
+		return runningApps.contains(appId);
+	}
+
 	public void dump()
 	{
 		logger.info("Requests per second: " + rps);
@@ -156,7 +161,8 @@ public class ManagementData
 		{
 			logger.info("   Details for: " + per.getAppId());
 			logger.info("   Requests per second: " + per.getRequestsPerSecond());
-			logger.info("   Requests per second: " + per.getAverageRequestTime());
+			logger.info("   Average Requests per second: " + per.getAverageRequestTime());
+			logger.info("   Load: " + per.getLoad());
 		}
 	}
 }
