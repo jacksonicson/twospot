@@ -1,7 +1,9 @@
 package org.prot.controller.management.appserver;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.prot.appserver.management.IAppServerStats;
@@ -48,7 +50,7 @@ public class AppServerWatcher
 		return performanceData;
 	}
 
-	public void remove(String appId)
+	private void remove(String appId)
 	{
 		performanceData.remove(appId);
 		connections.remove(appId);
@@ -56,6 +58,21 @@ public class AppServerWatcher
 
 	private void updateManagementData()
 	{
+		// Delete all old AppServers
+		Set<String> appIds = manager.getAppIds();
+		for (Iterator<String> it = connections.keySet().iterator(); it.hasNext();)
+		{
+			String appId = it.next();
+			if (!appIds.contains(appId))
+			{
+				logger.debug("Stop watching: " + appId);
+
+				performanceData.remove(appId);
+				it.remove();
+			}
+		}
+
+		// Iterate over all AppIds and poll them
 		for (String appId : manager.getAppIds())
 		{
 			IAppServerStats remObject = getRemoteObject(appId);
@@ -70,6 +87,9 @@ public class AppServerWatcher
 			{
 				updateApp(perfData, remObject);
 			} catch (NullPointerException e)
+			{
+				remove(appId);
+			} catch (Throwable e)
 			{
 				remove(appId);
 			}
@@ -102,6 +122,7 @@ public class AppServerWatcher
 		} catch (Exception e)
 		{
 			logger.debug("Could not connect with the AppServer management", e);
+			remove(appId);
 		}
 
 		return null;

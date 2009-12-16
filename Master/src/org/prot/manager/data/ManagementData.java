@@ -57,6 +57,16 @@ public class ManagementData
 
 	public void updatePerformanceData(PerformanceData[] update)
 	{
+		// Remove all old entries
+		Set<String> keys = new HashSet<String>();
+		keys.addAll(performanceData.keySet());
+		for (PerformanceData test : update)
+			keys.remove(test.getAppId());
+
+		for (String toDel : keys)
+			performanceData.remove(toDel);
+
+		// Update existing entries and add new entries
 		for (PerformanceData test : update)
 		{
 			String appId = test.getAppId();

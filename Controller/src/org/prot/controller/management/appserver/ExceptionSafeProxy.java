@@ -33,7 +33,7 @@ public class ExceptionSafeProxy implements InvocationHandler
 		return 2299;
 	}
 
-	private void connect()
+	private void connect() throws Throwable
 	{
 		if (obj != null)
 			return;
@@ -53,6 +53,8 @@ public class ExceptionSafeProxy implements InvocationHandler
 			logger.debug("exception while connecting to AppServer: " + appId);
 			logger.trace(e);
 			obj = null;
+
+			throw e;
 		}
 	}
 
@@ -71,6 +73,8 @@ public class ExceptionSafeProxy implements InvocationHandler
 			obj = null;
 			logger.debug("exception in proxy");
 			logger.trace(e);
+
+			throw e;
 		}
 
 		return result;

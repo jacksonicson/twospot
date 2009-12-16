@@ -21,6 +21,8 @@ public class SimpleLoadBalancer implements LoadBalancer
 
 		ControllerInfo[] infos = registry.getControllers();
 		double[] ranking = new double[infos.length];
+		int bestIndex = 0;
+		double bestRanking = 0;
 		for (int i = 0; i < infos.length; i++)
 		{
 			ControllerInfo info = infos[i];
@@ -31,20 +33,14 @@ public class SimpleLoadBalancer implements LoadBalancer
 			rank += 1.0 * management.getAverageCpu();
 			rank += 0.0 * management.getMemLoad(); // TODO: Range 0 to 1
 			rank += 1.0 * management.getRunningApps().length; // TODO: Difficult
-																// to decide ...
-																// depens on mem
-																// and cpu
+			// to decide ...
+			// depens on mem
+			// and cpu
 			rank += 0.005 * management.getRps();
 			ranking[i] = rank;
 
-			logger.debug("Ranking: " + rank);
-		}
+			logger.debug("Ranking for " + info.getAddress() + " = " + rank);
 
-		// Find the Controller with the best (lowest) ranking
-		int bestIndex = 0;
-		double bestRanking = 0;
-		for (int i = 0; i < ranking.length; i++)
-		{
 			if (bestRanking > ranking[i])
 			{
 				bestIndex = i;

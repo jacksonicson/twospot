@@ -69,13 +69,16 @@ class AppRegistry
 		return appInfos.get(appId);
 	}
 
-	public synchronized void deleteApp(String appId)
+	private synchronized void deleteApp(String appId)
 	{
 		if (appInfos.containsKey(appId))
 		{
 			AppInfo appInfo = appInfos.get(appId);
 			freePorts.add(appInfo.getPort());
 			appInfos.remove(appId);
+		} else
+		{
+			logger.warn("AppId unknown - cannot delete app");
 		}
 	}
 
