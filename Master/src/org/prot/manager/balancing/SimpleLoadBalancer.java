@@ -33,9 +33,9 @@ public class SimpleLoadBalancer implements LoadBalancer
 			// Smaller rankings are better!
 			double rank = 0;
 			rank += 1.0 * management.getAverageCpu();
-			rank += 0.0 * management.getMemLoad(); // TODO: Range 0 to 1
-			rank += 1.0 * management.getRunningApps().length; // TODO: Difficult
-			rank += 0.9 * info.assignedSize();
+			rank += 1.0 * management.getMemLoad();
+			rank += 0.5 * management.getRunningApps().length;
+			rank += 0.7 * info.assignedSize();
 			rank += 0.005 * management.getRps();
 			logger.debug("Ranking for " + info.getAddress() + " = " + rank);
 

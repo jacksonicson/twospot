@@ -16,7 +16,7 @@ public class ManagementData
 	private double rps;
 
 	// Memory consumed by the AppServer's
-	private long memLoad;
+	private double memLoad;
 
 	// Average CPU usage
 	private double averageCpu;
@@ -98,12 +98,12 @@ public class ManagementData
 		return (String[]) runningApps.toArray(new String[0]);
 	}
 
-	public long getMemLoad()
+	public double getMemLoad()
 	{
 		return memLoad;
 	}
 
-	public void setMemLoad(long memLoad)
+	public void setMemLoad(double memLoad)
 	{
 		this.memLoad = memLoad;
 	}

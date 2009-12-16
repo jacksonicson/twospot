@@ -6,7 +6,7 @@ public interface IJmxResources
 {
 	public double loadAverage();
 
-	public long freeMemory();
+	public double freeMemory();
 
 	public double requestsPerSecond();
 

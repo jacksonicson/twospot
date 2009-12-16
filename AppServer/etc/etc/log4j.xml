@@ -31,7 +31,8 @@
 		</layout>
 	</appender>
 
-	<logger name="org.prot.app.services.log.LogServiceMock" additivity="false">
+	<logger name="org.prot.app.services.log.LogServiceMock"
+		additivity="false">
 		<level value="ALL" />
 		<appender-ref ref="ConsoleAppender" />
 	</logger>
@@ -50,7 +51,7 @@
 	</logger>
 
 	<logger name="org.prot.appserver.runtime.java.data" additivity="false">
-		<level value="INFO" />
+		<level value="DEBUG" />
 		<appender-ref ref="SocketAppender" />
 		<appender-ref ref="Rolling" />
 	</logger>

@@ -35,13 +35,13 @@ public class JmxResources implements IJmxResources
 	@Override
 	public double loadAverage()
 	{
-		return operatingSystem.getSystemLoadAverage();
+		return operatingSystem.getAvailableProcessors() / operatingSystem.getSystemLoadAverage();
 	}
 
 	@Override
-	public long freeMemory()
+	public double freeMemory()
 	{
-		return operatingSystem.getFreePhysicalMemorySize();
+		return operatingSystem.getFreePhysicalMemorySize() / operatingSystem.getTotalPhysicalMemorySize();
 	}
 
 	@Override

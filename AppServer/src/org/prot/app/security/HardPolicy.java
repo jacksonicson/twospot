@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.PropertyPermission;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -422,7 +423,7 @@ public class HardPolicy extends Policy
 
 		// FilePermissions
 		appPermissions.add(new FilePermission(appDir, "read"));
-		appPermissions.add(new FilePermission(scratchDir, "read,write,delete"));
+		appPermissions.add(new FilePermission(scratchDir, "read,write,delete,execute"));
 
 		// TODO: DON'T GRANT THIS!!!!!
 		appPermissions.add(new SocketPermission("*", "connect,resolve"));
@@ -438,7 +439,7 @@ public class HardPolicy extends Policy
 		appPermissions.add(new RuntimePermission("getClassLoader"));
 
 		// PropertyPermissins
-		// appPermissions.add(new PropertyPermission("*", "read"));
+		appPermissions.add(new PropertyPermission("*", "read"));
 
 		// ReflectionPermissions
 		appPermissions.add(new ReflectPermission("suppressAccessChecks"));
