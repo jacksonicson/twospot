@@ -100,6 +100,10 @@ public class ManagementData
 
 	public double getAverageCpu()
 	{
+		// Windows-Systems return -1 which is not very useful!
+		if (averageCpu < 0)
+			averageCpu = 0;
+
 		return averageCpu;
 	}
 

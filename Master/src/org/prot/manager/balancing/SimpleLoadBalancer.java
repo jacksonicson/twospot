@@ -1,19 +1,59 @@
 package org.prot.manager.balancing;
 
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.prot.controller.management.appserver.PerformanceData;
 import org.prot.manager.data.ControllerInfo;
 import org.prot.manager.data.ControllerRegistry;
+import org.prot.manager.data.ManagementData;
 
 public class SimpleLoadBalancer implements LoadBalancer
 {
 	private static final Logger logger = Logger.getLogger(SimpleLoadBalancer.class);
 
 	private ControllerRegistry registry;
+
+	private ControllerInfo findBestController(String appId)
+	{
+		logger.debug("Finding best Controller");
+
+		ControllerInfo[] infos = registry.getControllers();
+		double[] ranking = new double[infos.length];
+		for (int i = 0; i < infos.length; i++)
+		{
+			ControllerInfo info = infos[i];
+			ManagementData management = info.getManagementData();
+
+			// Smaller rankings are better!
+			double rank = 0;
+			rank += 1.0 * management.getAverageCpu();
+			rank += 0.0 * management.getMemLoad(); // TODO: Range 0 to 1
+			rank += 1.0 * management.getRunningApps().length; // TODO: Difficult
+																// to decide ...
+																// depens on mem
+																// and cpu
+			rank += 0.005 * management.getRps();
+			ranking[i] = rank;
+
+			logger.debug("Ranking: " + rank);
+		}
+
+		// Find the Controller with the best (lowest) ranking
+		int bestIndex = 0;
+		double bestRanking = 0;
+		for (int i = 0; i < ranking.length; i++)
+		{
+			if (bestRanking > ranking[i])
+			{
+				bestIndex = i;
+				bestRanking = ranking[i];
+			}
+		}
+
+		return infos[bestIndex];
+	}
 
 	@Override
 	public Set<ControllerInfo> selectController(String appId)
@@ -28,51 +68,35 @@ public class SimpleLoadBalancer implements LoadBalancer
 			return null;
 		}
 
+		// Results
 		Set<ControllerInfo> result = new HashSet<ControllerInfo>();
-		boolean requireMore = false;
 
 		// Check if a Controller is already running this app
+		// If a Controller is found - ask if the App requires more AppServers
+		boolean requireMore = false;
 		for (ControllerInfo info : infos)
 		{
 			PerformanceData data = info.getManagementData().getPerformanceData(appId);
 			if (data != null)
 			{
+				logger.debug("Found Controller which is running the app");
+
+				// Check if the AppServer is overloaded
 				requireMore |= data.getLoad() > 0.6;
+
+				// Add the AppServer to the list
 				result.add(info);
 			}
 		}
 
-		if (requireMore)
-		{
-			logger.info("App requires more appservers");
-
-			ControllerInfo best = null;
-			double bestLoad = Double.MAX_VALUE;
-			for (ControllerInfo info : infos)
-			{
-				if (result.contains(info))
-					continue;
-
-				double cpu = info.getManagementData().getAverageCpu();
-				if (bestLoad > cpu)
-				{
-					bestLoad = cpu;
-					best = info;
-				}
-			}
-
-			// If we found another Controller
-			if (best != null)
-				result.add(best);
-
+		// Do we need to start another AppServer for this App?
+		if (!requireMore && !result.isEmpty())
 			return result;
-		}
+		else
+			logger.info("App requires more AppServers");
 
-		// Randomly select a new Controller
-		int size = infos.length;
-		Random random = new Random();
-		result.add(infos[Math.abs(random.nextInt()) % size]);
-
+		// Find a good Controller and return the new Set
+		result.add(findBestController(appId));
 		return result;
 	}
 
