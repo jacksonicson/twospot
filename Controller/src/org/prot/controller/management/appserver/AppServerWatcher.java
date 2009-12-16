@@ -73,7 +73,7 @@ public class AppServerWatcher
 		}
 
 		// Iterate over all AppIds and poll them
-		for (String appId : manager.getAppIds())
+		for (String appId : connections.keySet())
 		{
 			IAppServerStats remObject = getRemoteObject(appId);
 			if (remObject == null)

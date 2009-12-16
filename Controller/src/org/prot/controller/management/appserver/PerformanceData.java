@@ -8,11 +8,11 @@ public class PerformanceData implements Serializable
 
 	private final String appId;
 
-	private double requestsPerSecond;
+	private double requestsPerSecond = 0d;
 
-	private double averageRequestTime;
+	private double averageRequestTime = 0d;
 
-	private double load;
+	private double load = 0d;
 
 	public PerformanceData(String appId)
 	{
