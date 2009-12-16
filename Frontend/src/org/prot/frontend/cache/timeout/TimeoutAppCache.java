@@ -73,6 +73,9 @@ public class TimeoutAppCache implements AppCache
 			info = entry.pickController();
 		}
 
+		if (info == null)
+			logger.warn("Could not find a Controller for: " + appId);
+
 		return info;
 	}
 

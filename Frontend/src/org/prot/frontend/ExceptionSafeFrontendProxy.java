@@ -33,7 +33,10 @@ public class ExceptionSafeFrontendProxy implements InvocationHandler
 			return;
 
 		if (Configuration.getConfiguration().getManagerAddress() == null)
+		{
+			logger.warn("No manager address");
 			return;
+		}
 
 		if (obj == null)
 		{

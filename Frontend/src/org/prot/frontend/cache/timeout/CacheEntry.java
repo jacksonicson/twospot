@@ -2,6 +2,7 @@ package org.prot.frontend.cache.timeout;
 
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -69,14 +70,18 @@ public class CacheEntry
 		}
 	}
 
+	Random r = new Random();
+	int counter = 0;
+
 	ControllerInfo pickController()
 	{
 		if (controllers.isEmpty())
 			return null;
 
-		// Cycles through all controllers to balance the requests
-		String[] keys = controllers.keySet().toArray(new String[0]);
-		return controllers.get(keys[0]);
+		ControllerInfo[] infos = controllers.values().toArray(new ControllerInfo[0]);
+		int select = Math.abs(counter++) % infos.length;
+
+		return infos[select];
 	}
 
 	String getAppId()
