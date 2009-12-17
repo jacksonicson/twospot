@@ -16,16 +16,19 @@ All configuration files are located within the /conf directory. The /conf direct
 The following list contains all important configuration files and properties:
   * /conf/util/etc
     * config.properties: All properties are important and documented in this file
-    * zookeeper.xml: Address of the ZooKeeper quorum server
-  * /conf/fileserver/
+    * zookeeper.xml: Address and port of the ZooKeeper quorum server
+  * /conf/fileserver/etc/spring.xml
     * DownloadResourceHandler.resouceBase: Defines where the application packages are located
     * UploadResourceHandler.resouceBase: Defines where the application packages are located
   * /conf/controller/
-    * hbase-site.xml: Contains the location and port of the ZooKeeper Quorum service
+    * hbase-site.xml: Contains the location and port of the ZooKeeper Quorum service (port ist in a comment!!!)
     * etc/controller.properties: All properties are important and documented in this file
   * /conf/appserver/
     * hbase-site.xml: Contains the location and port of the ZooKeeper Quorum service
     * etc/appserver.properties: All properties are important and documented in this file
+
+Configuration of the Log4j system: 
+Each configuration directory contains a /etc/log4j.xml file. This file is used to configure the logging for the application fragment. The Rolling-Appender is used for server deployments. 
 
 == Start ==
 Twospot provides a python script which is used to bootstrap a single component. The python script also contains functions to start all platform components.

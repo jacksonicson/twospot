@@ -1,0 +1,8 @@
+== Checklist for a Server-Deployment: ==
+ 
+* Portal-App running + DB-Connection
+* Login of an existing User
+* Register a new user
+* Are deployments working
+* Are all AppServers of an application stopped after a Deployment
+* Are old AppServers killed
