@@ -46,19 +46,16 @@ class AppMonitor implements Runnable
 
 		synchronized (jobQueue)
 		{
-			synchronized (processList)
+			for (AppInfo info : deadApps)
 			{
-				for (AppInfo info : deadApps)
-				{
-					logger.debug("Stopping AppId: " + info.getAppId());
+				logger.debug("Stopping AppId: " + info.getAppId());
 
-					AppProcess process = this.processList.get(info);
-					if (process == null)
-						continue;
+				AppProcess process = this.processList.get(info);
+				if (process == null)
+					continue;
 
-					this.processList.remove(info);
-					jobQueue.add(process);
-				}
+				this.processList.remove(info);
+				jobQueue.add(process);
 
 			}
 
@@ -74,18 +71,14 @@ class AppMonitor implements Runnable
 		{
 			logger.debug("Starting AppId: " + info.getAppId());
 
-			synchronized (processList)
+			AppProcess process = this.processList.get(info);
+			if (process == null)
 			{
-				AppProcess process = this.processList.get(info);
-				if (process == null)
-				{
-					process = new AppProcess(info);
-					this.processList.put(info, process);
-				}
-
-				jobQueue.add(process);
+				process = new AppProcess(info);
+				this.processList.put(info, process);
 			}
 
+			jobQueue.add(process);
 			jobQueue.notifyAll();
 		}
 	}
@@ -106,7 +99,8 @@ class AppMonitor implements Runnable
 
 	public void run()
 	{
-		while (running)
+		logger.debug("Starting AppMonitor worker thread...");
+		while (true)
 		{
 			// References the process to be started
 			AppProcess toProcess = null;
@@ -119,6 +113,7 @@ class AppMonitor implements Runnable
 				{
 					try
 					{
+						logger.debug("Waiting for jobs...");
 						jobQueue.wait();
 					} catch (InterruptedException e)
 					{
@@ -131,6 +126,7 @@ class AppMonitor implements Runnable
 			}
 
 			// Start
+			logger.debug("Executing job");
 			toProcess.execute();
 
 			// Resume all Continuations
