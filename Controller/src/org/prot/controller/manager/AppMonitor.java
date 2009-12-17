@@ -1,10 +1,9 @@
 package org.prot.controller.manager;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
@@ -24,7 +23,7 @@ class AppMonitor implements Runnable
 	boolean running = false;
 
 	// Manages all AppProcess-Objects
-	private Map<AppInfo, AppProcess> processList = new HashMap<AppInfo, AppProcess>();
+	private Map<AppInfo, AppProcess> processList = new ConcurrentHashMap<AppInfo, AppProcess>();
 
 	// Worker queue
 	private Queue<AppProcess> jobQueue = new LinkedBlockingQueue<AppProcess>();
@@ -41,72 +40,73 @@ class AppMonitor implements Runnable
 			running = threadPool.dispatch(this);
 	}
 
-	public void killProcess(Set<AppInfo> idleApps)
-	{
-		synchronized (jobQueue)
-		{
-			for (AppInfo info : idleApps)
-			{
-				logger.debug("Kill AppServer-Job: " + info.getAppId());
-
-				AppProcess process = this.processList.get(info);
-				if (process != null)
-				{
-					this.processList.remove(info);
-					jobQueue.add(process);
-				}
-			}
-			
-			jobQueue.notifyAll();
-		}
-	}
-
-	public void startProcess(AppInfo info)
+	void scheduleKillProcess(Set<AppInfo> deadApps)
 	{
 		startWorkerThread();
 
 		synchronized (jobQueue)
 		{
-			logger.debug("New AppServer-Job: " + info.getAppId());
-
-			AppProcess process = this.processList.get(info);
-			if (process == null)
+			synchronized (processList)
 			{
-				process = new AppProcess(info);
-				this.processList.put(info, process);
+				for (AppInfo info : deadApps)
+				{
+					logger.debug("Stopping AppId: " + info.getAppId());
+
+					AppProcess process = this.processList.get(info);
+					if (process == null)
+						continue;
+
+					this.processList.remove(info);
+					jobQueue.add(process);
+				}
+
 			}
 
-			jobQueue.add(process);
 			jobQueue.notifyAll();
 		}
 	}
 
-	public boolean waitForApplication(AppInfo appInfo)
+	void scheduleStartProcess(AppInfo info)
 	{
-		synchronized (appInfo)
+		startWorkerThread();
+
+		synchronized (jobQueue)
 		{
-			// If the AppServer is online - don't use a Continuation
-			if (appInfo.getStatus() == AppState.ONLINE)
-				return false;
+			logger.debug("Starting AppId: " + info.getAppId());
 
-			// Get the continuation
-			HttpConnection con = HttpConnection.getCurrentConnection();
-			Continuation continuation = ContinuationSupport.getContinuation(con.getRequest());
+			synchronized (processList)
+			{
+				AppProcess process = this.processList.get(info);
+				if (process == null)
+				{
+					process = new AppProcess(info);
+					this.processList.put(info, process);
+				}
 
-			// Register the continuation
-			logger.debug("Suspending the request for: " + appInfo.getAppId());
-			appInfo.addContinuation(continuation);
+				jobQueue.add(process);
+			}
+
+			jobQueue.notifyAll();
+		}
+	}
+
+	boolean waitForApplication(AppInfo appInfo)
+	{
+		// Get the continuation
+		HttpConnection con = HttpConnection.getCurrentConnection();
+		Continuation continuation = ContinuationSupport.getContinuation(con.getRequest());
+
+		// Register the continuation
+		if (appInfo.addContinuation(continuation))
 			continuation.suspend();
 
-			// Continuation used
-			return true;
-		}
+		// Continuation used
+		return true;
 	}
 
 	public void run()
 	{
-		// Run forever (Controller doesn't have a shutdown sequence)
-		while (true)
+		while (running)
 		{
 			// References the process to be started
 			AppProcess toProcess = null;
@@ -119,11 +119,10 @@ class AppMonitor implements Runnable
 				{
 					try
 					{
-						logger.debug("Waiting for Job"); 
 						jobQueue.wait();
 					} catch (InterruptedException e)
 					{
-						logger.error("Interruption in AppStarter-Thread", e);
+						logger.error(e);
 					}
 				}
 
@@ -131,19 +130,8 @@ class AppMonitor implements Runnable
 				toProcess = jobQueue.poll();
 			}
 
-			logger.debug("Monitor starts job");
-
 			// Start
-			try
-			{
-				// Start the process
-				toProcess.startOrRestart();
-			} catch (IOException e)
-			{
-				// Update the AppServer state
-				logger.debug("AppProcess failed - updating status"); 
-				toProcess.getAppInfo().setStatus(AppState.FAILED);
-			}
+			toProcess.execute();
 
 			// Resume all Continuations
 			toProcess.getAppInfo().resume();

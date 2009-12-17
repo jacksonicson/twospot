@@ -37,7 +37,7 @@ class AppProcess
 
 	private void stopAndClean()
 	{
-		logger.info("Killing AppServer process: " + appInfo.getAppId());
+		logger.info("Killing AppServer: " + appInfo.getAppId());
 
 		try
 		{
@@ -45,19 +45,13 @@ class AppProcess
 			process = null;
 		} catch (Exception e)
 		{
-			// Do nothing
+			logger.trace(e);
 		}
 	}
 
-	public void kill()
+	void execute()
 	{
-		this.appInfo.setStatus(AppState.OFFLINE);
-		stopAndClean();
-	}
-
-	public void startOrRestart() throws IOException
-	{
-		logger.debug("Starting new AppServer process");
+		logger.debug("Starting AppServer...");
 
 		// Check if the process should be killed
 		if (appInfo.getStatus() == AppState.KILLED)
@@ -97,26 +91,25 @@ class AppProcess
 		String c = "";
 		for (String cmd : command)
 			c += cmd + " ";
-		logger.debug("Executing command: " + c);
+		logger.debug("Command: " + c);
 
 		// configure the process
 		ProcessBuilder procBuilder = new ProcessBuilder();
-		// procBuilder.directory(new File("../AppServer/"));
 		procBuilder.command(command);
 		procBuilder.redirectErrorStream(true);
 
 		try
 		{
 			// Start the process
-			logger.debug("ProcesssBuilder start process");
+			logger.debug("Starting process...");
 			this.process = procBuilder.start();
 
 			// Wait until the Server running
-			logger.debug("Waiting for AppServer now");
+			logger.debug("Waiting for AppServer...");
 			waitForAppServer();
 
 			// Update the AppServer state
-			logger.debug("AppServer seems to be online");
+			logger.debug("AppServer is ONLINE");
 			this.appInfo.setStatus(AppState.ONLINE);
 
 		} catch (IOException e)
@@ -125,13 +118,13 @@ class AppProcess
 			logger.error("Could not start a new server process (AppId: " + appInfo.getAppId() + " Command: "
 					+ command.toString() + ")", e);
 
-			throw e;
+			this.appInfo.setStatus(AppState.FAILED);
+			stopAndClean();
 		}
 	}
 
 	private List<String> readClasspath()
 	{
-		logger.debug("Reading classpath file");
 		List<String> classpath = new ArrayList<String>();
 		try
 		{
@@ -173,12 +166,8 @@ class AppProcess
 
 	private String loadClasspath()
 	{
-		// Determine the classpath separator
-		final String separator;
-		if (System.getProperty("os.name").toLowerCase().indexOf("windows") > -1)
-			separator = ";";
-		else
-			separator = ":";
+		// Get the classpath separator
+		final String separator = System.getProperty("path.separator");
 
 		// Read the classpath file
 		List<String> libs = readClasspath();
@@ -233,22 +222,20 @@ class AppProcess
 		} catch (IOException e)
 		{
 			// Log the error
-			logger.error("Could not start a new server process - AppId: " + appInfo.getAppId());
-
-			// Could not verify if server is online so kill it
-			stopAndClean();
+			logger.error("Error while starting AppServer - AppId: " + appInfo.getAppId());
 
 			// Rethrow this exception
 			throw e;
+
 		} finally
 		{
-			// Close the input stream
 			try
 			{
+				// Close the input stream
 				stdInStream.close();
 			} catch (IOException e)
 			{
-				// Do nothing
+				logger.trace(e);
 			}
 		}
 	}

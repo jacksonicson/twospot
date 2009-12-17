@@ -11,7 +11,7 @@ import org.prot.util.ReservedAppIds;
 public final class AppInfo
 {
 	private static final Logger logger = Logger.getLogger(AppInfo.class);
-	
+
 	// Maximum time until the AppServer is idle
 	private static final int MAX_TIME_TO_IDLE = 1 * 20 * 1000;
 
@@ -46,7 +46,7 @@ public final class AppInfo
 		return (System.currentTimeMillis() - this.lastUsed) > MAX_TIME_TO_IDLE;
 	}
 
-	public AppInfo(String appId, int port)
+	AppInfo(String appId, int port)
 	{
 		this.appId = appId;
 		this.port = port;
@@ -61,24 +61,27 @@ public final class AppInfo
 		processToken = "" + token;
 	}
 
-	public void addContinuation(Continuation continuation)
+	public synchronized boolean addContinuation(Continuation continuation)
 	{
-		synchronized (continuations)
+		switch (status)
 		{
-			this.continuations.add(continuation);
-			logger.debug("Number of continuations: " + this.continuations.size());
+		case ONLINE:
+		case FAILED:
+		case KILLED:
+			return false;
 		}
+
+		continuations.add(continuation);
+
+		return true;
 	}
 
-	public void resume()
+	public synchronized void resume()
 	{
-		synchronized (continuations)
-		{
-			for (Continuation continuation : continuations)
-				continuation.resume();
+		for (Continuation continuation : continuations)
+			continuation.resume();
 
-			continuations.clear();
-		}
+		continuations.clear();
 	}
 
 	public String getAppId()
@@ -91,7 +94,7 @@ public final class AppInfo
 		return port;
 	}
 
-	public synchronized AppState getStatus()
+	public  synchronized AppState getStatus()
 	{
 		return status;
 	}

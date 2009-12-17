@@ -1,5 +1,6 @@
 package org.prot.controller.manager;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -42,7 +43,7 @@ public class AppManager implements DeploymentListener
 		// Todo-Information
 		Todo todo = null;
 
-		// Performance
+		// This call is not synchronized - most calls end here
 		if (appInfo.getStatus() == AppState.ONLINE)
 			return appInfo;
 
@@ -57,13 +58,12 @@ public class AppManager implements DeploymentListener
 				// Don't change the state
 				return appInfo;
 			case STARTING:
-				// Don't change the state
-				logger.debug("AppServer is starting, waiting ...");
+				// Don't change the state but wait for the server
 				todo = Todo.WAIT;
 				break;
 			case OFFLINE:
 			case STALE:
-				// Change the state to STARTING
+				// Change the state to STARTING and start the server
 				appInfo.setStatus(AppState.STARTING);
 				todo = Todo.START;
 				break;
@@ -91,14 +91,9 @@ public class AppManager implements DeploymentListener
 
 	boolean checkToken(String token)
 	{
-		logger.debug("Checking token: " + token);
-
 		// False if there is no token
 		if (token == null)
-		{
-			logger.debug("Invalid token - token is null");
 			return false;
-		}
 
 		// Iterate over all running applications
 		for (String appId : registry.getAppIds())
@@ -106,39 +101,50 @@ public class AppManager implements DeploymentListener
 			// Get application infos and the token
 			AppInfo info = registry.getAppInfo(appId);
 
-			// Copare stored token
+			// Concurrency - AppInfo could be deleted while scanning the AppId's
+			if (info == null)
+				continue;
+
+			// Compare stored token
 			if (token.equals(info.getProcessToken()))
 			{
 				// If both tokens are equal - return true
-				logger.debug("Valid token");
 				return true;
 			}
 		}
 
 		// No matching token found
-		logger.debug("Invalid token - token is unknown");
 		return false;
 	}
 
 	public Set<String> getAppIds()
 	{
-		return registry.getAppIds();
+		HashSet<String> copy = new HashSet<String>();
+		copy.addAll(registry.getAppIds());
+		return copy;
 	}
 
-	public void killApp(String appId)
+	private void killApp(String appId)
 	{
 		// Geht the AppInfo for this application
 		AppInfo appInfo = registry.getAppInfo(appId);
 
-		// Check if the application is running
+		// Check if the application is available
 		if (appInfo == null)
 		{
-			logger.debug("Cannot kill application " + appId + " - not running");
+			logger.debug("Cannot kill application, unknown by this Controller - AppId: " + appId);
 			return;
 		}
 
 		// Update the state
 		appInfo.setStatus(AppState.KILLED);
+	}
+
+	@Override
+	public void reportAppDeployment(String appId)
+	{
+		logger.info("App deployed - killing all AppServer instances of AppId: " + appId);
+		killApp(appId);
 	}
 
 	public void reportStaleApp(String appId)
@@ -149,18 +155,20 @@ public class AppManager implements DeploymentListener
 		if (appInfo == null)
 			return;
 
+		// Update the state
 		appInfo.setStatus(AppState.STALE);
 	}
 
 	private boolean startApp(AppInfo appInfo)
 	{
 		// Enqueue the process start
-		monitor.startProcess(appInfo);
+		monitor.scheduleStartProcess(appInfo);
 
 		// Watch for application updates
 		managementService.watchApp(appInfo.getAppId());
 
-		// Wait until the AppServer is online
+		// Register a Listener for the application. If the application is
+		// already running it returns true, if not it returns false
 		return monitor.waitForApplication(appInfo);
 	}
 
@@ -169,12 +177,15 @@ public class AppManager implements DeploymentListener
 		// Find and kill all idle AppServers
 		Set<AppInfo> dead = registry.findDeadApps();
 
+		// If no dead AppServers findDeadApps() returns null
 		if (dead != null)
 		{
+			// Don't listen on ZooKeeper events any more
 			for (AppInfo info : dead)
 				managementService.removeWatch(info.getAppId());
 
-			monitor.killProcess(dead);
+			// Schedule kill-Tasks for each entry
+			monitor.scheduleKillProcess(dead);
 		}
 	}
 
@@ -192,13 +203,6 @@ public class AppManager implements DeploymentListener
 			logger.debug("Maintenance");
 			doMaintenance();
 		}
-	}
-
-	@Override
-	public void appDeployed(String appId)
-	{
-		logger.info("App deployed - killing all AppServer instances: " + appId);
-		killApp(appId);
 	}
 
 	public void setRegistry(AppRegistry registry)
