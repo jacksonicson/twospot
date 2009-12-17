@@ -1,8 +1,11 @@
-== Checklist for a Server-Deployment: ==
- 
-* Portal-App running + DB-Connection
-* Login of an existing User
-* Register a new user
-* Are deployments working
-* Are all AppServers of an application stopped after a Deployment
-* Are old AppServers killed
+== Checklist for a Release ==
+0 Portal-App running + DB-Connection
+0 Login of an existing User
+0 Register a new user
+0 Are deployments working
+0 Are all AppServers of an application stopped after a Deployment
+0 Are old AppServers killed
+
+0 Does the DevServer with the GoGo-Application work
+0 Does the DevServer work with a new Application, build by using the Tools
+0 Does the Ant-Build-process of the new Application work
