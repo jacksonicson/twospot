@@ -1,8 +1,13 @@
 package org.prot.controller.management;
 
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.prot.util.stats.AppStat;
+import org.prot.util.stats.DoubleStat;
+import org.prot.util.stats.LongStat;
 import org.prot.util.stats.StatsValue;
 
 import ort.prot.util.server.CountingRequestLog;
@@ -20,20 +25,50 @@ public class Management implements IJmxResources
 
 	private OperatingSystemMXBean operatingSystem;
 
+	private long timestamp = System.currentTimeMillis();
+
 	public Management()
 	{
 		operatingSystem = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 	}
 
+	@Override
 	public String getName()
 	{
 		return "Controller";
 	}
 
+	private long update()
+	{
+		appServerWatcher.update();
+
+		long time = System.currentTimeMillis() - timestamp;
+		if (time > 1000)
+		{
+			countingRequestLog.reset();
+		}
+
+		return time;
+	}
+
 	@Override
 	public Set<StatsValue> ping()
 	{
-		return null;
+		Set<StatsValue> data = new HashSet<StatsValue>();
+
+		long time = update();
+		double rps = countingRequestLog.getCounter() / (time / 1000);
+
+		data.add(new DoubleStat("cpu", operatingSystem.getSystemLoadAverage()));
+		data.add(new LongStat("freeMemory", operatingSystem.getFreePhysicalMemorySize()));
+		data.add(new LongStat("totalMemory", operatingSystem.getTotalPhysicalMemorySize()));
+		data.add(new DoubleStat("rps", rps));
+
+		Map<String, Set<StatsValue>> appData = appServerWatcher.getData();
+		for (String appId : appData.keySet())
+			data.add(new AppStat("app", appData.get(appId)));
+
+		return data;
 	}
 
 	public void setAppServerWatcher(AppServerWatcher appServerWatcher)

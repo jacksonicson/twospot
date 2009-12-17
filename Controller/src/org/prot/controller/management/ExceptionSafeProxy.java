@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 import org.apache.log4j.Logger;
-import org.prot.appserver.management.Ping;
+import org.prot.util.managment.Ping;
 import org.springframework.remoting.rmi.RmiProxyFactoryBean;
 
 public class ExceptionSafeProxy implements InvocationHandler

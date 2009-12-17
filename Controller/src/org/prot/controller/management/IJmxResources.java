@@ -1,7 +1,6 @@
 package org.prot.controller.management;
 
-import org.prot.appserver.management.Ping;
-
+import org.prot.util.managment.Ping;
 
 public interface IJmxResources extends Ping
 {

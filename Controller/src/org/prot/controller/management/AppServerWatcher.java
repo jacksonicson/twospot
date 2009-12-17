@@ -6,10 +6,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.prot.appserver.management.Ping;
 import org.prot.controller.manager.AppManager;
-import org.prot.util.scheduler.Scheduler;
-import org.prot.util.scheduler.SchedulerTask;
+import org.prot.util.managment.Ping;
 import org.prot.util.stats.StatsValue;
 
 public class AppServerWatcher
@@ -22,9 +20,9 @@ public class AppServerWatcher
 
 	private Map<String, Set<StatsValue>> data = new HashMap<String, Set<StatsValue>>();
 
-	public void init()
+	public Map<String, Set<StatsValue>> getData()
 	{
-		Scheduler.addTask(new Watcher());
+		return data;
 	}
 
 	private Ping connectPing(String appId)
@@ -46,7 +44,7 @@ public class AppServerWatcher
 		data.put(appId, newData);
 	}
 
-	private void update()
+	public void update()
 	{
 		// Delete all old AppServers
 		Set<String> appIds = manager.getAppIds();
@@ -73,21 +71,6 @@ public class AppServerWatcher
 				data.remove(appId);
 				connections.remove(appId);
 			}
-		}
-	}
-
-	class Watcher extends SchedulerTask
-	{
-		@Override
-		public void run()
-		{
-			update();
-		}
-
-		@Override
-		public long getInterval()
-		{
-			return 1000;
 		}
 	}
 
