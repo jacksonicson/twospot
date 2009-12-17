@@ -7,7 +7,10 @@ Das DevServer ZIP-Paket kann <a href="downloads.jsp">hier</a> heruntergeladen we
 
 <h3>Konfiguration</h3>
 <p>
-Bevor der DevServer gestartet werden kann, m&uuml;ssen einige wenige Konfigurationseinstellungen vorgenommen werden. Diese betreffen im Wesentlichen das Scratch-Verzeichnis. Dieses wird vom DevServer f&uuml;r tempor&auml;re Dateien genutzt. Zum Beispiel werden die Servlets der JSP-Seiten im dem Scratch-Verzeichnis angelegt und kompiliert.
+Bevor der DevServer gestartet werden kann, m&uuml;ssen einige wenige Konfigurationseinstellungen
+vorgenommen werden. Diese betreffen im Wesentlichen das Scratch-Verzeichnis.
+Dieses wird vom DevServer f&uuml;r tempor&auml;re Dateien genutzt. Zum Beispiel
+werden die Servlets f&uuml;r JSP-Dateien im Scratch-Verzeichnis gespeichert.
 </p>
 
 <p>
@@ -26,7 +29,7 @@ appServer.mode=DEVELOPMENT
 # Defines the working directory in which the extracted application directores reside
 appserver.workDir=
 
-# Defines the scratch dir wich is used by the JSP-Compiler
+# !!! Defines the scratch dir wich is used by the JSP-Compiler !!!
 appServer.scratchdir=C:/temp/scratch
 
 ### Security options ###
@@ -35,7 +38,13 @@ appServer.security.DOSPrevention.time=40000
 </pre>
 
 <h3>Starten</h3>
-<p>Der Start des DevServers erfolgt &uuml;ber das <code>twospot.py</code> Tools-Script. Dieses muss in dem Verzeichnis der auszuf&uuml;hrenden Anwendung gestartet werden. Im Beispiel befindet sich die Anwendung <b>gogo</b> im Verzeichnis <code>/home/alf/dev/gogo</code>. Der DevServer wird dann wie folgt gestartet: 
+<p>Der Start des DevServers erfolgt &uuml;ber das <code>twospot.py</code> Tools-Script,
+    das sich im Root-Verzeichnis vom DevServer befindet. Befindet sich das DevServer-Verzeichnis
+    in der <code>PATH</code>-Umgebungsvariable kann das Script direkt &uuml;ber die Konsole gestartet
+    werden. Das Script muss in dem Anwendungs-Verzeichnis gestartet werden. Im
+    Beispiel befindet sich die Anwendung <b>gogo</b> im
+    Verzeichnis <code>/home/alf/dev/gogo</code>.
+    Der DevServer wird dann wie folgenderma&szlig;en gestartet: 
 </p>
 
 <pre class="prettypring">
@@ -55,15 +64,33 @@ In der Produktionsumgebung aktiviert der AppServer die Java Sicherheitsmechnisme
 
 <h4>Datenbank</h4>
 <p>
-Leider ist es nicht m&ouml;glich die HBase-Datenbank im DevServer auszuf&uuml;hren. Aus diesem Grund verwendet der DevServer die <a href="http://www.h2database.com">H2-Datenbank</a>. Der Zugriff auf die Datenbank erfolgt analog zur Produktionsumgebung &uuml;ber JDO. Bei der H2-Datenbank handelt es sich um eine typische relationale Datenbank mit einem wesentlich gr&ouml;&szlig;eren Funktionsumfang als HBase. Eine genauere Beschreibung des Datenbankzugriffes ist <a href="hbase.jsp">hier</a> zu finden. F&uuml;r die Anwendung ist die zugrundeliegende Datenbank aufgrund des Einsatzes von JDO weitgehend transparent.
+Leider ist es nicht m&ouml;glich die HBase-Datenbank im DevServer auszuf&uuml;hren.
+Aus diesem Grund verwendet der DevServer die <a href="http://www.h2database.com">H2-Datenbank</a>.
+Der Zugriff auf die Datenbank erfolgt analog zur Produktionsumgebung &uuml;ber
+JDO. Bei der H2-Datenbank handelt es sich um eine typische relationale Datenbank
+mit einem wesentlich gr&ouml;&szlig;eren Funktionsumfang als HBase. Aus diesem
+Grund sollten nur die elementare JDO-Funktionalit&auml;t verwendet werden. Eine genauere
+Beschreibung des Datenbankzugriffes ist <a href="hbase.jsp">hier</a> zu
+finden. F&uuml;r die Anwendung ist die zugrundeliegende Datenbank aufgrund des
+Einsatzes von JDO weitgehend transparent.
 </p>
 
 <h4>UserService</h4>
 <p>
-Die TwoSpot-Plattform stellt einen zentralen Benutzerservice mit einer einfachen API zur Verf&uuml;gung. Der DevServer enth&auml;lt eine Mock-Implementierung der UserService-API. Die Mock-Implementierung simuliert den Benutzerservice, enth&auml;lt aber keine Funktionen zur Authentifizierung. Au&szlig;erdem ist die Mock-Implementierung nur f&uuml;r den Betrieb mit <b>einem</b> Anwender bzw. einer Session konzipiert. Es k&ouml;nnen sicht also nicht mehere Anwender gleichzeitg am System anmelden!
+Die TwoSpot-Plattform stellt einen zentralen Benutzerservice mit einer einfachen
+    API zur Verf&uuml;gung. Der DevServer enth&auml;lt eine Mock-Implementierung
+    der UserService-API. Die Mock-Implementierung simuliert den Benutzerservice,
+    enth&auml;lt aber keine Funktionen zur Authentifizierung. Dar&uuml;ber hinaus
+    ist die Mock-Implementierung nur f&uuml;r den Betrieb mit <b>einem</b> Anwender
+    bzw. einer Session konzipiert. Es k&ouml;nnen sicht also nicht mehere Anwender
+    gleichzeitg am System anmelden!
 </p>
 
 <h4>LogService</h4>
 <p>
-Auch f&uuml;r den LogService enth&auml;lt der DevServer eine einfache Mock-Implementierung. Diese schreibt alle Logs &uuml;ber das <a href="">Log4j-Framework</a> auf die Standard-Ausgabe. Dies l&auml;sst sich &uuml;ber die Log4j-Konfiguration des DevServers allerdings &auml;ndern. Der name des Loggers lautet <code>org.prot.appserver.services.log</code>, die Log4j-Konfigurationsdatei befindet sich unter <code>/conf/appserver/etc/log4j.xml</code>.
+Auch f&uuml;r den LogService enth&auml;lt der DevServer eine einfache Mock-Implementierung.
+Diese schreibt alle Logs &uuml;ber das <a href="">Log4j-Framework</a> auf die
+Standard-Ausgabe. Dies l&auml;sst sich &uuml;ber die Log4j-Konfiguration des
+DevServers allerdings &auml;ndern. Der Name des Loggers lautet <code>org.prot.appserver.services.log</code>,
+die Log4j-Konfigurationsdatei befindet sich unter <code>/conf/appserver/etc/log4j.xml</code>.
 </p>

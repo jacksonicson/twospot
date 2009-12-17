@@ -49,13 +49,19 @@ public class BlogEntry
 </pre>
 
 <p>
-Anschlie&szlig;end m&uuml;ssen die Klasse und die persistenten Attribute annotiert werden. Die Klasse wird dabei mit <code>@PersistenceCapable</code> annotiert. Dar&uuml;ber erh&auml;lt JDO die Information, dass es sich um eine persistente Klasse handelt. Alle persistenten Attribute werden mit <code>@Persistent</code> annotiert. Diese Attribute werden von JDO gespeichert. Es ist dar&uuml;ber hinau&szlig; sinnvoll nicht persistente Attribute mit <code>@NotPersistent</code> zu annotieren. Die annotierte <code>BlogEntry</code>-Klasse hat das folgende Aussehen:
+Anschlie&szlig;end m&uuml;ssen die Klasse und die persistenten Attribute annotiert werden. Die Klasse wird dabei mit <code>@PersistenceCapable</code> annotiert. Dar&uuml;ber erh&auml;lt JDO die Information, dass es sich um eine persistente Klasse handelt. Alle persistenten Attribute werden mit <code>@Persistent</code> annotiert. Diese Attribute werden von JDO gespeichert. Es ist dar&uuml;ber hinau&szlig; sinnvoll nicht persistente Attribute mit <code>@NotPersistent</code> zu annotieren. </p>
+<p>Ein persistentes Klassen-Attribut muss als Prim&auml;rschl&uuml;ssel gekennzeichnet
+    sein. Der Prim&auml;rschl&uuml;ssel kann entweder von der Anwendung generiert werden,
+    oder es kann eine Generator-Strategie z.B. <code>UUIDSTRING</code> eingesetzt werden. </p>
+<p>Die annotierte <code>BlogEntry</code>-Klasse hat das folgende Aussehen:
 </p>
 
 <pre class="prettyprint lang-java">
 @PersistenceCapable
 public class BlogEntry
 {
+	@Persistent(valueStrategy = IdGeneratorStrategy.UUIDSTRING)<br />	@PrimaryKey<br />	private String key;
+
 	@Persistent
 	private String username; 
 	
@@ -87,6 +93,8 @@ public class BlogEntry
 <p>
 Um Instanzen der <code>BlogEntry</code>-Klasse zu speichern muss eine <code>PersisteceManagerFactory</code> erzeugt werden. &uuml;ber diese kann ein <code>PersistenceManager</code> erzeugt werden. Mithilfe des <code>PersistenceManager</code>'s k&ouml;nnen persistence Objekte in der Datenbank gespeichert werden. 
 </p>
+<p>Das Anlegen einer neuen <code>PersistenceManagerFactory</code> ist sehr &quot;teuer&quot;. Aus diesem
+    Grund empfiehlt es sich die Referenz in Form eines Singletons zu speichern. </p>
 <p>
 Der folgende Quellcodeausschnitt erstellt eine Instanz der <code>BlogEntry</code>-Klasse und speichert das Objet in der Datenbank. 
 </p>

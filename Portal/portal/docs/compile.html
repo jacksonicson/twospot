@@ -1,76 +1,75 @@
 <h2>Kompilieren einer Anwendung</h2>
 
-<p>Um TwoSpot-Anwendungen zu komplilieren werden einige Bibliotheken ben&ouml;tigt. Diese befinden sich alle im <code>/dev</code>-Verzeichnis des DevServer's. Die JAR-Dateien sollten <b>nicht</b> in das <code>WEB-INF/lib</code>-Verzeichnis der Web-Anwendung &uuml;bertragen werden, da sie bereits im DevServer selbst enthalten sind. 
-</p>
+<p>Um TwoSpot-Anwendungen zu komplilieren werden einige Bibliotheken (JAR-Dateien)
+    ben&ouml;tigt.
+    Diese befinden sich im <code>/dev</code>-Verzeichnis vom DevServer.
+    Die JAR-Dateien sollten <b>nicht</b> in das <code>WEB-INF/lib</code>-Verzeichnis
+    der Web-Anwendung &uuml;bertragen werden, da sie bereits im AvvServer und
+DevServer enthalten sind.</p>
 <p>
-Zum Kompilieren von TwoSpot-Anwendungen wird eine ANT-Buildfile eingesetzt. Eine Template-Version dieser Buildfile ist im nachfolgend dargestellt.
-</p>
+Zum Kompilieren von TwoSpot-Anwendungen wird eine ANT-Buildfile eingesetzt. Eine
+    Template-Version dieser Buildfile ist im nachfolgend Codeausschnitt dargestellt.
+Das Script nimmt an, dass sich alle JAR-Dateien aus dem <code>/dev</code>-Verzeichnis
+im <code>/lib</code>-Verzeichnis und die Anwendungs-Quellcodes
+im <code>/src</code>-Verzeichnis der Anwendung befinden. Die <code>class</code>-Dateien
+werden im <code>WEB-INF/classes</code>-Verzeichnis abgelegt. </p>
 <pre class="prettyprint lang-htm">
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;
 &lt;project basedir=&quot;.&quot; default=&quot;all&quot; name=&quot;GoGo&quot;&gt;
 
-	&lt;import file=&quot;./classpath.xml&quot; /&gt;
-
 	&lt;property name=&quot;src&quot; value=&quot;./src&quot; /&gt;
-	&lt;property name=&quot;build&quot; value=&quot;./WEB-INF/classes&quot; /&gt;
+	&lt;property name=&quot;dest&quot; value=&quot;./WEB-INF/classes&quot; /&gt;
+	&lt;property name=&quot;libdir&quot; value=&quot;./lib&quot; /&gt;
 
-	&lt;target name=&quot;prepare&quot;&gt;
-	&lt;/target&gt;
+	&lt;path id=&quot;classpath&quot;&gt;
+		&lt;fileset dir=&quot;${libdir}&quot;&gt;
+			&lt;include name=&quot;*.jar&quot; /&gt;
+		&lt;/fileset&gt;
+	&lt;/path&gt;
 
-	&lt;target name=&quot;cleanup&quot;&gt;
-	&lt;/target&gt;
-
-	&lt;target name=&quot;enhance&quot; description=&quot;DataNucleus enhancement&quot;&gt;
+	&lt;target name=&quot;enhance&quot;&gt;
 		&lt;path id=&quot;enhancer.classpath&quot;&gt;
 			&lt;path refid=&quot;classpath&quot; /&gt;
-			&lt;pathelement location=&quot;${build}&quot; /&gt;
+			&lt;pathelement location=&quot;${dest}&quot; /&gt;
 		&lt;/path&gt;
 
-		&lt;taskdef name=&quot;enhance&quot; classpathref=&quot;enhancer.classpath&quot; classname=&quot;org.datanucleus.enhancer.tools.EnhancerTask&quot; /&gt;
+		&lt;taskdef name=&quot;enhance&quot;
+		         classpathref=&quot;enhancer.classpath&quot;
+		         classname=&quot;org.datanucleus.enhancer.tools.EnhancerTask&quot; /&gt;
 
-		&lt;enhance classpathref=&quot;enhancer.classpath&quot; failonerror=&quot;true&quot; verbose=&quot;true&quot;&gt;
+		&lt;enhance classpathref=&quot;enhancer.classpath&quot;
+		         failonerror=&quot;true&quot;
+		         verbose=&quot;false&quot;&gt;
+
 			&lt;jvmarg line=&quot;-Dlog4j.configuration=${log4j.config.file}&quot; /&gt;
 
-			&lt;fileset dir=&quot;${build}&quot;&gt;
+			&lt;fileset dir=&quot;${dest}&quot;&gt;
 				&lt;include name=&quot;**/*.class&quot; /&gt;
 			&lt;/fileset&gt;
+
 		&lt;/enhance&gt;
 	&lt;/target&gt;
 
-	&lt;target name=&quot;build&quot; depends=&quot;prepare&quot;&gt;
-		&lt;mkdir dir=&quot;${build}&quot; /&gt;
-		&lt;javac srcdir=&quot;${src}&quot; destdir=&quot;${build}&quot;&gt;
+	&lt;target name=&quot;build&quot;&gt;
+		&lt;delete dir=&quot;${dest}&quot; /&gt;
+		&lt;mkdir dir=&quot;${dest}&quot; /&gt;
+		&lt;javac srcdir=&quot;${src}&quot; destdir=&quot;${dest}&quot;&gt;
 			&lt;classpath refid=&quot;classpath&quot; /&gt;
 		&lt;/javac&gt;
 	&lt;/target&gt;
 
-	&lt;target name=&quot;mkcp&quot;&gt;
-		&lt;exec executable=&quot;python&quot;&gt;
-			&lt;arg value=&quot;../Build/buildclasspath.py&quot; /&gt;
-		&lt;/exec&gt;
-	&lt;/target&gt;
+	&lt;target name=&quot;all&quot; depends=&quot;build,enhance&quot; /&gt;
 
-	&lt;target name=&quot;all&quot; depends=&quot;prepare,build,enhance,cleanup&quot; /&gt;
 &lt;/project&gt;
 </pre>
-
-<p>Es wird empfohlen den Inhalt des <code>/dev</code>-Verzeichnisses vom DevServer in ein <code>/lib</code>-Verzeichnis innerhalb der TwoSpot-Anwendung zu kopieren. Das Verzeichnis der TwoSpot-Anwendung <b>gogo</b> hat z.b. den folgenden Aufbau:</p>
-
-<pre class="prettyprint lang-htm">
-  /gogo
-    /src (Quellcodedateien der GoGo-Anwendung)
-    /WEB-INF
-      /lib
-      /classes (Dorthin werden die Quellcode-Dateien kompiliert)
-    /lib (Enth&auml;lt alle JAR-Dateien aus dem /dev-Verzeichnis des DevServers)
-    /build.xml (Die oben dargestellte build.xml-Datei)
-    /app.yaml (Anwendungskonfiguration)
-</pre>
-
-<p>Um die Anwendung zu kompilieren muss lediglich das ANT-Script ausgef&uuml;hrt werden. Es wird dabei eine funktionierende ANT-Installation vorrausgesetzt:</p>
+<p>Um die Anwendung zu kompilieren muss lediglich das ANT-Script im Anwendungs-Verzeichnis
+    ausgef&uuml;hrt
+    werden. Es wird dabei eine funktionierende ANT-Installation vorrausgesetzt.
+Der Startbefehl lautet:</p>
 
 <pre class="prettyprint lang-htm">
 ant -f build.xml
 </pre>
 
-<p>Die GoGo-Anwendung kann <a href="downloads.jsp">hier</a> heruntergeladen werden</p>
+<p>Die GoGo-Anwendung mit der ANT-Buildfile kann <a href="downloads.jsp">hier</a> heruntergeladen
+    werden.</p>
