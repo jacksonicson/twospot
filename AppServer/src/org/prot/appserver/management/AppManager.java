@@ -2,6 +2,7 @@ package org.prot.appserver.management;
 
 import java.util.Set;
 
+import org.prot.util.managment.Ping;
 import org.prot.util.stats.StatsValue;
 
 public class AppManager implements Ping
