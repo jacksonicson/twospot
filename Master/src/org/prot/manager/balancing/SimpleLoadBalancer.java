@@ -40,7 +40,7 @@ public class SimpleLoadBalancer implements LoadBalancer
 			logger.debug("Ranking for " + info.getAddress() + " = " + rank);
 
 			// Update best Controller
-			if (bestRanking > rank)
+			if (bestRanking > rank || bestController == null)
 			{
 				bestRanking = rank;
 				bestController = info;
