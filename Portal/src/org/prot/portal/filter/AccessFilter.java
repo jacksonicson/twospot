@@ -34,7 +34,7 @@ public class AccessFilter extends GenericFilterBean
 			uri = uri.substring(1);
 
 		String[] clean = { "docs", "index.htm", "login.htm", "start.htm", "loginHandler.htm",
-				"registerHandler.htm", "etc" };
+				"registerHandler.htm", "loadTest.htm", "etc" };
 
 		// Check if user is logged in
 		String user = service.getCurrentUser();

@@ -4,11 +4,7 @@ import java.util.Set;
 
 import org.prot.util.stats.StatsValue;
 
-class MockManagement implements Management
+public interface Ping
 {
-	@Override
-	public Set<StatsValue> ping()
-	{
-		return null;
-	}
+	public Set<StatsValue> ping();
 }

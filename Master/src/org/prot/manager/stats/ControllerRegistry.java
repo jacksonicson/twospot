@@ -1,4 +1,4 @@
-package org.prot.manager.data;
+package org.prot.manager.stats;
 
 import java.util.HashMap;
 import java.util.HashSet;

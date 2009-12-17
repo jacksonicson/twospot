@@ -1,11 +1,11 @@
-package org.prot.controller.management.appserver;
+package org.prot.controller.management;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 import org.apache.log4j.Logger;
-import org.prot.appserver.management.IAppServerStats;
+import org.prot.appserver.management.Ping;
 import org.springframework.remoting.rmi.RmiProxyFactoryBean;
 
 public class ExceptionSafeProxy implements InvocationHandler
@@ -41,7 +41,7 @@ public class ExceptionSafeProxy implements InvocationHandler
 		try
 		{
 			RmiProxyFactoryBean proxyFactory = new RmiProxyFactoryBean();
-			proxyFactory.setServiceInterface(IAppServerStats.class);
+			proxyFactory.setServiceInterface(Ping.class);
 			proxyFactory.setServiceUrl("rmi://" + APP_SERVER_ADDRESS + ":" + getRmiPort() + "/appserver/"
 					+ appId);
 			proxyFactory.afterPropertiesSet();
@@ -50,7 +50,7 @@ public class ExceptionSafeProxy implements InvocationHandler
 
 		} catch (Exception e)
 		{
-			logger.debug("exception while connecting to AppServer: " + appId);
+			logger.debug("Exception while connecting to AppServer: " + appId);
 			logger.trace(e);
 			obj = null;
 
@@ -71,7 +71,7 @@ public class ExceptionSafeProxy implements InvocationHandler
 		} catch (Exception e)
 		{
 			obj = null;
-			logger.debug("exception in proxy");
+			logger.debug("Exception in proxy");
 			logger.trace(e);
 
 			throw e;

@@ -4,7 +4,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.prot.manager.balancing.LoadBalancer;
-import org.prot.manager.data.ControllerInfo;
+import org.prot.manager.stats.ControllerInfo;
 
 public class FrontendServiceImpl implements FrontendService
 {

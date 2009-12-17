@@ -40,6 +40,9 @@ public class AppManager implements DeploymentListener
 		// Get or register the AppServer
 		AppInfo appInfo = registry.getOrRegisterApp(appId);
 
+		// Update last access timestamp (Idle are killed)
+		appInfo.touch();
+
 		// Todo-Information
 		Todo todo = null;
 

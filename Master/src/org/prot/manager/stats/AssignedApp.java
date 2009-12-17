@@ -1,9 +1,11 @@
-package org.prot.manager.data;
+package org.prot.manager.stats;
 
 public class AssignedApp
 {
+	// AppId
 	private final String appId;
 
+	// Timestamp of assignment (Assignments time out!)
 	private final long timestamp;
 
 	public AssignedApp(String appId)

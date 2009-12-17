@@ -188,7 +188,7 @@
 
 	<!-- Management -->
 	<bean id="AppServerWatcher"
-		class="org.prot.controller.management.appserver.AppServerWatcher"
+		class="org.prot.controller.management.AppServerWatcher"
 		init-method="init">
 		<property name="manager" ref="AppManager" />
 	</bean>
@@ -220,7 +220,7 @@
 		<property name="beans">
 			<map>
 				<entry key="bean:name=resources">
-					<bean class="org.prot.controller.management.services.JmxResources">
+					<bean class="org.prot.controller.management.Management">
 						<property name="appServerWatcher" ref="AppServerWatcher" />
 						<property name="countingRequestLog" ref="CountingRequestLog" />
 					</bean>

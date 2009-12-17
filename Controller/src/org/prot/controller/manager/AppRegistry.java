@@ -85,10 +85,7 @@ class AppRegistry
 	{
 		AppInfo appInfo = appInfos.get(appId);
 		if (appInfo != null)
-		{
-			appInfo.touch();
 			return appInfo;
-		}
 
 		synchronized (appInfos)
 		{
@@ -99,7 +96,6 @@ class AppRegistry
 
 			// Create new AppInfo
 			appInfo = new AppInfo(appId, getPort());
-			appInfo.touch();
 
 			// Add the new AppInfo
 			this.appInfos.put(appInfo.getAppId(), appInfo);

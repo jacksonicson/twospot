@@ -11,7 +11,7 @@
 
 
 	<!-- Application beans -->
-	<bean id="ControllerRegistry" class="org.prot.manager.data.ControllerRegistry">
+	<bean id="ControllerRegistry" class="org.prot.manager.stats.ControllerRegistry">
 	</bean>
 
 	<bean id="ControllerWatcher" class="org.prot.manager.watcher.ControllerWatcher"

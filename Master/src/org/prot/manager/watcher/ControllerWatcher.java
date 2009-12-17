@@ -5,9 +5,9 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.prot.controller.management.services.IJmxResources;
-import org.prot.manager.data.ControllerInfo;
-import org.prot.manager.data.ControllerRegistry;
-import org.prot.manager.data.ManagementData;
+import org.prot.manager.stats.ControllerInfo;
+import org.prot.manager.stats.ControllerRegistry;
+import org.prot.manager.stats.Stats;
 import org.prot.util.scheduler.Scheduler;
 import org.prot.util.scheduler.SchedulerTask;
 
@@ -16,6 +16,8 @@ public class ControllerWatcher
 	private static final Logger logger = Logger.getLogger(ControllerWatcher.class);
 
 	private ControllerRegistry registry;
+
+	private Stats stats;
 
 	private Map<String, JmxController> connections = new HashMap<String, JmxController>();
 
@@ -54,29 +56,15 @@ public class ControllerWatcher
 
 				// Get JMX connection
 				JmxController connection = getJmxController(info.getServiceAddress());
-				ManagementData management = info.getManagementData();
-
-				// Update resource data
 				IJmxResources resources = connection.getJmxResources();
-				updateResources(management, resources);
+
+				stats.update(info.getAddress(), resources);
 
 			} catch (Exception e)
 			{
 				removeJmxController(info.getServiceAddress());
 			}
 		}
-	}
-
-	private void updateResources(ManagementData management, IJmxResources resources)
-	{
-		management.updateRunningApps(resources.getApps());
-		management.updatePerformanceData(resources.getAppsPerformance());
-
-		management.setRps(resources.requestsPerSecond());
-		management.setMemLoad(resources.freeMemory());
-		management.setAverageCpu(resources.loadAverage());
-
-		management.dump();
 	}
 
 	class WatchTask extends SchedulerTask

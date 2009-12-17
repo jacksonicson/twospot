@@ -41,6 +41,9 @@
 			<props>
 				<prop key="/start.htm">Start</prop>
 
+				<!-- Load tests -->
+				<prop key="/loadTest.htm">LoadTest</prop>
+
 				<!-- Deploy -->
 				<prop key="/deploy.htm">AppDeployment</prop>
 				<prop key="/deployDone.htm">AppDeploymentDone</prop>
@@ -75,6 +78,9 @@
 			<value>.jsp</value>
 		</property>
 	</bean>
+
+	<!-- Load tests -->
+	<bean name="LoadTest" class="org.prot.portal.loadtest.LoadTestController" />
 
 	<!-- Web-Beans -->
 	<bean name="Start" class="org.prot.portal.start.StartController" />

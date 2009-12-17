@@ -1,12 +1,15 @@
 package org.prot.appserver.runtime.java;
 
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.Connector;
-import org.prot.appserver.management.AppManagement;
+import org.prot.appserver.management.Management;
+import org.prot.util.stats.StatsValue;
 
 import ort.prot.util.server.CountingRequestLog;
 
-public class JettyAppManagement implements AppManagement
+public class JettyAppManagement implements Management
 {
 	private static final Logger logger = Logger.getLogger(JettyAppManagement.class);
 
@@ -14,38 +17,10 @@ public class JettyAppManagement implements AppManagement
 
 	private Connector connector;
 
-	private long lastReset = 0;
-
-	public JettyAppManagement()
-	{
-		this.lastReset = System.currentTimeMillis();
-	}
-
 	@Override
-	public double requestsPerSecond()
+	public Set<StatsValue> ping()
 	{
-		long count = countingRequestLog.getCounter();
-		long time = System.currentTimeMillis() - lastReset;
-		return count / (time / 1000d);
-	}
-
-	@Override
-	public long averageRequestTime()
-	{
-		return -1;
-	}
-
-	@Override
-	public double ping()
-	{
-		long time = System.currentTimeMillis() - lastReset;
-		if (time > 10000)
-		{
-			lastReset = System.currentTimeMillis();
-			countingRequestLog.reset();
-		}
-
-		return (double) (connector.isLowResources() ? 1 : 0);
+		return null;
 	}
 
 	public void setCountingRequestLog(CountingRequestLog countingRequestLog)
