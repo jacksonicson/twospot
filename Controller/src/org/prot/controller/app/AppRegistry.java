@@ -151,6 +151,13 @@ public class AppRegistry implements TokenChecker
 		return false;
 	}
 
+	public Set<AppInfo> getAppInfos()
+	{
+		Set<AppInfo> appInfos = new HashSet<AppInfo>();
+		appInfos.addAll(this.appInfos.values());
+		return appInfos;
+	}
+
 	public Set<String> getAppIds()
 	{
 		return appInfos.keySet();

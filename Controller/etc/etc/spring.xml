@@ -59,8 +59,13 @@
 
 
 	<!-- Application beans -->
-	<bean id="Stats" class="org.prot.controller.stats.Stats">
+	<bean id="Stats" class="org.prot.controller.stats.Stats" init-method="init">
 		<property name="registry" ref="AppRegistry" />
+		<property name="processors">
+			<list>
+				<bean class="org.prot.controller.stats.IdleProcessor" />
+			</list>
+		</property>
 	</bean>
 
 	<bean id="ManagementService" class="org.prot.controller.zookeeper.ManagementService"

@@ -12,8 +12,6 @@ public class AppManager implements DeploymentListener
 {
 	private static final Logger logger = Logger.getLogger(AppManager.class);
 
-	private static final long MAINTENANCE_TIME = 5000;
-
 	private AppRegistry registry;
 
 	private ProcessWorker processWorker;
@@ -23,7 +21,7 @@ public class AppManager implements DeploymentListener
 	public void init()
 	{
 		// Schedule the maintaince task
-		Scheduler.addTask(new MaintenanceTask());
+		Scheduler.addTask(new CleanupTask());
 
 		// Register listeners
 		managementService.addDeploymentListener(this);
@@ -139,7 +137,7 @@ public class AppManager implements DeploymentListener
 		return processWorker.waitForApplication(appInfo);
 	}
 
-	private void doMaintenance()
+	private void cleanup()
 	{
 		// Find and kill dead AppServers
 		Set<AppInfo> dead = registry.findDeadApps();
@@ -156,19 +154,25 @@ public class AppManager implements DeploymentListener
 		}
 	}
 
-	class MaintenanceTask extends SchedulerTask
+	class CleanupTask extends SchedulerTask
 	{
 		@Override
 		public long getInterval()
 		{
-			return MAINTENANCE_TIME;
+			return 5000;
 		}
 
 		@Override
 		public void run()
 		{
-			logger.debug("Maintenance");
-			doMaintenance();
+			try
+			{
+				cleanup();
+			} catch (Exception e)
+			{
+				logger.error("CleanupTask failed", e);
+				System.exit(1);
+			}
 		}
 	}
 
