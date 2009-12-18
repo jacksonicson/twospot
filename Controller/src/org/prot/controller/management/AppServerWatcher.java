@@ -53,6 +53,7 @@ public class AppServerWatcher
 			String appId = it.next();
 			if (!appIds.contains(appId))
 			{
+				logger.debug("App lost: " + appId);
 				data.remove(appId);
 				it.remove();
 			}
@@ -68,6 +69,7 @@ public class AppServerWatcher
 				updateData(appId, ping);
 			} catch (Exception e)
 			{
+				logger.debug("Connection lost: " + appId);
 				data.remove(appId);
 				connections.remove(appId);
 			}

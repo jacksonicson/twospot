@@ -44,9 +44,10 @@ public class Management implements IJmxResources
 		appServerWatcher.update();
 
 		long time = System.currentTimeMillis() - timestamp;
-		if (time > 1000)
+		if (time > 10000)
 		{
 			countingRequestLog.reset();
+			timestamp = System.currentTimeMillis();
 		}
 
 		return time;
@@ -56,11 +57,11 @@ public class Management implements IJmxResources
 	public Set<StatsValue> ping()
 	{
 		update();
-		
+
 		Set<StatsValue> data = new HashSet<StatsValue>();
 
 		long time = update();
-		double rps = countingRequestLog.getCounter() / (time / 1000);
+		double rps = countingRequestLog.getCounter() / (time / 1000 + 1);
 
 		data.add(new DoubleStat(StatType.CPU_USAGE, operatingSystem.getSystemLoadAverage()));
 		data.add(new LongStat(StatType.FREE_MEMORY, operatingSystem.getFreePhysicalMemorySize()));
@@ -68,6 +69,7 @@ public class Management implements IJmxResources
 		data.add(new DoubleStat(StatType.REQUESTS_PER_SECOND, rps));
 
 		Map<String, Set<StatsValue>> appData = appServerWatcher.getData();
+		logger.debug("AppServers: " + appData.size());
 		for (String appId : appData.keySet())
 			data.add(new AppStat(StatType.APPLICATION, appId, appData.get(appId)));
 

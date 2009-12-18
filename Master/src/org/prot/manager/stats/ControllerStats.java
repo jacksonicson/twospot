@@ -39,6 +39,14 @@ public class ControllerStats implements StatsUpdater
 
 		public long freeMemory;
 		public long totalMemory;
+
+		public void dump()
+		{
+			logger.debug("   CPU: " + cpu);
+			logger.debug("   RPS: " + rps);
+			logger.debug("   FreeMem: " + freeMemory);
+			logger.debug("   TotalMem: " + totalMemory);
+		}
 	}
 
 	private final StatValues stats = new StatValues();
@@ -52,12 +60,12 @@ public class ControllerStats implements StatsUpdater
 	{
 		return instances.size();
 	}
-	
+
 	public int size()
 	{
 		return instances.size();
 	}
-	
+
 	public InstanceStats getInstance(String appId)
 	{
 		return instances.get(appId);
@@ -73,6 +81,14 @@ public class ControllerStats implements StatsUpdater
 		return instances.keySet();
 	}
 
+	void assign(String appId)
+	{
+		if (instances.containsKey(appId))
+			return;
+
+		instances.put(appId, new InstanceStats(appId, true));
+	}
+
 	void updateStats(Set<StatsValue> update)
 	{
 		lastUpdate = System.currentTimeMillis();
@@ -86,8 +102,15 @@ public class ControllerStats implements StatsUpdater
 		{
 			// Remove everything which is not running or old
 			String appId = it.next();
-			if (!runningApps.contains(appId) || instances.get(appId).isOld())
+			if (!runningApps.contains(appId))
+			{
+				logger.debug("Removing: " + appId);
 				it.remove();
+			} else if (instances.get(appId).isOld())
+			{
+				logger.debug("Old instance");
+				it.remove();
+			}
 		}
 	}
 
@@ -103,6 +126,7 @@ public class ControllerStats implements StatsUpdater
 
 	public void update(StatType key, IntegerStat value)
 	{
+		// Empty
 	}
 
 	@Override
@@ -122,7 +146,7 @@ public class ControllerStats implements StatsUpdater
 	@Override
 	public void update(StatType key, BooleanStat value)
 	{
-
+		// Empty
 	}
 
 	@Override
@@ -145,10 +169,13 @@ public class ControllerStats implements StatsUpdater
 		switch (key)
 		{
 		case APPLICATION:
-			runningApps.add(value.get());
-			if (!instances.containsKey(value.get()))
-				instances.put(value.get(), new InstanceStats(value.get()));
-			InstanceStats instance = instances.get(value.get());
+			final String appId = value.get();
+			runningApps.add(appId);
+
+			if (!instances.containsKey(appId))
+				instances.put(appId, new InstanceStats(appId));
+
+			InstanceStats instance = instances.get(appId);
 			instance.update(value.composite());
 			break;
 		}
@@ -157,8 +184,8 @@ public class ControllerStats implements StatsUpdater
 	public void dump()
 	{
 		logger.debug("RunningApps: " + runningApps.size());
+		stats.dump();
 		logger.debug("Instances: " + instances.size());
-
 		for (InstanceStats instance : instances.values())
 			instance.dump();
 	}

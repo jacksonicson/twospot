@@ -27,6 +27,12 @@ public class InstanceStats implements StatsUpdater
 	{
 		public double rps;
 		public boolean overloaded;
+
+		public void dump()
+		{
+			logger.debug("   RPS: " + rps);
+			logger.debug("   Overloaded: " + overloaded);
+		}
 	}
 
 	final private StatValues stat = new StatValues();
@@ -34,6 +40,12 @@ public class InstanceStats implements StatsUpdater
 	public InstanceStats(String appId)
 	{
 		this.appId = appId;
+	}
+	
+	public InstanceStats(String appId, boolean assigned)
+	{
+		this(appId);
+		this.assigned = true;
 	}
 
 	public StatValues getValues()
@@ -48,7 +60,7 @@ public class InstanceStats implements StatsUpdater
 
 	public void update(Set<StatsValue> update)
 	{
-		assigned = true;
+		assigned = false;
 		lastUpdate = System.currentTimeMillis();
 
 		for (StatsValue value : update)
@@ -102,5 +114,6 @@ public class InstanceStats implements StatsUpdater
 
 	public void dump()
 	{
+		stat.dump();
 	}
 }

@@ -39,7 +39,7 @@ public class JettyAppManagement implements Management
 	{
 		long time = update();
 
-		double rps = countingRequestLog.getCounter() / (time / 1000);
+		double rps = countingRequestLog.getCounter() / (time / 1000 + 1);
 
 		Set<StatsValue> data = new HashSet<StatsValue>();
 		data.add(new BooleanStat(StatType.OVERLOADED, connector.isLowResources()));

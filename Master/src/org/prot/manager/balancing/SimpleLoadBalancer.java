@@ -37,8 +37,8 @@ public class SimpleLoadBalancer implements LoadBalancer
 		{
 			// Rate this controller
 			double rank = 0;
-			rank += 1.0 * controller.getValues().cpu;
-			rank += 1.0 * controller.getValues().freeMemory / controller.getValues().totalMemory;
+			rank += 0.3 * ((controller.getValues().cpu < 0) ? 0 : controller.getValues().cpu);
+			rank += 2.0 * controller.getValues().freeMemory / controller.getValues().totalMemory;
 			rank += 0.5 * controller.size();
 			rank += 0.003 * controller.getValues().rps;
 
@@ -66,7 +66,9 @@ public class SimpleLoadBalancer implements LoadBalancer
 		if (!result.isEmpty() && !overloaded)
 			return result;
 
-		result.add(registry.getController(bestController.getAddress()));
+		ControllerInfo bestControllerInfo = registry.getController(bestController.getAddress());
+		stats.assignToController(appId, bestController.getAddress());
+		result.add(bestControllerInfo);
 
 		return result;
 	}

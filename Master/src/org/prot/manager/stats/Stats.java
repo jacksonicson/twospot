@@ -22,10 +22,13 @@ public class Stats
 
 	public void finalizeUpdate()
 	{
+		// Remove all old controllers
 		removeOld();
 
+		// Update public controllers
 		publicControllers.putAll(controllers);
 
+		// Remove all public controllers which are not in the controllers map
 		for (Iterator<String> it = publicControllers.keySet().iterator(); it.hasNext();)
 		{
 			String address = it.next();
@@ -34,12 +37,21 @@ public class Stats
 		}
 	}
 
-	public void remove(String address)
+	public void assignToController(String appId, String address)
 	{
+		ControllerStats stats = controllers.get(address);
+		if (stats == null)
+			return;
+		stats.assign(appId);
+	}
+
+	public void removeController(String address)
+	{
+		// Remove controller
 		controllers.remove(address);
 	}
 
-	public void update(String address, Ping ping)
+	public void updateController(String address, Ping ping)
 	{
 		// Load management data
 		Set<StatsValue> stats = ping.ping();

@@ -44,7 +44,7 @@ public class ControllerWatcher
 		connection.release();
 		connections.remove(address);
 
-		stats.remove(address);
+		stats.removeController(address);
 	}
 
 	private void update()
@@ -61,7 +61,7 @@ public class ControllerWatcher
 				// Get JMX connection
 				JmxController connection = getJmxController(info.getServiceAddress());
 				IJmxResources ping = connection.getJmxResources();
-				stats.update(info.getAddress(), ping);
+				stats.updateController(info.getAddress(), ping);
 
 			} catch (Exception e)
 			{
