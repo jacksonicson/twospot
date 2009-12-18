@@ -2,11 +2,11 @@ package org.prot.util.stats;
 
 public class DoubleStat implements StatsValue
 {
-	private final String key;
+	private final StatType key;
 
 	private final double value;
 
-	public DoubleStat(String key, double value)
+	public DoubleStat(StatType key, double value)
 	{
 		this.key = key;
 		this.value = value;

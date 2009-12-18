@@ -3,6 +3,7 @@
 	<name>Master</name>
 	<comment></comment>
 	<projects>
+		<project>Util</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

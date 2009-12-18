@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.prot.util.stats.AppStat;
 import org.prot.util.stats.DoubleStat;
 import org.prot.util.stats.LongStat;
+import org.prot.util.stats.StatType;
 import org.prot.util.stats.StatsValue;
 
 import ort.prot.util.server.CountingRequestLog;
@@ -59,14 +60,14 @@ public class Management implements IJmxResources
 		long time = update();
 		double rps = countingRequestLog.getCounter() / (time / 1000);
 
-		data.add(new DoubleStat("cpu", operatingSystem.getSystemLoadAverage()));
-		data.add(new LongStat("freeMemory", operatingSystem.getFreePhysicalMemorySize()));
-		data.add(new LongStat("totalMemory", operatingSystem.getTotalPhysicalMemorySize()));
-		data.add(new DoubleStat("rps", rps));
+		data.add(new DoubleStat(StatType.CPU_USAGE, operatingSystem.getSystemLoadAverage()));
+		data.add(new LongStat(StatType.FREE_MEMORY, operatingSystem.getFreePhysicalMemorySize()));
+		data.add(new LongStat(StatType.TOTAL_MEMORY, operatingSystem.getTotalPhysicalMemorySize()));
+		data.add(new DoubleStat(StatType.REQUESTS_PER_SECOND, rps));
 
 		Map<String, Set<StatsValue>> appData = appServerWatcher.getData();
 		for (String appId : appData.keySet())
-			data.add(new AppStat("app", appData.get(appId)));
+			data.add(new AppStat(StatType.APPLICATION, appId, appData.get(appId)));
 
 		return data;
 	}

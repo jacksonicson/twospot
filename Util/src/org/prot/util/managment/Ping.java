@@ -1,4 +1,4 @@
-package org.prot.appserver.management;
+package org.prot.util.managment;
 
 import java.util.Set;
 

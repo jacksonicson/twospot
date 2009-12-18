@@ -1,6 +1,6 @@
 package org.prot.manager.watcher;
 
-import org.prot.controller.management.services.IJmxResources;
+import org.prot.controller.management.IJmxResources;
 
 public class JmxController
 {
@@ -24,7 +24,7 @@ public class JmxController
 		return resources;
 	}
 
-	public void release()
+	void release()
 	{
 		resources = null;
 	}

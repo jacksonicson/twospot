@@ -1,18 +1,18 @@
 package org.prot.util.stats;
 
-public class IntegerStat implements StatsValue
+public class LongStat implements StatsValue
 {
 	private final StatType key;
 
-	private final double value;
+	private final long value;
 
-	public IntegerStat(StatType key, double value)
+	public LongStat(StatType key, long value)
 	{
 		this.key = key;
 		this.value = value;
 	}
 
-	public double get()
+	public long get()
 	{
 		return this.value;
 	}

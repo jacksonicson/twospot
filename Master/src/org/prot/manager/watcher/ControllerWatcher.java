@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.prot.controller.management.services.IJmxResources;
 import org.prot.manager.stats.ControllerInfo;
 import org.prot.manager.stats.ControllerRegistry;
 import org.prot.manager.stats.Stats;
+import org.prot.util.managment.Ping;
 import org.prot.util.scheduler.Scheduler;
 import org.prot.util.scheduler.SchedulerTask;
 
@@ -38,15 +38,19 @@ public class ControllerWatcher
 		return connection;
 	}
 
-	private void removeJmxController(String address)
+	private void removeController(String address)
 	{
 		JmxController connection = getJmxController(address);
 		connection.release();
 		connections.remove(address);
+
+		stats.remove(address);
 	}
 
 	private void update()
 	{
+		stats.startUpdate();
+
 		// Iterate over all controllers
 		for (ControllerInfo info : registry.getControllers())
 		{
@@ -56,15 +60,18 @@ public class ControllerWatcher
 
 				// Get JMX connection
 				JmxController connection = getJmxController(info.getServiceAddress());
-				IJmxResources resources = connection.getJmxResources();
+				Ping ping = connection.getJmxResources();
 
-				stats.update(info.getAddress(), resources);
+				stats.update(info.getAddress(), ping);
 
 			} catch (Exception e)
 			{
-				removeJmxController(info.getServiceAddress());
+				removeController(info.getServiceAddress());
 			}
 		}
+
+		stats.finalizeUpdate();
+		stats.dump();
 	}
 
 	class WatchTask extends SchedulerTask

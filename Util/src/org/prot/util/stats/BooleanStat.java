@@ -1,18 +1,18 @@
 package org.prot.util.stats;
 
-public class IntegerStat implements StatsValue
+public class BooleanStat implements StatsValue
 {
 	private final StatType key;
 
-	private final double value;
+	private final boolean value;
 
-	public IntegerStat(StatType key, double value)
+	public BooleanStat(StatType key, boolean value)
 	{
 		this.key = key;
 		this.value = value;
 	}
 
-	public double get()
+	public boolean get()
 	{
 		return this.value;
 	}

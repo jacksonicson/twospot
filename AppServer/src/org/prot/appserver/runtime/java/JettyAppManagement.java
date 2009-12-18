@@ -7,6 +7,7 @@ import org.eclipse.jetty.server.Connector;
 import org.prot.appserver.management.Management;
 import org.prot.util.stats.BooleanStat;
 import org.prot.util.stats.DoubleStat;
+import org.prot.util.stats.StatType;
 import org.prot.util.stats.StatsValue;
 
 import ort.prot.util.server.CountingRequestLog;
@@ -41,8 +42,8 @@ public class JettyAppManagement implements Management
 		double rps = countingRequestLog.getCounter() / (time / 1000);
 
 		Set<StatsValue> data = new HashSet<StatsValue>();
-		data.add(new BooleanStat("overloaded", connector.isLowResources()));
-		data.add(new DoubleStat("rps", rps));
+		data.add(new BooleanStat(StatType.OVERLOADED, connector.isLowResources()));
+		data.add(new DoubleStat(StatType.REQUESTS_PER_SECOND, rps));
 
 		return data;
 	}

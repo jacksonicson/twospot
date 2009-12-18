@@ -1,10 +1,11 @@
 package org.prot.manager.stats;
 
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 
@@ -12,12 +13,10 @@ public class ControllerRegistry
 {
 	private static final Logger logger = Logger.getLogger(ControllerRegistry.class);
 
-	private Map<String, ControllerInfo> controllers = new HashMap<String, ControllerInfo>();
+	private Map<String, ControllerInfo> controllers = new ConcurrentHashMap<String, ControllerInfo>();
 
 	public synchronized void update(List<ControllerInfo> infos)
 	{
-		logger.info("Updaging controller registry...");
-
 		// Contains alls addresses from the controllers
 		Set<String> availableAddresses = new HashSet<String>();
 
@@ -53,8 +52,13 @@ public class ControllerRegistry
 		}
 	}
 
-	public ControllerInfo[] getControllers()
+	public Collection<ControllerInfo> getControllers()
 	{
-		return controllers.values().toArray(new ControllerInfo[0]);
+		return controllers.values();
+	}
+
+	public ControllerInfo getController(String address)
+	{
+		return controllers.get(address);
 	}
 }
