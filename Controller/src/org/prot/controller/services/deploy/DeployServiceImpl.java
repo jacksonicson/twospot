@@ -10,8 +10,8 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import org.apache.log4j.Logger;
+import org.prot.controller.app.TokenChecker;
 import org.prot.controller.config.Configuration;
-import org.prot.controller.manager.TokenChecker;
 import org.prot.controller.zookeeper.ManagementService;
 
 public class DeployServiceImpl implements DeployService

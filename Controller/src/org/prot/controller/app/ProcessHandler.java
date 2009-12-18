@@ -1,4 +1,4 @@
-package org.prot.controller.manager;
+package org.prot.controller.app;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,62 +10,79 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.prot.controller.config.Configuration;
 
-class AppProcess
+class ProcessHandler
 {
 	// Logger
-	private static final Logger logger = Logger.getLogger(AppProcess.class);
+	private static final Logger logger = Logger.getLogger(ProcessHandler.class);
 
 	// Info sent by appserver
 	private static final String SERVER_ONLINE = "server online";
 	private static final String SERVER_FAILED = "server failed";
 
-	// AppInfo which belongs to this process
-	private AppInfo appInfo;
-
-	// Connection to the process
-	private Process process;
-
-	public AppProcess(AppInfo appInfo)
+	private void stopAndClean(AppProcess process)
 	{
-		this.appInfo = appInfo;
-	}
-
-	public AppInfo getAppInfo()
-	{
-		return this.appInfo;
-	}
-
-	private void stopAndClean()
-	{
-		logger.info("Killing AppServer: " + appInfo.getAppId());
+		if (process.getProcess() == null)
+			return;
 
 		try
 		{
-			process.destroy();
-			process = null;
+			process.getProcess().destroy();
+			process.setProcess(null);
 		} catch (Exception e)
 		{
 			logger.trace(e);
 		}
 	}
 
-	void execute()
+	void stop(AppProcess appProcess)
+	{
+		logger.debug("Stopping AppServer...");
+		stopAndClean(appProcess);
+	}
+
+	boolean execute(AppInfo appInfo, AppProcess appProcess)
 	{
 		logger.debug("Starting AppServer...");
 
-		// Check if the process should be killed
-		if (appInfo.getStatus() == AppState.KILLED)
-		{
-			logger.debug("Could not start AppServer - already killed");
-			stopAndClean();
-			return;
-		}
-
 		// Kill the old process if exists
-		if (process != null)
-			stopAndClean();
+		stopAndClean(appProcess);
 
-		// build command
+		// Create the command line
+		List<String> command = createCommand(appInfo);
+
+		// configure the process
+		ProcessBuilder procBuilder = new ProcessBuilder();
+		procBuilder.command(command);
+		procBuilder.redirectErrorStream(true);
+
+		try
+		{
+			// Start the process
+			logger.debug("Starting process...");
+			Process process = procBuilder.start();
+			appProcess.setProcess(process);
+
+			// Wait until the Server running
+			logger.debug("Waiting for AppServer...");
+			waitForAppServer(process);
+
+			// Update the AppServer state
+			logger.debug("AppServer is ONLINE");
+			return true;
+
+		} catch (IOException e)
+		{
+			// Log the error
+			logger.error("Could not start a new server process (AppId: " + appInfo.getAppId() + " Command: "
+					+ command.toString() + ")", e);
+
+			stopAndClean(appProcess);
+			return false;
+		}
+	}
+
+	private List<String> createCommand(AppInfo appInfo)
+	{
 		List<String> command = new LinkedList<String>();
 		command.add("java");
 
@@ -93,34 +110,7 @@ class AppProcess
 			c += cmd + " ";
 		logger.debug("Command: " + c);
 
-		// configure the process
-		ProcessBuilder procBuilder = new ProcessBuilder();
-		procBuilder.command(command);
-		procBuilder.redirectErrorStream(true);
-
-		try
-		{
-			// Start the process
-			logger.debug("Starting process...");
-			this.process = procBuilder.start();
-
-			// Wait until the Server running
-			logger.debug("Waiting for AppServer...");
-			waitForAppServer();
-
-			// Update the AppServer state
-			logger.debug("AppServer is ONLINE");
-			this.appInfo.setStatus(AppState.ONLINE);
-
-		} catch (IOException e)
-		{
-			// Log the error
-			logger.error("Could not start a new server process (AppId: " + appInfo.getAppId() + " Command: "
-					+ command.toString() + ")", e);
-
-			this.appInfo.setStatus(AppState.FAILED);
-			stopAndClean();
-		}
+		return command;
 	}
 
 	private List<String> readClasspath()
@@ -128,7 +118,7 @@ class AppProcess
 		List<String> classpath = new ArrayList<String>();
 		try
 		{
-			BufferedReader reader = new BufferedReader(new InputStreamReader(AppProcess.class
+			BufferedReader reader = new BufferedReader(new InputStreamReader(ProcessHandler.class
 					.getResourceAsStream("/cpAppServer.txt")));
 
 			String buffer = "";
@@ -190,7 +180,7 @@ class AppProcess
 		return classpath;
 	}
 
-	private boolean waitForAppServer() throws IOException
+	private boolean waitForAppServer(Process process) throws IOException
 	{
 		// create IO streams
 		BufferedReader stdInStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -201,28 +191,28 @@ class AppProcess
 			String line = "";
 			while ((line = stdInStream.readLine()) != null)
 			{
-				logger.debug("appserver: " + appInfo.getAppId() + "> " + line);
+				logger.debug("appserver> " + line);
 
 				if (line.equalsIgnoreCase(SERVER_ONLINE))
 				{
-					logger.info("AppServer is ONLINE: " + this.appInfo.getAppId());
+					logger.info("AppServer is ONLINE");
 					return true;
 				} else if (line.equalsIgnoreCase(SERVER_FAILED))
 				{
-					logger.info("AppServer FAILED" + this.appInfo.getAppId());
+					logger.info("AppServer FAILED");
 					throw new IOException("AppServer FAILED");
 				}
 			}
 
 			// AppServer is not online - we did not recive SERVER_ONLINE or
 			// SERVER_FAILED
-			logger.info("AppServer is NOT ONLINE: " + this.appInfo.getAppId());
+			logger.info("AppServer is NOT ONLINE");
 			throw new IOException("AppServer FAILED");
 
 		} catch (IOException e)
 		{
 			// Log the error
-			logger.error("Error while starting AppServer - AppId: " + appInfo.getAppId());
+			logger.error("Error while starting AppServer");
 
 			// Rethrow this exception
 			throw e;

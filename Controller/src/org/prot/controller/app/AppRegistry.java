@@ -1,63 +1,17 @@
-package org.prot.controller.manager;
+package org.prot.controller.app;
 
-import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.log4j.Logger;
-
 class AppRegistry
 {
-	private static final Logger logger = Logger.getLogger(AppRegistry.class);
-
-	private final int startPort = 9090;
-
-	private int currentPort = startPort;
-
-	private Queue<Integer> freePorts = new LinkedList<Integer>();
+	private final PortPool portPool = new PortPool();
 
 	private Map<String, AppInfo> appInfos = new ConcurrentHashMap<String, AppInfo>();
-
-	private synchronized int getPort()
-	{
-		// Check if there are any free ports
-		if (freePorts.isEmpty())
-			return this.currentPort++;
-
-		// Find a free port
-		synchronized (freePorts)
-		{
-			Integer foundPort = null;
-			for (Integer test : freePorts)
-			{
-				try
-				{
-					ServerSocket socket = new ServerSocket(test);
-					socket.close();
-					foundPort = test;
-					break;
-				} catch (Exception e)
-				{
-					logger.warn("AppRegsitry could not reuse port: " + test);
-					continue;
-				}
-			}
-
-			if (foundPort != null)
-			{
-				freePorts.remove(foundPort);
-				return foundPort;
-			}
-		}
-
-		return this.currentPort++;
-	}
 
 	public AppInfo getAppInfo(String appId)
 	{
@@ -75,7 +29,7 @@ class AppRegistry
 				return;
 
 			AppInfo appInfo = appInfos.get(appId);
-			freePorts.add(appInfo.getPort());
+			portPool.releasePort(appInfo.getPort());
 
 			appInfos.remove(appId);
 		}
@@ -94,8 +48,11 @@ class AppRegistry
 			if (appInfos.containsKey(appId))
 				return appInfos.get(appId);
 
+			// Get a port
+			int port = portPool.getPort();
+
 			// Create new AppInfo
-			appInfo = new AppInfo(appId, getPort());
+			appInfo = new AppInfo(appId, port);
 
 			// Add the new AppInfo
 			this.appInfos.put(appInfo.getAppId(), appInfo);
@@ -165,8 +122,43 @@ class AppRegistry
 		return idleApps;
 	}
 
+	boolean checkToken(String token)
+	{
+		// False if there is no token
+		if (token == null)
+			return false;
+
+		// Iterate over all running applications
+		for (String appId : appInfos.keySet())
+		{
+			// Get application infos and the token
+			AppInfo info = appInfos.get(appId);
+
+			// Concurrency - AppInfo could be deleted while scanning the AppId's
+			if (info == null)
+				continue;
+
+			// Compare stored token
+			if (token.equals(info.getProcessToken()))
+			{
+				// If both tokens are equal - return true
+				return true;
+			}
+		}
+
+		// No matching token found
+		return false;
+	}
+
 	Set<String> getAppIds()
 	{
 		return appInfos.keySet();
+	}
+
+	Set<String> getDuplicatedAppIds()
+	{
+		Set<String> duplicate = new HashSet<String>();
+		duplicate.addAll(appInfos.keySet());
+		return duplicate;
 	}
 }

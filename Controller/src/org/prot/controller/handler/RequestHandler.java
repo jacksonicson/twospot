@@ -6,36 +6,33 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.prot.controller.manager.AppInfo;
-import org.prot.controller.manager.AppManager;
+import org.prot.controller.app.AppInfo;
+import org.prot.controller.app.AppManager;
 import org.prot.controller.stats.Stats;
 import org.prot.util.AppIdExtractor;
 
 public class RequestHandler extends AbstractHandler
 {
-	private static final Logger logger = Logger.getLogger(RequestHandler.class);
-
 	private static final String APP_SERVER_HOST = "localhost";
 
 	private AppManager appManager;
 
-	private RequestManager requestManager;
+	private RequestProcessor requestProcessor;
 
 	private Stats stats;
 
-	private HttpURI getUrl(Request request, AppInfo appInfo)
+	private final HttpURI getUrl(final Request request, final AppInfo appInfo)
 	{
 		// Get the connection settings
 		String scheme = request.getScheme();
 		int port = appInfo.getPort();
 		String uri = request.getUri().toString();
 
-		// Build the complete URL (In this case string concat seems to be
+		// Build the complete URL (In this case string concation seems to be
 		// inefficient)
 		StringBuilder builder = new StringBuilder(scheme.length() + 4 + uri.length() + 10);
 		builder.append(scheme);
@@ -72,7 +69,7 @@ public class RequestHandler extends AbstractHandler
 		// continuation continues this handle method will be called again and
 		// the appInfo than is *not* null
 		if (appInfo == null)
-			return; // To be continued
+			return;
 
 		// Update stats
 		stats.handle(appId);
@@ -81,20 +78,21 @@ public class RequestHandler extends AbstractHandler
 		switch (appInfo.getStatus())
 		{
 		case FAILED:
-			response.sendError(HttpStatus.NOT_FOUND_404, "AppServer failed");
+			response.sendError(HttpStatus.NOT_FOUND_404, "Could not start AppServer");
 			baseRequest.setHandled(true);
 			return;
 		case STALE:
-			response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500, "Stale AppServer");
+			response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
+					"Could not communicate with the AppServer");
 			baseRequest.setHandled(true);
 			return;
 		}
 
-		// Forward the request
+		// Create a destination URL to forward the request
 		HttpURI destination = getUrl(baseRequest, appInfo);
 
 		// Register the request in the RequestManager.
-		requestManager.registerRequest(appInfo.getAppId(), baseRequest, request, response, destination);
+		requestProcessor.process(appInfo.getAppId(), baseRequest, request, response, destination);
 	}
 
 	public void setAppManager(AppManager appManager)
@@ -102,9 +100,9 @@ public class RequestHandler extends AbstractHandler
 		this.appManager = appManager;
 	}
 
-	public void setRequestManager(RequestManager requestManager)
+	public void setRequestManager(RequestProcessor requestManager)
 	{
-		this.requestManager = requestManager;
+		this.requestProcessor = requestManager;
 	}
 
 	public void setStats(Stats stats)

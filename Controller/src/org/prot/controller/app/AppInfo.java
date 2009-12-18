@@ -1,17 +1,14 @@
-package org.prot.controller.manager;
+package org.prot.controller.app;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jetty.continuation.Continuation;
 import org.prot.util.ReservedAppIds;
 
 public final class AppInfo
 {
-	private static final Logger logger = Logger.getLogger(AppInfo.class);
-
 	// Maximum time until the AppServer is idle
 	private static final int MAX_TIME_TO_IDLE = 1 * 20 * 1000;
 
@@ -23,7 +20,7 @@ public final class AppInfo
 
 	// Start time of this app
 	private final long startTime = System.currentTimeMillis();
-	
+
 	// State of the appserver
 	private AppState status = AppState.OFFLINE;
 
@@ -35,6 +32,9 @@ public final class AppInfo
 
 	// Token which is used to authenticate the process
 	private final String processToken;
+
+	// Reference to the Process of this app
+	private final AppProcess appProcess = new AppProcess();
 
 	// Continuations for requests which are waiting for this appserver
 	private List<Continuation> continuations = new ArrayList<Continuation>();
@@ -48,7 +48,7 @@ public final class AppInfo
 	{
 		return (System.currentTimeMillis() - this.lastUsed) > MAX_TIME_TO_IDLE;
 	}
-	
+
 	long getStartTime()
 	{
 		return this.startTime;
@@ -84,7 +84,7 @@ public final class AppInfo
 		return true;
 	}
 
-	public synchronized void resume()
+	public synchronized void resumeContinuations()
 	{
 		for (Continuation continuation : continuations)
 			continuation.resume();
@@ -102,7 +102,7 @@ public final class AppInfo
 		return port;
 	}
 
-	public  synchronized AppState getStatus()
+	public synchronized AppState getStatus()
 	{
 		return status;
 	}
@@ -120,6 +120,11 @@ public final class AppInfo
 	public int hashCode()
 	{
 		return appId.hashCode();
+	}
+
+	public AppProcess getAppProcess()
+	{
+		return appProcess;
 	}
 
 	public boolean equals(Object o)

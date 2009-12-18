@@ -2,7 +2,7 @@ package org.prot.controller.services.db;
 
 import java.util.List;
 
-import org.prot.controller.manager.TokenChecker;
+import org.prot.controller.app.TokenChecker;
 
 public class DbServiceImpl implements DbService
 {

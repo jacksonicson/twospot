@@ -1,6 +1,5 @@
-package org.prot.controller.manager;
+package org.prot.controller.app;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -18,7 +17,7 @@ public class AppManager implements DeploymentListener
 
 	private AppRegistry registry;
 
-	private AppMonitor monitor;
+	private ProcessMonitor monitor;
 
 	private ManagementService managementService;
 
@@ -95,41 +94,6 @@ public class AppManager implements DeploymentListener
 		return appInfo;
 	}
 
-	boolean checkToken(String token)
-	{
-		// False if there is no token
-		if (token == null)
-			return false;
-
-		// Iterate over all running applications
-		for (String appId : registry.getAppIds())
-		{
-			// Get application infos and the token
-			AppInfo info = registry.getAppInfo(appId);
-
-			// Concurrency - AppInfo could be deleted while scanning the AppId's
-			if (info == null)
-				continue;
-
-			// Compare stored token
-			if (token.equals(info.getProcessToken()))
-			{
-				// If both tokens are equal - return true
-				return true;
-			}
-		}
-
-		// No matching token found
-		return false;
-	}
-
-	public Set<String> getAppIds()
-	{
-		HashSet<String> copy = new HashSet<String>();
-		copy.addAll(registry.getAppIds());
-		return copy;
-	}
-
 	private void killApp(String appId)
 	{
 		// Geht the AppInfo for this application
@@ -147,13 +111,13 @@ public class AppManager implements DeploymentListener
 	}
 
 	@Override
-	public void reportAppDeployment(String appId)
+	public void deployApp(String appId)
 	{
 		logger.info("App deployed - killing all AppServer instances of AppId: " + appId);
 		killApp(appId);
 	}
 
-	public void reportStaleApp(String appId)
+	public void staleApp(String appId)
 	{
 		AppInfo appInfo = registry.getAppInfo(appId);
 
@@ -238,7 +202,7 @@ public class AppManager implements DeploymentListener
 		this.registry = registry;
 	}
 
-	public void setMonitor(AppMonitor monitor)
+	public void setMonitor(ProcessMonitor monitor)
 	{
 		this.monitor = monitor;
 	}

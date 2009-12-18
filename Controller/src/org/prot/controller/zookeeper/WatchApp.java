@@ -58,7 +58,7 @@ public class WatchApp implements Job, Watcher
 		}
 
 		for (DeploymentListener listener : copy)
-			listener.reportAppDeployment(appId);
+			listener.deployApp(appId);
 	}
 
 	@Override

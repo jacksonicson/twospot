@@ -1,4 +1,4 @@
-package org.prot.controller.manager;
+package org.prot.controller.app;
 
 public interface TokenChecker
 {

@@ -8,7 +8,7 @@ import javax.jdo.Query;
 import javax.jdo.Transaction;
 
 import org.apache.log4j.Logger;
-import org.prot.controller.manager.TokenChecker;
+import org.prot.controller.app.TokenChecker;
 import org.prot.util.jdo.JdoConnection;
 
 public class LogServiceImpl implements LogService

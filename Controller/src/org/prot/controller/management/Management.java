@@ -16,7 +16,7 @@ import sun.management.ManagementFactory;
 
 import com.sun.management.OperatingSystemMXBean;
 
-public class Management implements IJmxResources
+public class Management implements JmxPing
 {
 	private static final Logger logger = Logger.getLogger(Management.class);
 

@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.prot.controller.manager.AppManager;
+import org.prot.controller.app.AppManager;
 import org.prot.util.managment.Ping;
 import org.prot.util.stats.StatsValue;
 
@@ -46,34 +46,34 @@ public class AppServerWatcher
 
 	public void update()
 	{
-		// Delete all old AppServers
-		Set<String> appIds = manager.getAppIds();
-		for (Iterator<String> it = connections.keySet().iterator(); it.hasNext();)
-		{
-			String appId = it.next();
-			if (!appIds.contains(appId))
-			{
-				logger.debug("App lost: " + appId);
-				data.remove(appId);
-				it.remove();
-			}
-		}
-
-		// Iterate over all AppIds and poll them
-		for (String appId : appIds)
-		{
-			Ping ping = connectPing(appId);
-
-			try
-			{
-				updateData(appId, ping);
-			} catch (Exception e)
-			{
-				logger.debug("Connection lost: " + appId);
-				data.remove(appId);
-				connections.remove(appId);
-			}
-		}
+//		// Delete all old AppServers
+//		Set<String> appIds = manager.getAppIds();
+//		for (Iterator<String> it = connections.keySet().iterator(); it.hasNext();)
+//		{
+//			String appId = it.next();
+//			if (!appIds.contains(appId))
+//			{
+//				logger.debug("App lost: " + appId);
+//				data.remove(appId);
+//				it.remove();
+//			}
+//		}
+//
+//		// Iterate over all AppIds and poll them
+//		for (String appId : appIds)
+//		{
+//			Ping ping = connectPing(appId);
+//
+//			try
+//			{
+//				updateData(appId, ping);
+//			} catch (Exception e)
+//			{
+//				logger.debug("Connection lost: " + appId);
+//				data.remove(appId);
+//				connections.remove(appId);
+//			}
+//		}
 	}
 
 	public void setManager(AppManager manager)
