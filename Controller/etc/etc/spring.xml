@@ -66,7 +66,7 @@
 		<property name="processors">
 			<list>
 				<bean class="org.prot.controller.stats.IdleProcessor" />
-				<bean class="org.prot.controller.stats.LowRequestsProcessor">
+				<bean class="org.prot.controller.stats.HighLoadProcessor">
 					<property name="connector" ref="OutsideConnector" />
 				</bean>
 			</list>

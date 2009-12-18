@@ -7,9 +7,9 @@ import org.eclipse.jetty.server.Connector;
 import org.prot.controller.app.AppInfo;
 import org.prot.controller.app.AppState;
 
-public class LowRequestsProcessor implements BalancingProcessor
+public class HighLoadProcessor implements BalancingProcessor
 {
-	private static final Logger logger = Logger.getLogger(LowRequestsProcessor.class);
+	private static final Logger logger = Logger.getLogger(HighLoadProcessor.class);
 
 	private Connector connector;
 
