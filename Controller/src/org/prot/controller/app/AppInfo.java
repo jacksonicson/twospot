@@ -41,21 +41,6 @@ public final class AppInfo
 	// Continuations for requests which are waiting for this appserver
 	private List<Continuation> continuations = new ArrayList<Continuation>();
 
-	void touch()
-	{
-		this.lastUsed = System.currentTimeMillis();
-	}
-
-	boolean isIdle()
-	{
-		return (System.currentTimeMillis() - this.lastUsed) > IDLE_THREASHOLD;
-	}
-
-	long getCreationTime()
-	{
-		return this.creationTime;
-	}
-
 	AppInfo(String appId, int port)
 	{
 		this.appId = appId;
@@ -72,6 +57,21 @@ public final class AppInfo
 		{
 			processToken = null;
 		}
+	}
+
+	void touch()
+	{
+		this.lastUsed = System.currentTimeMillis();
+	}
+
+	boolean isIdle()
+	{
+		return (System.currentTimeMillis() - this.lastUsed) > IDLE_THREASHOLD;
+	}
+
+	long getCreationTime()
+	{
+		return this.creationTime;
 	}
 
 	public synchronized boolean addContinuation(Continuation continuation)
@@ -125,11 +125,6 @@ public final class AppInfo
 		return processToken != null;
 	}
 
-	public int hashCode()
-	{
-		return appId.hashCode();
-	}
-
 	public AppProcess getAppProcess()
 	{
 		return appProcess;
@@ -138,6 +133,11 @@ public final class AppInfo
 	public AppManagement getAppManagement()
 	{
 		return appManagement;
+	}
+
+	public String getProcessToken()
+	{
+		return processToken;
 	}
 
 	public boolean equals(Object o)
@@ -149,8 +149,8 @@ public final class AppInfo
 		return cmp.getAppId().equals(this.appId);
 	}
 
-	public String getProcessToken()
+	public int hashCode()
 	{
-		return processToken;
+		return appId.hashCode();
 	}
 }

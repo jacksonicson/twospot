@@ -187,6 +187,8 @@
 				<entry key="bean:name=resources">
 					<bean class="org.prot.controller.management.Management">
 						<property name="appServerWatcher" ref="AppServerWatcher" />
+						<property name="stats" ref="Stats" />
+						<property name="registry" ref="AppRegistry" />
 					</bean>
 				</entry>
 			</map>

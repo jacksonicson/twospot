@@ -26,6 +26,11 @@ public class AppManagement
 		return stats;
 	}
 
+	public Set<StatsValue> getData()
+	{
+		return data;
+	}
+	
 	public Ping getPing()
 	{
 		return ping;
