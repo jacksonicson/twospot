@@ -32,6 +32,8 @@ public class RequestProcessor extends HttpProxyHelper<String>
 			forwardRequest(baseRequest, request, response, dest, appId);
 		} catch (Exception e)
 		{
+			logger.error("Exception in Proxy", e);
+
 			baseRequest.setHandled(true);
 
 			try

@@ -59,7 +59,9 @@
 
 
 	<!-- Application beans -->
-	<bean id="Stats" class="org.prot.controller.stats.Stats" />
+	<bean id="Stats" class="org.prot.controller.stats.Stats">
+		<property name="registry" ref="AppRegistry" />
+	</bean>
 
 	<bean id="ManagementService" class="org.prot.controller.zookeeper.ManagementService"
 		init-method="init">
@@ -84,6 +86,7 @@
 
 	<bean id="RequestProcessor" class="org.prot.controller.handler.RequestProcessor">
 		<property name="appManager" ref="AppManager" />
+		<property name="httpClient" ref="HttpClient" />
 	</bean>
 
 	<bean id="AppServerWatcher" class="org.prot.controller.management.AppServerWatcher">

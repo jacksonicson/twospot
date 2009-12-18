@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.server.Request;
@@ -17,6 +18,8 @@ import org.prot.util.AppIdExtractor;
 
 public class RequestHandler extends AbstractHandler
 {
+	private static final Logger logger = Logger.getLogger(RequestHandler.class);
+
 	private static final String APP_SERVER_HOST = "localhost";
 
 	private AppManager appManager;
@@ -69,7 +72,10 @@ public class RequestHandler extends AbstractHandler
 		// continuation continues this handle method will be called again and
 		// the appInfo than is *not* null
 		if (appInfo == null)
+		{
+			logger.debug("Wait until continuation resumes");
 			return;
+		}
 
 		// Update stats
 		stats.handle(appId);
@@ -99,7 +105,6 @@ public class RequestHandler extends AbstractHandler
 	{
 		this.appManager = appManager;
 	}
-
 
 	public void setRequestProcessor(RequestProcessor requestProcessor)
 	{
