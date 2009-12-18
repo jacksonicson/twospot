@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jetty.continuation.Continuation;
 import org.prot.util.ReservedAppIds;
 
 public final class AppInfo
 {
+	private static final Logger logger = Logger.getLogger(AppInfo.class);
+
 	// AppId
 	private final String appId;
 
@@ -66,7 +69,7 @@ public final class AppInfo
 		return this.touch;
 	}
 
-	long getCreationTime()
+	public long getCreationTime()
 	{
 		return this.creationTime;
 	}
@@ -114,6 +117,41 @@ public final class AppInfo
 
 	public synchronized void setStatus(AppState status)
 	{
+		// Check if this is a valid state change
+		boolean check = this.status == status;
+		switch (this.status)
+		{
+		case OFFLINE:
+			check |= status == AppState.STARTING;
+			break;
+		case STALE:
+			check |= status == AppState.STARTING;
+			check |= status == AppState.KILLED;
+			break;
+		case STARTING:
+			check |= status == AppState.ONLINE;
+			check |= status == AppState.FAILED;
+			break;
+		case FAILED:
+			check |= status == AppState.KILLED;
+			break;
+		case ONLINE:
+			check |= status == AppState.KILLED;
+			check |= status == AppState.STALE;
+			break;
+		case KILLED:
+			check |= status == AppState.OFFLINE;
+			break;
+		default:
+			logger.warn("Unknown AppServer state");
+		}
+
+		if (!check)
+		{
+			logger.error("Invalid sate change from " + this.status + " to " + status);
+			System.exit(1);
+		}
+
 		this.status = status;
 	}
 
