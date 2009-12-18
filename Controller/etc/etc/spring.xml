@@ -21,6 +21,7 @@
 		<property name="threadPool" ref="ThreadPool" />
 		<property name="timeout" value="30000" />
 		<property name="maxRetries" value="0" />
+		<property name="connectorType" value="2" />
 	</bean>
 
 	<!-- ThreadPool -->
@@ -59,7 +60,8 @@
 
 
 	<!-- Application beans -->
-	<bean id="Stats" class="org.prot.controller.stats.Stats" init-method="init">
+	<bean id="Stats" class="org.prot.controller.stats.Stats"
+		init-method="init">
 		<property name="registry" ref="AppRegistry" />
 		<property name="processors">
 			<list>
@@ -189,10 +191,9 @@
 		<property name="beans">
 			<map>
 				<entry key="bean:name=resources">
-					<bean class="org.prot.controller.management.Management">
+					<bean class="org.prot.controller.management.ControllerPing">
 						<property name="appServerWatcher" ref="AppServerWatcher" />
 						<property name="stats" ref="Stats" />
-						<property name="registry" ref="AppRegistry" />
 					</bean>
 				</entry>
 			</map>

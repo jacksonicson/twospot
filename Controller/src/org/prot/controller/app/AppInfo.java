@@ -188,4 +188,9 @@ public final class AppInfo
 	{
 		return appId.hashCode();
 	}
+	
+	public void dump()
+	{
+		logger.debug("Continuations: " + continuations.size());
+	}
 }
