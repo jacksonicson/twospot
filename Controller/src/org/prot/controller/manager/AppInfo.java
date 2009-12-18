@@ -21,6 +21,9 @@ public final class AppInfo
 	// Port under which the appserver runs
 	private final int port;
 
+	// Start time of this app
+	private final long startTime = System.currentTimeMillis();
+	
 	// State of the appserver
 	private AppState status = AppState.OFFLINE;
 
@@ -44,6 +47,11 @@ public final class AppInfo
 	boolean isIdle()
 	{
 		return (System.currentTimeMillis() - this.lastUsed) > MAX_TIME_TO_IDLE;
+	}
+	
+	long getStartTime()
+	{
+		return this.startTime;
 	}
 
 	AppInfo(String appId, int port)

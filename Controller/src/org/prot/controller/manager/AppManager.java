@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.prot.controller.stats.Stats;
 import org.prot.controller.zookeeper.DeploymentListener;
 import org.prot.controller.zookeeper.ManagementService;
 import org.prot.util.scheduler.Scheduler;
@@ -20,6 +21,8 @@ public class AppManager implements DeploymentListener
 	private AppMonitor monitor;
 
 	private ManagementService managementService;
+
+	private Stats stats;
 
 	public void init()
 	{
@@ -190,6 +193,28 @@ public class AppManager implements DeploymentListener
 			// Schedule kill-Tasks for each entry
 			monitor.scheduleKillProcess(dead);
 		}
+
+		// Kill everything with low stats
+		// TODO: Check if controller is under a high load and kill unused apps
+		// in this case!
+		for (String appId : registry.getAppIds())
+		{
+			long time = registry.getAppInfo(appId).getStartTime();
+			if (System.currentTimeMillis() - time < 60 * 1000)
+				continue;
+
+			double stat = stats.getRps(appId);
+			if (stat < 0)
+				continue;
+			if (stat < 10)
+			{
+				logger.debug("Try killing app because of bad stats (low rps value): " + stat);
+
+				// Check ZooKeeper if we are the only control - if we are not
+				// under high load
+				killApp(appId);
+			}
+		}
 	}
 
 	class MaintenanceTask extends SchedulerTask
@@ -221,5 +246,10 @@ public class AppManager implements DeploymentListener
 	public void setManagementService(ManagementService managementService)
 	{
 		this.managementService = managementService;
+	}
+
+	public void setStats(Stats stats)
+	{
+		this.stats = stats;
 	}
 }

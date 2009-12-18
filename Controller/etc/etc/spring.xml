@@ -73,14 +73,16 @@
 		<property name="requestLog" ref="CountingRequestLog" />
 	</bean>
 
+	<bean id="Stats" class="org.prot.controller.stats.Stats">
+	</bean>
+
 	<!-- Request handling -->
 
 	<bean id="RequestHandler" class="org.prot.controller.handler.RequestHandler">
 		<property name="appManager" ref="AppManager" />
 		<property name="requestManager" ref="RequestManager" />
+		<property name="stats" ref="Stats" />
 	</bean>
-
-
 
 
 	<!-- Application beans -->
@@ -116,6 +118,7 @@
 		<property name="registry" ref="AppRegistry" />
 		<property name="monitor" ref="AppMonitor" />
 		<property name="managementService" ref="ManagementService" />
+		<property name="stats"  ref="Stats" />
 	</bean>
 
 	<bean id="TokenChecker" class="org.prot.controller.manager.TokenCheckerProxy">

@@ -13,6 +13,7 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.prot.controller.manager.AppInfo;
 import org.prot.controller.manager.AppManager;
+import org.prot.controller.stats.Stats;
 import org.prot.util.AppIdExtractor;
 
 public class RequestHandler extends AbstractHandler
@@ -24,6 +25,8 @@ public class RequestHandler extends AbstractHandler
 	private AppManager appManager;
 
 	private RequestManager requestManager;
+
+	private Stats stats;
 
 	private HttpURI getUrl(Request request, AppInfo appInfo)
 	{
@@ -71,6 +74,9 @@ public class RequestHandler extends AbstractHandler
 		if (appInfo == null)
 			return; // To be continued
 
+		// Update stats
+		stats.handle(appId);
+
 		// Check the State of the AppInfo
 		switch (appInfo.getStatus())
 		{
@@ -99,5 +105,10 @@ public class RequestHandler extends AbstractHandler
 	public void setRequestManager(RequestManager requestManager)
 	{
 		this.requestManager = requestManager;
+	}
+
+	public void setStats(Stats stats)
+	{
+		this.stats = stats;
 	}
 }
