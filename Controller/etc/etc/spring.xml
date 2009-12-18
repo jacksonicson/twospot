@@ -81,7 +81,6 @@
 		<property name="registry" ref="AppRegistry" />
 		<property name="processWorker" ref="ProcessWorker" />
 		<property name="managementService" ref="ManagementService" />
-		<property name="stats" ref="Stats" />
 	</bean>
 
 	<bean id="RequestProcessor" class="org.prot.controller.handler.RequestProcessor">

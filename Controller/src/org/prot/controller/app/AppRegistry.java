@@ -96,7 +96,7 @@ public class AppRegistry implements TokenChecker
 		for (AppInfo info : appInfos.values())
 		{
 			AppState state = info.getStatus();
-			if (info.isIdle() || state == AppState.FAILED || state == AppState.KILLED)
+			if (state == AppState.FAILED || state == AppState.KILLED)
 			{
 				if (idleApps == null)
 					idleApps = new HashSet<AppInfo>();

@@ -9,9 +9,6 @@ import org.prot.util.ReservedAppIds;
 
 public final class AppInfo
 {
-	// Maximum time until the AppServer is idle
-	private static final int IDLE_THREASHOLD = 1 * 20 * 1000;
-
 	// AppId
 	private final String appId;
 
@@ -26,7 +23,7 @@ public final class AppInfo
 	private final long creationTime = System.currentTimeMillis();
 
 	// Timestamp which tells last usage
-	private long lastUsed;
+	private long touch;
 
 	// State of the appserver
 	private AppState status = AppState.OFFLINE;
@@ -61,12 +58,12 @@ public final class AppInfo
 
 	void touch()
 	{
-		this.lastUsed = System.currentTimeMillis();
+		this.touch = System.currentTimeMillis();
 	}
 
-	boolean isIdle()
+	public long getTouch()
 	{
-		return (System.currentTimeMillis() - this.lastUsed) > IDLE_THREASHOLD;
+		return this.touch;
 	}
 
 	long getCreationTime()

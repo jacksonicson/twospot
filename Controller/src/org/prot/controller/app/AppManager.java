@@ -3,7 +3,6 @@ package org.prot.controller.app;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.prot.controller.stats.Stats;
 import org.prot.controller.zookeeper.DeploymentListener;
 import org.prot.controller.zookeeper.ManagementService;
 import org.prot.util.scheduler.Scheduler;
@@ -20,8 +19,6 @@ public class AppManager implements DeploymentListener
 	private ProcessWorker processWorker;
 
 	private ManagementService managementService;
-
-	private Stats stats;
 
 	public void init()
 	{
@@ -144,7 +141,7 @@ public class AppManager implements DeploymentListener
 
 	private void doMaintenance()
 	{
-		// Find and kill all idle AppServers
+		// Find and kill dead AppServers
 		Set<AppInfo> dead = registry.findDeadApps();
 
 		// If no dead AppServers findDeadApps() returns null
@@ -157,29 +154,6 @@ public class AppManager implements DeploymentListener
 			// Schedule kill-Tasks for each entry
 			processWorker.scheduleKillProcess(dead);
 		}
-
-		// Kill everything with low stats
-		// TODO: Check if controller is under a high load and kill unused apps
-		// in this case!
-		// for (String appId : registry.getAppIds())
-		// {
-		// long time = registry.getAppInfo(appId).getCreationTime();
-		// if (System.currentTimeMillis() - time < 60 * 1000)
-		// continue;
-		//
-		// double stat = stats.getRps(appId);
-		// if (stat < 0)
-		// continue;
-		// if (stat < 10)
-		// {
-		// logger.debug("Try killing app because of bad stats (low rps value): "
-		// + stat);
-		//
-		// // Check ZooKeeper if we are the only control - if we are not
-		// // under high load
-		// killApp(appId);
-		// }
-		// }
 	}
 
 	class MaintenanceTask extends SchedulerTask
@@ -207,14 +181,9 @@ public class AppManager implements DeploymentListener
 	{
 		this.managementService = managementService;
 	}
-	
+
 	public void setProcessWorker(ProcessWorker processWorker)
 	{
 		this.processWorker = processWorker;
-	}
-
-	public void setStats(Stats stats)
-	{
-		this.stats = stats;
 	}
 }
