@@ -1,0 +1,19 @@
+Lastverteilung in TwoSpot:
+
+Master:  
+- Verteilt die Requests an alle Verfügbaren Controller
+- Controller mit geringer Belastung werden bevorzugt (Ranking)
+- Controller die die angeforderte App bereits ausführen werden bevorzugt (Ranking)
+- Wenn ein Controller bzw. ein AppServer mit der angeforderten App überlastet ist - wird ein weitere Controller selektiert
+
+Controller:
+- Idle-Appserver werden beendet (AppServer die seit x-Minuten keine Request verarbeitet haben)
+- Niedrig-Belastete AppServer werden beendet, falls noch andere Controller die App betrieben (Sync über ZooKeeper)
+- Niedrig-Belastete AppServer werden beendet, wenn Controller mehr als x AppServer ausführt
+- Falls der Controller stark belastet wird - werden sukzessiv alle niedrig-belasteten AppServer beendet (Auch wenn der Controller als einziger die App betreibt)
+
+Scaling-Up:
+- Der Master weist eninem Controller die Apps zu. Über die Management-Daten kennt der Master die Auslastung. 
+
+Scaling-Down: 
+- Controller beenden AppServer unter bestimmten Kriterien 
