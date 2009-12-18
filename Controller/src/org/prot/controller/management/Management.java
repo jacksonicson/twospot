@@ -55,6 +55,8 @@ public class Management implements IJmxResources
 	@Override
 	public Set<StatsValue> ping()
 	{
+		update();
+		
 		Set<StatsValue> data = new HashSet<StatsValue>();
 
 		long time = update();

@@ -22,16 +22,35 @@ public class SimpleLoadBalancer implements LoadBalancer
 	@Override
 	public Set<ControllerInfo> selectController(String appId)
 	{
+		if (stats.getControllers().isEmpty())
+			return null;
+
 		Set<ControllerInfo> result = new HashSet<ControllerInfo>();
 
 		boolean overloaded = false;
 
 		double bestRanking = Double.MAX_VALUE;
 		ControllerStats bestController = null;
-		
+
 		Map<String, ControllerStats> controllers = stats.getControllers();
 		for (ControllerStats controller : controllers.values())
 		{
+			// Rate this controller
+			double rank = 0;
+			rank += 1.0 * controller.getValues().cpu;
+			rank += 1.0 * controller.getValues().freeMemory / controller.getValues().totalMemory;
+			rank += 0.5 * controller.size();
+			rank += 0.003 * controller.getValues().rps;
+
+			logger.debug("Ranking: " + rank);
+
+			// Check if its the new best controller
+			if (rank < bestRanking || bestController == null)
+			{
+				bestRanking = rank;
+				bestController = controller;
+			}
+
 			// Check if controller is running the application
 			InstanceStats instance = controller.getInstance(appId);
 			if (instance == null)
@@ -42,9 +61,6 @@ public class SimpleLoadBalancer implements LoadBalancer
 
 			// Check if controller is overloaded
 			overloaded |= instance.getValues().overloaded;
-
-			// Rate this controller
-			
 		}
 
 		if (!result.isEmpty() && !overloaded)
@@ -60,4 +76,8 @@ public class SimpleLoadBalancer implements LoadBalancer
 		this.stats = stats;
 	}
 
+	public void setRegistry(ControllerRegistry registry)
+	{
+		this.registry = registry;
+	}
 }

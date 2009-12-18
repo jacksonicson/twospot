@@ -1,6 +1,8 @@
 package org.prot.util.stats;
 
-public interface StatsValue
+import java.io.Serializable;
+
+public interface StatsValue extends Serializable
 {
 	public void update(StatsUpdater updater);
 }

@@ -14,9 +14,12 @@
 	<bean id="ControllerRegistry" class="org.prot.manager.stats.ControllerRegistry">
 	</bean>
 
+	<bean id="Stats" class="org.prot.manager.stats.Stats" />
+
 	<bean id="ControllerWatcher" class="org.prot.manager.watcher.ControllerWatcher"
 		init-method="init">
 		<property name="registry" ref="ControllerRegistry" />
+		<property name="stats" ref="Stats" />
 	</bean>
 
 	<bean id="ManagementService" class="org.prot.manager.zookeeper.ManagementService"
@@ -42,6 +45,7 @@
 
 	<bean id="LoadBalancer" class="org.prot.manager.balancing.SimpleLoadBalancer">
 		<property name="registry" ref="ControllerRegistry" />
+		<property name="stats" ref="Stats" />
 	</bean>
 
 	<!-- Services -->

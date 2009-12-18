@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.prot.controller.management.IJmxResources;
 import org.prot.manager.stats.ControllerInfo;
 import org.prot.manager.stats.ControllerRegistry;
 import org.prot.manager.stats.Stats;
-import org.prot.util.managment.Ping;
 import org.prot.util.scheduler.Scheduler;
 import org.prot.util.scheduler.SchedulerTask;
 
@@ -60,8 +60,7 @@ public class ControllerWatcher
 
 				// Get JMX connection
 				JmxController connection = getJmxController(info.getServiceAddress());
-				Ping ping = connection.getJmxResources();
-
+				IJmxResources ping = connection.getJmxResources();
 				stats.update(info.getAddress(), ping);
 
 			} catch (Exception e)
@@ -92,5 +91,10 @@ public class ControllerWatcher
 	public void setRegistry(ControllerRegistry registry)
 	{
 		this.registry = registry;
+	}
+
+	public void setStats(Stats stats)
+	{
+		this.stats = stats;
 	}
 }

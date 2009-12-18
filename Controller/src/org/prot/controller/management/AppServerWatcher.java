@@ -59,7 +59,7 @@ public class AppServerWatcher
 		}
 
 		// Iterate over all AppIds and poll them
-		for (String appId : connections.keySet())
+		for (String appId : appIds)
 		{
 			Ping ping = connectPing(appId);
 

@@ -32,7 +32,7 @@ public class ControllerStats implements StatsUpdater
 	// All
 	private Map<String, InstanceStats> instances = new HashMap<String, InstanceStats>();
 
-	class StatValues
+	public class StatValues
 	{
 		public double cpu;
 		public double rps;
@@ -48,6 +48,16 @@ public class ControllerStats implements StatsUpdater
 		this.address = address;
 	}
 
+	public int countStartedApps()
+	{
+		return instances.size();
+	}
+	
+	public int size()
+	{
+		return instances.size();
+	}
+	
 	public InstanceStats getInstance(String appId)
 	{
 		return instances.get(appId);

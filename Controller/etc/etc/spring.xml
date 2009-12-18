@@ -95,9 +95,13 @@
 		<property name="requestManager" ref="RequestManager" />
 	</bean>
 
+
+
 	<bean id="Controller" class="org.prot.controller.Controller">
 		<property name="server" ref="Server" />
 	</bean>
+
+
 
 
 	<bean id="AppRegistry" class="org.prot.controller.manager.AppRegistry">
@@ -157,6 +161,7 @@
 	</bean>
 
 	<bean id="DbDao" class="org.prot.controller.services.db.HbaseDbDao" />
+
 	<bean id="DbServiceExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
 		<property name="serviceName" value="appserver/DbService" />
 
@@ -187,9 +192,7 @@
 	</bean>
 
 	<!-- Management -->
-	<bean id="AppServerWatcher"
-		class="org.prot.controller.management.AppServerWatcher"
-		init-method="init">
+	<bean id="AppServerWatcher" class="org.prot.controller.management.AppServerWatcher">
 		<property name="manager" ref="AppManager" />
 	</bean>
 
