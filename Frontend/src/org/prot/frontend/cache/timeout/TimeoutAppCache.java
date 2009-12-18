@@ -7,8 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import org.prot.frontend.ExceptionSafeFrontendProxy;
 import org.prot.frontend.cache.AppCache;
-import org.prot.manager.data.ControllerInfo;
 import org.prot.manager.services.FrontendService;
+import org.prot.manager.stats.ControllerInfo;
 import org.prot.util.scheduler.Scheduler;
 import org.prot.util.scheduler.SchedulerTask;
 

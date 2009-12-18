@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
-import org.prot.manager.data.ControllerInfo;
+import org.prot.manager.stats.ControllerInfo;
 
 public class CacheEntry
 {
