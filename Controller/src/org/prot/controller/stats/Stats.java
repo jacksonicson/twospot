@@ -1,40 +1,19 @@
 package org.prot.controller.stats;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.prot.controller.app.AppManager;
+import org.prot.controller.app.AppRegistry;
 
 public class Stats
 {
-	private Map<String, AppRequestStats> stats = new ConcurrentHashMap<String, AppRequestStats>();
-
-	private AppManager appManager;
-
-	public void init()
-	{
-	}
+	private AppRegistry registry;
 
 	public void handle(final String appId)
 	{
-		AppRequestStats stats = this.stats.get(appId);
-		if (stats != null)
-			stats.handle();
-		else
-			this.stats.put(appId, new AppRequestStats());
+		AppRequestStats stats = registry.getAppInfo(appId).getAppManagement().getAppRequestStats();
+		stats.handle();
 	}
 
-	public double getRps(final String appId)
+	public void setRegistry(AppRegistry registry)
 	{
-		AppRequestStats stats = this.stats.get(appId);
-		if (stats != null)
-			return stats.getRps();
-
-		return -1;
-	}
-
-	public void setAppManager(AppManager appManager)
-	{
-		this.appManager = appManager;
+		this.registry = registry;
 	}
 }

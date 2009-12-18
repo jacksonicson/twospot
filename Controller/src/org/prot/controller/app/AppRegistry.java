@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-class AppRegistry
+public class AppRegistry implements TokenChecker
 {
 	private final PortPool portPool = new PortPool();
 
@@ -122,7 +122,8 @@ class AppRegistry
 		return idleApps;
 	}
 
-	boolean checkToken(String token)
+	@Override
+	public boolean checkToken(String token)
 	{
 		// False if there is no token
 		if (token == null)
@@ -150,12 +151,12 @@ class AppRegistry
 		return false;
 	}
 
-	Set<String> getAppIds()
+	public Set<String> getAppIds()
 	{
 		return appInfos.keySet();
 	}
 
-	Set<String> getDuplicatedAppIds()
+	public Set<String> getDuplicatedAppIds()
 	{
 		Set<String> duplicate = new HashSet<String>();
 		duplicate.addAll(appInfos.keySet());

@@ -100,9 +100,10 @@ public class RequestHandler extends AbstractHandler
 		this.appManager = appManager;
 	}
 
-	public void setRequestManager(RequestProcessor requestManager)
+
+	public void setRequestProcessor(RequestProcessor requestProcessor)
 	{
-		this.requestProcessor = requestManager;
+		this.requestProcessor = requestProcessor;
 	}
 
 	public void setStats(Stats stats)

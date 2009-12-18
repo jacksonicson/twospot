@@ -2,7 +2,7 @@ package org.prot.controller.app;
 
 public class AppProcess
 {
-	private Process process;
+	private transient Process process;
 	
 	public Process getProcess()
 	{

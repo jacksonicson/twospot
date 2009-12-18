@@ -19,7 +19,7 @@ public class RequestProcessor extends HttpProxyHelper<String>
 
 	private AppManager appManager;
 
-	public RequestProcessor(boolean limitTraffic)
+	public RequestProcessor()
 	{
 		super(true);
 	}

@@ -1,12 +1,11 @@
 package org.prot.controller.management;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.prot.controller.app.AppManager;
+import org.prot.controller.app.AppInfo;
+import org.prot.controller.app.AppManagement;
+import org.prot.controller.app.AppRegistry;
 import org.prot.util.managment.Ping;
 import org.prot.util.stats.StatsValue;
 
@@ -14,70 +13,51 @@ public class AppServerWatcher
 {
 	private static final Logger logger = Logger.getLogger(AppServerWatcher.class);
 
-	private AppManager manager;
+	private AppRegistry registry;
 
-	private Map<String, Ping> connections = new HashMap<String, Ping>();
-
-	private Map<String, Set<StatsValue>> data = new HashMap<String, Set<StatsValue>>();
-
-	public Map<String, Set<StatsValue>> getData()
+	private Ping connect(String appId)
 	{
-		return data;
-	}
-
-	private Ping connectPing(String appId)
-	{
-		Ping ping = connections.get(appId);
-		if (ping != null)
-			return ping;
-
 		Ping connection = (Ping) ExceptionSafeProxy.newInstance(getClass().getClassLoader(), Ping.class,
 				appId);
-		connections.put(appId, connection);
-
 		return connection;
 	}
 
-	private void updateData(String appId, Ping ping)
+	private void ping(Ping ping, AppManagement management)
 	{
-		Set<StatsValue> newData = ping.ping();
-		data.put(appId, newData);
+		Set<StatsValue> values = ping.ping();
+		management.update(values);
 	}
 
 	public void update()
 	{
-//		// Delete all old AppServers
-//		Set<String> appIds = manager.getAppIds();
-//		for (Iterator<String> it = connections.keySet().iterator(); it.hasNext();)
-//		{
-//			String appId = it.next();
-//			if (!appIds.contains(appId))
-//			{
-//				logger.debug("App lost: " + appId);
-//				data.remove(appId);
-//				it.remove();
-//			}
-//		}
-//
-//		// Iterate over all AppIds and poll them
-//		for (String appId : appIds)
-//		{
-//			Ping ping = connectPing(appId);
-//
-//			try
-//			{
-//				updateData(appId, ping);
-//			} catch (Exception e)
-//			{
-//				logger.debug("Connection lost: " + appId);
-//				data.remove(appId);
-//				connections.remove(appId);
-//			}
-//		}
+		for (String appId : registry.getAppIds())
+		{
+			AppInfo info = registry.getAppInfo(appId);
+			if (info == null)
+				continue;
+
+			AppManagement management = info.getAppManagement();
+			Ping ping = management.getPing();
+			if (ping == null)
+			{
+				ping = connect(appId);
+				management.setPing(ping);
+			}
+
+			try
+			{
+				ping(ping, management);
+			} catch (Exception e)
+			{
+				logger.trace(e);
+				management.setPing(null);
+			}
+		}
 	}
 
-	public void setManager(AppManager manager)
+	public void setRegistry(AppRegistry registry)
 	{
-		this.manager = manager;
+		this.registry = registry;
 	}
+
 }

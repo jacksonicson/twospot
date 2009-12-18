@@ -14,11 +14,13 @@ public class ExceptionSafeProxy implements InvocationHandler
 
 	private static final String APP_SERVER_ADDRESS = "localhost";
 
+	private static final int RMI_PORT = 2299;
+
 	private String appId;
 
 	private Object obj;
 
-	public ExceptionSafeProxy(String appId)
+	private ExceptionSafeProxy(String appId)
 	{
 		this.appId = appId;
 	}
@@ -26,11 +28,6 @@ public class ExceptionSafeProxy implements InvocationHandler
 	public static Object newInstance(ClassLoader loader, Class<?> clazz, String appId)
 	{
 		return Proxy.newProxyInstance(loader, new Class<?>[] { clazz }, new ExceptionSafeProxy(appId));
-	}
-
-	private static final int getRmiPort()
-	{
-		return 2299;
 	}
 
 	private void connect() throws Throwable
@@ -42,18 +39,15 @@ public class ExceptionSafeProxy implements InvocationHandler
 		{
 			RmiProxyFactoryBean proxyFactory = new RmiProxyFactoryBean();
 			proxyFactory.setServiceInterface(Ping.class);
-			proxyFactory.setServiceUrl("rmi://" + APP_SERVER_ADDRESS + ":" + getRmiPort() + "/appserver/"
-					+ appId);
+			proxyFactory
+					.setServiceUrl("rmi://" + APP_SERVER_ADDRESS + ":" + RMI_PORT + "/appserver/" + appId);
 			proxyFactory.afterPropertiesSet();
-
 			obj = proxyFactory.getObject();
-
 		} catch (Exception e)
 		{
 			logger.debug("Exception while connecting to AppServer: " + appId);
 			logger.trace(e);
 			obj = null;
-
 			throw e;
 		}
 	}
@@ -63,20 +57,15 @@ public class ExceptionSafeProxy implements InvocationHandler
 	{
 		connect();
 
-		Object result = null;
-
 		try
 		{
-			result = method.invoke(obj, args);
+			return method.invoke(obj, args);
 		} catch (Exception e)
 		{
 			obj = null;
 			logger.debug("Exception in proxy");
 			logger.trace(e);
-
 			throw e;
 		}
-
-		return result;
 	}
 }

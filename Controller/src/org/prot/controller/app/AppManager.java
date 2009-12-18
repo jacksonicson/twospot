@@ -17,7 +17,7 @@ public class AppManager implements DeploymentListener
 
 	private AppRegistry registry;
 
-	private ProcessMonitor monitor;
+	private ProcessWorker processWorker;
 
 	private ManagementService managementService;
 
@@ -86,7 +86,7 @@ public class AppManager implements DeploymentListener
 		case WAIT:
 			// Waits until the application is ONLINE. Returns true if a
 			// continuation is used
-			if (monitor.waitForApplication(appInfo))
+			if (processWorker.waitForApplication(appInfo))
 				return null;
 			break;
 		}
@@ -132,14 +132,14 @@ public class AppManager implements DeploymentListener
 	private boolean startApp(AppInfo appInfo)
 	{
 		// Enqueue the process start
-		monitor.scheduleStartProcess(appInfo);
+		processWorker.scheduleStartProcess(appInfo);
 
 		// Watch for application updates
 		managementService.watchApp(appInfo.getAppId());
 
 		// Register a Listener for the application. If the application is
 		// already running it returns true, if not it returns false
-		return monitor.waitForApplication(appInfo);
+		return processWorker.waitForApplication(appInfo);
 	}
 
 	private void doMaintenance()
@@ -155,30 +155,31 @@ public class AppManager implements DeploymentListener
 				managementService.removeWatch(info.getAppId());
 
 			// Schedule kill-Tasks for each entry
-			monitor.scheduleKillProcess(dead);
+			processWorker.scheduleKillProcess(dead);
 		}
 
 		// Kill everything with low stats
 		// TODO: Check if controller is under a high load and kill unused apps
 		// in this case!
-		for (String appId : registry.getAppIds())
-		{
-			long time = registry.getAppInfo(appId).getStartTime();
-			if (System.currentTimeMillis() - time < 60 * 1000)
-				continue;
-
-			double stat = stats.getRps(appId);
-			if (stat < 0)
-				continue;
-			if (stat < 10)
-			{
-				logger.debug("Try killing app because of bad stats (low rps value): " + stat);
-
-				// Check ZooKeeper if we are the only control - if we are not
-				// under high load
-				killApp(appId);
-			}
-		}
+		// for (String appId : registry.getAppIds())
+		// {
+		// long time = registry.getAppInfo(appId).getCreationTime();
+		// if (System.currentTimeMillis() - time < 60 * 1000)
+		// continue;
+		//
+		// double stat = stats.getRps(appId);
+		// if (stat < 0)
+		// continue;
+		// if (stat < 10)
+		// {
+		// logger.debug("Try killing app because of bad stats (low rps value): "
+		// + stat);
+		//
+		// // Check ZooKeeper if we are the only control - if we are not
+		// // under high load
+		// killApp(appId);
+		// }
+		// }
 	}
 
 	class MaintenanceTask extends SchedulerTask
@@ -202,14 +203,14 @@ public class AppManager implements DeploymentListener
 		this.registry = registry;
 	}
 
-	public void setMonitor(ProcessMonitor monitor)
-	{
-		this.monitor = monitor;
-	}
-
 	public void setManagementService(ManagementService managementService)
 	{
 		this.managementService = managementService;
+	}
+	
+	public void setProcessWorker(ProcessWorker processWorker)
+	{
+		this.processWorker = processWorker;
 	}
 
 	public void setStats(Stats stats)

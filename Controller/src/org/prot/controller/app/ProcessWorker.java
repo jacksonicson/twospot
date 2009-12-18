@@ -10,9 +10,9 @@ import org.eclipse.jetty.continuation.ContinuationSupport;
 import org.eclipse.jetty.server.HttpConnection;
 import org.eclipse.jetty.util.thread.ThreadPool;
 
-class ProcessMonitor implements Runnable
+class ProcessWorker implements Runnable
 {
-	private static final Logger logger = Logger.getLogger(ProcessMonitor.class);
+	private static final Logger logger = Logger.getLogger(ProcessWorker.class);
 
 	// Thread pool
 	private ThreadPool threadPool;
@@ -53,12 +53,10 @@ class ProcessMonitor implements Runnable
 
 	public void init()
 	{
-		// Start the thread only if it is not running right now
-		if (!threadPool.dispatch(this))
-		{
-			logger.error("Could not start worker thread");
-			System.exit(1);
-		}
+		if (!running)
+			running = threadPool.dispatch(this);
+
+		logger.debug("ProcessWorker thread running: " + running);
 	}
 
 	void scheduleKillProcess(Set<AppInfo> deadApps)
@@ -75,6 +73,7 @@ class ProcessMonitor implements Runnable
 
 	void scheduleStartProcess(AppInfo info)
 	{
+		init();
 		logger.debug("Scheduling a START-Job");
 
 		synchronized (jobQueue)
