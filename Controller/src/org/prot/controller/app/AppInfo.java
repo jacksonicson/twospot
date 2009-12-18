@@ -146,13 +146,10 @@ public final class AppInfo
 			logger.warn("Unknown AppServer state");
 		}
 
-		if (!check)
-		{
-			logger.error("Invalid sate change from " + this.status + " to " + status);
-			System.exit(1);
-		}
-
-		this.status = status;
+		if (check)
+			this.status = status;
+		else
+			logger.warn("Invalid sate change from " + this.status + " to " + status);
 	}
 
 	public boolean isPrivileged()
@@ -188,7 +185,7 @@ public final class AppInfo
 	{
 		return appId.hashCode();
 	}
-	
+
 	public void dump()
 	{
 		logger.debug("Continuations: " + continuations.size());

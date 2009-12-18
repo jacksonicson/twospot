@@ -46,7 +46,7 @@ public class AppManager implements DeploymentListener
 		// This call is not synchronized - most calls end here
 		if (appInfo.getStatus() == AppState.ONLINE)
 		{
-			appInfo.dump();
+			// appInfo.dump();
 			return appInfo;
 		}
 
