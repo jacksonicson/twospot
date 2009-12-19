@@ -27,20 +27,23 @@ public class RegisterApp implements Job
 	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
 		ZooKeeper zk = zooHelper.getZooKeeper();
+		String appPath = ZNodes.ZNODE_APPS + "/" + appId;
 
-		String path = ZNodes.ZNODE_APPS + "/" + appId;
+		// Create a new AppEntry object which serialized version is saved to the
+		// ZooKeeper
 		AppEntry entry = new AppEntry(appId);
 		ObjectSerializer serializer = new ObjectSerializer();
-		byte[] data = serializer.serialize(entry);
+		byte[] entryData = serializer.serialize(entry);
 
 		try
 		{
 			// Persist the AppEntry
-			String createdPath = zk.create(path, data, zooHelper.getACL(), CreateMode.PERSISTENT);
-			logger.info("AppId persisted in ZooKeeper: " + createdPath);
+			String createdPath = zk.create(appPath, entryData, zooHelper.getACL(), CreateMode.PERSISTENT);
+			logger.info("Application written to ZooKeeper: " + createdPath);
+
 		} catch (KeeperException exists)
 		{
-			logger.error("Could not register within ZooKeeper. Registration path already exists: " + path);
+			logger.error("Could not register within ZooKeeper. Registration path already exists: " + appPath);
 			return false;
 		}
 

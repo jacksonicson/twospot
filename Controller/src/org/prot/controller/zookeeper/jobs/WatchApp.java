@@ -14,9 +14,11 @@ import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.Watcher.Event.EventType;
 import org.apache.zookeeper.data.Stat;
 import org.prot.controller.zookeeper.DeploymentListener;
+import org.prot.util.ObjectSerializer;
 import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
+import org.prot.util.zookeeper.data.AppEntry;
 
 public class WatchApp implements Job, Watcher
 {
@@ -38,16 +40,12 @@ public class WatchApp implements Job, Watcher
 
 	public void watchApp(String appId)
 	{
-		logger.debug("Watching AppId: " + appId);
-
 		watching.add(appId);
 		zooHelper.getQueue().insert(this);
 	}
 
 	public void removeWatch(String appId)
 	{
-		logger.debug("Don't watch AppId: " + appId);
-
 		watching.remove(appId);
 	}
 
@@ -66,10 +64,8 @@ public class WatchApp implements Job, Watcher
 	@Override
 	public void process(WatchedEvent event)
 	{
-
 		if (event.getType() == EventType.None)
 		{
-			logger.debug("WatchApp - Connectino has changed");
 			zooHelper.getQueue().insert(this);
 			return;
 		}
@@ -79,25 +75,22 @@ public class WatchApp implements Job, Watcher
 			ZooKeeper zk = zooHelper.getZooKeeper();
 
 			// Geht the path to the node which data has changed
-			String path = event.getPath();
-			if (path == null)
-			{
-				logger.warn("Path is null");
-				return;
-			}
+			final String path = event.getPath();
 
-			// Extract the node data
+			// If there is no path - do nothing
+			if (path == null)
+				return;
+
+			// Extract the AppEntry object
 			Stat stat = new Stat();
 			byte[] data = zk.getData(path, false, stat);
-			String appId = new String(data);
+			ObjectSerializer serializer = new ObjectSerializer();
+			AppEntry entry = (AppEntry) serializer.deserialize(data);
 
 			// The ZooKeeper API cannot remove watches. We have to check here if
-			// the app is still watched
-			if (watching.contains(appId))
-			{
-				logger.debug("Deployed AppId: " + appId);
-				appDeployed(appId);
-			}
+			// the appId is still in the watchlist
+			if (watching.contains(entry.appId))
+				appDeployed(entry.appId);
 
 		} catch (InterruptedException e)
 		{
@@ -110,7 +103,7 @@ public class WatchApp implements Job, Watcher
 			logger.error(e);
 		} finally
 		{
-			// Reschedule this task
+			// Reschedule this task (install watchers)
 			zooHelper.getQueue().insert(this);
 		}
 	}
@@ -118,10 +111,8 @@ public class WatchApp implements Job, Watcher
 	@Override
 	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
-		logger.debug("WatchApp");
-
 		ZooKeeper zk = zooHelper.getZooKeeper();
-		String path = ZNodes.ZNODE_APPS;
+		final String appsPath = ZNodes.ZNODE_APPS;
 
 		try
 		{
@@ -129,34 +120,24 @@ public class WatchApp implements Job, Watcher
 			for (String watch : this.watching)
 			{
 				// Assumend path to the node
-				final String watchPath = path + "/" + watch;
+				final String watchPath = appsPath + "/" + watch;
 
 				// Check if a node for the AppId exists
 				Stat stat = zk.exists(watchPath, false);
 				if (stat == null)
 				{
-					logger.error("Cannot watch AppId: " + watch);
+					// Register the application
+					zooHelper.getQueue().requires(this, new RegisterApp(watch));
 
-					// Enqueue a register task before this task
-					zooHelper.getQueue().insertBefore(this, new RegisterApp(watch));
-
+					// Retry
 					return false;
 				}
 
-				// Get the node data
-				stat = new Stat();
-				byte[] data = zk.getData(watchPath, false, stat);
-				String childAppId = new String(data);
-
 				// Check if we are watching this node
-				if (watching.contains(childAppId))
-				{
-					logger.debug("Watching ZooKeeper node: " + watchPath);
-
-					// Watch the node
-					zk.exists(watchPath, this);
-				}
+				stat = zk.exists(watchPath, this);
 			}
+
+			return true;
 
 		} catch (KeeperException e)
 		{
@@ -167,8 +148,6 @@ public class WatchApp implements Job, Watcher
 			logger.error(e);
 			return false;
 		}
-
-		return true;
 	}
 
 	@Override

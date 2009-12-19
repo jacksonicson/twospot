@@ -26,35 +26,41 @@ public class StartApp implements Job
 	@Override
 	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
-		logger.debug("StartApp");
-		
 		ZooKeeper zk = zooHelper.getZooKeeper();
-		String path = ZNodes.ZNODE_APPS + "/" + appId + "/" + Configuration.getConfiguration().getUID();
-		
+		String instancePath = ZNodes.ZNODE_APPS + "/" + appId + "/"
+				+ Configuration.getConfiguration().getUID();
+
 		try
 		{
-			Stat stat = zk.exists(path, false);
+			// Check if the path for the insatance node already exists
+			Stat stat = zk.exists(instancePath, false);
 			if (stat != null)
 			{
-				zk.create(path, new byte[0], zooHelper.getACL(), CreateMode.EPHEMERAL);
+				// The path does not exist - create it (empty node)
+				zk.create(instancePath, new byte[0], zooHelper.getACL(), CreateMode.EPHEMERAL);
 				return true;
 			}
+
+			logger.debug("Could not register instance in ZooKeeper");
+			return false;
+
 		} catch (KeeperException e)
 		{
+			logger.debug(e);
+
 			switch (e.code())
 			{
 			case BADVERSION:
+				// Retry
 				return false;
 			case NONODE:
-				logger.error("Could not register AppServer in ZooKepper - NONODE", e);
+				// Retry
 				return false;
 			}
 
-			logger.error(e);
+			// Retry
 			return false;
 		}
-
-		return true;
 	}
 
 	@Override

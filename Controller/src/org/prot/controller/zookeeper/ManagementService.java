@@ -6,6 +6,7 @@ import org.prot.controller.zookeeper.jobs.RegisterApp;
 import org.prot.controller.zookeeper.jobs.RegisterController;
 import org.prot.controller.zookeeper.jobs.StartApp;
 import org.prot.controller.zookeeper.jobs.StopApp;
+import org.prot.controller.zookeeper.jobs.TryStopApp;
 import org.prot.controller.zookeeper.jobs.WatchApp;
 import org.prot.util.zookeeper.ZooHelper;
 
@@ -33,12 +34,12 @@ public class ManagementService
 
 	public boolean stop(String appId)
 	{
-		return zooHelper.getQueue().insertAndWait(new StopApp(appId, true));
+		return zooHelper.getQueue().insertAndWait(new StopApp(appId));
 	}
 
 	public boolean tryShutdown(String appId)
 	{
-		return zooHelper.getQueue().insertAndWait(new StopApp(appId, false));
+		return zooHelper.getQueue().insertAndWait(new TryStopApp(appId));
 	}
 
 	public void start(String appId)

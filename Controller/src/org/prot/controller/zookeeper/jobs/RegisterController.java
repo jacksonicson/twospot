@@ -46,33 +46,39 @@ public class RegisterController implements Job
 	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
 		ZooKeeper zk = zooHelper.getZooKeeper();
-		String path = ZNodes.ZNODE_CONTROLLER + "/" + Configuration.getConfiguration().getUID();
+		String controllerPath = ZNodes.ZNODE_CONTROLLER + "/" + Configuration.getConfiguration().getUID();
 
+		// Create a new ControllerEntry object which serialized version is saved
+		// to the ZooKeeper
 		ControllerEntry entry = new ControllerEntry();
 		entry.serviceAddress = getAddress(networkInterface).getHostAddress();
 		entry.address = getAddress(networkInterface).getHostAddress();
 		entry.port = Configuration.getConfiguration().getControllerPort();
 
+		// Serialize the ControllerEntry object
 		ObjectSerializer serializer = new ObjectSerializer();
-		byte[] data = serializer.serialize(entry);
+		byte[] entryData = serializer.serialize(entry);
 
-		if (zk.exists(path, false) != null)
+		// Check if the ZooKeeper-Node for the Controller already exists
+		if (zk.exists(controllerPath, false) != null)
 		{
-			logger.warn("Could not register within ZooKeeper. Registration path already exists: " + path);
+			logger.warn("Could not register within ZooKeeper - already exists: " + controllerPath);
 			return false;
 		}
 
 		try
 		{
-			String createdPath = zk.create(path, data, zooHelper.getACL(), CreateMode.EPHEMERAL);
-			logger.info("Controller registered within ZooKeeper: " + createdPath);
+			String createdPath = zk.create(controllerPath, entryData, zooHelper.getACL(),
+					CreateMode.EPHEMERAL);
+			logger.info("Controller ZooKeeper-Path: " + createdPath);
+
+			return true;
+
 		} catch (KeeperException e)
 		{
-			logger.error("Could not register within ZooKeeper. Registration path already exists: " + path, e);
+			logger.error("Could not register within ZooKeeper: " + controllerPath, e);
 			return false;
 		}
-
-		return true;
 	}
 
 	@Override

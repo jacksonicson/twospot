@@ -25,35 +25,43 @@ public class DeployApp implements Job
 	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
 		ZooKeeper zk = zooHelper.getZooKeeper();
-		String path = ZNodes.ZNODE_APPS + "/" + appId;
+		String appPath = ZNodes.ZNODE_APPS + "/" + appId;
 		try
 		{
-			// Check if the path exists, don't watch the node
-			Stat stat = new Stat();
-			byte[] data = zk.getData(path, false, stat);
+			// Check if a path for the AppId exists
+			Stat stat = zk.exists(appPath, false);
 			if (stat == null)
 			{
-				logger.error("ZooKeeper has no such app - creating node first: " + path);
-
-				// Enqueue a register task before this task
-				zooHelper.getQueue().insertBefore(this, new RegisterApp(appId));
+				// First we need to register the ZooKeeper-Node for the AppId
+				zooHelper.getQueue().requires(this, new RegisterApp(appId));
 
 				// We are not done with this task
 				return false;
 			}
 
-			// Reset the node data (don't change them)
-			zk.setData(path, data, stat.getVersion());
-			logger.debug("ZooKeeper updated: " + path);
+			// Read the current ndoe data
+			byte[] data = zk.getData(appPath, false, stat);
+
+			// Update the data of the node
+			zk.setData(appPath, data, stat.getVersion());
+
+			// Node data has been saved
+			return true;
 
 		} catch (KeeperException e)
 		{
 			logger.error(e);
+
+			// Retry
 			return false;
+
 		} catch (InterruptedException e)
 		{
 			logger.error(e);
+
+			// Retry
 			return false;
+
 		} catch (IllegalArgumentException e)
 		{
 			logger.fatal(e);
@@ -61,7 +69,7 @@ public class DeployApp implements Job
 			System.exit(1);
 		}
 
-		return true;
+		return false;
 	}
 
 	@Override
