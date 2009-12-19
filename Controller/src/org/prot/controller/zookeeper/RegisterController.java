@@ -1,8 +1,6 @@
 package org.prot.controller.zookeeper;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.SocketException;
 
@@ -11,11 +9,12 @@ import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 import org.prot.controller.config.Configuration;
+import org.prot.util.ObjectSerializer;
 import org.prot.util.net.AddressExtractor;
 import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
-import org.prot.util.zookeeper.data.Controller;
+import org.prot.util.zookeeper.data.ControllerEntry;
 
 public class RegisterController implements Job
 {
@@ -28,21 +27,22 @@ public class RegisterController implements Job
 		this.networkInterface = networkInterface;
 	}
 
-	private InetAddress getAddress(String networkInterface)
+	private final InetAddress getAddress(String networkInterface)
 	{
 		try
 		{
 			return AddressExtractor.getInetAddress(networkInterface, false);
 		} catch (SocketException e)
 		{
-			logger.error("Could not get IP address for network interface " + networkInterface, e);
+			logger.fatal("Could not get IP address for network interface " + networkInterface, e);
+			logger.fatal("Shutting down...");
 			System.exit(1);
 		}
 
 		return null;
 	}
 
-	private String generateUUID()
+	private final String generateUUID()
 	{
 		return java.util.UUID.randomUUID().toString();
 	}
@@ -51,17 +51,16 @@ public class RegisterController implements Job
 	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
 		ZooKeeper zk = zooHelper.getZooKeeper();
-
-		Controller controller = new Controller();
-		controller.serviceAddress = getAddress(networkInterface).getHostAddress();
-		controller.address = getAddress(networkInterface).getHostAddress();
-		controller.port = Configuration.getConfiguration().getControllerPort();
-
-		ByteArrayOutputStream bo = new ByteArrayOutputStream();
-		ObjectOutputStream out = new ObjectOutputStream(bo);
-		out.writeObject(controller);
-
 		String path = ZNodes.ZNODE_CONTROLLER + "/" + generateUUID();
+
+		ControllerEntry entry = new ControllerEntry();
+		entry.serviceAddress = getAddress(networkInterface).getHostAddress();
+		entry.address = getAddress(networkInterface).getHostAddress();
+		entry.port = Configuration.getConfiguration().getControllerPort();
+
+		ObjectSerializer serializer = new ObjectSerializer();
+		byte[] data = serializer.serialize(entry);
+
 		if (zk.exists(path, false) != null)
 		{
 			logger.warn("Could not register within ZooKeeper. Registration path already exists: " + path);
@@ -70,11 +69,11 @@ public class RegisterController implements Job
 
 		try
 		{
-			String createdPath = zk.create(path, bo.toByteArray(), zooHelper.getACL(), CreateMode.EPHEMERAL);
+			String createdPath = zk.create(path, data, zooHelper.getACL(), CreateMode.EPHEMERAL);
 			logger.info("Controller registered within ZooKeeper: " + createdPath);
-		} catch (KeeperException exists)
+		} catch (KeeperException e)
 		{
-			logger.error("Could not register within ZooKeeper. Registration path already exists: " + path);
+			logger.error("Could not register within ZooKeeper. Registration path already exists: " + path, e);
 			return false;
 		}
 
@@ -92,5 +91,4 @@ public class RegisterController implements Job
 	{
 		return true;
 	}
-
 }

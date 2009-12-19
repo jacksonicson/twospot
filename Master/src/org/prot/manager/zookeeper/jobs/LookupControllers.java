@@ -1,8 +1,6 @@
 package org.prot.manager.zookeeper.jobs;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +12,11 @@ import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 import org.prot.manager.stats.ControllerInfo;
 import org.prot.manager.stats.ControllerRegistry;
+import org.prot.util.ObjectSerializer;
 import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
-import org.prot.util.zookeeper.data.Controller;
+import org.prot.util.zookeeper.data.ControllerEntry;
 
 public class LookupControllers implements Job, Watcher
 {
@@ -32,20 +31,6 @@ public class LookupControllers implements Job, Watcher
 	{
 		// Reexecute this job
 		zooHelper.getQueue().insert(this);
-	}
-
-	private Controller loadController(byte[] buffer) throws IOException
-	{
-		ObjectInputStream oin = new ObjectInputStream(new ByteArrayInputStream(buffer));
-		try
-		{
-			return (Controller) oin.readObject();
-		} catch (ClassNotFoundException e)
-		{
-			logger.error("Could not deserialize ZooKeeper data: " + e);
-		}
-
-		return null;
 	}
 
 	@Override
@@ -68,7 +53,9 @@ public class LookupControllers implements Job, Watcher
 			Stat stat = new Stat();
 			byte[] data = zk.getData(child, false, stat);
 
-			Controller controller = loadController(data);
+			ObjectSerializer serializer = new ObjectSerializer();
+			ControllerEntry controller = (ControllerEntry) serializer.deserialize(data);
+			
 			ControllerInfo info = new ControllerInfo();
 			info.setAddress(controller.address);
 			info.setServiceAddress(controller.serviceAddress);

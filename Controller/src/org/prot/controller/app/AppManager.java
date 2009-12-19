@@ -97,6 +97,9 @@ public class AppManager implements DeploymentListener
 		// Geht the AppInfo for this application
 		AppInfo appInfo = registry.getAppInfo(appId);
 
+		// Update stats
+		managementService.stop(appId);
+
 		// Check if the application is available
 		if (appInfo == null)
 		{
@@ -133,6 +136,7 @@ public class AppManager implements DeploymentListener
 		processWorker.scheduleStartProcess(appInfo);
 
 		// Watch for application updates
+		managementService.start(appInfo.getAppId());
 		managementService.watchApp(appInfo.getAppId());
 
 		// Register a Listener for the application. If the application is

@@ -6,17 +6,19 @@ import org.apache.log4j.Logger;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
+import org.prot.util.ObjectSerializer;
 import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
+import org.prot.util.zookeeper.data.AppEntry;
 
-public class DeployApp implements Job
+public class StartApp implements Job
 {
-	private static final Logger logger = Logger.getLogger(DeployApp.class);
+	private static final Logger logger = Logger.getLogger(StartApp.class);
 
 	private final String appId;
 
-	public DeployApp(String appId)
+	public StartApp(String appId)
 	{
 		this.appId = appId;
 	}
@@ -25,40 +27,37 @@ public class DeployApp implements Job
 	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
 		ZooKeeper zk = zooHelper.getZooKeeper();
+
 		String path = ZNodes.ZNODE_APPS + "/" + appId;
 		try
 		{
-			// Check if the path exists, don't watch the node
 			Stat stat = new Stat();
 			byte[] data = zk.getData(path, false, stat);
-			if (stat == null)
+			if (data != null)
 			{
-				logger.error("ZooKeeper has no such app - creating node first: " + path);
-
-				// Enqueue a register task before this task
-				zooHelper.getQueue().insertBefore(this, new RegisterApp(appId));
-
-				// We are not done with this task
+				ObjectSerializer serializer = new ObjectSerializer();
+				AppEntry entry = (AppEntry) serializer.deserialize(data);
+				entry.serverInstances++;
+				data = serializer.serialize(entry);
+				zk.setData(path, data, stat.getVersion());
+			} else
+			{
+				logger.error("ZooKeeper has no such Node (App is not registered): " + path);
+				return false;
+			}
+		} catch (KeeperException e)
+		{
+			switch (e.code())
+			{
+			case BADVERSION:
+				return false;
+			case NONODE:
+				logger.error("Could not update AppEntry in ZooKepper - NONODE", e);
 				return false;
 			}
 
-			// Reset the node data (don't change them)
-			zk.setData(path, data, stat.getVersion());
-			logger.debug("ZooKeeper updated: " + path);
-
-		} catch (KeeperException e)
-		{
 			logger.error(e);
 			return false;
-		} catch (InterruptedException e)
-		{
-			logger.error(e);
-			return false;
-		} catch (IllegalArgumentException e)
-		{
-			logger.fatal(e);
-			logger.fatal("Shutting down...");
-			System.exit(1);
 		}
 
 		return true;
@@ -73,6 +72,6 @@ public class DeployApp implements Job
 	@Override
 	public boolean isRetryable()
 	{
-		return true;
+		return false;
 	}
 }

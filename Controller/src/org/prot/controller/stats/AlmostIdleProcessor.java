@@ -29,7 +29,7 @@ public class AlmostIdleProcessor implements BalancingProcessor
 
 				// Check if this Controller is the last Controller serving the
 				// AppServer
-				if (management.shutdown(appInfo.getAppId()))
+				if (management.tryShutdown(appInfo.getAppId()))
 				{
 					logger.debug("Killing AppServer because of low load and multiple servings");
 					// Everythin is ok - this Controller is not the last one

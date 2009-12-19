@@ -6,9 +6,11 @@ import org.apache.log4j.Logger;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
+import org.prot.util.ObjectSerializer;
 import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
+import org.prot.util.zookeeper.data.AppEntry;
 
 public class RegisterApp implements Job
 {
@@ -27,12 +29,15 @@ public class RegisterApp implements Job
 		ZooKeeper zk = zooHelper.getZooKeeper();
 
 		String path = ZNodes.ZNODE_APPS + "/" + appId;
-		byte[] content = path.getBytes();
+		AppEntry entry = new AppEntry(appId);
+		ObjectSerializer serializer = new ObjectSerializer();
+		byte[] data = serializer.serialize(entry);
 
 		try
 		{
-			String createdPath = zk.create(path, content, zooHelper.getACL(), CreateMode.PERSISTENT);
-			logger.info("AppId registered within ZooKeeper: " + createdPath);
+			// Persist the AppEntry
+			String createdPath = zk.create(path, data, zooHelper.getACL(), CreateMode.PERSISTENT);
+			logger.info("AppId persisted in ZooKeeper: " + createdPath);
 		} catch (KeeperException exists)
 		{
 			logger.error("Could not register within ZooKeeper. Registration path already exists: " + path);
