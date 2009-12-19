@@ -136,8 +136,8 @@ public class AppManager implements DeploymentListener
 		processWorker.scheduleStartProcess(appInfo);
 
 		// Watch for application updates
-		managementService.start(appInfo.getAppId());
 		managementService.watchApp(appInfo.getAppId());
+		managementService.start(appInfo.getAppId());
 
 		// Register a Listener for the application. If the application is
 		// already running it returns true, if not it returns false

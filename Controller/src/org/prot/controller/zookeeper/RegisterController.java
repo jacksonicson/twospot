@@ -42,16 +42,11 @@ public class RegisterController implements Job
 		return null;
 	}
 
-	private final String generateUUID()
-	{
-		return java.util.UUID.randomUUID().toString();
-	}
-
 	@Override
 	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
 		ZooKeeper zk = zooHelper.getZooKeeper();
-		String path = ZNodes.ZNODE_CONTROLLER + "/" + generateUUID();
+		String path = ZNodes.ZNODE_CONTROLLER + "/" + Configuration.getConfiguration().getUID();
 
 		ControllerEntry entry = new ControllerEntry();
 		entry.serviceAddress = getAddress(networkInterface).getHostAddress();

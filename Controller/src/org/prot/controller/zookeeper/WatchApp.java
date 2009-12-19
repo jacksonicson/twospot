@@ -117,12 +117,13 @@ public class WatchApp implements Job, Watcher
 	@Override
 	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
+		logger.debug("WatchApp");
+
 		ZooKeeper zk = zooHelper.getZooKeeper();
+		String path = ZNodes.ZNODE_APPS;
 
 		try
 		{
-			String path = ZNodes.ZNODE_APPS;
-
 			// Iterate over all watched apps
 			for (String watch : this.watching)
 			{
@@ -134,7 +135,11 @@ public class WatchApp implements Job, Watcher
 				if (stat == null)
 				{
 					logger.error("Cannot watch AppId: " + watch);
-					continue;
+
+					// Enqueue a register task before this task
+					zooHelper.getQueue().insertBefore(this, new RegisterApp(watch));
+
+					return false;
 				}
 
 				// Get the node data

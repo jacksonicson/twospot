@@ -23,7 +23,7 @@ public class AlmostIdleProcessor implements BalancingProcessor
 		{
 			double rps = appInfo.getAppManagement().getAppRequestStats().getRps();
 			long time = current - appInfo.getCreationTime();
-			if (rps < 30d && time > 60000)
+			if (rps < 30d && time > 20000)
 			{
 				logger.debug("Almost idle AppServer found - trying to shut down");
 

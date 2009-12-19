@@ -1,16 +1,16 @@
 package org.prot.controller.zookeeper;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
-import org.prot.util.ObjectSerializer;
+import org.prot.controller.config.Configuration;
 import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
-import org.prot.util.zookeeper.data.AppEntry;
 
 public class StopApp implements Job
 {
@@ -31,39 +31,27 @@ public class StopApp implements Job
 	{
 		ZooKeeper zk = zooHelper.getZooKeeper();
 
-		String path = ZNodes.ZNODE_APPS + "/" + appId;
+		String appNode = ZNodes.ZNODE_APPS + "/" + appId;
+		String instanceNode = appNode + "/" + Configuration.getConfiguration().getUID();
 		try
 		{
-			Stat stat = new Stat();
-			byte[] data = zk.getData(path, false, stat);
-			if (data != null)
+			List<String> childs = zk.getChildren(appNode, false);
+			int childCount = childs.size();
+
+			// If we should only check if there are more Controllers serving
+			// this app
+			if (!updateZooKeeper)
+				return childCount > 0;
+
+			Stat stat = zk.exists(instanceNode, false);
+			if (stat != null)
 			{
-				ObjectSerializer serializer = new ObjectSerializer();
-				AppEntry entry = (AppEntry) serializer.deserialize(data);
-				entry.serverInstances--;
-				if (entry.serverInstances < 0)
-				{
-					logger.error("AppEntry serverInstances is negative: " + entry.serverInstances);
-					entry.serverInstances = 0;
-				}
-
-				if (!updateZooKeeper)
-					return entry.serverInstances > 0;
-
-				if (entry.serverInstances > 0)
-				{
-					data = serializer.serialize(entry);
-					zk.setData(path, data, stat.getVersion());
-					return true;
-				}
-
-				return false;
-
-			} else
-			{
-				logger.error("ZooKeeper has no such Node (App is not registered): " + path);
-				return false;
+				zk.delete(instanceNode, stat.getVersion());
+				return true;
 			}
+
+			return false;
+
 		} catch (KeeperException e)
 		{
 			switch (e.code())

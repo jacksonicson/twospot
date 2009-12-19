@@ -13,6 +13,9 @@ public class Configuration
 	// Singleton instance
 	private static Configuration configuration;
 
+	// UID of this controller
+	private final String UID;
+
 	// Configuration
 	private Properties properties = new Properties();
 
@@ -46,6 +49,10 @@ public class Configuration
 
 	public Configuration()
 	{
+		// UID
+		this.UID = java.util.UUID.randomUUID().toString();
+
+		// Read the configuration files
 		InputStream utilIn = this.getClass().getResourceAsStream("/etc/config.properties");
 		InputStream controllerIn = this.getClass().getResourceAsStream("/etc/controller.properties");
 		try
@@ -111,4 +118,10 @@ public class Configuration
 		return vmOptions;
 	}
 
+	public String getUID()
+	{
+		return UID;
+	}
+	
+	
 }

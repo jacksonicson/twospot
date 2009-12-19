@@ -3,14 +3,14 @@ package org.prot.controller.zookeeper;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
-import org.prot.util.ObjectSerializer;
+import org.prot.controller.config.Configuration;
 import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
-import org.prot.util.zookeeper.data.AppEntry;
 
 public class StartApp implements Job
 {
@@ -26,24 +26,18 @@ public class StartApp implements Job
 	@Override
 	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
+		logger.debug("StartApp");
+		
 		ZooKeeper zk = zooHelper.getZooKeeper();
-
-		String path = ZNodes.ZNODE_APPS + "/" + appId;
+		String path = ZNodes.ZNODE_APPS + "/" + appId + "/" + Configuration.getConfiguration().getUID();
+		
 		try
 		{
-			Stat stat = new Stat();
-			byte[] data = zk.getData(path, false, stat);
-			if (data != null)
+			Stat stat = zk.exists(path, false);
+			if (stat != null)
 			{
-				ObjectSerializer serializer = new ObjectSerializer();
-				AppEntry entry = (AppEntry) serializer.deserialize(data);
-				entry.serverInstances++;
-				data = serializer.serialize(entry);
-				zk.setData(path, data, stat.getVersion());
-			} else
-			{
-				logger.error("ZooKeeper has no such Node (App is not registered): " + path);
-				return false;
+				zk.create(path, new byte[0], zooHelper.getACL(), CreateMode.EPHEMERAL);
+				return true;
 			}
 		} catch (KeeperException e)
 		{
@@ -52,7 +46,7 @@ public class StartApp implements Job
 			case BADVERSION:
 				return false;
 			case NONODE:
-				logger.error("Could not update AppEntry in ZooKepper - NONODE", e);
+				logger.error("Could not register AppServer in ZooKepper - NONODE", e);
 				return false;
 			}
 
@@ -72,6 +66,6 @@ public class StartApp implements Job
 	@Override
 	public boolean isRetryable()
 	{
-		return false;
+		return true;
 	}
 }
