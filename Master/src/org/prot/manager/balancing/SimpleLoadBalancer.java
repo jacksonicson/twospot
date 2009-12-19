@@ -22,21 +22,30 @@ public class SimpleLoadBalancer implements LoadBalancer
 	@Override
 	public Set<ControllerInfo> selectController(String appId)
 	{
+		// Check if the master knows Controllers
 		if (stats.getControllers().isEmpty())
+		{
+			logger.warn("Controller has no Controllers");
 			return null;
+		}
 
+		// Set for the results
 		Set<ControllerInfo> result = new HashSet<ControllerInfo>();
 
-		boolean overloaded = false;
+		// Number of Controllers which report an overload
+		int overloaded = 0;
 
+		// Used to find the best Controller (lowest load)
 		double bestRanking = Double.MAX_VALUE;
 		ControllerStats bestController = null;
 
+		// Map with all known Controllers
 		Map<String, ControllerStats> controllers = stats.getControllers();
 		for (ControllerStats controller : controllers.values())
 		{
-			// Rate this controller
+			// Calculate a ranking for the controller
 			double rank = 0;
+			// TODO: Overalod flag of the controller
 			rank += 0.3 * ((controller.getValues().cpu < 0) ? 0 : controller.getValues().cpu);
 			rank += 2.0 * controller.getValues().freeMemory / controller.getValues().totalMemory;
 			rank += 0.5 * controller.size();
@@ -54,22 +63,44 @@ public class SimpleLoadBalancer implements LoadBalancer
 			// Check if controller is running the application
 			InstanceStats instance = controller.getInstance(appId);
 			if (instance == null)
+			{
+				// Controller is not running the application
 				continue;
+			}
 
-			// This controller is running the application
+			// Add the controller to the result set
 			registry.getController(controller.getAddress());
 
-			// Check if controller is overloaded
-			overloaded |= instance.getValues().overloaded;
+			// Check if controller reports an overload
+			if (instance.getValues().overloaded)
+				overloaded++;
 		}
 
-		if (!result.isEmpty() && !overloaded)
-			return result;
+		// Check if we have found Controllers which are running the application
+		if (!result.isEmpty())
+		{
+			int countControllers = result.size();
+			double relativeOverload = (double) overloaded / (double) countControllers;
 
+			// Return the current results if there are enough Controllers which
+			// are not overloaded
+			if (relativeOverload < 0.5d)
+				return result;
+		}
+
+		// The application requires another Controller - use the Controller with
+		// the lowest load
 		ControllerInfo bestControllerInfo = registry.getController(bestController.getAddress());
-		stats.assignToController(appId, bestController.getAddress());
 		result.add(bestControllerInfo);
 
+		// Update internal stat data about this assignment (Controller -
+		// Application)
+		stats.assignToController(appId, bestController.getAddress());
+
+		// This should never happen
+		assert (result.isEmpty() == false);
+
+		// Return the results
 		return result;
 	}
 

@@ -1,6 +1,5 @@
 package org.prot.manager.stats;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -13,7 +12,7 @@ public class Stats
 {
 	private Map<String, ControllerStats> publicControllers = new ConcurrentHashMap<String, ControllerStats>();
 
-	private HashMap<String, ControllerStats> controllers = new HashMap<String, ControllerStats>();
+	private Map<String, ControllerStats> controllers = new ConcurrentHashMap<String, ControllerStats>();
 
 	public void startUpdate()
 	{
@@ -42,13 +41,17 @@ public class Stats
 		ControllerStats stats = controllers.get(address);
 		if (stats == null)
 			return;
+
 		stats.assign(appId);
 	}
 
 	public void removeController(String address)
 	{
-		// Remove controller
-		controllers.remove(address);
+		synchronized (controllers)
+		{
+			// Remove controller
+			controllers.remove(address);
+		}
 	}
 
 	public void updateController(String address, Ping ping)
@@ -56,13 +59,25 @@ public class Stats
 		// Load management data
 		Set<StatsValue> stats = ping.ping();
 
-		// Update local controller data
 		ControllerStats controller = controllers.get(address);
+
+		// Need to create a new ControllerStats-Object?
 		if (controller == null)
 		{
-			controller = new ControllerStats(address);
-			controllers.put(address, controller);
+			synchronized (controllers)
+			{
+				// Double check this
+				if (controllers.containsKey(address))
+				{
+					// Create and register a new ControllerStats-Object
+					controller = new ControllerStats(address);
+					controllers.put(address, controller);
+				}
+
+			}
 		}
+
+		// Update the ControllerStas object
 		controller.updateStats(stats);
 	}
 

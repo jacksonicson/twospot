@@ -1,10 +1,10 @@
 package org.prot.manager.stats;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.prot.util.stats.AppStat;
@@ -30,7 +30,7 @@ public class ControllerStats implements StatsUpdater
 	private Set<String> runningApps = new HashSet<String>();
 
 	// All
-	private Map<String, InstanceStats> instances = new HashMap<String, InstanceStats>();
+	private Map<String, InstanceStats> instances = new ConcurrentHashMap<String, InstanceStats>();
 
 	public class StatValues
 	{
@@ -81,7 +81,7 @@ public class ControllerStats implements StatsUpdater
 		return instances.keySet();
 	}
 
-	void assign(String appId)
+	synchronized void assign(String appId)
 	{
 		if (instances.containsKey(appId))
 			return;
@@ -89,7 +89,7 @@ public class ControllerStats implements StatsUpdater
 		instances.put(appId, new InstanceStats(appId, true));
 	}
 
-	void updateStats(Set<StatsValue> update)
+	synchronized void updateStats(Set<StatsValue> update)
 	{
 		lastUpdate = System.currentTimeMillis();
 
