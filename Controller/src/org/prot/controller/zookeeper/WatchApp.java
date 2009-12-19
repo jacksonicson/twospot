@@ -11,6 +11,7 @@ import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.Watcher.Event.EventType;
 import org.apache.zookeeper.data.Stat;
 import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.ZNodes;
@@ -64,12 +65,25 @@ public class WatchApp implements Job, Watcher
 	@Override
 	public void process(WatchedEvent event)
 	{
+
+		if (event.getType() == EventType.None)
+		{
+			logger.debug("WatchApp - Connectino has changed");
+			zooHelper.getQueue().insert(this);
+			return;
+		}
+
 		try
 		{
 			ZooKeeper zk = zooHelper.getZooKeeper();
 
 			// Geht the path to the node which data has changed
 			String path = event.getPath();
+			if (path == null)
+			{
+				logger.warn("Path is null");
+				return;
+			}
 
 			// Extract the node data
 			Stat stat = new Stat();
@@ -113,8 +127,8 @@ public class WatchApp implements Job, Watcher
 			for (String watch : this.watching)
 			{
 				// Assumend path to the node
-				final String watchPath = path + "/" + watch; 
-				
+				final String watchPath = path + "/" + watch;
+
 				// Check if a node for the AppId exists
 				Stat stat = zk.exists(watchPath, false);
 				if (stat == null)
@@ -132,7 +146,7 @@ public class WatchApp implements Job, Watcher
 				if (watching.contains(childAppId))
 				{
 					logger.debug("Watching ZooKeeper node: " + watchPath);
-					
+
 					// Watch the node
 					zk.exists(watchPath, this);
 				}
