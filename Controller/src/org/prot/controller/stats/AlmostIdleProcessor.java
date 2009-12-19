@@ -44,6 +44,7 @@ public class AlmostIdleProcessor implements BalancingProcessor
 				// Check if this Controller is the last Controller serving the
 				// AppServer
 				boolean check = management.tryShutdown(appInfo.getAppId());
+				logger.debug("Trying to shutdown almost idle: " + appInfo.getAppId() + " - " + check);
 
 				// If a shutdown is possible
 				if (check)
