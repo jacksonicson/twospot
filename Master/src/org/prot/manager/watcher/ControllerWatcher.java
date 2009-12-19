@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.prot.controller.management.IJmxResources;
+import org.prot.controller.management.JmxPing;
 import org.prot.manager.stats.ControllerInfo;
 import org.prot.manager.stats.ControllerRegistry;
 import org.prot.manager.stats.Stats;
@@ -60,7 +60,7 @@ public class ControllerWatcher
 
 				// Get JMX connection
 				JmxController connection = getJmxController(info.getServiceAddress());
-				IJmxResources ping = connection.getJmxResources();
+				JmxPing ping = connection.getJmxResources();
 				stats.updateController(info.getAddress(), ping);
 
 			} catch (Exception e)

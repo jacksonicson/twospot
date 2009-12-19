@@ -1,31 +1,31 @@
 package org.prot.manager.watcher;
 
-import org.prot.controller.management.IJmxResources;
+import org.prot.controller.management.JmxPing;
 
 public class JmxController
 {
 	private final String address;
 
-	private IJmxResources resources;
+	private JmxPing ping;
 
 	public JmxController(String address)
 	{
 		this.address = address;
 	}
 
-	IJmxResources getJmxResources()
+	JmxPing getJmxResources()
 	{
-		if (resources == null)
+		if (ping == null)
 		{
-			resources = (IJmxResources) ExceptionSafeProxy.newInstance(getClass().getClassLoader(),
-					IJmxResources.class, address, "bean:name=resources");
+			ping = (JmxPing) ExceptionSafeProxy.newInstance(getClass().getClassLoader(), JmxPing.class,
+					address, "bean:name=resources");
 		}
 
-		return resources;
+		return ping;
 	}
 
 	void release()
 	{
-		resources = null;
+		ping = null;
 	}
 }
