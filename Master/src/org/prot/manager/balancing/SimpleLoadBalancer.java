@@ -25,7 +25,7 @@ public class SimpleLoadBalancer implements LoadBalancer
 		// Check if the master knows Controllers
 		if (stats.getControllers().isEmpty())
 		{
-			logger.warn("Controller has no Controllers");
+			logger.warn("Master has no Controllers");
 			return null;
 		}
 

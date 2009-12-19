@@ -5,11 +5,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.log4j.Logger;
 import org.prot.util.managment.Ping;
 import org.prot.util.stats.StatsValue;
 
 public class Stats
 {
+	private static final Logger logger = Logger.getLogger(Stats.class);
+
 	private Map<String, ControllerStats> publicControllers = new ConcurrentHashMap<String, ControllerStats>();
 
 	private Map<String, ControllerStats> controllers = new ConcurrentHashMap<String, ControllerStats>();
@@ -47,11 +50,7 @@ public class Stats
 
 	public void removeController(String address)
 	{
-		synchronized (controllers)
-		{
-			// Remove controller
-			controllers.remove(address);
-		}
+		controllers.remove(address);
 	}
 
 	public void updateController(String address, Ping ping)
@@ -67,7 +66,7 @@ public class Stats
 			synchronized (controllers)
 			{
 				// Double check this
-				if (controllers.containsKey(address))
+				if (!controllers.containsKey(address))
 				{
 					// Create and register a new ControllerStats-Object
 					controller = new ControllerStats(address);
