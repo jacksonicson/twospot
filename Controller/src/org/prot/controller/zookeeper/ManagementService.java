@@ -25,6 +25,17 @@ public class ManagementService
 		return zooHelper.getQueue().insertAndWait(new RegisterApp(appId));
 	}
 
+	public boolean shutdown(String appId)
+	{
+		// TODO: Implementation
+		return true;
+	}
+
+	public void start(String appId)
+	{
+		// TODO: Implementation
+	}
+
 	public void deployApp(String appId, String version)
 	{
 		zooHelper.getQueue().insert(new DeployApp(appId));
