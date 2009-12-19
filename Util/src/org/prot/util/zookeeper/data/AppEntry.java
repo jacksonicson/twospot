@@ -8,8 +8,6 @@ public class AppEntry implements Serializable
 
 	public final String appId;
 
-	public int serverInstances = 0;
-
 	public AppEntry(String appId)
 	{
 		this.appId = appId;

@@ -1,4 +1,4 @@
-package org.prot.controller.zookeeper;
+package org.prot.controller.zookeeper.jobs;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,7 +41,11 @@ public class StopApp implements Job
 			// If we should only check if there are more Controllers serving
 			// this app
 			if (!updateZooKeeper)
-				return childCount > 0;
+			{
+				boolean canDelete = childCount > 1;
+				logger.debug("Can delete node: " + canDelete);
+				return canDelete;
+			}
 
 			Stat stat = zk.exists(instanceNode, false);
 			if (stat != null)

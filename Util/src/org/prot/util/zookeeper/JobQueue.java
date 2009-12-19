@@ -29,7 +29,7 @@ public class JobQueue implements Runnable
 		// Cannot retry blocking jobs
 		assert (job.isRetryable() == false);
 
-		return execute(job);
+		return execute(job, false);
 	}
 
 	public void insert(Job job)
@@ -89,7 +89,7 @@ public class JobQueue implements Runnable
 				todo = jobQueue.get(0);
 			}
 
-			boolean deleteJob = execute(todo);
+			boolean deleteJob = execute(todo, true);
 
 			if (deleteJob)
 			{
@@ -101,7 +101,7 @@ public class JobQueue implements Runnable
 		}
 	}
 
-	private boolean execute(Job job)
+	private boolean execute(Job job, boolean queued)
 	{
 		logger.info("processing job");
 
@@ -109,11 +109,11 @@ public class JobQueue implements Runnable
 		job.init(zooHelper);
 
 		// Retry this job?
-		boolean deleteJob = false;
+		boolean jobState = false;
 		try
 		{
 			// Execute the job
-			deleteJob = job.execute(zooHelper);
+			jobState = job.execute(zooHelper);
 
 		} catch (KeeperException e)
 		{
@@ -135,10 +135,15 @@ public class JobQueue implements Runnable
 			e.printStackTrace();
 		}
 
-		// Check if job is retryable
-		if (!deleteJob && !job.isRetryable())
-			deleteJob = true;
+		// If the job is executed without the queue
+		if (queued == false)
+			return jobState;
 
-		return deleteJob;
+		// Check if job is retryable
+		if (jobState == false && job.isRetryable() == false)
+			jobState = true;
+
+		// Return the jobState
+		return jobState;
 	}
 }

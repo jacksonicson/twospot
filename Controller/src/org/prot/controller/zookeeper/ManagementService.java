@@ -1,6 +1,12 @@
 package org.prot.controller.zookeeper;
 
 import org.apache.log4j.Logger;
+import org.prot.controller.zookeeper.jobs.DeployApp;
+import org.prot.controller.zookeeper.jobs.RegisterApp;
+import org.prot.controller.zookeeper.jobs.RegisterController;
+import org.prot.controller.zookeeper.jobs.StartApp;
+import org.prot.controller.zookeeper.jobs.StopApp;
+import org.prot.controller.zookeeper.jobs.WatchApp;
 import org.prot.util.zookeeper.ZooHelper;
 
 public class ManagementService

@@ -1,4 +1,4 @@
-package org.prot.controller.zookeeper;
+package org.prot.controller.zookeeper.jobs;
 
 import java.io.IOException;
 

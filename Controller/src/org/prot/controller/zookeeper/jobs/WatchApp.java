@@ -1,4 +1,4 @@
-package org.prot.controller.zookeeper;
+package org.prot.controller.zookeeper.jobs;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,6 +13,7 @@ import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.Watcher.Event.EventType;
 import org.apache.zookeeper.data.Stat;
+import org.prot.controller.zookeeper.DeploymentListener;
 import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
