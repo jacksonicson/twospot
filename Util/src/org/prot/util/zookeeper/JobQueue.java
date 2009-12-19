@@ -43,7 +43,7 @@ public class JobQueue implements Runnable
 		run();
 	}
 
-	public void insertBefore(Job target, Job toInsert)
+	public void requires(Job target, Job toInsert)
 	{
 		synchronized (jobQueue)
 		{
