@@ -40,7 +40,10 @@ public class Stats
 		logger.debug("Executing the balancing processors...");
 
 		for (BalancingProcessor processor : processors)
+		{
+			logger.debug("Executing: " + processor.getClass().getCanonicalName());
 			processor.run(registry.getAppInfos());
+		}
 	}
 
 	public void setRegistry(AppRegistry registry)

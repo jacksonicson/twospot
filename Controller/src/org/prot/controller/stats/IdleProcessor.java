@@ -29,8 +29,6 @@ public class IdleProcessor implements BalancingProcessor
 	@Override
 	public void run(Set<AppInfo> appInfos)
 	{
-		logger.debug("Idle processor");
-
 		long currentTime = System.currentTimeMillis();
 
 		for (AppInfo appInfo : appInfos)
@@ -39,7 +37,7 @@ public class IdleProcessor implements BalancingProcessor
 			time = currentTime - time;
 			if (time > IDLE_THREASHOLD)
 			{
-				logger.debug("Idle AppServer detected: " + appInfo.getAppId());
+				logger.debug("Killing idle AppServer: " + appInfo.getAppId());
 				appInfo.setStatus(AppState.KILLED);
 			}
 		}
