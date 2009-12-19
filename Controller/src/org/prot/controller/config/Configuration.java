@@ -87,6 +87,11 @@ public class Configuration
 	{
 		return properties;
 	}
+	
+	public String getProperty(String key)
+	{
+		return properties.getProperty(key);
+	}
 
 	public int getControllerPort()
 	{
