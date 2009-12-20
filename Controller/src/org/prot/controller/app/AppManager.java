@@ -32,6 +32,11 @@ public class AppManager implements DeploymentListener
 		START, WAIT
 	};
 
+	public boolean isBlocked(String appId)
+	{
+		return registry.isBlocked(appId);
+	}
+
 	public AppInfo requireApp(String appId)
 	{
 		// Get or register the AppServer

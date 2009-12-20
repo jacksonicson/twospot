@@ -13,6 +13,8 @@ public class AppRegistry implements TokenChecker
 
 	private Map<String, AppInfo> appInfos = new ConcurrentHashMap<String, AppInfo>();
 
+	private Map<String, Long> blocked = new ConcurrentHashMap<String, Long>();
+
 	public AppInfo getAppInfo(String appId)
 	{
 		return appInfos.get(appId);
@@ -33,6 +35,24 @@ public class AppRegistry implements TokenChecker
 
 			appInfos.remove(appId);
 		}
+	}
+
+	public boolean isBlocked(String appId)
+	{
+		if (!blocked.containsKey(appId))
+			return false;
+
+		Long time = blocked.get(appId);
+		if (time == null)
+			return false;
+
+		if (System.currentTimeMillis() - time > 50000)
+		{
+			blocked.remove(appId);
+			return false;
+		}
+
+		return true;
 	}
 
 	public AppInfo getOrRegisterApp(String appId)
@@ -76,6 +96,10 @@ public class AppRegistry implements TokenChecker
 			switch (state)
 			{
 			case KILLED:
+				// Block this AppId temporarely
+				blocked.put(info.getAppId(), System.currentTimeMillis());
+				toDelete.add(info);
+				continue;
 			case STALE:
 			case FAILED:
 				toDelete.add(info);

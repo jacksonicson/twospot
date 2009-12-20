@@ -63,6 +63,15 @@ public class RequestHandler extends AbstractHandler
 			return;
 		}
 
+		// Check if the application is blocked
+		if (appManager.isBlocked(appId))
+		{
+			logger.debug("Recived request for blocked: " + appId);
+			response.sendError(HttpStatus.MOVED_TEMPORARILY_302);
+			baseRequest.setHandled(true);
+			return;
+		}
+
 		// Inform the AppManager
 		AppInfo appInfo = appManager.requireApp(appId);
 
