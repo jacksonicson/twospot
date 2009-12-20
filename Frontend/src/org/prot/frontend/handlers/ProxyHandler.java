@@ -15,19 +15,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.http.HttpStatus;
-import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.prot.frontend.cache.AppCache;
-import org.prot.manager.stats.ControllerInfo;
 import org.prot.util.AppIdExtractor;
 import org.prot.util.ReservedAppIds;
 
 public class ProxyHandler extends AbstractHandler
 {
 	private static final Logger logger = Logger.getLogger(ProxyHandler.class);
-
-	private AppCache appCache;
 
 	private FrontendProxy frontendProxy;
 
@@ -48,9 +43,26 @@ public class ProxyHandler extends AbstractHandler
 		}
 
 		if (appId.equals(ReservedAppIds.FRONTEND_DEPLOY))
+		{
 			handleDeploy(baseRequest, request, response);
-		else
-			handleApp(appId, target, baseRequest, request, response);
+		} else
+		{
+			try
+			{
+				// Forward the request
+				frontendProxy.process(appId, baseRequest, request, response);
+
+			} catch (Exception e)
+			{
+				logger.error("Error while processing the request", e);
+
+				response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
+				response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500);
+
+				baseRequest.setHandled(true);
+				return;
+			}
+		}
 	}
 
 	private void handleDeploy(Request baseRequest, HttpServletRequest request, HttpServletResponse response)
@@ -110,58 +122,6 @@ public class ProxyHandler extends AbstractHandler
 		baseRequest.setHandled(true);
 		response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
 		return;
-	}
-
-	private void handleApp(String appId, String target, Request baseRequest, HttpServletRequest request,
-			HttpServletResponse response) throws IOException, ServletException
-	{
-		try
-		{
-			// Check if the cache holds a controller for this app
-			ControllerInfo info = appCache.getController(appId);
-			if (info == null)
-			{
-				response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
-						"Manager unreachable or did not return a Controller.");
-				baseRequest.setHandled(true);
-				return;
-			}
-
-			// Build the destination url
-			String address = info.getAddress();
-			String uri = baseRequest.getUri().toString();
-			StringBuilder builder = new StringBuilder(5 + 3 + address.length() + 1 + 4 + 1 + 10
-					+ uri.length() + 10);
-			builder.append(request.getScheme());
-			builder.append("://");
-			builder.append(address);
-			builder.append(":");
-			builder.append(info.getPort());
-			builder.append("/");
-			builder.append(appId);
-			builder.append(uri);
-
-			// Create the URI
-			HttpURI httpUri = new HttpURI(builder.toString());
-
-			// Forward the request
-			frontendProxy.forwardRequest(baseRequest, request, response, httpUri, response);
-
-		} catch (Exception e)
-		{
-			logger.error("Error while processing the request", e);
-
-			response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
-			response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500);
-
-			baseRequest.setHandled(true);
-			return;
-		}
-	}
-
-	public void setAppCache(AppCache appCache)
-	{
-		this.appCache = appCache;
 	}
 
 	public void setFrontendProxy(FrontendProxy frontendProxy)
