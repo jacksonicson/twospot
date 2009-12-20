@@ -12,8 +12,6 @@ import org.prot.util.zookeeper.ZooHelper;
 
 public class ManagementService
 {
-	private static final Logger logger = Logger.getLogger(ManagementService.class);
-
 	// ZooKeeper helper
 	private ZooHelper zooHelper;
 
@@ -37,7 +35,7 @@ public class ManagementService
 		return zooHelper.getQueue().insertAndWait(new StopApp(appId));
 	}
 
-	public boolean tryShutdown(String appId)
+	public boolean tryStop(String appId)
 	{
 		return zooHelper.getQueue().insertAndWait(new TryStopApp(appId));
 	}

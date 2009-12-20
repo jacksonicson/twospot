@@ -95,13 +95,7 @@ public class AppRegistry implements TokenChecker
 			AppState state = info.getStatus();
 			switch (state)
 			{
-			case KILLED:
-				// Block this AppId temporarely
-				blocked.put(info.getAppId(), System.currentTimeMillis());
-				toDelete.add(info);
-				continue;
-			case STALE:
-			case FAILED:
+			case OFFLINE:
 				toDelete.add(info);
 				continue;
 			}
@@ -120,7 +114,7 @@ public class AppRegistry implements TokenChecker
 		for (AppInfo info : appInfos.values())
 		{
 			AppState state = info.getStatus();
-			if (state == AppState.FAILED || state == AppState.KILLED)
+			if (state == AppState.FAILED || state == AppState.KILLED || state == AppState.IDLE)
 			{
 				if (idleApps == null)
 					idleApps = new HashSet<AppInfo>();
@@ -132,7 +126,17 @@ public class AppRegistry implements TokenChecker
 					// run we will get all left apps.
 					if (info.getStatus().equals(state))
 					{
-						info.setStatus(AppState.KILLED);
+						switch (info.getStatus())
+						{
+						case FAILED:
+							info.setStatus(AppState.KILLED);
+						case KILLED:
+							blocked.put(info.getAppId(), System.currentTimeMillis());
+							break;
+						case IDLE:
+							break;
+						}
+
 						idleApps.add(info);
 					}
 				}

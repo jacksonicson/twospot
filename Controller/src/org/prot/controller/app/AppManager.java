@@ -97,30 +97,15 @@ public class AppManager implements DeploymentListener
 		return appInfo;
 	}
 
-	private void killApp(String appId)
-	{
-		// Geht the AppInfo for this application
-		AppInfo appInfo = registry.getAppInfo(appId);
-
-		// Update stats
-		managementService.stop(appId);
-
-		// Check if the application is available
-		if (appInfo == null)
-		{
-			logger.debug("Cannot kill application, unknown by this Controller - AppId: " + appId);
-			return;
-		}
-
-		// Update the state
-		appInfo.setStatus(AppState.KILLED);
-	}
-
 	@Override
 	public void deployApp(String appId)
 	{
 		logger.info("App deployed - killing all AppServer instances of AppId: " + appId);
-		killApp(appId);
+
+		// Geht the AppInfo for this application
+		AppInfo appInfo = registry.getAppInfo(appId);
+		if (appInfo != null)
+			appInfo.setStatus(AppState.KILLED);
 	}
 
 	public void staleApp(String appId)
@@ -159,7 +144,11 @@ public class AppManager implements DeploymentListener
 		{
 			// Don't listen on ZooKeeper events any more
 			for (AppInfo info : dead)
+			{
+				// Unregister AppServer from ZooKeeper
+				managementService.stop(info.getAppId());
 				managementService.removeWatch(info.getAppId());
+			}
 
 			// Schedule kill-Tasks for each entry
 			processWorker.scheduleKillProcess(dead);

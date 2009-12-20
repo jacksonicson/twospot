@@ -142,6 +142,9 @@ public final class AppInfo
 		case KILLED:
 			check |= status == AppState.OFFLINE;
 			break;
+		case IDLE:
+			check |= status == AppState.OFFLINE;
+			break;
 		default:
 			logger.warn("Unknown AppServer state");
 		}
