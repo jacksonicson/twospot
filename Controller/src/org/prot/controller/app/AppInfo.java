@@ -137,6 +137,7 @@ public final class AppInfo
 			break;
 		case ONLINE:
 			check |= status == AppState.KILLED;
+			check |= status == AppState.IDLE;
 			check |= status == AppState.STALE;
 			break;
 		case KILLED:
