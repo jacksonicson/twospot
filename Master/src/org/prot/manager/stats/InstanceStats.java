@@ -27,6 +27,7 @@ public class InstanceStats implements StatsUpdater
 	{
 		public double rps;
 		public boolean overloaded;
+		public long overloadedHold;
 
 		public void dump()
 		{
@@ -41,7 +42,7 @@ public class InstanceStats implements StatsUpdater
 	{
 		this.appId = appId;
 	}
-	
+
 	public InstanceStats(String appId, boolean assigned)
 	{
 		this(appId);
@@ -97,7 +98,11 @@ public class InstanceStats implements StatsUpdater
 		switch (key)
 		{
 		case OVERLOADED:
-			stat.overloaded = value.get();
+			if (System.currentTimeMillis() - stat.overloadedHold > 30000)
+			{
+				stat.overloaded = value.get();
+				stat.overloadedHold = System.currentTimeMillis();
+			}
 			break;
 		}
 	}
