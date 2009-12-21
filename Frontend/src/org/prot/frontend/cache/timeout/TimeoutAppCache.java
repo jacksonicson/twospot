@@ -57,6 +57,12 @@ public class TimeoutAppCache implements AppCache
 	}
 
 	@Override
+	public void staleController(String address)
+	{
+		// TODO
+	}
+
+	@Override
 	public ControllerInfo getController(String appId)
 	{
 		CacheEntry entry = cache.get(appId);
