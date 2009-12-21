@@ -57,12 +57,6 @@ public class TimeoutAppCache implements AppCache
 	}
 
 	@Override
-	public void staleController(String address)
-	{
-		// TODO
-	}
-
-	@Override
 	public ControllerInfo getController(String appId)
 	{
 		CacheEntry entry = cache.get(appId);
@@ -83,6 +77,13 @@ public class TimeoutAppCache implements AppCache
 			logger.warn("Could not find a Controller for: " + appId);
 
 		return info;
+	}
+
+	@Override
+	public void staleController(String address)
+	{
+		for (CacheEntry entry : cache.values())
+			entry.removeStale(address);
 	}
 
 	public void updateCache()

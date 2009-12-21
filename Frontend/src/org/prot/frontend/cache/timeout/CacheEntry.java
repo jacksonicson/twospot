@@ -60,6 +60,12 @@ public class CacheEntry
 		logger.debug("SIZE: " + controllers.keySet().size());
 	}
 
+	void removeStale(String address)
+	{
+		if (controllers.containsKey(address))
+			controllers.remove(address);
+	}
+
 	void removeOlderThan(long threshold)
 	{
 		long currentTime = System.currentTimeMillis();
