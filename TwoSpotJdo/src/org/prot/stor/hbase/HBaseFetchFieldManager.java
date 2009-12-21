@@ -14,258 +14,91 @@ limitations under the License.
 
 Contributors :
     ...
-***********************************************************************/
+ ***********************************************************************/
 package org.prot.stor.hbase;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 
 import org.apache.hadoop.hbase.client.Result;
 import org.datanucleus.StateManager;
-import org.datanucleus.exceptions.NucleusException;
 import org.datanucleus.store.fieldmanager.AbstractFieldManager;
 
 public class HBaseFetchFieldManager extends AbstractFieldManager
 {
-    Result result;
-    StateManager sm;
+	Result result;
+	StateManager sm;
 
-    public HBaseFetchFieldManager(StateManager sm, Result result)
-    {
-        this.sm = sm;
-        this.result = result;
-    }
+	public HBaseFetchFieldManager(StateManager sm, Result result)
+	{
+		this.sm = sm;
+		this.result = result;
+	}
 
-    public boolean fetchBooleanField(int fieldNumber)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
-        boolean value;
-        try
-        {
-            byte[] bytes = result.getValue(familyName.getBytes(), columnName.getBytes());
-            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-            ObjectInputStream ois = new ObjectInputStream(bis);
-            value = ois.readBoolean();
-            ois.close();
-            bis.close();
-        }
-        catch (IOException e)
-        {
-            throw new NucleusException(e.getMessage(), e);
-        }
-        return value;
-    }
-    
-    public byte fetchByteField(int fieldNumber)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
-        byte value;
-        try
-        {
-            byte[] bytes = result.getValue(familyName.getBytes(), columnName.getBytes());
-            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-            ObjectInputStream ois = new ObjectInputStream(bis);
-            value = ois.readByte();
-            ois.close();
-            bis.close();
-        }
-        catch (IOException e)
-        {
-            throw new NucleusException(e.getMessage(), e);
-        }
-        return value;
-    }
-    
-    public char fetchCharField(int fieldNumber)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
-        char value;
-        try
-        {
-            byte[] bytes = result.getValue(familyName.getBytes(), columnName.getBytes());
-            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-            ObjectInputStream ois = new ObjectInputStream(bis);
-            value = ois.readChar();
-            ois.close();
-            bis.close();
-        }
-        catch (IOException e)
-        {
-            throw new NucleusException(e.getMessage(), e);
-        }
-        return value;    
-    }
-    
-    public double fetchDoubleField(int fieldNumber)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
-        double value;
-        try
-        {
-            byte[] bytes = result.getValue(familyName.getBytes(), columnName.getBytes());
-            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-            ObjectInputStream ois = new ObjectInputStream(bis);
-            value = ois.readDouble();
-            ois.close();
-            bis.close();
-        }
-        catch (IOException e)
-        {
-            throw new NucleusException(e.getMessage(), e);
-        }
-        return value; 
-    }
-    
-    public float fetchFloatField(int fieldNumber)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
-        float value;
-        try
-        {
-            byte[] bytes = result.getValue(familyName.getBytes(), columnName.getBytes());
-            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-            ObjectInputStream ois = new ObjectInputStream(bis);
-            value = ois.readFloat();
-            ois.close();
-            bis.close();
-        }
-        catch (IOException e)
-        {
-            throw new NucleusException(e.getMessage(), e);
-        }
-        return value;
-    }
-    
-    public int fetchIntField(int fieldNumber)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
-        int value;
-        try
-        {
-            byte[] bytes = result.getValue(familyName.getBytes(), columnName.getBytes());
-            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-            ObjectInputStream ois = new ObjectInputStream(bis);
-            value = ois.readInt();
-            ois.close();
-            bis.close();
-        }
-        catch (IOException e)
-        {
-            throw new NucleusException(e.getMessage(), e);
-        }
-        return value;
-    }
-    
-    public long fetchLongField(int fieldNumber)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
-        long value;
-        try
-        {
-            byte[] bytes = result.getValue(familyName.getBytes(), columnName.getBytes());
-            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-            ObjectInputStream ois = new ObjectInputStream(bis);
-            value = ois.readLong();
-            ois.close();
-            bis.close();
-        }
-        catch (IOException e)
-        {
-            throw new NucleusException(e.getMessage(), e);
-        }
-        return value;
-    }
-    
-    public Object fetchObjectField(int fieldNumber)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
-        Object value;
-        try
-        {
-            try
-            {
-                byte[] bytes = result.getValue(familyName.getBytes(), columnName.getBytes());
-                ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-                ObjectInputStream ois = new ObjectInputStream(bis);
-                value = ois.readObject();
-                ois.close();
-                bis.close();
-            }
-            catch(NullPointerException ex)
-            {
-                return null;
-            }
-        }
-        catch (IOException e)
-        {
-            throw new NucleusException(e.getMessage(), e);
-        }
-        catch (ClassNotFoundException e)
-        {
-            throw new NucleusException(e.getMessage(), e);
-        }
-        return value;
-    }
-    
-    public short fetchShortField(int fieldNumber)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
-        short value;
-        try
-        {
-            byte[] bytes = result.getValue(familyName.getBytes(), columnName.getBytes());
-            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-            ObjectInputStream ois = new ObjectInputStream(bis);
-            value = ois.readShort();
-            ois.close();
-            bis.close();
-        }
-        catch (IOException e)
-        {
-            throw new NucleusException(e.getMessage(), e);
-        }
-        return value;
-    }
-    
-    public String fetchStringField(int fieldNumber)
-    {
-        String familyName = HBaseUtils.getFamilyName(sm.getClassMetaData(),fieldNumber);
-        String columnName = HBaseUtils.getQualifierName(sm.getClassMetaData(),fieldNumber);
-        String value;
-        try
-        {
-            try
-            {
-                byte[] bytes = result.getValue(familyName.getBytes(), columnName.getBytes());
-                ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-                ObjectInputStream ois = new ObjectInputStream(bis);
-                value = (String) ois.readObject();
-                ois.close();
-                bis.close();
-            }
-            catch(NullPointerException ex)
-            {
-                return null;
-            }
-        }
-        catch (IOException e)
-        {
-            throw new NucleusException(e.getMessage(), e);
-        }
-        catch (ClassNotFoundException e)
-        {
-            throw new NucleusException(e.getMessage(), e);
-        }
-        return value;
-    }
+	public boolean fetchBooleanField(int fieldNumber)
+	{
+		// Never use this method
+		assert (false);
+		return false;
+	}
+
+	public byte fetchByteField(int fieldNumber)
+	{
+		// Never use this method
+		assert (false);
+		return 0;
+	}
+
+	public char fetchCharField(int fieldNumber)
+	{
+		// Never use this method
+		assert (false);
+		return 0;
+	}
+
+	public double fetchDoubleField(int fieldNumber)
+	{
+		// Never use this method
+		assert (false);
+		return 0d;
+	}
+
+	public float fetchFloatField(int fieldNumber)
+	{
+		// Never use this method
+		assert (false);
+		return 0f;
+	}
+
+	public int fetchIntField(int fieldNumber)
+	{
+		// Never use this method
+		assert (false);
+		return 0;
+	}
+
+	public long fetchLongField(int fieldNumber)
+	{
+		// Never use this method
+		assert (false);
+		return 0l;
+	}
+
+	public Object fetchObjectField(int fieldNumber)
+	{
+		// Never use this method
+		assert (false);
+		return null;
+	}
+
+	public short fetchShortField(int fieldNumber)
+	{
+		// Never use this method
+		assert (false);
+		return 0;
+	}
+
+	public String fetchStringField(int fieldNumber)
+	{
+		// Never use this method
+		assert (false);
+		return null;
+	}
 }

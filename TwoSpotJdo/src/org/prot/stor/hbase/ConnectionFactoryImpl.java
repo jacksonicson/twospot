@@ -24,21 +24,10 @@ import org.datanucleus.ObjectManager;
 import org.datanucleus.store.connection.AbstractConnectionFactory;
 import org.datanucleus.store.connection.ManagedConnection;
 
-/**
- * Implementation of a ConnectionFactory for HBase.
- */
 public class ConnectionFactoryImpl extends AbstractConnectionFactory
 {
 	private HBaseConnectionPool connectionPool;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param omfContext
-	 *            The OMF context
-	 * @param resourceType
-	 *            Type of resource (tx, nontx)
-	 */
 	public ConnectionFactoryImpl(OMFContext omfContext, String resourceType)
 	{
 		super(omfContext, resourceType);
@@ -50,15 +39,6 @@ public class ConnectionFactoryImpl extends AbstractConnectionFactory
 		connectionPool = new HBaseConnectionPool();
 	}
 
-	/**
-	 * Method to create a new managed connection.
-	 * 
-	 * @param om
-	 *            ObjectManager
-	 * @param transactionOptions
-	 *            Transaction options
-	 * @return The connection
-	 */
 	public ManagedConnection createManagedConnection(ObjectManager om, Map transactionOptions)
 	{
 		// Get the storemanager

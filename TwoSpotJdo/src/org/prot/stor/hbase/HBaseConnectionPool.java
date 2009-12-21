@@ -87,10 +87,6 @@ public class HBaseConnectionPool
 		}
 	}
 
-	/**
-	 * Method is called regularly by the evictor thread and removes all expired
-	 * connections
-	 */
 	private void disposeTimedOutConnections()
 	{
 		for (Iterator<HBaseManagedConnection> it = connections.iterator(); it.hasNext();)
