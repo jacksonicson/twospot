@@ -1,5 +1,7 @@
 package org.prot.portal.loadtest;
 
+import java.util.Random;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,7 +14,17 @@ public class LoadTestController implements Controller
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
 			throws Exception
 	{
-		Thread.sleep(1500);
+		Random r = new Random(System.currentTimeMillis());
+		for (int v = 0; v < 2; v++)
+		{
+			long i = Math.abs((r.nextInt())) % 9999999;
+			for (int t = 2; t < i / 2; t++)
+			{
+				if (i % t == 0)
+					break;
+			}
+		}
+
 		return null;
 	}
 
