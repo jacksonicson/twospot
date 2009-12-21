@@ -52,15 +52,13 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 
 	public void close()
 	{
-		// TODO Auto-generated method stub
-
+		// Do nothing
 	}
 
 	public void deleteObject(StateManager sm)
 	{
 		// Check if read-only so update not permitted
 		storeMgr.assertReadOnlyForUpdateOfObject(sm);
-
 		HBaseManagedConnection mconn = (HBaseManagedConnection) storeMgr.getConnection(sm.getObjectManager());
 		try
 		{
@@ -164,12 +162,16 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 	private Delete newDelete(StateManager sm) throws IOException
 	{
 		Object pkValue = sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
+		
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(bos);
 		oos.writeObject(pkValue);
+		
 		Delete batch = new Delete(bos.toByteArray());
+		
 		oos.close();
 		bos.close();
+		
 		return batch;
 	}
 
