@@ -15,6 +15,7 @@ public class AppService
 
 	public boolean existsApplication(String appId)
 	{
+		appId = appId.toLowerCase();
 		Application app = appDao.loadApp(appId);
 		return app != null;
 	}

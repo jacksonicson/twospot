@@ -43,23 +43,26 @@ public final class ReservedAppIds
 	 * @param appId
 	 * @return
 	 */
-	public static final boolean validateNewAppId(String appId)
+	public static final String validateNewAppId(String appId)
 	{
+		// Make everything lower case
+		appId = appId.toLowerCase();
+
 		// Check if this appId is reserved
 		if (ReservedAppIds.isReserved(appId))
-			return false;
+			return null;
 
 		if (appId.length() < MIN_LENGTH || appId.length() > MAX_LENGTH)
-			return false;
+			return null;
 
 		// Check each character of the appId
 		char[] chars = appId.toCharArray();
 		for (char c : chars)
 		{
 			if (!Character.isLetterOrDigit(c))
-				return false;
+				return null;
 		}
 
-		return true;
+		return appId;
 	}
 }

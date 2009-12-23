@@ -28,14 +28,18 @@ public class RegisterAppValidator implements Validator
 	{
 		RegisterAppCommand registeredApp = (RegisterAppCommand) target;
 
+		// Convert appId to lower case
+		registeredApp.setAppId(registeredApp.getAppId().toLowerCase());
+
+		// Check fields
 		ValidationUtils.rejectIfEmpty(errors, "appId", "", "AppId required");
 
 		// Do some further checks (if no errors until now)
 		if (!errors.hasErrors())
 		{
 			// Check if appId is valid
-			boolean isValid = ReservedAppIds.validateNewAppId(registeredApp.getAppId());
-			if (isValid == false)
+			String isValid = ReservedAppIds.validateNewAppId(registeredApp.getAppId());
+			if (isValid == null)
 			{
 				errors.rejectValue("appId", "", "Invalid AppId");
 			}
