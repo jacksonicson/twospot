@@ -24,15 +24,18 @@ import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.TableNotFoundException;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
+import org.apache.log4j.Logger;
 import org.datanucleus.metadata.AbstractClassMetaData;
 
 public class HBaseUtils
 {
+	private static final Logger logger = Logger.getLogger(HBaseUtils.class);
+
 	private static final String ENTITY_TABLE = "entities";
 
 	private static String APP_ID = "appId";
 
-	public static String getRowKey(AbstractClassMetaData acmd)
+	public static String getRowKey(AbstractClassMetaData acmd, Key key)
 	{
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("/");
@@ -40,22 +43,24 @@ public class HBaseUtils
 		buffer.append("/");
 		buffer.append(acmd.getName());
 		buffer.append(":");
-		buffer.append("NULL");
+		buffer.append(key.toString());
 
-		return buffer.toString();
+		String rowKey = buffer.toString();
+		logger.debug("RowKey: " + rowKey);
+		return rowKey;
 	}
 
 	public static String getTableName(AbstractClassMetaData acmd)
 	{
 		return ENTITY_TABLE;
 	}
-	
+
 	public static void createSchema(HBaseConfiguration config, AbstractClassMetaData acmd,
 			boolean autoCreateColumns) throws IOException
 	{
-		
+
 		System.out.println("creating schema");
-		
+
 		HBaseAdmin hBaseAdmin = new HBaseAdmin(config);
 		HTableDescriptor hTable;
 		String tableName = ENTITY_TABLE;

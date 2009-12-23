@@ -23,6 +23,12 @@
 			key="hbase" url-key="hbase" />
 	</extension>
 
+	<!-- VALUE GENERATOR -->
+	<extension point="org.datanucleus.store_valuegenerator">
+		<valuegenerator name="keygen"
+			class-name="org.prot.stor.hbase.KeyValueGenerator" unique="true" />
+	</extension>
+
 	<!-- QUERY LANGUAGES -->
 	<extension point="org.datanucleus.store_query_query">
 		<query class-name="org.prot.stor.hbase.query.JDOQLQuery"
