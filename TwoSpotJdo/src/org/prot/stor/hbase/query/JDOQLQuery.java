@@ -17,19 +17,10 @@ Contributors :
  ***********************************************************************/
 package org.prot.stor.hbase.query;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.datanucleus.ObjectManager;
-import org.datanucleus.query.evaluator.JDOQLEvaluator;
-import org.datanucleus.query.evaluator.JavaQueryEvaluator;
 import org.datanucleus.store.query.AbstractJDOQLQuery;
-import org.datanucleus.util.NucleusLogger;
-import org.prot.stor.hbase.HBaseManagedConnection;
-import org.prot.stor.hbase.HBaseUtils;
 
 /**
  * Implementation of JDOQL for HBase datastores.
@@ -77,47 +68,54 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 
 	protected Object performExecute(Map parameters)
 	{
-		HBaseManagedConnection mconn = (HBaseManagedConnection) om.getStoreManager().getConnection(om);
-		try
-		{
-			long startTime = System.currentTimeMillis();
-			if (NucleusLogger.QUERY.isDebugEnabled())
-			{
-				NucleusLogger.QUERY.debug(LOCALISER.msg("021046", "JDOQL", getSingleStringQuery(), null));
-			}
-			List candidates = null;
-			if (candidateCollection != null)
-			{
-				candidates = new ArrayList(candidateCollection);
-			} else if (candidateExtent != null)
-			{
-				candidates = new ArrayList();
-				Iterator iter = candidateExtent.iterator();
-				while (iter.hasNext())
-				{
-					candidates.add(iter.next());
-				}
-			} else
-			{
-				candidates = HBaseUtils.getObjectsOfCandidateType(om, mconn, candidateClass, subclasses,
-						ignoreCache);
-			}
+		// HBaseManagedConnection mconn = (HBaseManagedConnection)
+		// om.getStoreManager().getConnection(om);
+		// try
+		// {
+		// long startTime = System.currentTimeMillis();
+		// if (NucleusLogger.QUERY.isDebugEnabled())
+		// {
+		// NucleusLogger.QUERY.debug(LOCALISER.msg("021046", "JDOQL",
+		// getSingleStringQuery(), null));
+		// }
+		// List candidates = null;
+		// if (candidateCollection != null)
+		// {
+		// candidates = new ArrayList(candidateCollection);
+		// } else if (candidateExtent != null)
+		// {
+		// candidates = new ArrayList();
+		// Iterator iter = candidateExtent.iterator();
+		// while (iter.hasNext())
+		// {
+		// candidates.add(iter.next());
+		// }
+		// } else
+		// {
+		// candidates = HBaseUtils.getObjectsOfCandidateType(om, mconn,
+		// candidateClass, subclasses,
+		// ignoreCache);
+		// }
+		//
+		// // Apply any result restrictions to the results
+		// JavaQueryEvaluator resultMapper = new JDOQLEvaluator(this,
+		// candidates, compilation, parameters,
+		// om.getClassLoaderResolver());
+		// Collection results = resultMapper.execute(true, true, true, true,
+		// true);
+		//
+		// if (NucleusLogger.QUERY.isDebugEnabled())
+		// {
+		// NucleusLogger.QUERY.debug(LOCALISER.msg("021074", "JDOQL", ""
+		// + (System.currentTimeMillis() - startTime)));
+		// }
+		//
+		// return results;
+		// } finally
+		// {
+		// mconn.release();
+		// }
 
-			// Apply any result restrictions to the results
-			JavaQueryEvaluator resultMapper = new JDOQLEvaluator(this, candidates, compilation, parameters,
-					om.getClassLoaderResolver());
-			Collection results = resultMapper.execute(true, true, true, true, true);
-
-			if (NucleusLogger.QUERY.isDebugEnabled())
-			{
-				NucleusLogger.QUERY.debug(LOCALISER.msg("021074", "JDOQL", ""
-						+ (System.currentTimeMillis() - startTime)));
-			}
-
-			return results;
-		} finally
-		{
-			mconn.release();
-		}
+		return null;
 	}
 }

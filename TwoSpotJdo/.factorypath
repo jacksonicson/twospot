@@ -1,7 +1,0 @@
-<factorypath>
-    <factorypathentry kind="WKSPJAR" id="/Libs/lib/datanucleus/deps/asm-3.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="WKSPJAR" id="/Libs/lib/datanucleus/deps/ehcache-1.1.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="WKSPJAR" id="/Libs/lib/datanucleus/deps/jdo2-api-2.3-eb.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="WKSPJAR" id="/Libs/lib/datanucleus/datanucleus-core-2.0.0-m3.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="WKSPJAR" id="/Libs/lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar" enabled="true" runInBatchMode="false"/>
-</factorypath>

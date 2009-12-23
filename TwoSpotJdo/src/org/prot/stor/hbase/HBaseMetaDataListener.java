@@ -14,7 +14,7 @@ limitations under the License.
 
 Contributors:
    ...
-**********************************************************************/
+ **********************************************************************/
 package org.prot.stor.hbase;
 
 import java.io.IOException;
@@ -27,43 +27,48 @@ import org.datanucleus.metadata.MetaDataListener;
 import org.datanucleus.util.Localiser;
 
 /**
- * Listener for the load of metadata for classes.
- * Allows us to reject metadata when it isn't supported by this datastore.
+ * Listener for the load of metadata for classes. Allows us to reject metadata
+ * when it isn't supported by this datastore.
  */
 public class HBaseMetaDataListener implements MetaDataListener
 {
-    /** Localiser for messages. */
-    protected static final Localiser LOCALISER = Localiser.getInstance(
-        "org.datanucleus.store.hbase.Localisation", HBaseStoreManager.class.getClassLoader());
+	/** Localiser for messages. */
+	protected static final Localiser LOCALISER = Localiser.getInstance(
+			"org.datanucleus.store.hbase.Localisation", HBaseStoreManager.class.getClassLoader());
 
-    private HBaseStoreManager storeManager;
-    
-    HBaseMetaDataListener(HBaseStoreManager storeManager)
-    {
-        this.storeManager = storeManager;
-    }
-    
-    /* (non-Javadoc)
-     * @see org.datanucleus.metadata.MetaDataListener#loaded(org.datanucleus.metadata.AbstractClassMetaData)
-     */
-    public void loaded(AbstractClassMetaData cmd)
-    {
-        if (cmd.getIdentityType() == IdentityType.DATASTORE && !cmd.isEmbeddedOnly())
-        {
-            // Datastore id not supported
-            throw new InvalidMetaDataException(LOCALISER, "HBase.DatastoreID", cmd.getFullClassName());
-        }
-        if (storeManager.isAutoCreateTables() || storeManager.isAutoCreateColumns())
-        {
-            try 
-            {
-                HBaseUtils.createSchema(storeManager.getHbaseConfig(), cmd, storeManager.isAutoCreateColumns());
-            } 
-            catch (IOException e) 
-            {
-                throw new NucleusDataStoreException(e.getMessage(),e);
-            }
-        }
-        
-    }
+	private HBaseStoreManager storeManager;
+
+	HBaseMetaDataListener(HBaseStoreManager storeManager)
+	{
+		this.storeManager = storeManager;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.datanucleus.metadata.MetaDataListener#loaded(org.datanucleus.metadata
+	 * .AbstractClassMetaData)
+	 */
+	public void loaded(AbstractClassMetaData cmd)
+	{
+		System.out.println("Meta data listener loaded");
+
+		if (cmd.getIdentityType() == IdentityType.DATASTORE && !cmd.isEmbeddedOnly())
+		{
+			// Datastore id not supported
+			throw new InvalidMetaDataException(LOCALISER, "HBase.DatastoreID", cmd.getFullClassName());
+		}
+		if (storeManager.isAutoCreateTables() || storeManager.isAutoCreateColumns())
+		{
+			try
+			{
+				HBaseUtils.createSchema(storeManager.getHbaseConfig(), cmd, storeManager
+						.isAutoCreateColumns());
+			} catch (IOException e)
+			{
+				throw new NucleusDataStoreException(e.getMessage(), e);
+			}
+		}
+	}
 }

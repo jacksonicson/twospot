@@ -21,6 +21,12 @@ import org.apache.hadoop.hbase.client.Result;
 import org.datanucleus.StateManager;
 import org.datanucleus.store.fieldmanager.AbstractFieldManager;
 
+/**
+ * Es werden keine einzelnen Felder für ein persistentes Objekt geladen. Das objekt
+ * wird immer komplett serialisiert!
+ * @author Andreas Wolke
+ *
+ */
 public class HBaseFetchFieldManager extends AbstractFieldManager
 {
 	Result result;

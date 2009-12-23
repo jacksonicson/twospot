@@ -22,6 +22,13 @@ import org.apache.hadoop.hbase.client.Put;
 import org.datanucleus.StateManager;
 import org.datanucleus.store.fieldmanager.AbstractFieldManager;
 
+/**
+ * In der Datenbank befindet sich das Objekt in einer serialisierten Form. Daher
+ * werden keine einzelnen Felder aus der Datenbank geladen bzw. deserialisiert!
+ * 
+ * @author Andreas Wolke
+ * 
+ */
 public class HBaseInsertFieldManager extends AbstractFieldManager
 {
 	Put put;

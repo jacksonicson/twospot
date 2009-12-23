@@ -17,20 +17,10 @@ Contributors :
  ***********************************************************************/
 package org.prot.stor.hbase.query;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.datanucleus.ObjectManager;
-import org.datanucleus.exceptions.NucleusException;
-import org.datanucleus.query.evaluator.JPQLEvaluator;
-import org.datanucleus.query.evaluator.JavaQueryEvaluator;
 import org.datanucleus.store.query.AbstractJPQLQuery;
-import org.datanucleus.util.NucleusLogger;
-import org.prot.stor.hbase.HBaseManagedConnection;
-import org.prot.stor.hbase.HBaseUtils;
 
 /**
  * Implementation of JPQL for HBase datastores.
@@ -78,54 +68,61 @@ public class JPQLQuery extends AbstractJPQLQuery
 
 	protected Object performExecute(Map parameters)
 	{
-		HBaseManagedConnection mconn = (HBaseManagedConnection) om.getStoreManager().getConnection(om);
-		try
-		{
-			long startTime = System.currentTimeMillis();
-			if (NucleusLogger.QUERY.isDebugEnabled())
-			{
-				NucleusLogger.QUERY.debug(LOCALISER.msg("021046", "JPQL", getSingleStringQuery(), null));
-			}
-			List candidates = null;
-			if (candidateCollection == null)
-			{
-				candidates = HBaseUtils.getObjectsOfCandidateType(om, mconn, candidateClass, subclasses,
-						ignoreCache);
-			} else
-			{
-				candidates = new ArrayList(candidateCollection);
-			}
+		// HBaseManagedConnection mconn = (HBaseManagedConnection)
+		// om.getStoreManager().getConnection(om);
+		// try
+		// {
+		// long startTime = System.currentTimeMillis();
+		// if (NucleusLogger.QUERY.isDebugEnabled())
+		// {
+		// NucleusLogger.QUERY.debug(LOCALISER.msg("021046", "JPQL",
+		// getSingleStringQuery(), null));
+		// }
+		// List candidates = null;
+		// if (candidateCollection == null)
+		// {
+		// candidates = HBaseUtils.getObjectsOfCandidateType(om, mconn,
+		// candidateClass, subclasses,
+		// ignoreCache);
+		// } else
+		// {
+		// candidates = new ArrayList(candidateCollection);
+		// }
+		//
+		// // Apply any result restrictions to the results
+		// JavaQueryEvaluator resultMapper = new JPQLEvaluator(this, candidates,
+		// compilation, parameters, om
+		// .getClassLoaderResolver());
+		// Collection results = resultMapper.execute(true, true, true, true,
+		// true);
+		//
+		// if (NucleusLogger.QUERY.isDebugEnabled())
+		// {
+		// NucleusLogger.QUERY.debug(LOCALISER.msg("021074", "JPQL", ""
+		// + (System.currentTimeMillis() - startTime)));
+		// }
+		//
+		// if (type == BULK_DELETE)
+		// {
+		// Iterator iter = results.iterator();
+		// while (iter.hasNext())
+		// {
+		// Object obj = iter.next();
+		// om.deleteObject(obj);
+		// }
+		// return new Long(results.size());
+		// } else if (type == BULK_UPDATE)
+		// {
+		// throw new NucleusException("Bulk Update is not yet supported");
+		// } else
+		// {
+		// return results;
+		// }
+		// } finally
+		// {
+		// mconn.release();
+		// }
 
-			// Apply any result restrictions to the results
-			JavaQueryEvaluator resultMapper = new JPQLEvaluator(this, candidates, compilation, parameters, om
-					.getClassLoaderResolver());
-			Collection results = resultMapper.execute(true, true, true, true, true);
-
-			if (NucleusLogger.QUERY.isDebugEnabled())
-			{
-				NucleusLogger.QUERY.debug(LOCALISER.msg("021074", "JPQL", ""
-						+ (System.currentTimeMillis() - startTime)));
-			}
-
-			if (type == BULK_DELETE)
-			{
-				Iterator iter = results.iterator();
-				while (iter.hasNext())
-				{
-					Object obj = iter.next();
-					om.deleteObject(obj);
-				}
-				return new Long(results.size());
-			} else if (type == BULK_UPDATE)
-			{
-				throw new NucleusException("Bulk Update is not yet supported");
-			} else
-			{
-				return results;
-			}
-		} finally
-		{
-			mconn.release();
-		}
+		return null;
 	}
 }

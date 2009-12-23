@@ -18,231 +18,73 @@ Contributors :
 package org.prot.stor.hbase;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.TableNotFoundException;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
-import org.apache.hadoop.hbase.client.HTable;
-import org.apache.hadoop.hbase.client.Result;
-import org.apache.hadoop.hbase.client.ResultScanner;
-import org.apache.hadoop.hbase.client.Scan;
-import org.datanucleus.ClassLoaderResolver;
-import org.datanucleus.FetchPlan;
-import org.datanucleus.ObjectManager;
-import org.datanucleus.StateManager;
-import org.datanucleus.exceptions.NucleusDataStoreException;
 import org.datanucleus.metadata.AbstractClassMetaData;
-import org.datanucleus.metadata.AbstractMemberMetaData;
-import org.datanucleus.metadata.ColumnMetaData;
-import org.datanucleus.store.FieldValues;
 
 public class HBaseUtils
 {
-	public static final String NAMESPACE_USER_TAGBLES = "user";
+	private static final String ENTITY_TABLE = "entities";
 
-	// Namespace for the tables (used as prefix)
-	private static String namespace = NAMESPACE_USER_TAGBLES;
+	private static String APP_ID = "appId";
 
-	// Use -1 for infinite field size
-	private static long maxFieldSize = -1;
-
-	// Max rows to fetch with a scanner
-	private static long MAX_ROWS = 100;
-
-	public static void setNamespace(String namespace)
+	public static String getRowKey(AbstractClassMetaData acmd)
 	{
-		HBaseUtils.namespace = namespace;
-	}
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("/");
+		buffer.append(APP_ID);
+		buffer.append("/");
+		buffer.append(acmd.getName());
+		buffer.append(":");
+		buffer.append("NULL");
 
-	public static void setMaxFieldSize(long size)
-	{
-		maxFieldSize = size;
-	}
-
-	public static boolean checkFieldSize(long size)
-	{
-		if (maxFieldSize == -1)
-			return true;
-
-		return size <= maxFieldSize;
+		return buffer.toString();
 	}
 
 	public static String getTableName(AbstractClassMetaData acmd)
 	{
-		// String appId = Configuration.getInstance().getAppId();
-		String tableName = acmd.getTable();
-		if (tableName == null)
-			tableName = acmd.getName();
-
-		return namespace + "." + tableName;
+		return ENTITY_TABLE;
 	}
-
-	public static String getFamilyName(AbstractClassMetaData acmd, int absoluteFieldNumber)
-	{
-		AbstractMemberMetaData ammd = acmd.getMetaDataForManagedMemberAtAbsolutePosition(absoluteFieldNumber);
-		String columnName = null;
-
-		// Try the first column if specified
-		ColumnMetaData[] colmds = ammd.getColumnMetaData();
-		if (colmds != null && colmds.length > 0)
-		{
-			columnName = colmds[0].getName();
-		}
-		if (columnName == null)
-		{
-			// Fallback to the field/property name
-			columnName = HBaseUtils.getTableName(acmd);
-		} else if (columnName.indexOf(":") > -1)
-		{
-			columnName = columnName.substring(0, columnName.indexOf(":"));
-		}
-		return columnName;
-	}
-
-	public static String getQualifierName(AbstractClassMetaData acmd, int absoluteFieldNumber)
-	{
-		AbstractMemberMetaData ammd = acmd.getMetaDataForManagedMemberAtAbsolutePosition(absoluteFieldNumber);
-		String columnName = null;
-
-		// Try the first column if specified
-		ColumnMetaData[] colmds = ammd.getColumnMetaData();
-		if (colmds != null && colmds.length > 0)
-		{
-			columnName = colmds[0].getName();
-		}
-		if (columnName == null)
-		{
-			// Fallback to the field/property name
-			columnName = ammd.getName();
-		}
-		if (columnName.indexOf(":") > -1)
-		{
-			columnName = columnName.substring(columnName.indexOf(":") + 1);
-		}
-		return columnName;
-	}
-
-	/**
-	 * Convenience method to get all objects of the candidate type (and optional
-	 * subclasses) from the specified XML connection.
-	 * 
-	 * @param om
-	 *            ObjectManager
-	 * @param mconn
-	 *            Managed Connection
-	 * @param candidateClass
-	 *            Candidate
-	 * @param subclasses
-	 *            Include subclasses?
-	 * @param ignoreCache
-	 *            Whether to ignore the cache
-	 * @return List of objects of the candidate type (or subclass)
-	 */
-	public static List getObjectsOfCandidateType(final ObjectManager om, HBaseManagedConnection mconn,
-			Class candidateClass, boolean subclasses, boolean ignoreCache)
-	{
-		List results = new ArrayList();
-		try
-		{
-			final ClassLoaderResolver clr = om.getClassLoaderResolver();
-			final AbstractClassMetaData acmd = om.getMetaDataManager().getMetaDataForClass(candidateClass,
-					clr);
-
-			HTable table = mconn.getHTable(HBaseUtils.getTableName(acmd));
-
-			Scan scan = new Scan();
-			int[] fieldNumbers = acmd.getAllMemberPositions();
-			for (int i = 0; i < fieldNumbers.length; i++)
-			{
-				byte[] familyNames = HBaseUtils.getFamilyName(acmd, fieldNumbers[i]).getBytes();
-				byte[] columnNames = HBaseUtils.getQualifierName(acmd, fieldNumbers[i]).getBytes();
-				scan.addColumn(familyNames, columnNames);
-			}
-			ResultScanner scanner = table.getScanner(scan);
-			Iterator<Result> it = scanner.iterator();
-
-			int counter = 0;
-			while (it.hasNext() && counter++ < MAX_ROWS)
-			{
-				final Result result = it.next();
-				results.add(om.findObjectUsingAID(clr.classForName(acmd.getFullClassName()),
-						new FieldValues()
-						{
-							// StateManager calls the fetchFields method
-							public void fetchFields(StateManager sm)
-							{
-								sm.replaceFields(acmd.getPKMemberPositions(), new HBaseFetchFieldManager(sm,
-										result));
-								sm.replaceFields(acmd.getBasicMemberPositions(clr, om.getMetaDataManager()),
-										new HBaseFetchFieldManager(sm, result));
-							}
-
-							public void fetchNonLoadedFields(StateManager sm)
-							{
-								sm.replaceNonLoadedFields(acmd.getAllMemberPositions(),
-										new HBaseFetchFieldManager(sm, result));
-							}
-
-							public FetchPlan getFetchPlanForLoading()
-							{
-								return null;
-							}
-						}, ignoreCache, true));
-
-			}
-		} catch (IOException e)
-		{
-			throw new NucleusDataStoreException(e.getMessage(), e);
-		}
-		return results;
-	}
-
+	
 	public static void createSchema(HBaseConfiguration config, AbstractClassMetaData acmd,
 			boolean autoCreateColumns) throws IOException
 	{
+		
+		System.out.println("creating schema");
+		
 		HBaseAdmin hBaseAdmin = new HBaseAdmin(config);
 		HTableDescriptor hTable;
-		String tableName = HBaseUtils.getTableName(acmd);
+		String tableName = ENTITY_TABLE;
+
 		try
 		{
+			// Check if the table exists
 			hTable = hBaseAdmin.getTableDescriptor(tableName.getBytes());
 		} catch (TableNotFoundException ex)
 		{
+			// Table does not exist - so create a new one
 			hTable = new HTableDescriptor(tableName);
 			hBaseAdmin.createTable(hTable);
 		}
 
-		if (autoCreateColumns)
+		// Check if the table contains the column family
+		boolean modified = false;
+		if (!hTable.hasFamily("entity".getBytes()))
 		{
-			boolean modified = false;
-			if (!hTable.hasFamily(HBaseUtils.getTableName(acmd).getBytes()))
-			{
-				HColumnDescriptor hColumn = new HColumnDescriptor(HBaseUtils.getTableName(acmd));
-				hTable.addFamily(hColumn);
-				modified = true;
-			}
-			int[] fieldNumbers = acmd.getAllMemberPositions();
-			for (int i = 0; i < fieldNumbers.length; i++)
-			{
-				String familyName = getFamilyName(acmd, fieldNumbers[i]);
-				if (!hTable.hasFamily(familyName.getBytes()))
-				{
-					HColumnDescriptor hColumn = new HColumnDescriptor(familyName);
-					hTable.addFamily(hColumn);
-					modified = true;
-				}
-			}
-			if (modified)
-			{
-				hBaseAdmin.disableTable(hTable.getName());
-				hBaseAdmin.modifyTable(hTable.getName(), hTable);
-				hBaseAdmin.enableTable(hTable.getName());
-			}
+			HColumnDescriptor hColumn = new HColumnDescriptor("entity");
+			hTable.addFamily(hColumn);
+			modified = true;
+		}
+
+		if (modified)
+		{
+			hBaseAdmin.disableTable(hTable.getName());
+			hBaseAdmin.modifyTable(hTable.getName(), hTable);
+			hBaseAdmin.enableTable(hTable.getName());
 		}
 	}
 }

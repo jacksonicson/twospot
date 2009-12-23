@@ -30,6 +30,11 @@ import org.datanucleus.metadata.MetaDataListener;
 import org.datanucleus.store.AbstractStoreManager;
 import org.datanucleus.store.NucleusConnection;
 
+/**
+ * Übernimmt das Bootstrapping vom Plugin
+ * @author Andreas Wolke
+ *
+ */
 public class HBaseStoreManager extends AbstractStoreManager
 {
     MetaDataListener metadataListener;
