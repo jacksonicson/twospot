@@ -33,8 +33,6 @@
 	<extension point="org.datanucleus.store_query_query">
 		<query class-name="org.prot.stor.hbase.query.JDOQLQuery"
 			datastore="hbase" name="JDOQL" />
-		<query class-name="org.prot.stor.hbase.query.JPQLQuery"
-			datastore="hbase" name="JPQL" />
 	</extension>
 
 	<!-- CONNECTION FACTORY -->

@@ -27,6 +27,7 @@ import org.datanucleus.store.query.AbstractJDOQLQuery;
  */
 public class JDOQLQuery extends AbstractJDOQLQuery
 {
+
 	/**
 	 * Constructs a new query instance that uses the given persistence manager.
 	 * 
@@ -68,6 +69,8 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 
 	protected Object performExecute(Map parameters)
 	{
+		System.out.println("JDOQL perform execute");
+
 		// HBaseManagedConnection mconn = (HBaseManagedConnection)
 		// om.getStoreManager().getConnection(om);
 		// try

@@ -30,10 +30,13 @@ import org.apache.log4j.Logger;
 import org.datanucleus.ObjectManager;
 import org.datanucleus.StateManager;
 import org.datanucleus.exceptions.NucleusDataStoreException;
+import org.datanucleus.exceptions.NucleusObjectNotFoundException;
+import org.datanucleus.exceptions.NucleusUserException;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.store.StoreManager;
 import org.datanucleus.store.StorePersistenceHandler;
 import org.datanucleus.util.Localiser;
+import org.datanucleus.util.StringUtils;
 
 /**
  * Wichtigste Klasse. Hier werden die Objekte serialisiert und in der Datenbank
@@ -131,18 +134,17 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 
 		// Check existence of the object since HBase doesn't enforce application
 		// identity
-		// try
-		// {
-		// locateObject(sm);
-		//
-		// throw new
-		// NucleusUserException(LOCALISER.msg("HBase.Insert.ObjectWithIdAlreadyExists",
-		// StringUtils.toJVMIDString(sm.getObject()),
-		// sm.getInternalObjectId()));
-		// } catch (NucleusObjectNotFoundException onfe)
-		// {
-		// // Do nothing since object with this id doesn't exist
-		// }
+		try
+		{
+			// Throws an exception if the object could not be located
+			locateObject(sm);
+
+			throw new NucleusUserException(LOCALISER.msg("HBase.Insert.ObjectWithIdAlreadyExists",
+					StringUtils.toJVMIDString(sm.getObject()), sm.getInternalObjectId()));
+		} catch (NucleusObjectNotFoundException onfe)
+		{
+			// Do nothing since object with this id doesn't exist
+		}
 
 		HBaseManagedConnection mconn = (HBaseManagedConnection) storeMgr.getConnection(sm.getObjectManager());
 		try
@@ -168,11 +170,6 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 
 			// entity:serialized
 			put.add("entity".getBytes(), "serialized".getBytes(), out.toByteArray());
-
-			// Delete delete = newDelete(sm);
-			// HBaseInsertFieldManager fm = new HBaseInsertFieldManager(sm, put,
-			// delete);
-			// sm.provideFields(acmd.getAllMemberPositions(), fm);
 
 			table.put(put);
 			table.close();
@@ -237,14 +234,20 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 		return result;
 	}
 
-	private boolean exists(StateManager sm, HTable table) throws IOException
+	private boolean exists(AbstractClassMetaData acmd, StateManager sm, HTable table) throws IOException
 	{
+		// Load the primary key
 		Object pkValue = sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
 
+		// Serialize the primary key
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(bos);
 		oos.writeObject(pkValue);
-		Get get = new Get(bos.toByteArray());
+
+		String row = HBaseUtils.getRowKey(acmd, (Key) pkValue);
+		System.out.println("Exists row: " + row);
+		Get get = new Get(row.getBytes());
+
 		boolean result = table.exists(get);
 		oos.close();
 		bos.close();
@@ -253,26 +256,27 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 
 	public void locateObject(StateManager sm)
 	{
-		System.out.println("locate object");
+		System.out.println("locating object");
 
-		// HBaseManagedConnection mconn = (HBaseManagedConnection)
-		// storeMgr.getConnection(sm.getObjectManager());
-		// try
-		// {
-		// AbstractClassMetaData acmd = sm.getClassMetaData();
-		// HTable table = mconn.getHTable(HBaseUtils.getTableName(acmd));
-		// if (!exists(sm, table))
-		// {
-		// throw new NucleusObjectNotFoundException();
-		// }
-		// table.close();
-		// } catch (IOException e)
-		// {
-		// throw new NucleusDataStoreException(e.getMessage(), e);
-		// } finally
-		// {
-		// mconn.release();
-		// }
+		HBaseManagedConnection mconn = (HBaseManagedConnection) storeMgr.getConnection(sm.getObjectManager());
+		try
+		{
+			AbstractClassMetaData acmd = sm.getClassMetaData();
+			HTable table = mconn.getHTable(HBaseUtils.getTableName(acmd));
+
+			// Check if the object exists in that table
+			if (!exists(acmd, sm, table))
+			{
+				throw new NucleusObjectNotFoundException();
+			}
+			table.close();
+		} catch (IOException e)
+		{
+			throw new NucleusDataStoreException(e.getMessage(), e);
+		} finally
+		{
+			mconn.release();
+		}
 	}
 
 	public void updateObject(StateManager sm, int[] fieldNumbers)
