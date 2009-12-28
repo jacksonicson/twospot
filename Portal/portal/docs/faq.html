@@ -6,6 +6,25 @@ Es wird nicht der DNS-Server der FH verwendet. Bei Einsatz eines externen DNS-Se
 </p>
 
 <br/>
+<p><b>Log4j-ERROR beim Starten vom DevServer</b></p>
+<p>
+Beim Starten vom DevServer wird der folgende Fehler angezeigt:
+</p>
+<pre class="prettyprint lang-htm">
+log4j:ERROR Could not connect to remote log4j server at [localhost]. We will try again later.
+</pre>
+<p>
+In der Log4j-Konfiguration wurde ein Socket-Appender konfiguriert. Über diesen
+können die Log4j-Meldungen über einen Socket an einen Socket-Server (Log-Server)
+geschickt werden. Für den Betrieb des DevServers wird kein Log-Server benötigt
+und die Meldung kann ignoriert werden. </p>
+<p>Für eine übersichtliche Darstellung der
+    Log-Meldungen kann z.B. der Log-Server <a href="http://sourceforge.net/projects/lumbermill/">Lumbermill</a> eingesetzt
+    werden.</p>
+
+
+
+<br/>
 
 <p><b>Das Starten einer Anwendung dauert sehr lange</b></p>
 <p>
