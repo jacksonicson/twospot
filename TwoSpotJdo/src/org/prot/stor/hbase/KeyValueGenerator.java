@@ -1,56 +1,130 @@
 package org.prot.stor.hbase;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import java.util.Map.Entry;
 
-import org.datanucleus.store.valuegenerator.ValueGenerator;
+import org.apache.hadoop.hbase.client.Get;
+import org.apache.hadoop.hbase.client.HTable;
+import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.client.Result;
+import org.apache.hadoop.hbase.client.RowLock;
+import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.log4j.Logger;
+import org.datanucleus.store.valuegenerator.AbstractDatastoreGenerator;
+import org.datanucleus.store.valuegenerator.ValueGenerationBlock;
 
-public class KeyValueGenerator implements ValueGenerator
+public class KeyValueGenerator extends AbstractDatastoreGenerator
 {
-	private long counter = 0;
+	private static final Logger logger = Logger.getLogger(KeyValueGenerator.class);
 
-	private Key current;
-
-	public KeyValueGenerator(String s, Properties p)
+	public KeyValueGenerator(String name, Properties props)
 	{
-
+		super(name, props);
 	}
 
 	@Override
-	public void allocate(int additional)
+	protected ValueGenerationBlock reserveBlock(long size)
 	{
+		List list = new ArrayList();
+
+		// Aquire size from the HBase counter
+
+		// Create the keys
+
+		logger.debug("reserving block: " + size);
+
+		HBaseManagedConnection connection = (HBaseManagedConnection) connectionProvider.retrieveConnection();
+		HTable table = connection.getHTable(HBaseUtils.COUNTER_TABLE);
+
+		RowLock lock;
+		try
+		{
+			Get get = new Get(Bytes.toBytes(HBaseUtils.APP_ID));
+
+			Result result = table.get(get);
+			logger.info("Result found: " + result.size());
+
+			byte[] counter = Bytes.toBytes("counter");
+
+			Entry<Long, byte[]> data = result.getMap().get(counter).get(counter).lastEntry();
+			System.out.println("Timestamp: " + data.getKey());
+			byte[] value = data.getValue();
+
+			long lValue = Bytes.toLong(value);
+			logger.info("Counter is now: " + lValue);
+
+			long newValue = lValue + size;
+
+			System.out.println("IValue now: " + newValue);
+
+			if (result != null)
+			{
+				logger.debug("Updating now");
+
+				Put put = new Put(Bytes.toBytes(HBaseUtils.APP_ID));
+				put.add(counter, counter, Bytes.toBytes(newValue));
+
+				// table.put(put);
+				table.checkAndPut(Bytes.toBytes(HBaseUtils.APP_ID), counter, counter, Bytes.toBytes(lValue),
+						put);
+			}
+
+			long i = 0;
+			do
+			{
+				Key key = new Key();
+				key.setKey(Bytes.toBytes((long) (lValue + i)));
+				list.add(key);
+
+			} while (++i < size);
+
+		} catch (IOException e)
+		{
+			logger.error(e);
+		}
+
+		return new ValueGenerationBlock(list);
 	}
 
-	@Override
-	public Object current()
+	protected boolean requiresRepository()
 	{
-		return current;
+		// Yes we require a repository
+		return true;
 	}
 
-	@Override
-	public long currentValue()
+	protected boolean repositoryExists()
 	{
-		return counter;
+		// Repository does not exist
+		return false;
 	}
 
-	@Override
-	public String getName()
+	protected boolean createRepository()
 	{
-		return "keygenerator";
-	}
+		HBaseManagedConnection connection = (HBaseManagedConnection) connectionProvider.retrieveConnection();
+		HTable table = connection.getHTable(HBaseUtils.COUNTER_TABLE);
 
-	@Override
-	public Object next()
-	{
-		long time = System.currentTimeMillis();
-		current = new Key();
-		current.setKey(("tt" + time).getBytes());
-		return current;
-	}
+		try
+		{
+			Result result = table.get(new Get(Bytes.toBytes(HBaseUtils.APP_ID)));
+			logger.info("Result found");
 
-	@Override
-	public long nextValue()
-	{
-		return ++counter;
-	}
+			if (result == null || result.size() == 0)
+			{
+				logger.info("Creating a new counter");
+				Put put = new Put(Bytes.toBytes(HBaseUtils.APP_ID));
+				byte[] counter = Bytes.toBytes("counter");
+				put.add(counter, counter, Bytes.toBytes(0l));
+				table.put(put);
+			}
 
+		} catch (IOException e)
+		{
+			logger.error(e);
+		}
+
+		return true;
+	}
 }

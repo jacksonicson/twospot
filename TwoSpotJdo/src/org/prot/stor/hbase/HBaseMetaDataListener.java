@@ -19,6 +19,7 @@ package org.prot.stor.hbase;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.datanucleus.exceptions.NucleusDataStoreException;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.IdentityType;
@@ -32,7 +33,8 @@ import org.datanucleus.util.Localiser;
  */
 public class HBaseMetaDataListener implements MetaDataListener
 {
-	/** Localiser for messages. */
+	private static final Logger logger = Logger.getLogger(HBaseMetaDataListener.class);
+
 	protected static final Localiser LOCALISER = Localiser.getInstance(
 			"org.datanucleus.store.hbase.Localisation", HBaseStoreManager.class.getClassLoader());
 
@@ -52,7 +54,7 @@ public class HBaseMetaDataListener implements MetaDataListener
 	 */
 	public void loaded(AbstractClassMetaData cmd)
 	{
-		System.out.println("Meta data listener loaded");
+		logger.debug("Meta data listener loaded");
 
 		if (cmd.getIdentityType() == IdentityType.DATASTORE && !cmd.isEmbeddedOnly())
 		{

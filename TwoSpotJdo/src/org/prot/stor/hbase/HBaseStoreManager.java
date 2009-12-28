@@ -14,7 +14,7 @@ limitations under the License.
 
 Contributors :
     ...
-***********************************************************************/
+ ***********************************************************************/
 package org.prot.stor.hbase;
 
 import java.util.Collection;
@@ -32,122 +32,125 @@ import org.datanucleus.store.NucleusConnection;
 
 /**
  * Übernimmt das Bootstrapping vom Plugin
+ * 
  * @author Andreas Wolke
- *
+ * 
  */
 public class HBaseStoreManager extends AbstractStoreManager
 {
-    MetaDataListener metadataListener;
+	MetaDataListener metadataListener;
 
-    private HBaseConfiguration hbaseConfig; 
-    
-    private boolean autoCreateTables = false;
-    private boolean autoCreateColumns = false;
+	private HBaseConfiguration hbaseConfig;
 
-    private int poolTimeBetweenEvictionRunsMillis; 
-    private int poolMinEvictableIdleTimeMillis;
-    
-    /**
-     * Constructor.
-     * @param clr ClassLoader resolver
-     * @param omfContext ObjectManagerFactory context
-     */
-    public HBaseStoreManager(ClassLoaderResolver clr, OMFContext omfContext)
-    {
-        super("hbase", clr, omfContext);
-                
-        // Handler for metadata
-        metadataListener = new HBaseMetaDataListener(this);
-        omfContext.getMetaDataManager().registerListener(metadataListener);
+	private boolean autoCreateTables = false;
+	private boolean autoCreateColumns = false;
 
-        // Handler for persistence process
-        persistenceHandler = new HBasePersistenceHandler(this);
+	private int poolTimeBetweenEvictionRunsMillis;
+	private int poolMinEvictableIdleTimeMillis;
 
-        hbaseConfig = new HBaseConfiguration();
+	/**
+	 * Constructor.
+	 * 
+	 * @param clr
+	 *            ClassLoader resolver
+	 * @param omfContext
+	 *            ObjectManagerFactory context
+	 */
+	public HBaseStoreManager(ClassLoaderResolver clr, OMFContext omfContext)
+	{
+		super("hbase", clr, omfContext);
 
-        PersistenceConfiguration conf = omfContext.getPersistenceConfiguration();
-        boolean autoCreateSchema = conf.getBooleanProperty("datanucleus.autoCreateSchema");
-        if (autoCreateSchema)
-        {
-            autoCreateTables = true;
-            autoCreateColumns = true;
-        }
-        else
-        {
-            autoCreateTables = conf.getBooleanProperty("datanucleus.autoCreateTables");
-            autoCreateColumns = conf.getBooleanProperty("datanucleus.autoCreateColumns");
-        }        
-        // how often should the evictor run
-        poolTimeBetweenEvictionRunsMillis = conf.getIntProperty("datanucleus.connectionPool.timeBetweenEvictionRunsMillis");
-        if (poolTimeBetweenEvictionRunsMillis == 0)
-        {
-            poolTimeBetweenEvictionRunsMillis = 15 * 1000; // default, 15 secs
-        }
-         
-        // how long may a connection sit idle in the pool before it may be evicted
-        poolMinEvictableIdleTimeMillis = conf.getIntProperty("datanucleus.connectionPool.minEvictableIdleTimeMillis");
-        if (poolMinEvictableIdleTimeMillis == 0)
-        {
-            poolMinEvictableIdleTimeMillis = 30 * 1000; // default, 30 secs
-        }
-                
-        logConfiguration();
-    }
+		// Handler for metadata
+		metadataListener = new HBaseMetaDataListener(this);
+		omfContext.getMetaDataManager().registerListener(metadataListener);
 
-    protected void registerConnectionMgr()
-    {
-        super.registerConnectionMgr();
-        this.connectionMgr.disableConnectionPool();
-    }
+		// Handler for persistence process
+		persistenceHandler = new HBasePersistenceHandler(this);
 
+		// Hbase configuration
+		hbaseConfig = new HBaseConfiguration();
 
-    /**
-     * Release of resources
-     */
-    public void close()
-    {
-        omfContext.getMetaDataManager().deregisterListener(metadataListener);
-        super.close();
-    }
+		// Check the configuration
+		PersistenceConfiguration conf = omfContext.getPersistenceConfiguration();
+		if (!conf.getBooleanProperty("datanucleus.autoCreateSchema"))
+		{
+			autoCreateTables = true;
+			autoCreateColumns = true;
+		} else
+		{
+			autoCreateTables = conf.getBooleanProperty("datanucleus.autoCreateTables");
+			autoCreateColumns = conf.getBooleanProperty("datanucleus.autoCreateColumns");
+		}
 
-    public NucleusConnection getNucleusConnection(ObjectManager om)
-    {
-        throw new UnsupportedOperationException();
-    }
+		// how often should the evictor run
+		poolTimeBetweenEvictionRunsMillis = conf
+				.getIntProperty("datanucleus.connectionPool.timeBetweenEvictionRunsMillis");
+		if (poolTimeBetweenEvictionRunsMillis == 0)
+			poolTimeBetweenEvictionRunsMillis = 15 * 1000; // default, 15 secs
 
-    /**
-     * Accessor for the supported options in string form
-     */
-    public Collection getSupportedOptions()
-    {
-        Set set = new HashSet();
-        set.add("ApplicationIdentity");
-        set.add("TransactionIsolationLevel.read-committed");
-        return set;
-    }
-    
-    public HBaseConfiguration getHbaseConfig()
-    {
-        return hbaseConfig;
-    }
-    
-    public boolean isAutoCreateColumns()
-    {
-        return autoCreateColumns;
-    }
-    
-    public boolean isAutoCreateTables()
-    {
-        return autoCreateTables;
-    }
-    
-    public int getPoolMinEvictableIdleTimeMillis()
-    {
-        return poolMinEvictableIdleTimeMillis;
-    }
-    
-    public int getPoolTimeBetweenEvictionRunsMillis()
-    {
-        return poolTimeBetweenEvictionRunsMillis;
-    }
+		// how long may a connection sit idle in the pool before it may be
+		// evicted
+		poolMinEvictableIdleTimeMillis = conf
+				.getIntProperty("datanucleus.connectionPool.minEvictableIdleTimeMillis");
+		if (poolMinEvictableIdleTimeMillis == 0)
+			poolMinEvictableIdleTimeMillis = 30 * 1000; // default, 30 secs
+
+		logConfiguration();
+	}
+
+	protected void registerConnectionMgr()
+	{
+		super.registerConnectionMgr();
+		this.connectionMgr.disableConnectionPool();
+	}
+
+	/**
+	 * Release of resources
+	 */
+	public void close()
+	{
+		omfContext.getMetaDataManager().deregisterListener(metadataListener);
+		super.close();
+	}
+
+	public NucleusConnection getNucleusConnection(ObjectManager om)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Accessor for the supported options in string form
+	 */
+	public Collection getSupportedOptions()
+	{
+		Set set = new HashSet();
+		set.add("ApplicationIdentity");
+		set.add("TransactionIsolationLevel.read-committed");
+		return set;
+	}
+
+	public HBaseConfiguration getHbaseConfig()
+	{
+		return hbaseConfig;
+	}
+
+	public boolean isAutoCreateColumns()
+	{
+		return autoCreateColumns;
+	}
+
+	public boolean isAutoCreateTables()
+	{
+		return autoCreateTables;
+	}
+
+	public int getPoolMinEvictableIdleTimeMillis()
+	{
+		return poolMinEvictableIdleTimeMillis;
+	}
+
+	public int getPoolTimeBetweenEvictionRunsMillis()
+	{
+		return poolTimeBetweenEvictionRunsMillis;
+	}
 }

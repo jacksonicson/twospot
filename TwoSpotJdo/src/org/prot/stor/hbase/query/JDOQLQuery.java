@@ -19,7 +19,15 @@ package org.prot.stor.hbase.query;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.datanucleus.ObjectManager;
+import org.datanucleus.query.expression.DyadicExpression;
+import org.datanucleus.query.expression.Expression;
+import org.datanucleus.query.expression.Literal;
+import org.datanucleus.query.expression.PrimaryExpression;
+import org.datanucleus.query.expression.Expression.DyadicOperator;
+import org.datanucleus.query.expression.Expression.Operator;
+import org.datanucleus.query.symbol.Symbol;
 import org.datanucleus.store.query.AbstractJDOQLQuery;
 
 /**
@@ -27,6 +35,8 @@ import org.datanucleus.store.query.AbstractJDOQLQuery;
  */
 public class JDOQLQuery extends AbstractJDOQLQuery
 {
+
+	private static final Logger logger = Logger.getLogger(JDOQLQuery.class);
 
 	/**
 	 * Constructs a new query instance that uses the given persistence manager.
@@ -67,9 +77,66 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 		super(om, query);
 	}
 
+	private void translate(String left, Expression filter)
+	{
+		Class expressionClass = filter.getClass();
+		if (expressionClass == DyadicExpression.class)
+		{
+			System.out.println(left + "dyadic expression");
+			Operator operator = filter.getOperator();
+			assert (operator != null);
+			String strOperator = operator.toString().trim();
+			DyadicOperator dyoperator = (DyadicOperator) operator;
+			if (strOperator.equals("OR"))
+			{
+			} else if (strOperator.equals("="))
+			{
+
+			}
+
+		} else if (expressionClass == PrimaryExpression.class)
+		{
+			System.out.println(left + "primary expression");
+		}
+
+		Operator operator = filter.getOperator();
+		if (operator != null)
+		{
+			System.out.println(left + "Operator string: " + filter.getOperator().toString());
+			if (filter.getOperator().toString().trim().equals("OR"))
+			{
+				System.out.println(left + "Operator is OR");
+				translate(left + " ", filter.getLeft());
+				translate(left + " ", filter.getRight());
+			} else if (filter.getOperator().toString().trim().equals("="))
+			{
+				System.out.println(left + "Operator is EQUALS");
+				translate(left + "L ", filter.getLeft());
+				translate(left + "R ", filter.getRight());
+			}
+			return;
+		} else if (filter.getSymbol() != null)
+		{
+			Symbol symb = filter.getSymbol();
+			System.out.println(left + "Symbol: " + symb);
+			return;
+		} else if (filter.getClass() == Literal.class)
+		{
+			Literal l = (Literal) filter;
+			System.out.println(left + l.getLiteral());
+		} else
+		{
+			System.out.println(left + "unknown expression");
+			System.out.println(left + filter);
+		}
+	}
+
 	protected Object performExecute(Map parameters)
 	{
-		System.out.println("JDOQL perform execute");
+		logger.debug("perform execute");
+
+		Expression filter = this.compilation.getExprFilter();
+		translate("", filter);
 
 		// HBaseManagedConnection mconn = (HBaseManagedConnection)
 		// om.getStoreManager().getConnection(om);
@@ -101,6 +168,7 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 		// }
 		//
 		// // Apply any result restrictions to the results
+
 		// JavaQueryEvaluator resultMapper = new JDOQLEvaluator(this,
 		// candidates, compilation, parameters,
 		// om.getClassLoaderResolver());
