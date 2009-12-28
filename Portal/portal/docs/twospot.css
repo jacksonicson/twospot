@@ -41,6 +41,11 @@ p {
 	line-height: 125%
 }
 
+info {
+	font-style:italic;
+	font-weight:300;
+}
+
 body {
 	font-family: Helvetica, Arial, sans-serif;
 	font-size: small;
