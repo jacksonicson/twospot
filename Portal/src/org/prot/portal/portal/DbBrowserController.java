@@ -22,6 +22,9 @@ public class DbBrowserController implements Controller
 			throws Exception
 	{
 		String appId = request.getParameter("appId");
+		if (appId == null)
+			return null;
+		appId = appId.toLowerCase();
 
 		DbQueryCommand queryCommand = new DbQueryCommand();
 		queryCommand.setAppId(appId);

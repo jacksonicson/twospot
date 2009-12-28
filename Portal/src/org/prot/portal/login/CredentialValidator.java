@@ -29,17 +29,17 @@ public class CredentialValidator implements Validator
 				"Password must not be empty");
 
 		// Check credentials (only if no erros until now)
-		logger.info("checking credentials now"); 
+		logger.info("checking credentials now");
 		if (errors.getAllErrors().size() == 0)
 		{
-			logger.info("yes"); 
-			String username = loginCommand.getUsername();
+			logger.info("yes");
+			String username = loginCommand.getUsername().toLowerCase();
 			String password = loginCommand.getPassword();
 
 			boolean check = userService.checkCredentials(username, password);
 			if (check == false)
 			{
-				logger.info("Login failed"); 
+				logger.info("Login failed");
 				errors.reject("", "Login failed - invalid credentials");
 			}
 		}

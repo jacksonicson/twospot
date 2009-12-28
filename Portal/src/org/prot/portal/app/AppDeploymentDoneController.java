@@ -37,8 +37,8 @@ public class AppDeploymentDoneController implements Controller
 		}
 
 		// Get deployment parameters
-		String appId = request.getParameter("id");
-		String version = request.getParameter("ver");
+		String appId = request.getParameter("id").toLowerCase();
+		String version = request.getParameter("ver").toLowerCase();
 		if (appId == null || version == null)
 		{
 			response.sendError(400, "Deployment requires an appId and a version information");

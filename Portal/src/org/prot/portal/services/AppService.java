@@ -22,6 +22,7 @@ public class AppService
 
 	public String getApplicationOwner(String appId)
 	{
+		appId = appId.toLowerCase();
 		Application app = appDao.loadApp(appId);
 		if (app == null)
 			return null;
@@ -34,6 +35,7 @@ public class AppService
 		org.prot.app.services.user.UserService userService = UserServiceFactory.getUserService();
 		String owner = userService.getCurrentUser();
 
+		appId = appId.toLowerCase();
 		appDao.saveApp(appId, owner);
 	}
 

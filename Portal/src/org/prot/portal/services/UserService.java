@@ -15,6 +15,9 @@ public class UserService
 
 	public boolean existsUserId(String username)
 	{
+		// Ensure that username is case insensitive
+		username = username.toLowerCase();
+
 		PlatformUser user = userDao.getUser(username);
 		return user != null;
 	}
@@ -47,6 +50,9 @@ public class UserService
 	{
 		assert (username != null);
 
+		// Ensure that username is case insensitive
+		username = username.toLowerCase();
+
 		PlatformUser user = userDao.getUser(username);
 		return user;
 	}
@@ -56,6 +62,9 @@ public class UserService
 		// TODO: Throw an exception
 		if (existsUserId(user.getUsername()) == true)
 			return;
+
+		// Ensure that username is case insensitive
+		user.setUsername(user.getUsername().toLowerCase());
 
 		// MD5 hash password
 		user.setMd5Password(MD5(password));
@@ -68,6 +77,9 @@ public class UserService
 	{
 		// MD5 hash the password
 		String md5 = MD5(password);
+
+		// Ensure that username is case insensitive
+		username = username.toLowerCase();
 
 		// Load the user from the datastore
 		PlatformUser user = userDao.getUser(username);

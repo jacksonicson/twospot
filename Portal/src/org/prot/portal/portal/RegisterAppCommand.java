@@ -11,7 +11,7 @@ public class RegisterAppCommand
 
 	public void setAppId(String appId)
 	{
-		this.appId = appId;
+		this.appId = appId.toLowerCase();
 	}
 
 }

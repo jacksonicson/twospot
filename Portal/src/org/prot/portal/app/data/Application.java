@@ -22,7 +22,7 @@ public class Application
 
 	public void setAppId(String appId)
 	{
-		this.appId = appId;
+		this.appId = appId.toLowerCase();
 	}
 
 	public String getOwner()

@@ -18,6 +18,9 @@ public class LogsController implements Controller
 			throws Exception
 	{
 		String appId = request.getParameter("appId");
+		if (appId == null)
+			return null;
+		appId = appId.toLowerCase();
 
 		List<LogMessage> messages = LogServiceFactory.getLogService().getMessages(appId, LogService.ALL);
 
