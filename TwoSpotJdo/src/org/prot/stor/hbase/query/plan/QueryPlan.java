@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.prot.stor.hbase.HBaseManagedConnection;
 
 public class QueryPlan
 {
@@ -17,8 +18,23 @@ public class QueryPlan
 		plan.add(step);
 	}
 
-	public List<QueryStep> getPlan()
+	private void optimize()
 	{
-		return this.plan;
+		logger.debug("Optimizing the query");
+	}
+
+	public List<Object> execute(HBaseManagedConnection connection)
+	{
+		// Optimize the plan
+		optimize();
+
+		List<Object> candidates = new ArrayList<Object>();
+
+		for (QueryStep step : plan)
+		{
+			step.exeucte(connection, candidates);
+		}
+
+		return candidates;
 	}
 }

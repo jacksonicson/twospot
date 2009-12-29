@@ -25,17 +25,16 @@ import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 import org.datanucleus.ObjectManager;
 import org.datanucleus.StateManager;
 import org.datanucleus.exceptions.NucleusDataStoreException;
 import org.datanucleus.exceptions.NucleusObjectNotFoundException;
-import org.datanucleus.exceptions.NucleusUserException;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.store.StoreManager;
 import org.datanucleus.store.StorePersistenceHandler;
 import org.datanucleus.util.Localiser;
-import org.datanucleus.util.StringUtils;
 
 /**
  * Wichtigste Klasse. Hier werden die Objekte serialisiert und in der Datenbank
@@ -138,8 +137,10 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 			// Throws an exception if the object could not be located
 			locateObject(sm);
 
-//			throw new NucleusUserException(LOCALISER.msg("HBase.Insert.ObjectWithIdAlreadyExists",
-//					StringUtils.toJVMIDString(sm.getObject()), sm.getInternalObjectId()));
+			// throw new
+			// NucleusUserException(LOCALISER.msg("HBase.Insert.ObjectWithIdAlreadyExists",
+			// StringUtils.toJVMIDString(sm.getObject()),
+			// sm.getInternalObjectId()));
 		} catch (NucleusObjectNotFoundException onfe)
 		{
 			// Do nothing since object with this id doesn't exist
@@ -157,6 +158,8 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 
 			byte[] key = HBaseUtils.getRowKey(acmd, kkey);
 
+			logger.debug("Using key: " + key);
+			
 			Put put = new Put(key);
 
 			// Create a serialized version of the class
@@ -172,6 +175,29 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 
 			table.put(put);
 			table.close();
+
+			// Update the index-table
+			// ---------------------------------------------------------
+
+			HTable indexTable = mconn.getHTable(HBaseUtils.INDEX_BY_KIND_TABLE);
+			byte[] bAppId = Bytes.toBytes(HBaseUtils.APP_ID);
+			byte[] bKind = Bytes.toBytes(sm.getClassMetaData().getName());
+			byte[] bKey = key;
+
+			logger.debug("Using class kind name: " + sm.getClassMetaData().getName());
+
+			byte[] all = Bytes.add(bAppId, "/".getBytes(), bKind);
+			all = Bytes.add(all, "/".getBytes(), bKey);
+
+			logger.debug("Using index: " + new String(all));
+
+			byte[] nothing = Bytes.toBytes("key");
+			put = new Put(all);
+			put.add(nothing, nothing, key);
+			indexTable.put(put);
+			indexTable.close();
+			logger.debug("Done index table is filled");
+
 		} catch (IOException e)
 		{
 			throw new NucleusDataStoreException(e.getMessage(), e);

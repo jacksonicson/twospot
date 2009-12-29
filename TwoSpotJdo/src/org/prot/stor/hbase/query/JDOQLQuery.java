@@ -24,7 +24,9 @@ import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.ObjectManager;
 import org.datanucleus.exceptions.NucleusException;
 import org.datanucleus.metadata.AbstractClassMetaData;
+import org.datanucleus.store.connection.ManagedConnection;
 import org.datanucleus.store.query.AbstractJDOQLQuery;
+import org.prot.stor.hbase.HBaseManagedConnection;
 import org.prot.stor.hbase.query.plan.QueryPlan;
 
 /**
@@ -102,11 +104,27 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 				getFetchPlan(), om);
 		mapper.compile();
 
-		return null;
+		return plan;
 	}
 
 	protected Object performExecute(Map parameters)
 	{
-		return null;
+		for (Object key : parameters.keySet())
+		{
+			logger.debug("parameter: " + key + " - " + parameters.get(key));
+		}
+
+		logger.debug("Perform execute");
+
+		ManagedConnection mconn = om.getStoreManager().getConnection(om);
+		HBaseManagedConnection hbaseConnection = (HBaseManagedConnection) mconn;
+		if (this.queryPlan == null)
+		{
+			logger.error("Query plan is null");
+			return null;
+		} else
+		{
+			return queryPlan.execute(hbaseConnection);
+		}
 	}
 }

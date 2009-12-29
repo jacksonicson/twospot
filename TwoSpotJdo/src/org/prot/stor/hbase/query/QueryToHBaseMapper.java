@@ -23,12 +23,14 @@ import org.datanucleus.query.expression.ParameterExpression;
 import org.datanucleus.query.expression.PrimaryExpression;
 import org.datanucleus.query.expression.SubqueryExpression;
 import org.datanucleus.query.expression.VariableExpression;
+import org.datanucleus.query.symbol.Symbol;
 import org.datanucleus.store.mapped.StatementClassMapping;
 import org.datanucleus.store.mapped.StatementResultMapping;
 import org.prot.stor.hbase.query.plan.FetchExpression;
 import org.prot.stor.hbase.query.plan.FetchType;
 import org.prot.stor.hbase.query.plan.IntersectExpression;
 import org.prot.stor.hbase.query.plan.KeyParameter;
+import org.prot.stor.hbase.query.plan.KindExpression;
 import org.prot.stor.hbase.query.plan.LiteralParameter;
 import org.prot.stor.hbase.query.plan.QueryPlan;
 import org.prot.stor.hbase.query.plan.QueryStep;
@@ -87,6 +89,16 @@ public class QueryToHBaseMapper extends AbstractExpressionEvaluator
 
 	public void compile()
 	{
+		if (compilation.getExprFrom() != null)
+		{
+			logger.debug("Expression from is not null");
+		}
+
+		if (compilation.getExprResult() == null)
+		{
+			logger.debug("Expression result is null");
+		}
+
 		// Get the filter expression
 		if (compilation.getExprFilter() != null)
 		{
@@ -106,6 +118,10 @@ public class QueryToHBaseMapper extends AbstractExpressionEvaluator
 				QueryStep step = stack.pop();
 				queryPlan.appendStep(step);
 			}
+		} else
+		{
+			KindExpression kind = new KindExpression(compilation.getCandidateClass().getSimpleName());
+			queryPlan.appendStep(kind);
 		}
 	}
 
@@ -126,12 +142,19 @@ public class QueryToHBaseMapper extends AbstractExpressionEvaluator
 	{
 		logger.debug("Processing parameter expression");
 
+		// TODO
+
 		return null;
 	}
 
 	protected Object processVariableExpression(VariableExpression expr)
 	{
 		logger.debug("Processing variable expression");
+
+		Symbol varSymb = expr.getSymbol();
+		String varName = varSymb.getQualifiedName();
+
+		// TODO
 
 		return null;
 	}
