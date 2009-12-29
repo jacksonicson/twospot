@@ -20,173 +20,93 @@ package org.prot.stor.hbase.query;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.ObjectManager;
-import org.datanucleus.query.expression.DyadicExpression;
-import org.datanucleus.query.expression.Expression;
-import org.datanucleus.query.expression.Literal;
-import org.datanucleus.query.expression.PrimaryExpression;
-import org.datanucleus.query.expression.Expression.DyadicOperator;
-import org.datanucleus.query.expression.Expression.Operator;
-import org.datanucleus.query.symbol.Symbol;
+import org.datanucleus.exceptions.NucleusException;
+import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.store.query.AbstractJDOQLQuery;
+import org.prot.stor.hbase.query.plan.QueryPlan;
 
 /**
  * Implementation of JDOQL for HBase datastores.
  */
 public class JDOQLQuery extends AbstractJDOQLQuery
 {
-
 	private static final Logger logger = Logger.getLogger(JDOQLQuery.class);
 
-	/**
-	 * Constructs a new query instance that uses the given persistence manager.
-	 * 
-	 * @param om
-	 *            the associated ObjectManager for this query.
-	 */
+	private QueryPlan queryPlan;
+
 	public JDOQLQuery(ObjectManager om)
 	{
 		this(om, (JDOQLQuery) null);
 	}
 
-	/**
-	 * Constructs a new query instance having the same criteria as the given
-	 * query.
-	 * 
-	 * @param om
-	 *            The ObjectManager
-	 * @param q
-	 *            The query from which to copy criteria.
-	 */
 	public JDOQLQuery(ObjectManager om, JDOQLQuery q)
 	{
 		super(om, q);
 	}
 
-	/**
-	 * Constructor for a JDOQL query where the query is specified using the
-	 * "Single-String" format.
-	 * 
-	 * @param om
-	 *            The persistence manager
-	 * @param query
-	 *            The query string
-	 */
 	public JDOQLQuery(ObjectManager om, String query)
 	{
 		super(om, query);
 	}
 
-	private void translate(String left, Expression filter)
+	protected boolean isCompiled()
 	{
-		Class expressionClass = filter.getClass();
-		if (expressionClass == DyadicExpression.class)
-		{
-			System.out.println(left + "dyadic expression");
-			Operator operator = filter.getOperator();
-			assert (operator != null);
-			String strOperator = operator.toString().trim();
-			DyadicOperator dyoperator = (DyadicOperator) operator;
-			if (strOperator.equals("OR"))
-			{
-			} else if (strOperator.equals("="))
-			{
+		return super.isCompiled();
+	}
 
-			}
-
-		} else if (expressionClass == PrimaryExpression.class)
+	protected synchronized void compileInternal(boolean forExecute, Map parameterValues)
+	{
+		if (isCompiled())
 		{
-			System.out.println(left + "primary expression");
+			logger.debug("Query is compiled");
+			return;
 		}
 
-		Operator operator = filter.getOperator();
-		if (operator != null)
+		// Compile the generic query expressions
+		super.compileInternal(forExecute, parameterValues);
+
+		ClassLoaderResolver clr = om.getClassLoaderResolver();
+		AbstractClassMetaData acmd = getObjectManager().getMetaDataManager().getMetaDataForClass(
+				candidateClass, clr);
+
+		// Check the query type
+		switch (type)
 		{
-			System.out.println(left + "Operator string: " + filter.getOperator().toString());
-			if (filter.getOperator().toString().trim().equals("OR"))
-			{
-				System.out.println(left + "Operator is OR");
-				translate(left + " ", filter.getLeft());
-				translate(left + " ", filter.getRight());
-			} else if (filter.getOperator().toString().trim().equals("="))
-			{
-				System.out.println(left + "Operator is EQUALS");
-				translate(left + "L ", filter.getLeft());
-				translate(left + "R ", filter.getRight());
-			}
+		case SELECT:
+			logger.debug("Compiling SELECT query");
+
+			// Create a query plan out of the compiled query
+			QueryPlan queryPlan = compileQueryFull(parameterValues, acmd);
+			this.queryPlan = queryPlan;
+
 			return;
-		} else if (filter.getSymbol() != null)
-		{
-			Symbol symb = filter.getSymbol();
-			System.out.println(left + "Symbol: " + symb);
-			return;
-		} else if (filter.getClass() == Literal.class)
-		{
-			Literal l = (Literal) filter;
-			System.out.println(left + l.getLiteral());
-		} else
-		{
-			System.out.println(left + "unknown expression");
-			System.out.println(left + filter);
+
+		case BULK_UPDATE:
+			throw new NucleusException("Bulk updates are not supported");
+
+		case BULK_DELETE:
+			throw new NucleusException("Bulk deletes are not supported");
+
+		default:
+			throw new NucleusException("Unsupported query type");
 		}
+	}
+
+	private QueryPlan compileQueryFull(Map parameters, AbstractClassMetaData candidateCmd)
+	{
+		QueryPlan plan = new QueryPlan();
+
+		QueryToHBaseMapper mapper = new QueryToHBaseMapper(plan, compilation, parameters, candidateCmd,
+				getFetchPlan(), om);
+		mapper.compile();
+
+		return null;
 	}
 
 	protected Object performExecute(Map parameters)
 	{
-		logger.debug("perform execute");
-
-		Expression filter = this.compilation.getExprFilter();
-		translate("", filter);
-
-		// HBaseManagedConnection mconn = (HBaseManagedConnection)
-		// om.getStoreManager().getConnection(om);
-		// try
-		// {
-		// long startTime = System.currentTimeMillis();
-		// if (NucleusLogger.QUERY.isDebugEnabled())
-		// {
-		// NucleusLogger.QUERY.debug(LOCALISER.msg("021046", "JDOQL",
-		// getSingleStringQuery(), null));
-		// }
-		// List candidates = null;
-		// if (candidateCollection != null)
-		// {
-		// candidates = new ArrayList(candidateCollection);
-		// } else if (candidateExtent != null)
-		// {
-		// candidates = new ArrayList();
-		// Iterator iter = candidateExtent.iterator();
-		// while (iter.hasNext())
-		// {
-		// candidates.add(iter.next());
-		// }
-		// } else
-		// {
-		// candidates = HBaseUtils.getObjectsOfCandidateType(om, mconn,
-		// candidateClass, subclasses,
-		// ignoreCache);
-		// }
-		//
-		// // Apply any result restrictions to the results
-
-		// JavaQueryEvaluator resultMapper = new JDOQLEvaluator(this,
-		// candidates, compilation, parameters,
-		// om.getClassLoaderResolver());
-		// Collection results = resultMapper.execute(true, true, true, true,
-		// true);
-		//
-		// if (NucleusLogger.QUERY.isDebugEnabled())
-		// {
-		// NucleusLogger.QUERY.debug(LOCALISER.msg("021074", "JDOQL", ""
-		// + (System.currentTimeMillis() - startTime)));
-		// }
-		//
-		// return results;
-		// } finally
-		// {
-		// mconn.release();
-		// }
-
 		return null;
 	}
 }

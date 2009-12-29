@@ -28,13 +28,8 @@ public class KeyValueGenerator extends AbstractDatastoreGenerator
 	@Override
 	protected ValueGenerationBlock reserveBlock(long size)
 	{
-		List list = new ArrayList();
-
-		// Aquire size from the HBase counter
-
-		// Create the keys
-
 		logger.debug("reserving block: " + size);
+		List list = new ArrayList();
 
 		HBaseManagedConnection connection = (HBaseManagedConnection) connectionProvider.retrieveConnection();
 		HTable table = connection.getHTable(HBaseUtils.COUNTER_TABLE);
