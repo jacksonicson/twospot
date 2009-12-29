@@ -53,23 +53,73 @@ public class FetchExpression extends QueryStep
 		byte[] bAppId = Bytes.toBytes(HBaseUtils.APP_ID);
 		byte[] bKind = Bytes.toBytes(kind);
 
-		byte[] startKey = Bytes.add(bAppId, "/".getBytes(), bKind);
-		startKey = Bytes.add(startKey, "/".getBytes(), bLeft);
-		startKey = Bytes.add(startKey, "/".getBytes(), bRight);
-		startKey = Bytes.add(startKey, "/".getBytes());
-
 		byte[] ones = new byte[1024];
 		for (int i = 0; i < ones.length; i++)
 			ones[i] = (byte) 0xFF;
 
-		byte[] stopKey = Bytes.add(startKey, ones);
-
-		logger.debug("StartKey is: " + new String(startKey));
-		logger.debug("StopKey is:" + new String(stopKey));
-
-		if (type == FetchType.EQUALS)
+		if (type == FetchType.EQUALS || type == FetchType.EQUALS_GREATER || type == FetchType.GREATER)
 		{
-			Scan scan = new Scan(startKey, stopKey);
+
+			Scan scan = null;
+			if (type == FetchType.EQUALS)
+			{
+				// Schema: appId/Kind/property/value/entityKey
+				// Start: gogo/Person/username/Bob/0x00
+				// Stop: gogo/Person/username/Bob/0xFFFF
+				byte[] startKey = Bytes.add(bAppId, "/".getBytes(), bKind);
+				startKey = Bytes.add(startKey, "/".getBytes(), bLeft);
+				startKey = Bytes.add(startKey, "/".getBytes(), bRight);
+				startKey = Bytes.add(startKey, "/".getBytes());
+
+				byte[] stopKey = Bytes.add(startKey, ones);
+
+				scan = new Scan(startKey, stopKey);
+			} else if (type == FetchType.EQUALS_GREATER)
+			{
+				// Schema: appId/Kind/property/value/entityKey
+				// Start: gogo/Person/username/Bob/0x00
+				// Stop: gogo/Person/username/0xFFFF
+				byte[] startKey = Bytes.add(bAppId, "/".getBytes(), bKind);
+				startKey = Bytes.add(startKey, "/".getBytes(), bLeft);
+				startKey = Bytes.add(startKey, "/".getBytes(), bRight);
+
+				byte[] stopKey = Bytes.add(bAppId, "/".getBytes(), bKind);
+				stopKey = Bytes.add(stopKey, "/".getBytes(), bLeft);
+				stopKey = Bytes.add(stopKey, "/".getBytes(), ones);
+
+				scan = new Scan(startKey, stopKey);
+			} else if (type == FetchType.GREATER)
+			{
+				// Schema: appId/Kind/property/value/entityKey
+				// Start: gogo/Person/username/Bob[++]/0x00
+				// Stop: gogo/Person/username/0xFFFF
+
+				boolean match = false;
+				for (int i = bRight.length - 1; i >= 0; i--)
+				{
+					if (bRight[i] == 0xFF)
+						continue;
+					else
+					{
+						bRight[i]++;
+						match = true;
+						break;
+					}
+				}
+				if (!match)
+					bRight = Bytes.add(bRight, new byte[] { 0x00 });
+
+				byte[] startKey = Bytes.add(bAppId, "/".getBytes(), bKind);
+				startKey = Bytes.add(startKey, "/".getBytes(), bLeft);
+				startKey = Bytes.add(startKey, "/".getBytes(), bRight);
+
+				byte[] stopKey = Bytes.add(bAppId, "/".getBytes(), bKind);
+				stopKey = Bytes.add(stopKey, "/".getBytes(), bLeft);
+				stopKey = Bytes.add(stopKey, "/".getBytes(), ones);
+
+				scan = new Scan(startKey, stopKey);
+			}
+
 			try
 			{
 				ResultScanner resultScanner = index.getScanner(scan);
@@ -82,13 +132,14 @@ public class FetchExpression extends QueryStep
 					if (result.getMap() == null)
 						continue;
 
-//					byte[] key = result.getRow();
-//					if (Bytes.compareTo(startKey, 0, startKey.length, key, 0, startKey.length) == 0)
-//					{
-//						logger.debug("Compare");
-//					}
-//					else
-//						continue;
+					// byte[] key = result.getRow();
+					// if (Bytes.compareTo(startKey, 0, startKey.length, key, 0,
+					// startKey.length) == 0)
+					// {
+					// logger.debug("Compare");
+					// }
+					// else
+					// continue;
 
 					byte[] nothing = Bytes.toBytes("key");
 					byte[] entityKey = result.getMap().get(nothing).get(nothing).lastEntry().getValue();
