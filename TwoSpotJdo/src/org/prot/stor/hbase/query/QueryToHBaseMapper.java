@@ -210,7 +210,8 @@ public class QueryToHBaseMapper extends AbstractExpressionEvaluator
 		LiteralParameter right = (LiteralParameter) stack.pop();
 		LiteralParameter left = (LiteralParameter) stack.pop();
 
-		FetchExpression fetch = new FetchExpression(FetchType.EQUALS, left, right);
+		FetchExpression fetch = new FetchExpression(FetchType.EQUALS, compilation.getCandidateClass()
+				.getSimpleName(), left, right);
 		stack.push(fetch);
 
 		return null;
@@ -223,7 +224,8 @@ public class QueryToHBaseMapper extends AbstractExpressionEvaluator
 		LiteralParameter right = (LiteralParameter) stack.pop();
 		LiteralParameter left = (LiteralParameter) stack.pop();
 
-		FetchExpression fetch = new FetchExpression(FetchType.NOT_EQUALS, left, right);
+		FetchExpression fetch = new FetchExpression(FetchType.NOT_EQUALS, compilation.getCandidateClass()
+				.getSimpleName(), left, right);
 		stack.push(fetch);
 
 		return null;
@@ -236,7 +238,8 @@ public class QueryToHBaseMapper extends AbstractExpressionEvaluator
 		LiteralParameter right = (LiteralParameter) stack.pop();
 		LiteralParameter left = (LiteralParameter) stack.pop();
 
-		FetchExpression fetch = new FetchExpression(FetchType.EQUALS_GREATER, left, right);
+		FetchExpression fetch = new FetchExpression(FetchType.EQUALS_GREATER, compilation.getCandidateClass()
+				.getSimpleName(), left, right);
 		stack.push(fetch);
 
 		return null;
@@ -249,7 +252,8 @@ public class QueryToHBaseMapper extends AbstractExpressionEvaluator
 		LiteralParameter right = (LiteralParameter) stack.pop();
 		LiteralParameter left = (LiteralParameter) stack.pop();
 
-		FetchExpression fetch = new FetchExpression(FetchType.GREATER, left, right);
+		FetchExpression fetch = new FetchExpression(FetchType.GREATER, compilation.getCandidateClass()
+				.getSimpleName(), left, right);
 		stack.push(fetch);
 
 		return null;
@@ -262,7 +266,8 @@ public class QueryToHBaseMapper extends AbstractExpressionEvaluator
 		LiteralParameter right = (LiteralParameter) stack.pop();
 		LiteralParameter left = (LiteralParameter) stack.pop();
 
-		FetchExpression fetch = new FetchExpression(FetchType.EQUALS_LOWER, left, right);
+		FetchExpression fetch = new FetchExpression(FetchType.EQUALS_LOWER, compilation.getCandidateClass()
+				.getSimpleName(), left, right);
 		stack.push(fetch);
 
 		return null;
@@ -275,7 +280,8 @@ public class QueryToHBaseMapper extends AbstractExpressionEvaluator
 		LiteralParameter right = (LiteralParameter) stack.pop();
 		LiteralParameter left = (LiteralParameter) stack.pop();
 
-		FetchExpression fetch = new FetchExpression(FetchType.LOWER, left, right);
+		FetchExpression fetch = new FetchExpression(FetchType.LOWER, compilation.getCandidateClass()
+				.getSimpleName(), left, right);
 		stack.push(fetch);
 
 		return null;

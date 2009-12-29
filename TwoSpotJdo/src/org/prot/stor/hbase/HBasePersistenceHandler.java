@@ -20,6 +20,12 @@ package org.prot.stor.hbase;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Get;
@@ -159,7 +165,7 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 			byte[] key = HBaseUtils.getRowKey(acmd, kkey);
 
 			logger.debug("Using key: " + key);
-			
+
 			Put put = new Put(key);
 
 			// Create a serialized version of the class
@@ -176,7 +182,7 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 			table.put(put);
 			table.close();
 
-			// Update the index-table
+			// Update the index-table (EntitiesByKind)
 			// ---------------------------------------------------------
 
 			HTable indexTable = mconn.getHTable(HBaseUtils.INDEX_BY_KIND_TABLE);
@@ -193,14 +199,86 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 
 			byte[] nothing = Bytes.toBytes("key");
 			put = new Put(all);
-			put.add(nothing, nothing, key);
+			put.add(nothing, nothing, bKey);
 			indexTable.put(put);
 			indexTable.close();
-			logger.debug("Done index table is filled");
+			logger.debug("Done entities by kind table updated");
+
+			// Update the index-table (EntitiesByProperties)
+			// ---------------------------------------------------------
+			String[] pks = sm.getClassMetaData().getPrimaryKeyMemberNames();
+			Set<String> spks = new HashSet<String>();
+			for (String s : pks)
+				spks.add(s);
+
+			List<Put> putList = new ArrayList<Put>();
+
+			for (String name : sm.getLoadedFieldNames())
+			{
+				if (spks.contains(name))
+					continue;
+
+				logger.debug("Scanning field: " + name);
+
+				Object oobj = sm.getObject();
+				char[] cName = name.toCharArray();
+				cName[0] = Character.toUpperCase(cName[0]);
+				Method method = oobj.getClass().getMethod("get" + new String(cName), new Class[0]);
+
+				Object value = method.invoke(oobj, new Object[0]);
+				byte[] bValue = null;
+				if (value instanceof Integer)
+					bValue = Bytes.toBytes((Integer) value);
+				else if (value instanceof String)
+					bValue = Bytes.toBytes((String) value);
+				else if (value instanceof Long)
+					bValue = Bytes.toBytes((Long) value);
+				else if (value instanceof Boolean)
+					bValue = Bytes.toBytes((Boolean) value);
+				else if (value instanceof Double)
+					bValue = Bytes.toBytes((Double) value);
+				else
+					continue;
+
+				byte[] propKey = Bytes.add(bAppId, "/".getBytes(), bKind);
+				propKey = Bytes.add(propKey, "/".getBytes(), name.getBytes());
+				propKey = Bytes.add(propKey, "/".getBytes(), bValue);
+				propKey = Bytes.add(propKey, "/".getBytes(), bKey);
+
+				logger.debug("Updating index with key: " + new String(propKey));
+
+				put = new Put(propKey);
+				put.add(nothing, nothing, bKey);
+				putList.add(put);
+			}
+
+			HTable index1 = mconn.getHTable(HBaseUtils.INDEX_BY_PROPERTY_TABLE);
+			index1.put(putList);
+			index1.close();
 
 		} catch (IOException e)
 		{
 			throw new NucleusDataStoreException(e.getMessage(), e);
+		} catch (SecurityException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally
 		{
 			mconn.release();
