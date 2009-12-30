@@ -68,10 +68,10 @@ public class StorageImpl implements Storage
 	}
 
 	@Override
-	public void query(StorageQuery query)
+	public List<Object> query(StorageQuery query)
 	{
 		QueryEngine queryEngine = new QueryEngine(connectionFactory);
-		queryEngine.run(query);
+		return queryEngine.run(query);
 	}
 
 	@Override

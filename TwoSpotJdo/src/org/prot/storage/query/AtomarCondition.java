@@ -41,9 +41,9 @@ public class AtomarCondition implements Serializable
 		return table;
 	}
 
-	private HTable getTableIndexByPropertyDesc(HBaseManagedConnection connection)
+	private HTable getTableIndexByPropertyAsc(HBaseManagedConnection connection)
 	{
-		HTable table = connection.getHTable(StorageUtils.TABLE_INDEX_BY_PROPERTY_DESC);
+		HTable table = connection.getHTable(StorageUtils.TABLE_INDEX_BY_PROPERTY_ASC);
 		return table;
 	}
 
@@ -102,15 +102,16 @@ public class AtomarCondition implements Serializable
 		return null;
 	}
 
-	private Set<byte[]> findIn(HTable indexTable, LimitCondition limit) throws IOException
+	private Set<byte[]> findIn(StorageQuery query, HTable indexTable, LimitCondition limit) throws IOException
 	{
-		byte[] bAppId = Bytes.toBytes("APPID TODO");
-		byte[] bKind = Bytes.toBytes("KIND TODO");
+		byte[] bAppId = Bytes.toBytes(query.getAppId());
+		byte[] bKind = Bytes.toBytes(query.getKind());
 		byte[] bProperty = property.getValue();
 		byte[] bValue = value.getValue();
 
 		// Create the scanner
 		Scan scan = createScanner(bAppId, bKind, bProperty, bValue);
+		logger.debug("Starting at: " + new String(scan.getStartRow()));
 		ResultScanner resultScanner = indexTable.getScanner(scan);
 
 		// Create a new set for the results
@@ -135,6 +136,8 @@ public class AtomarCondition implements Serializable
 	private void materialize(HTable entityTable, Set<byte[]> keys, List<Object> result) throws IOException,
 			ClassNotFoundException
 	{
+		logger.debug("Materializing entities");
+
 		for (byte[] key : keys)
 		{
 			Get get = new Get(key);
@@ -153,17 +156,16 @@ public class AtomarCondition implements Serializable
 		}
 	}
 
-	void run(HBaseManagedConnection connection, List<Object> result, LimitCondition limit)
+	void run(HBaseManagedConnection connection, StorageQuery query, List<Object> result, LimitCondition limit)
 			throws IOException, ClassNotFoundException
 	{
 		logger.debug("Running atomar condition of type: " + type);
-
 		logger.debug("Property is: " + property);
 		logger.debug("Value is: " + new String(value.getValue()));
 
 		// Get the tables
 		HTable tableEntities = getTableEntity(connection);
-		HTable tableIndex = getTableIndexByPropertyDesc(connection);
+		HTable tableIndex = getTableIndexByPropertyAsc(connection);
 
 		// Find the entity keys using the index table
 		Set<byte[]> entityKeys = null;
@@ -172,7 +174,8 @@ public class AtomarCondition implements Serializable
 		case EQUALS:
 		case GREATER:
 		case GREATER_EQUALS:
-			entityKeys = findIn(tableIndex, limit);
+			entityKeys = findIn(query, tableIndex, limit);
+			logger.debug("Found entity keys: " + entityKeys.size());
 
 			// Materialize the results
 			materialize(tableEntities, entityKeys, result);

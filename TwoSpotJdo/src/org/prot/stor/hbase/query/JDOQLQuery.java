@@ -17,6 +17,7 @@ Contributors :
  ***********************************************************************/
 package org.prot.stor.hbase.query;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -25,6 +26,9 @@ import org.datanucleus.ObjectManager;
 import org.datanucleus.exceptions.NucleusException;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.store.query.AbstractJDOQLQuery;
+import org.prot.stor.hbase.HBaseUtils;
+import org.prot.stor.hbase.StorageManagedConnection;
+import org.prot.storage.Storage;
 import org.prot.storage.query.StorageQuery;
 
 /**
@@ -77,9 +81,9 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 		case SELECT:
 			logger.debug("Compiling SELECT query");
 
-			// Create a query plan out of the compiled query
-			// QueryPlan queryPlan = compileQueryFull(parameterValues, acmd);
-			// this.queryPlan = queryPlan;
+			// Create a new storage query
+			StorageQuery storageQuery = compileQueryFull(parameterValues, acmd);
+			this.storageQuery = storageQuery;
 
 			return;
 
@@ -94,39 +98,25 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 		}
 	}
 
-	private StorageQuery compileQueryFull(Map parameters, AbstractClassMetaData candidateCmd)
+	private StorageQuery compileQueryFull(Map parameters, AbstractClassMetaData acmd)
 	{
-		// QueryPlan plan = new QueryPlan();
-		//
-		// QueryToHBaseMapper mapper = new QueryToHBaseMapper(plan, compilation,
-		// parameters, candidateCmd,
-		// getFetchPlan(), om);
-		// mapper.compile();
+		StorageQuery storageQuery = new StorageQuery(HBaseUtils.APP_ID, candidateClass.getSimpleName());
+		QueryToStorageMapper mapper = new QueryToStorageMapper(storageQuery, compilation, parameters, acmd,
+				getFetchPlan(), om);
 
-		return null;
+		mapper.compile();
+
+		return storageQuery;
 	}
 
 	protected Object performExecute(Map parameters)
 	{
-		// for (Object key : parameters.keySet())
-		// {
-		// logger.debug("parameter: " + key + " - " + parameters.get(key));
-		// }
-		//
-		// logger.debug("Perform execute");
-		//
-		// ManagedConnection mconn = om.getStoreManager().getConnection(om);
-		// HBaseManagedConnection hbaseConnection = (HBaseManagedConnection)
-		// mconn;
-		// if (this.queryPlan == null)
-		// {
-		// logger.error("Query plan is null");
-		// return null;
-		// } else
-		// {
-		// return queryPlan.execute(hbaseConnection);
-		// }
+		logger.debug("Executing query");
 
-		return null;
+		StorageManagedConnection connection = (StorageManagedConnection) om.getStoreManager().getConnection(
+				om);
+		Storage storage = connection.getStorage();
+		List<Object> list = storage.query(this.storageQuery);
+		return list;
 	}
 }

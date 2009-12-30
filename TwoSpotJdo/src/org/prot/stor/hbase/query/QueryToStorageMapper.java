@@ -163,6 +163,7 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 		AtomLiteral property = (AtomLiteral) stack.pop();
 
 		AtomarCondition condition = new AtomarCondition(ConditionType.EQUALS, property, value);
+		this.storageQuery.getCondition().addCondition(condition);
 		stack.push(condition);
 
 		return condition;
