@@ -35,7 +35,8 @@ public class HBaseUtils
 	public static final String ENTITY_TABLE = "entities";
 	public static final String COUNTER_TABLE = "counters";
 	public static final String INDEX_BY_KIND_TABLE = "indexKind";
-	public static final String INDEX_BY_PROPERTY_TABLE = "indexProperty";
+	public static final String INDEX_BY_PROPERTY_TABLE_DESC = "indexProperty";
+	public static final String INDEX_BY_PROPERTY_TABLE_ASC = "indexPropertyAsc";
 
 	public static String APP_ID = "null";
 
@@ -81,19 +82,55 @@ public class HBaseUtils
 			checkTableEntities(admin);
 			checkTableCounter(admin);
 			checkTableIndexByKind(admin);
-			checkTableIndexByProperty(admin);
+			checkTableIndexByPropertyDesc(admin);
+			checkTableIndexByPropertyAsc(admin);
 		} catch (Exception e)
 		{
 			logger.error(e);
 		}
 	}
 
-	private static void checkTableIndexByProperty(HBaseAdmin hBaseAdmin) throws Exception
+	private static void checkTableIndexByPropertyAsc(HBaseAdmin hBaseAdmin) throws Exception
 	{
 		logger.debug("Checking index by kind table");
 
 		HTableDescriptor hTable;
-		String tableName = INDEX_BY_PROPERTY_TABLE;
+		String tableName = INDEX_BY_PROPERTY_TABLE_ASC;
+
+		try
+		{
+			// Check if the table exists
+			hTable = hBaseAdmin.getTableDescriptor(tableName.getBytes());
+		} catch (TableNotFoundException ex)
+		{
+			// Table does not exist - so create a new one
+			hTable = new HTableDescriptor(tableName);
+			hBaseAdmin.createTable(hTable);
+		}
+
+		// Check if the table contains the column family (key:key)
+		boolean modified = false;
+		if (!hTable.hasFamily("key".getBytes()))
+		{
+			HColumnDescriptor hColumn = new HColumnDescriptor("key");
+			hTable.addFamily(hColumn);
+			modified = true;
+		}
+
+		if (modified)
+		{
+			hBaseAdmin.disableTable(hTable.getName());
+			hBaseAdmin.modifyTable(hTable.getName(), hTable);
+			hBaseAdmin.enableTable(hTable.getName());
+		}
+	}
+
+	private static void checkTableIndexByPropertyDesc(HBaseAdmin hBaseAdmin) throws Exception
+	{
+		logger.debug("Checking index by kind table");
+
+		HTableDescriptor hTable;
+		String tableName = INDEX_BY_PROPERTY_TABLE_DESC;
 
 		try
 		{

@@ -8,7 +8,7 @@ import org.prot.stor.hbase.HBaseManagedConnection;
 public class IntersectExpression extends QueryStep
 {
 	private static final Logger logger = Logger.getLogger(IntersectExpression.class);
-	
+
 	private FetchExpression batchA;
 	private FetchExpression batchB;
 
@@ -31,9 +31,8 @@ public class IntersectExpression extends QueryStep
 	@Override
 	public void exeucte(HBaseManagedConnection connection, List<Object> candidates)
 	{
-		// TODO Auto-generated method stub
-		
+		// Create a intersect of both results!
+		// Warng: This produces a lot of queries and memory consumtion and may
+		// be blocked!
 	}
-	
-	
 }

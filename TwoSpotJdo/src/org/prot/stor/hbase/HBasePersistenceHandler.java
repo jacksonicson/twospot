@@ -212,6 +212,7 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 				spks.add(s);
 
 			List<Put> putList = new ArrayList<Put>();
+			List<Put> putList2 = new ArrayList<Put>();
 
 			for (String name : sm.getLoadedFieldNames())
 			{
@@ -245,16 +246,38 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 				propKey = Bytes.add(propKey, "/".getBytes(), bValue);
 				propKey = Bytes.add(propKey, "/".getBytes(), bKey);
 
+				// Invert the bValue
+				byte[] bbValue = new byte[bValue.length];
+				for (int i = 0; i < bValue.length; i++)
+				{
+					bbValue[i] = bValue[i];
+					bbValue[i] = (byte) ~bbValue[i];
+				}
+
+				byte[] propKeyAsc = Bytes.add(bAppId, "/".getBytes(), bKind);
+				propKeyAsc = Bytes.add(propKeyAsc, "/".getBytes(), name.getBytes());
+				propKeyAsc = Bytes.add(propKeyAsc, "/".getBytes(), bbValue);
+				propKeyAsc = Bytes.add(propKeyAsc, "/".getBytes(), bKey);
+
 				logger.debug("Updating index with key: " + new String(propKey));
+				logger.debug("Updating index with key: " + new String(propKeyAsc));
 
 				put = new Put(propKey);
 				put.add(nothing, nothing, bKey);
 				putList.add(put);
+
+				Put put2 = new Put(propKeyAsc);
+				put2.add(nothing, nothing, bKey);
+				putList2.add(put2);
 			}
 
-			HTable index1 = mconn.getHTable(HBaseUtils.INDEX_BY_PROPERTY_TABLE);
+			HTable index1 = mconn.getHTable(HBaseUtils.INDEX_BY_PROPERTY_TABLE_DESC);
 			index1.put(putList);
 			index1.close();
+
+			HTable index2 = mconn.getHTable(HBaseUtils.INDEX_BY_PROPERTY_TABLE_ASC);
+			index2.put(putList2);
+			index2.close();
 
 		} catch (IOException e)
 		{
