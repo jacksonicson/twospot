@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.prot.stor.hbase.Key;
 import org.prot.storage.connection.ConnectionFactory;
 import org.prot.storage.connection.SchemaCreator;
+import org.prot.storage.query.QueryEngine;
 import org.prot.storage.query.StorageQuery;
 
 public class StorageImpl implements Storage
@@ -69,13 +70,14 @@ public class StorageImpl implements Storage
 	}
 
 	@Override
-	public void deleteObject(Key key)
+	public void query(StorageQuery query)
 	{
-
+		QueryEngine queryEngine = new QueryEngine(connectionFactory);
+		queryEngine.run(query);
 	}
 
 	@Override
-	public void query(StorageQuery query)
+	public void deleteObject(Key key)
 	{
 
 	}
