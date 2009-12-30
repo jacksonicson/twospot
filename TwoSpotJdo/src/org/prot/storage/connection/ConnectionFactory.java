@@ -1,7 +1,6 @@
 package org.prot.storage.connection;
 
 import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.datanucleus.store.connection.ManagedConnection;
 
 public class ConnectionFactory
 {
@@ -22,8 +21,8 @@ public class ConnectionFactory
 	{
 		return this.hbaseConfig;
 	}
-	
-	public ManagedConnection createManagedConnection()
+
+	public HBaseManagedConnection createManagedConnection()
 	{
 		// Get a connection from the connection pool (if there is one)
 		HBaseManagedConnection managedConnection = connectionPool.getPooledConnection();
