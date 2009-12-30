@@ -2,6 +2,7 @@ package org.prot.storage;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.hadoop.hbase.MasterNotRunningException;
 import org.apache.log4j.Logger;
@@ -37,6 +38,8 @@ public class StorageImpl implements Storage
 	@Override
 	public List<Key> createKey(String appId, String kind, int amount)
 	{
+		logger.debug("Creating keys " + amount);
+
 		KeyCreator keyCreator = new KeyCreator(connectionFactory);
 		try
 		{
@@ -49,9 +52,20 @@ public class StorageImpl implements Storage
 	}
 
 	@Override
-	public void createObject(String appId, String kind, Key key, Object obj)
+	public void createObject(String appId, String kind, Key key, Object obj, Map<String, byte[]> index)
 	{
 		assert (key != null);
+
+		logger.debug("Creating object");
+		ObjectCreator creator = new ObjectCreator(connectionFactory);
+		try
+		{
+			creator.createObject(appId, kind, key, obj, index);
+		} catch (IOException e)
+		{
+			logger.error("", e);
+			// TODO: Throw an exception
+		}
 	}
 
 	@Override
