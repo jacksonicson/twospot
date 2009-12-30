@@ -22,6 +22,7 @@ import javax.transaction.xa.XAResource;
 import org.datanucleus.exceptions.NucleusDataStoreException;
 import org.datanucleus.store.connection.AbstractManagedConnection;
 import org.prot.storage.Storage;
+import org.prot.storage.StorageImpl;
 
 /**
  * Implementation of a ManagedConnection.
@@ -46,6 +47,8 @@ public class StorageManagedConnection extends AbstractManagedConnection
 
 	public StorageManagedConnection()
 	{
+		this.storage = new StorageImpl();
+		
 		disableExpirationTime();
 	}
 

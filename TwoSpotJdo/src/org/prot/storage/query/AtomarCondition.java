@@ -25,10 +25,10 @@ public class AtomarCondition implements Serializable
 
 	private ConditionType type;
 
-	private String property;
-	private byte[] value;
+	private AtomLiteral property;
+	private AtomLiteral value;
 
-	public AtomarCondition(ConditionType type, String property, byte[] value)
+	public AtomarCondition(ConditionType type, AtomLiteral property, AtomLiteral value)
 	{
 		this.type = type;
 		this.property = property;
@@ -106,10 +106,11 @@ public class AtomarCondition implements Serializable
 	{
 		byte[] bAppId = Bytes.toBytes("APPID TODO");
 		byte[] bKind = Bytes.toBytes("KIND TODO");
-		byte[] bProperty = Bytes.toBytes(property);
+		byte[] bProperty = property.getValue();
+		byte[] bValue = value.getValue();
 
 		// Create the scanner
-		Scan scan = createScanner(bAppId, bKind, bProperty, value);
+		Scan scan = createScanner(bAppId, bKind, bProperty, bValue);
 		ResultScanner resultScanner = indexTable.getScanner(scan);
 
 		// Create a new set for the results
@@ -158,7 +159,7 @@ public class AtomarCondition implements Serializable
 		logger.debug("Running atomar condition of type: " + type);
 
 		logger.debug("Property is: " + property);
-		logger.debug("Value is: " + new String(value));
+		logger.debug("Value is: " + new String(value.getValue()));
 
 		// Get the tables
 		HTable tableEntities = getTableEntity(connection);

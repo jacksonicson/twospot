@@ -28,7 +28,7 @@ public class StorageQuery implements Serializable
 
 	private String kind;
 
-	private SelectCondition condition;
+	private SelectCondition condition = new SelectCondition();
 
 	private LimitCondition limit;
 
@@ -43,11 +43,11 @@ public class StorageQuery implements Serializable
 		this.kind = kind;
 	}
 
-	public void setCondition(SelectCondition condition)
+	public SelectCondition getCondition()
 	{
-		this.condition = condition;
+		return this.condition;
 	}
-
+	
 	List<Object> run(HBaseManagedConnection connection) throws IOException, ClassNotFoundException
 	{
 		List<Object> result = new ArrayList<Object>();
@@ -67,5 +67,20 @@ public class StorageQuery implements Serializable
 	private Object fetchObject(Key key)
 	{
 		return null;
+	}
+
+	public void setKey(Key key)
+	{
+		this.key = key;
+	}
+
+	public void setKind(String kind)
+	{
+		this.kind = kind;
+	}
+
+	public void setLimit(LimitCondition limit)
+	{
+		this.limit = limit;
 	}
 }

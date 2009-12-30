@@ -32,9 +32,8 @@ public class ConnectionFactoryImpl extends AbstractConnectionFactory
 	}
 
 	@Override
-	public ManagedConnection createManagedConnection(ObjectManager arg0, Map arg1)
+	public ManagedConnection createManagedConnection(ObjectManager om, Map options)
 	{
-
-		return null;
+		return new StorageManagedConnection();
 	}
 }
