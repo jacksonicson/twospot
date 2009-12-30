@@ -18,6 +18,11 @@ public class ConnectionFactory
 		hbaseConfig = new HBaseConfiguration();
 	}
 
+	public HBaseConfiguration getHBaseConfiguration()
+	{
+		return this.hbaseConfig;
+	}
+	
 	public ManagedConnection createManagedConnection()
 	{
 		// Get a connection from the connection pool (if there is one)
