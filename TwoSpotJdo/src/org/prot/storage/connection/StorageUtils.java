@@ -21,6 +21,7 @@ public class StorageUtils
 	public static final byte[] bKey = Bytes.toBytes("key");
 	public static final byte[] bEntity = Bytes.toBytes("entity");
 	public static final byte[] bSerialized = Bytes.toBytes("serialized");
+	public static final byte[] bCounter = Bytes.toBytes("counter"); 
 
 	public static byte[] incrementByteArray(byte[] input)
 	{

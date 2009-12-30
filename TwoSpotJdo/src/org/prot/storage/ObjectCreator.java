@@ -34,10 +34,14 @@ public class ObjectCreator
 		try
 		{
 			// Write the entity
+			logger.debug("Writing entity");
 			byte[] rowKey = writeEntity(entitiesTable, appId, kind, key, obj);
 
 			// Update the index tables
+			logger.debug("Updating index by kind"); 
 			writeIndexByKind(indexByKindTable, rowKey, appId, kind);
+			
+			logger.debug("Updating index by property");
 			writeIndexByPropertyAsc(indexByPropertyAsc, rowKey, appId, kind, index);
 
 		} catch (IOException e)
@@ -90,6 +94,8 @@ public class ObjectCreator
 		List<Put> putList = new ArrayList<Put>();
 		for (String propertyName : index.keySet())
 		{
+			logger.debug("Adding property " + propertyName);
+			
 			byte[] bPropertyName = Bytes.toBytes(propertyName);
 
 			byte[] propKey = Bytes.add(bAppId, StorageUtils.bSlash, bKind);

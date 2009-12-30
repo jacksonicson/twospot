@@ -56,7 +56,7 @@ public class StorageImpl implements Storage
 	{
 		assert (key != null);
 
-		logger.debug("Creating object");
+		logger.debug("Creating object of kind: " + kind);
 		ObjectCreator creator = new ObjectCreator(connectionFactory);
 		try
 		{
@@ -64,7 +64,6 @@ public class StorageImpl implements Storage
 		} catch (IOException e)
 		{
 			logger.error("", e);
-			// TODO: Throw an exception
 		}
 	}
 

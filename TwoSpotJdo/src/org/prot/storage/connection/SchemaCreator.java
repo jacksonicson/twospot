@@ -40,7 +40,7 @@ public class SchemaCreator
 		logger.debug("Checking for table: " + StorageUtils.TABLE_SEQUENCES);
 
 		String tableName = StorageUtils.TABLE_SEQUENCES;
-		String[] families = { "counter" };
+		byte[][] families = { StorageUtils.bCounter };
 
 		checkTable(tableName, families);
 	}
@@ -50,7 +50,7 @@ public class SchemaCreator
 		logger.debug("Checking for table: " + StorageUtils.TABLE_ENTITIES);
 
 		String tableName = StorageUtils.TABLE_ENTITIES;
-		String[] families = { "serialized" };
+		byte[][] families = { StorageUtils.bEntity };
 
 		checkTable(tableName, families);
 	}
@@ -60,7 +60,7 @@ public class SchemaCreator
 		logger.debug("Checking for table: " + StorageUtils.TABLE_INDEX_BY_KIND);
 
 		String tableName = StorageUtils.TABLE_INDEX_BY_KIND;
-		String[] families = { "key" };
+		byte[][] families = { StorageUtils.bKey };
 
 		checkTable(tableName, families);
 	}
@@ -70,7 +70,7 @@ public class SchemaCreator
 		logger.debug("Checking for table: " + StorageUtils.TABLE_INDEX_BY_PROPERTY_DESC);
 
 		String tableName = StorageUtils.TABLE_INDEX_BY_PROPERTY_DESC;
-		String[] families = { "key" };
+		byte[][] families = { StorageUtils.bKey };
 
 		checkTable(tableName, families);
 	}
@@ -80,7 +80,7 @@ public class SchemaCreator
 		logger.debug("Checking for table: " + StorageUtils.TABLE_INDEX_BY_PROPERTY_ASC);
 
 		String tableName = StorageUtils.TABLE_INDEX_BY_PROPERTY_ASC;
-		String[] families = { "key" };
+		byte[][] families = { StorageUtils.bKey };
 
 		checkTable(tableName, families);
 	}
@@ -90,12 +90,12 @@ public class SchemaCreator
 		logger.debug("Checking for table: " + StorageUtils.TABLE_INDEX_CUSTOM);
 
 		String tableName = StorageUtils.TABLE_INDEX_CUSTOM;
-		String[] families = { "key" };
+		byte[][] families = { StorageUtils.bKey };
 
 		checkTable(tableName, families);
 	}
 
-	private void checkTable(String tableName, String[] families) throws IOException
+	private void checkTable(String tableName, byte[][] families) throws IOException
 	{
 		// Check and create the table if necessary
 		HTableDescriptor hTable;
@@ -110,13 +110,13 @@ public class SchemaCreator
 
 		// Create table families
 		boolean tableModified = false;
-		for (String reqFamily : families)
+		for (byte[] reqFamily : families)
 		{
-			if (!hTable.hasFamily(reqFamily.getBytes()))
+			if (!hTable.hasFamily(reqFamily))
 			{
 				tableModified = true;
 
-				HColumnDescriptor hColumn = new HColumnDescriptor(reqFamily.getBytes());
+				HColumnDescriptor hColumn = new HColumnDescriptor(reqFamily);
 				hTable.addFamily(hColumn);
 			}
 		}

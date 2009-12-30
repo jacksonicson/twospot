@@ -178,7 +178,7 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 			storage.createObject(appId, kind, key, obj, index);
 		} finally
 		{
-			mconn.release();
+//			mconn.release();
 		}
 	}
 
