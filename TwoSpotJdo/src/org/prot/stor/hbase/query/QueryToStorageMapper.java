@@ -139,7 +139,7 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 			bValue = Bytes.toBytes((Boolean) value);
 
 		else if (value instanceof Character)
-			bValue = Bytes.toBytes((Character) value);
+			bValue = Bytes.toBytes(((Character) value).toString());
 
 		else
 		{
