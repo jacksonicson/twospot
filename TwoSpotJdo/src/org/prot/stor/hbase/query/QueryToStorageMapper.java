@@ -73,12 +73,32 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 	{
 		if (compilation.getExprFrom() != null)
 		{
-			logger.debug("TODO");
+			throw new NucleusException("FROM expressions are not supported");
 		}
 
 		if (compilation.getExprResult() != null)
 		{
-			logger.debug("TODO");
+			throw new NucleusException("RESULT expressions are not supported");
+		}
+
+		if (compilation.getExprOrdering() != null)
+		{
+			throw new NucleusException("ORDERING expressions are not supported");
+		}
+
+		if (compilation.getExprHaving() != null)
+		{
+			throw new NucleusException("HAVING expressions are not supported");
+		}
+
+		if (compilation.getExprGrouping() != null)
+		{
+			throw new NucleusException("GROUPING expressions are not supported");
+		}
+
+		if (compilation.getExprUpdate() != null)
+		{
+			throw new NucleusException("UPDATE expressions are not supported");
 		}
 
 		// Get the filter expression
@@ -98,6 +118,12 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 		{
 			storageQuery.setKind(compilation.getCandidateClass().getSimpleName());
 		}
+
+		// Unique queries
+		if (compilation.returnsSingleRow())
+		{
+			storageQuery.getLimit().setUnique(true);
+		}
 	}
 
 	protected Object processAndExpression(Expression expr)
@@ -108,8 +134,44 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 
 	protected Object processParameterExpression(ParameterExpression expr)
 	{
-		// TODO
-		return null;
+		Object paramValue = null;
+		if (parameters != null && parameters.containsKey(expr.getId()))
+			paramValue = parameters.get(expr.getId());
+
+		if (paramValue == null)
+			throw new NucleusException("Undeclared parameter: " + expr.getId());
+
+		Object value = paramValue;
+		byte[] bValue = null;
+
+		if (value instanceof String)
+			bValue = Bytes.toBytes((String) value);
+
+		else if (value instanceof Double)
+			bValue = Bytes.toBytes((Double) value);
+
+		else if (value instanceof Long)
+			bValue = Bytes.toBytes((Long) value);
+
+		else if (value instanceof Integer)
+			bValue = Bytes.toBytes((Integer) value);
+
+		else if (value instanceof Boolean)
+			bValue = Bytes.toBytes((Boolean) value);
+
+		else if (value instanceof Character)
+			bValue = Bytes.toBytes(((Character) value).toString());
+
+		else
+		{
+			logger.error("Unsupported paramter value type: " + value.getClass());
+			return null;
+		}
+
+		AtomLiteral literal = new AtomLiteral(bValue);
+		stack.push(literal);
+
+		return literal;
 	}
 
 	protected Object processVariableExpression(VariableExpression expr)

@@ -27,8 +27,8 @@ public class StorageQuery implements Serializable
 
 	private SelectCondition condition = new SelectCondition();
 
-	private LimitCondition limit;
-
+	private LimitCondition limit = new LimitCondition();
+	
 	public StorageQuery(String appId, String kind)
 	{
 		this(appId, kind, null);
@@ -67,6 +67,11 @@ public class StorageQuery implements Serializable
 		return result;
 	}
 
+	public LimitCondition getLimit()
+	{
+		return this.limit;
+	}
+	
 	private Object fetchObject(Key key)
 	{
 		return null;
@@ -80,11 +85,6 @@ public class StorageQuery implements Serializable
 	public void setKind(String kind)
 	{
 		this.kind = kind;
-	}
-
-	public void setLimit(LimitCondition limit)
-	{
-		this.limit = limit;
 	}
 
 	public Key getKey()

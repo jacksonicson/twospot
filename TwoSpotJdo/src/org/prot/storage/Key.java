@@ -2,6 +2,8 @@ package org.prot.storage;
 
 import java.io.Serializable;
 
+import org.apache.hadoop.hbase.util.Base64;
+
 public class Key implements Serializable
 {
 	private static final long serialVersionUID = -1077956197302875365L;
@@ -10,7 +12,7 @@ public class Key implements Serializable
 
 	public Key()
 	{
-
+		// Empty constructor is required
 	}
 
 	public byte[] getKey()
@@ -25,11 +27,15 @@ public class Key implements Serializable
 
 	public boolean equals(Object obj)
 	{
+		// Check if its this object
 		if (obj == this)
 			return true;
+
+		// Check if its the correct instance
 		if (!(obj instanceof Key))
 			return false;
 
+		// Compare the byte array
 		Key key = (Key) obj;
 		return key.equals(key.getKey());
 	}
@@ -47,6 +53,7 @@ public class Key implements Serializable
 		if (key == null)
 			return "";
 
-		return new String(key);
+		// Do a base64 encoding
+		return Base64.encodeBytes(key);
 	}
 }

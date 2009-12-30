@@ -149,12 +149,15 @@ public class AtomarCondition implements Serializable
 		Set<byte[]> entityKeys = new HashSet<byte[]>();
 
 		// Scan the table
-		for (Iterator<Result> it = resultScanner.iterator(); it.hasNext();)
+		for (Iterator<Result> it = resultScanner.iterator(); it.hasNext() && limit.isInRange();)
 		{
 			Result result = it.next();
 			if (result.getMap() == null)
 				continue;
 
+			// Increment the limit counter
+			limit.increment();
+			
 			// Extract the entity key
 			byte[] entityKey = result.getMap().get(StorageUtils.bKey).get(StorageUtils.bKey).lastEntry()
 					.getValue();
@@ -212,6 +215,7 @@ public class AtomarCondition implements Serializable
 
 			// Materialize the results
 			materialize(tableEntities, entityKeys, result);
+			break;
 
 		default:
 			logger.warn("Unsupported condition operator");
