@@ -176,8 +176,7 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 
 	protected Object processVariableExpression(VariableExpression expr)
 	{
-		// TODO
-		return null;
+		throw new NucleusException("Variables are not supported");
 	}
 
 	protected Object processLiteral(Literal expr)
