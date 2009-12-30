@@ -1,5 +1,6 @@
 package org.prot.storage.query;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +19,9 @@ public class SelectCondition implements Serializable
 	}
 
 	void run(HBaseManagedConnection connection, List<Object> result, LimitCondition limit)
+			throws IOException, ClassNotFoundException
 	{
 		for (AtomarCondition atom : atoms)
-		{
 			atom.run(connection, result, limit);
-		}
 	}
 }

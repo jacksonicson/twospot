@@ -1,5 +1,6 @@
 package org.prot.storage.query;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class StorageQuery implements Serializable
 		this.condition = condition;
 	}
 
-	List<Object> run(HBaseManagedConnection connection)
+	List<Object> run(HBaseManagedConnection connection) throws IOException, ClassNotFoundException
 	{
 		List<Object> result = new ArrayList<Object>();
 
@@ -59,7 +60,7 @@ public class StorageQuery implements Serializable
 
 		if (condition != null)
 			condition.run(connection, result, limit);
-		
+
 		return result;
 	}
 
