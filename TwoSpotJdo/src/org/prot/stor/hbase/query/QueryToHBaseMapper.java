@@ -1,16 +1,13 @@
 package org.prot.stor.hbase.query;
 
 import java.util.Map;
-import java.util.Stack;
 
-import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.FetchPlan;
 import org.datanucleus.ObjectManager;
 import org.datanucleus.exceptions.NucleusException;
 import org.datanucleus.metadata.AbstractClassMetaData;
-import org.datanucleus.query.QueryUtils;
 import org.datanucleus.query.compiler.CompilationComponent;
 import org.datanucleus.query.compiler.QueryCompilation;
 import org.datanucleus.query.evaluator.AbstractExpressionEvaluator;
@@ -26,20 +23,13 @@ import org.datanucleus.query.expression.VariableExpression;
 import org.datanucleus.query.symbol.Symbol;
 import org.datanucleus.store.mapped.StatementClassMapping;
 import org.datanucleus.store.mapped.StatementResultMapping;
-import org.prot.stor.hbase.query.plan.FetchExpression;
-import org.prot.stor.hbase.query.plan.FetchType;
-import org.prot.stor.hbase.query.plan.IntersectExpression;
-import org.prot.stor.hbase.query.plan.KeyParameter;
-import org.prot.stor.hbase.query.plan.KindExpression;
-import org.prot.stor.hbase.query.plan.LiteralParameter;
-import org.prot.stor.hbase.query.plan.QueryPlan;
-import org.prot.stor.hbase.query.plan.QueryStep;
+import org.prot.storage.query.StorageQuery;
 
 public class QueryToHBaseMapper extends AbstractExpressionEvaluator
 {
 	private static final Logger logger = Logger.getLogger(QueryToHBaseMapper.class);
 
-	private QueryPlan queryPlan;
+	private StorageQuery storageQuery;
 
 	private CompilationComponent compilationComponent;
 
@@ -65,12 +55,12 @@ public class QueryToHBaseMapper extends AbstractExpressionEvaluator
 
 	private boolean caseSensitive = true;
 
-	Stack<QueryStep> stack = new Stack<QueryStep>();
+//	Stack<QueryStep> stack = new Stack<QueryStep>();
 
-	public QueryToHBaseMapper(QueryPlan queryPlan, QueryCompilation compilation, Map parameters,
+	public QueryToHBaseMapper(StorageQuery query, QueryCompilation compilation, Map parameters,
 			AbstractClassMetaData cmd, FetchPlan fetchPlan, ObjectManager om)
 	{
-		this.queryPlan = queryPlan;
+//		this.queryPlan = queryPlan;
 
 		this.parameters = parameters;
 		this.fetchPlan = fetchPlan;
@@ -89,53 +79,55 @@ public class QueryToHBaseMapper extends AbstractExpressionEvaluator
 
 	public void compile()
 	{
-		if (compilation.getExprFrom() != null)
-		{
-			logger.debug("Expression from is not null");
-		}
-
-		if (compilation.getExprResult() == null)
-		{
-			logger.debug("Expression result is null");
-		}
-
-		// Get the filter expression
-		if (compilation.getExprFilter() != null)
-		{
-			// Update compilation comopnent
-			compilationComponent = CompilationComponent.FILTER;
-
-			// Check if there is an OR operator in the expression (unsupported)
-			if (QueryUtils.expressionHasOrOperator(compilation.getExprFilter()))
-				throw new NucleusException("OR filterin is unsupported");
-
-			// Evaluate the expression (calls process methods in this class)
-			compilation.getExprFilter().evaluate(this);
-
-			// Build the query plan with the remaining stack content
-			while (!stack.isEmpty())
-			{
-				QueryStep step = stack.pop();
-				queryPlan.appendStep(step);
-			}
-		} else
-		{
-			KindExpression kind = new KindExpression(compilation.getCandidateClass().getSimpleName());
-			queryPlan.appendStep(kind);
-		}
+//		if (compilation.getExprFrom() != null)
+//		{
+//			logger.debug("Expression from is not null");
+//		}
+//
+//		if (compilation.getExprResult() == null)
+//		{
+//			logger.debug("Expression result is null");
+//		}
+//
+//		// Get the filter expression
+//		if (compilation.getExprFilter() != null)
+//		{
+//			// Update compilation comopnent
+//			compilationComponent = CompilationComponent.FILTER;
+//
+//			// Check if there is an OR operator in the expression (unsupported)
+//			if (QueryUtils.expressionHasOrOperator(compilation.getExprFilter()))
+//				throw new NucleusException("OR filterin is unsupported");
+//
+//			// Evaluate the expression (calls process methods in this class)
+//			compilation.getExprFilter().evaluate(this);
+//
+//			// Build the query plan with the remaining stack content
+//			while (!stack.isEmpty())
+//			{
+//				QueryStep step = stack.pop();
+//				queryPlan.appendStep(step);
+//			}
+//		} else
+//		{
+//			KindExpression kind = new KindExpression(compilation.getCandidateClass().getSimpleName());
+//			queryPlan.appendStep(kind);
+//		}
 	}
 
 	protected Object processAndExpression(Expression expr)
 	{
-		logger.debug("Processing AND expression");
-
-		FetchExpression right = (FetchExpression) stack.pop();
-		FetchExpression left = (FetchExpression) stack.pop();
-
-		IntersectExpression intersection = new IntersectExpression(left, right);
-		stack.push(intersection);
-
-		return intersection;
+//		logger.debug("Processing AND expression");
+//
+//		FetchExpression right = (FetchExpression) stack.pop();
+//		FetchExpression left = (FetchExpression) stack.pop();
+//
+//		IntersectExpression intersection = new IntersectExpression(left, right);
+//		stack.push(intersection);
+//
+//		return intersection;
+		
+		return null;
 	}
 
 	protected Object processParameterExpression(ParameterExpression expr)
@@ -161,128 +153,138 @@ public class QueryToHBaseMapper extends AbstractExpressionEvaluator
 
 	protected Object processLiteral(Literal expr)
 	{
-		logger.debug("Processing LITERAL");
-
-		Object value = expr.getLiteral();
-		byte[] bValue = new byte[0];
-		if (value instanceof String)
-			bValue = Bytes.toBytes((String) value);
-		else if (value instanceof Long)
-			bValue = Bytes.toBytes((Long) value);
-		else if (value instanceof Integer)
-			bValue = Bytes.toBytes((Integer) value);
-		else if (value instanceof Boolean)
-			bValue = Bytes.toBytes((Boolean) value);
-		else
-		{
-			logger.warn("Unsupported literal type: " + value.getClass());
-			bValue = Bytes.toBytes(value.toString());
-		}
-
-		LiteralParameter propertyParameter = new LiteralParameter(bValue);
-		stack.push(propertyParameter);
-
-		return propertyParameter;
+		// logger.debug("Processing LITERAL");
+		//
+		// Object value = expr.getLiteral();
+		// byte[] bValue = new byte[0];
+		// if (value instanceof String)
+		// bValue = Bytes.toBytes((String) value);
+		// else if (value instanceof Long)
+		// bValue = Bytes.toBytes((Long) value);
+		// else if (value instanceof Integer)
+		// bValue = Bytes.toBytes((Integer) value);
+		// else if (value instanceof Boolean)
+		// bValue = Bytes.toBytes((Boolean) value);
+		// else
+		// {
+		// logger.warn("Unsupported literal type: " + value.getClass());
+		// bValue = Bytes.toBytes(value.toString());
+		// }
+		//
+		// LiteralParameter propertyParameter = new LiteralParameter(bValue);
+		// stack.push(propertyParameter);
+		//
+		// return propertyParameter;
+		return null;
 	}
 
 	protected Object processPrimaryExpression(PrimaryExpression expr)
 	{
-		logger.debug("Processing PRIMARY expression");
+		// logger.debug("Processing PRIMARY expression");
+		//
+		// if (expr.getLeft() != null)
+		// {
+		// throw new
+		// NucleusException("Primary expression cannot have a left part");
+		// }
+		//
+		// String id = expr.getId();
+		// byte[] bKey = Bytes.toBytes(id);
+		//
+		// KeyParameter keyParameter = new KeyParameter(bKey);
+		// stack.push(keyParameter);
+		//
+		// return keyParameter;
 
-		if (expr.getLeft() != null)
-		{
-			throw new NucleusException("Primary expression cannot have a left part");
-		}
-
-		String id = expr.getId();
-		byte[] bKey = Bytes.toBytes(id);
-
-		KeyParameter keyParameter = new KeyParameter(bKey);
-		stack.push(keyParameter);
-
-		return keyParameter;
+		return null;
 	}
 
 	protected Object processEqExpression(Expression expr)
 	{
-		logger.debug("Processing EQUALS expression");
-
-		LiteralParameter right = (LiteralParameter) stack.pop();
-		LiteralParameter left = (LiteralParameter) stack.pop();
-
-		FetchExpression fetch = new FetchExpression(FetchType.EQUALS, compilation.getCandidateClass()
-				.getSimpleName(), left, right);
-		stack.push(fetch);
+		// logger.debug("Processing EQUALS expression");
+		//
+		// LiteralParameter right = (LiteralParameter) stack.pop();
+		// LiteralParameter left = (LiteralParameter) stack.pop();
+		//
+		// FetchExpression fetch = new FetchExpression(FetchType.EQUALS,
+		// compilation.getCandidateClass()
+		// .getSimpleName(), left, right);
+		// stack.push(fetch);
 
 		return null;
 	}
 
 	protected Object processNoteqExpression(Expression expr)
 	{
-		logger.debug("Processing NOT EQUALS expression");
-
-		LiteralParameter right = (LiteralParameter) stack.pop();
-		LiteralParameter left = (LiteralParameter) stack.pop();
-
-		FetchExpression fetch = new FetchExpression(FetchType.NOT_EQUALS, compilation.getCandidateClass()
-				.getSimpleName(), left, right);
-		stack.push(fetch);
+		// logger.debug("Processing NOT EQUALS expression");
+		//
+		// LiteralParameter right = (LiteralParameter) stack.pop();
+		// LiteralParameter left = (LiteralParameter) stack.pop();
+		//
+		// FetchExpression fetch = new FetchExpression(FetchType.NOT_EQUALS,
+		// compilation.getCandidateClass()
+		// .getSimpleName(), left, right);
+		// stack.push(fetch);
 
 		return null;
 	}
 
 	protected Object processGteqExpression(Expression expr)
 	{
-		logger.debug("Prcoessing GREATER EQUALS expression");
-
-		LiteralParameter right = (LiteralParameter) stack.pop();
-		LiteralParameter left = (LiteralParameter) stack.pop();
-
-		FetchExpression fetch = new FetchExpression(FetchType.EQUALS_GREATER, compilation.getCandidateClass()
-				.getSimpleName(), left, right);
-		stack.push(fetch);
+		// logger.debug("Prcoessing GREATER EQUALS expression");
+		//
+		// LiteralParameter right = (LiteralParameter) stack.pop();
+		// LiteralParameter left = (LiteralParameter) stack.pop();
+		//
+		// FetchExpression fetch = new FetchExpression(FetchType.EQUALS_GREATER,
+		// compilation.getCandidateClass()
+		// .getSimpleName(), left, right);
+		// stack.push(fetch);
 
 		return null;
 	}
 
 	protected Object processGtExpression(Expression expr)
 	{
-		logger.debug("Processsing GREATER expression");
-
-		LiteralParameter right = (LiteralParameter) stack.pop();
-		LiteralParameter left = (LiteralParameter) stack.pop();
-
-		FetchExpression fetch = new FetchExpression(FetchType.GREATER, compilation.getCandidateClass()
-				.getSimpleName(), left, right);
-		stack.push(fetch);
+		// logger.debug("Processsing GREATER expression");
+		//
+		// LiteralParameter right = (LiteralParameter) stack.pop();
+		// LiteralParameter left = (LiteralParameter) stack.pop();
+		//
+		// FetchExpression fetch = new FetchExpression(FetchType.GREATER,
+		// compilation.getCandidateClass()
+		// .getSimpleName(), left, right);
+		// stack.push(fetch);
 
 		return null;
 	}
 
 	protected Object processLteqExpression(Expression expr)
 	{
-		logger.debug("Processing LOWER EQUALS expression");
-
-		LiteralParameter right = (LiteralParameter) stack.pop();
-		LiteralParameter left = (LiteralParameter) stack.pop();
-
-		FetchExpression fetch = new FetchExpression(FetchType.EQUALS_LOWER, compilation.getCandidateClass()
-				.getSimpleName(), left, right);
-		stack.push(fetch);
+		// logger.debug("Processing LOWER EQUALS expression");
+		//
+		// LiteralParameter right = (LiteralParameter) stack.pop();
+		// LiteralParameter left = (LiteralParameter) stack.pop();
+		//
+		// FetchExpression fetch = new FetchExpression(FetchType.EQUALS_LOWER,
+		// compilation.getCandidateClass()
+		// .getSimpleName(), left, right);
+		// stack.push(fetch);
 
 		return null;
 	}
 
 	protected Object processLtExpression(Expression expr)
 	{
-		logger.debug("Processing LOWER expression");
-
-		LiteralParameter right = (LiteralParameter) stack.pop();
-		LiteralParameter left = (LiteralParameter) stack.pop();
-
-		FetchExpression fetch = new FetchExpression(FetchType.LOWER, compilation.getCandidateClass()
-				.getSimpleName(), left, right);
-		stack.push(fetch);
+		// logger.debug("Processing LOWER expression");
+		//
+		// LiteralParameter right = (LiteralParameter) stack.pop();
+		// LiteralParameter left = (LiteralParameter) stack.pop();
+		//
+		// FetchExpression fetch = new FetchExpression(FetchType.LOWER,
+		// compilation.getCandidateClass()
+		// .getSimpleName(), left, right);
+		// stack.push(fetch);
 
 		return null;
 	}

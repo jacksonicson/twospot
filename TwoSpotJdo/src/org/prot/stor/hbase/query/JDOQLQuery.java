@@ -24,10 +24,8 @@ import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.ObjectManager;
 import org.datanucleus.exceptions.NucleusException;
 import org.datanucleus.metadata.AbstractClassMetaData;
-import org.datanucleus.store.connection.ManagedConnection;
 import org.datanucleus.store.query.AbstractJDOQLQuery;
-import org.prot.stor.hbase.HBaseManagedConnection;
-import org.prot.stor.hbase.query.plan.QueryPlan;
+import org.prot.storage.query.StorageQuery;
 
 /**
  * Implementation of JDOQL for HBase datastores.
@@ -36,7 +34,7 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 {
 	private static final Logger logger = Logger.getLogger(JDOQLQuery.class);
 
-	private QueryPlan queryPlan;
+	private StorageQuery storageQuery;
 
 	public JDOQLQuery(ObjectManager om)
 	{
@@ -80,8 +78,8 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 			logger.debug("Compiling SELECT query");
 
 			// Create a query plan out of the compiled query
-			QueryPlan queryPlan = compileQueryFull(parameterValues, acmd);
-			this.queryPlan = queryPlan;
+			// QueryPlan queryPlan = compileQueryFull(parameterValues, acmd);
+			// this.queryPlan = queryPlan;
 
 			return;
 
@@ -96,35 +94,39 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 		}
 	}
 
-	private QueryPlan compileQueryFull(Map parameters, AbstractClassMetaData candidateCmd)
+	private StorageQuery compileQueryFull(Map parameters, AbstractClassMetaData candidateCmd)
 	{
-		QueryPlan plan = new QueryPlan();
+		// QueryPlan plan = new QueryPlan();
+		//
+		// QueryToHBaseMapper mapper = new QueryToHBaseMapper(plan, compilation,
+		// parameters, candidateCmd,
+		// getFetchPlan(), om);
+		// mapper.compile();
 
-		QueryToHBaseMapper mapper = new QueryToHBaseMapper(plan, compilation, parameters, candidateCmd,
-				getFetchPlan(), om);
-		mapper.compile();
-
-		return plan;
+		return null;
 	}
 
 	protected Object performExecute(Map parameters)
 	{
-		for (Object key : parameters.keySet())
-		{
-			logger.debug("parameter: " + key + " - " + parameters.get(key));
-		}
+		// for (Object key : parameters.keySet())
+		// {
+		// logger.debug("parameter: " + key + " - " + parameters.get(key));
+		// }
+		//
+		// logger.debug("Perform execute");
+		//
+		// ManagedConnection mconn = om.getStoreManager().getConnection(om);
+		// HBaseManagedConnection hbaseConnection = (HBaseManagedConnection)
+		// mconn;
+		// if (this.queryPlan == null)
+		// {
+		// logger.error("Query plan is null");
+		// return null;
+		// } else
+		// {
+		// return queryPlan.execute(hbaseConnection);
+		// }
 
-		logger.debug("Perform execute");
-
-		ManagedConnection mconn = om.getStoreManager().getConnection(om);
-		HBaseManagedConnection hbaseConnection = (HBaseManagedConnection) mconn;
-		if (this.queryPlan == null)
-		{
-			logger.error("Query plan is null");
-			return null;
-		} else
-		{
-			return queryPlan.execute(hbaseConnection);
-		}
+		return null;
 	}
 }
