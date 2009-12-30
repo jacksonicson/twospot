@@ -11,7 +11,6 @@ import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
-import org.prot.stor.hbase.Key;
 import org.prot.storage.connection.ConnectionFactory;
 import org.prot.storage.connection.HBaseManagedConnection;
 import org.prot.storage.connection.StorageUtils;
@@ -38,7 +37,7 @@ public class KeyCreator
 		table.put(put);
 	}
 
-	public List<Key> fetchKey(String appId, int amount) throws IOException
+	public List<Key> fetchKey(String appId, long amount) throws IOException
 	{
 		HTable table = getSequenceTable();
 

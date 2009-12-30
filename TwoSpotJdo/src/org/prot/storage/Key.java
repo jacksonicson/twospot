@@ -1,4 +1,4 @@
-package org.prot.stor.hbase;
+package org.prot.storage;
 
 import java.io.Serializable;
 

@@ -2,7 +2,7 @@ package org.prot.storage.query;
 
 import java.io.Serializable;
 
-import org.prot.stor.hbase.Key;
+import org.prot.storage.Key;
 
 public class LimitCondition implements Serializable
 {

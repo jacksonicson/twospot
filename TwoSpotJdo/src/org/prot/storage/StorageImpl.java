@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.apache.hadoop.hbase.MasterNotRunningException;
 import org.apache.log4j.Logger;
-import org.prot.stor.hbase.Key;
 import org.prot.storage.connection.ConnectionFactory;
 import org.prot.storage.connection.SchemaCreator;
 import org.prot.storage.query.QueryEngine;
@@ -37,7 +36,7 @@ public class StorageImpl implements Storage
 	}
 
 	@Override
-	public List<Key> createKey(String appId, String kind, int amount)
+	public List<Key> createKey(String appId, long amount)
 	{
 		logger.debug("Creating keys " + amount);
 
@@ -77,7 +76,7 @@ public class StorageImpl implements Storage
 	}
 
 	@Override
-	public void deleteObject(Key key)
+	public void deleteObject(String appId, String kind, Key key)
 	{
 
 	}

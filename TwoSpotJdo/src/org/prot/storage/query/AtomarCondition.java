@@ -14,7 +14,7 @@ import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
-import org.prot.stor.hbase.HBaseManagedConnection;
+import org.prot.storage.connection.HBaseManagedConnection;
 import org.prot.storage.connection.StorageUtils;
 
 public class AtomarCondition implements Serializable

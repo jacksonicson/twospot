@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.prot.stor.hbase.HBaseManagedConnection;
+import org.prot.storage.connection.HBaseManagedConnection;
 
 public class SelectCondition implements Serializable
 {

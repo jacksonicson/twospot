@@ -17,28 +17,19 @@ Contributors :
  ***********************************************************************/
 package org.prot.stor.hbase;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.transaction.xa.XAResource;
 
-import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.client.HTable;
 import org.datanucleus.exceptions.NucleusDataStoreException;
 import org.datanucleus.store.connection.AbstractManagedConnection;
-import org.datanucleus.store.connection.ManagedConnectionResourceListener;
+import org.prot.storage.Storage;
 
 /**
  * Implementation of a ManagedConnection.
  */
-public class HBaseManagedConnection extends AbstractManagedConnection
+public class StorageManagedConnection extends AbstractManagedConnection
 {
-	// HBase-Configuration (Required to use the HBase libs)
-	private final HBaseConfiguration config;
-
-	// Maps table names to HTable objects
-	private final Map<String, HTable> tables;
+	// Reference to the storage implementation
+	private Storage storage;
 
 	// Counts the number of references to this connection
 	private int referenceCount = 0;
@@ -53,60 +44,32 @@ public class HBaseManagedConnection extends AbstractManagedConnection
 	// Is this connection disposed
 	private boolean isDisposed = false;
 
-	public HBaseManagedConnection(HBaseConfiguration config)
+	public StorageManagedConnection()
 	{
-		this.config = config;
-		this.tables = new HashMap<String, HTable>();
-
 		disableExpirationTime();
 	}
 
 	public Object getConnection()
 	{
+		// Unsupported - use getStorage instead
 		throw new NucleusDataStoreException("Unsopported Exception #getConnection() for "
 				+ this.getClass().getName());
 	}
 
-	public HTable getHTable(String tableName)
+	public Storage getStorage()
 	{
-		HTable table = tables.get(tableName);
-
-		if (table == null)
-		{
-			try
-			{
-				table = new HTable(config, tableName);
-				tables.put(tableName, table);
-			} catch (IOException e)
-			{
-				throw new NucleusDataStoreException(e.getMessage(), e);
-			}
-		}
-
-		return table;
+		return this.storage;
 	}
 
 	public XAResource getXAResource()
 	{
+		// Do nothing
 		return null;
 	}
 
 	public void close()
 	{
-		if (tables.size() == 0)
-			return;
-
-		for (ManagedConnectionResourceListener listener : listeners)
-			listener.managedConnectionPreClose();
-
-		try
-		{
-			closeTables(tables);
-		} finally
-		{
-			for (ManagedConnectionResourceListener listener : listeners)
-				listener.managedConnectionPostClose();
-		}
+		// Do nothing
 	}
 
 	void incrementReferenceCount()
@@ -152,27 +115,10 @@ public class HBaseManagedConnection extends AbstractManagedConnection
 	public void dispose()
 	{
 		isDisposed = true;
-		closeTables(tables);
 	}
 
 	public boolean isDisposed()
 	{
 		return isDisposed;
 	}
-
-	private void closeTables(Map<String, HTable> tables)
-	{
-		for (String tableName : tables.keySet())
-		{
-			try
-			{
-				HTable table = tables.get(tableName);
-				table.close();
-			} catch (IOException e)
-			{
-				throw new NucleusDataStoreException(e.getMessage(), e);
-			}
-		}
-	}
-
 }

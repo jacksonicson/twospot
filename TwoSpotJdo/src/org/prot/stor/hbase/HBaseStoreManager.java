@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.OMFContext;
 import org.datanucleus.ObjectManager;
@@ -39,8 +38,6 @@ import org.datanucleus.store.NucleusConnection;
 public class HBaseStoreManager extends AbstractStoreManager
 {
 	MetaDataListener metadataListener;
-
-	private HBaseConfiguration hbaseConfig;
 
 	private boolean autoCreateTables = false;
 	private boolean autoCreateColumns = false;
@@ -66,9 +63,6 @@ public class HBaseStoreManager extends AbstractStoreManager
 
 		// Handler for persistence process
 		persistenceHandler = new HBasePersistenceHandler(this);
-
-		// Hbase configuration
-		hbaseConfig = new HBaseConfiguration();
 
 		// Check the configuration
 		PersistenceConfiguration conf = omfContext.getPersistenceConfiguration();
@@ -121,17 +115,12 @@ public class HBaseStoreManager extends AbstractStoreManager
 	/**
 	 * Accessor for the supported options in string form
 	 */
-	public Collection getSupportedOptions()
+	public Collection<String> getSupportedOptions()
 	{
-		Set set = new HashSet();
+		Set<String> set = new HashSet<String>();
 		set.add("ApplicationIdentity");
 		set.add("TransactionIsolationLevel.read-committed");
 		return set;
-	}
-
-	public HBaseConfiguration getHbaseConfig()
-	{
-		return hbaseConfig;
 	}
 
 	public boolean isAutoCreateColumns()

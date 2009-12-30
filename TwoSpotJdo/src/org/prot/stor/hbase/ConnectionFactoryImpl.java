@@ -26,38 +26,15 @@ import org.datanucleus.store.connection.ManagedConnection;
 
 public class ConnectionFactoryImpl extends AbstractConnectionFactory
 {
-	private HBaseConnectionPool connectionPool;
-
 	public ConnectionFactoryImpl(OMFContext omfContext, String resourceType)
 	{
 		super(omfContext, resourceType);
-
-		// Get the storemanager
-		HBaseStoreManager storeManager = (HBaseStoreManager) omfContext.getStoreManager();
-
-		// Crate a new connection pool
-		connectionPool = new HBaseConnectionPool();
 	}
 
-	public ManagedConnection createManagedConnection(ObjectManager om, Map transactionOptions)
+	@Override
+	public ManagedConnection createManagedConnection(ObjectManager arg0, Map arg1)
 	{
-		// Get the storemanager
-		HBaseStoreManager storeManager = (HBaseStoreManager) om.getStoreManager();
 
-		// Get a connection from the connection pool (if there is one)
-		HBaseManagedConnection managedConnection = connectionPool.getPooledConnection();
-		if (managedConnection == null)
-		{
-			// There is no connection in the pool, so create a new one
-			managedConnection = new HBaseManagedConnection(storeManager.getHbaseConfig());
-			managedConnection.setIdleTimeoutMills(storeManager.getPoolMinEvictableIdleTimeMillis());
-
-			// Register the new connection with the pool
-			connectionPool.registerConnection(managedConnection);
-		}
-
-		// Increment the reference counter for the connection
-		managedConnection.incrementReferenceCount();
-		return managedConnection;
+		return null;
 	}
 }
