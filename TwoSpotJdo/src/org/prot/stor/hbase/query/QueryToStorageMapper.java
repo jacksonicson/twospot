@@ -134,6 +134,8 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 
 	protected Object processParameterExpression(ParameterExpression expr)
 	{
+		logger.debug("TEST" + expr.getSymbol().getValueType());
+		
 		Object paramValue = null;
 		if (parameters != null && parameters.containsKey(expr.getId()))
 			paramValue = parameters.get(expr.getId());

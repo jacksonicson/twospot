@@ -52,7 +52,8 @@ public class StorageImpl implements Storage
 	}
 
 	@Override
-	public void createObject(String appId, String kind, Key key, Object obj, Map<String, byte[]> index)
+	public void createObject(String appId, String kind, Key key, Object obj, Map<String, byte[]> index,
+			IndexDefinition indexDef)
 	{
 		assert (key != null);
 
@@ -60,7 +61,7 @@ public class StorageImpl implements Storage
 		ObjectCreator creator = new ObjectCreator(connectionFactory);
 		try
 		{
-			creator.createObject(appId, kind, key, obj, index);
+			creator.createObject(appId, kind, key, obj, index, indexDef);
 		} catch (IOException e)
 		{
 			logger.error("", e);

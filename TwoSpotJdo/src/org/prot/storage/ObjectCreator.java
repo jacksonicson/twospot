@@ -24,12 +24,13 @@ public class ObjectCreator
 		this.connection = connectionFactory.createManagedConnection();
 	}
 
-	public void createObject(String appId, String kind, Key key, Object obj, Map<String, byte[]> index)
-			throws IOException
+	public void createObject(String appId, String kind, Key key, Object obj, Map<String, byte[]> index,
+			IndexDefinition indexDef) throws IOException
 	{
 		HTable entitiesTable = getEntitiesTable();
 		HTable indexByKindTable = getIndexByKindTable();
 		HTable indexByPropertyAsc = getIndexByPropertyTableAsc();
+		HTable indexCustom = null;
 
 		try
 		{
@@ -38,11 +39,14 @@ public class ObjectCreator
 			byte[] rowKey = writeEntity(entitiesTable, appId, kind, key, obj);
 
 			// Update the index tables
-			logger.debug("Updating index by kind"); 
+			logger.debug("Updating index by kind");
 			writeIndexByKind(indexByKindTable, rowKey, appId, kind);
-			
+
 			logger.debug("Updating index by property");
 			writeIndexByPropertyAsc(indexByPropertyAsc, rowKey, appId, kind, index);
+
+			logger.debug("Updating custom index");
+			writeIndexCustom(indexCustom, rowKey, appId, kind, index, indexDef);
 
 		} catch (IOException e)
 		{
@@ -95,7 +99,7 @@ public class ObjectCreator
 		for (String propertyName : index.keySet())
 		{
 			logger.debug("Adding property " + propertyName);
-			
+
 			byte[] bPropertyName = Bytes.toBytes(propertyName);
 
 			byte[] propKey = Bytes.add(bAppId, StorageUtils.bSlash, bKind);
@@ -110,6 +114,12 @@ public class ObjectCreator
 
 		// Execute all puts
 		table.put(putList);
+	}
+
+	private void writeIndexCustom(HTable table, byte[] rowKey, String appId, String kind,
+			Map<String, byte[]> index, IndexDefinition indexDef)
+	{
+		// TODO:
 	}
 
 	private byte[] createRowKey(String appId, String kind, Key key)

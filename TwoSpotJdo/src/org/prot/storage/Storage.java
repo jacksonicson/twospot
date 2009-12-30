@@ -9,7 +9,8 @@ public interface Storage
 {
 	public List<Key> createKey(String appId, long amount);
 
-	public void createObject(String appId, String kind, Key key, Object obj, Map<String, byte[]> index);
+	public void createObject(String appId, String kind, Key key, Object obj, Map<String, byte[]> index,
+			IndexDefinition indexDef);
 
 	public void updateObject(Key key, Object obj);
 

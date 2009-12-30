@@ -68,7 +68,8 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 		// Cannot delete a read only object
 		storeMgr.assertReadOnlyForUpdateOfObject(sm);
 
-		StorageManagedConnection mconn = (StorageManagedConnection) storeMgr.getConnection(sm.getObjectManager());
+		StorageManagedConnection mconn = (StorageManagedConnection) storeMgr.getConnection(sm
+				.getObjectManager());
 		try
 		{
 			// Aquire object infos
@@ -166,7 +167,8 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 		}
 
 		// Save the object
-		StorageManagedConnection mconn = (StorageManagedConnection) storeMgr.getConnection(sm.getObjectManager());
+		StorageManagedConnection mconn = (StorageManagedConnection) storeMgr.getConnection(sm
+				.getObjectManager());
 		try
 		{
 			String appId = HBaseUtils.APP_ID;
@@ -175,10 +177,10 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 			Object obj = sm.getObject();
 
 			Storage storage = mconn.getStorage();
-			storage.createObject(appId, kind, key, obj, index);
+			storage.createObject(appId, kind, key, obj, index, null);
 		} finally
 		{
-//			mconn.release();
+			// mconn.release();
 		}
 	}
 
