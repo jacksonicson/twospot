@@ -19,6 +19,7 @@ package org.prot.stor.hbase;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.datanucleus.OMFContext;
 import org.datanucleus.ObjectManager;
 import org.datanucleus.store.connection.AbstractConnectionFactory;
@@ -26,14 +27,21 @@ import org.datanucleus.store.connection.ManagedConnection;
 
 public class ConnectionFactoryImpl extends AbstractConnectionFactory
 {
+	private static final Logger logger = Logger.getLogger(ConnectionFactoryImpl.class);
+
+	private StorageManagedConnection connection;
+
 	public ConnectionFactoryImpl(OMFContext omfContext, String resourceType)
 	{
 		super(omfContext, resourceType);
+
+		// Create a new managed connection
+		this.connection = new StorageManagedConnection();
 	}
 
 	@Override
 	public ManagedConnection createManagedConnection(ObjectManager om, Map options)
 	{
-		return new StorageManagedConnection();
+		return this.connection;
 	}
 }

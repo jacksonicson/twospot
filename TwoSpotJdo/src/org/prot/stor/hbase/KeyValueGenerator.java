@@ -22,7 +22,8 @@ public class KeyValueGenerator extends AbstractDatastoreGenerator
 	protected ValueGenerationBlock reserveBlock(long size)
 	{
 		logger.debug("Reserving keys: " + size);
-
+		
+		// Get the connection
 		StorageManagedConnection connection = (StorageManagedConnection) connectionProvider
 				.retrieveConnection();
 		Storage storage = connection.getStorage();

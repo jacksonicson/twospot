@@ -125,12 +125,22 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 
 		if (value instanceof String)
 			bValue = Bytes.toBytes((String) value);
+
+		else if (value instanceof Double)
+			bValue = Bytes.toBytes((Double) value);
+
 		else if (value instanceof Long)
 			bValue = Bytes.toBytes((Long) value);
+
 		else if (value instanceof Integer)
 			bValue = Bytes.toBytes((Integer) value);
+
 		else if (value instanceof Boolean)
 			bValue = Bytes.toBytes((Boolean) value);
+
+		else if (value instanceof Character)
+			bValue = Bytes.toBytes((Character) value);
+
 		else
 		{
 			logger.error("Unsupported literal type: " + value.getClass());

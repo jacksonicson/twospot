@@ -35,21 +35,9 @@ public class StorageManagedConnection extends AbstractManagedConnection
 	// Counts the number of references to this connection
 	private int referenceCount = 0;
 
-	// How long until this connection is idle (expirationTime = system time +
-	// idle time
-	private int idleTimeoutMills = 30 * 1000; // 30 secs
-
-	// Timestamp when this connection expires (-1 for no expiry)
-	private long expirationTime;
-
-	// Is this connection disposed
-	private boolean isDisposed = false;
-
 	public StorageManagedConnection()
 	{
 		this.storage = new StorageImpl();
-		
-		disableExpirationTime();
 	}
 
 	public Object getConnection()
@@ -78,50 +66,13 @@ public class StorageManagedConnection extends AbstractManagedConnection
 	void incrementReferenceCount()
 	{
 		referenceCount++;
-		disableExpirationTime();
 	}
 
 	public void release()
 	{
 		referenceCount--;
 
-		if (referenceCount == 0)
-		{
-			close();
-			enableExpirationTime();
-		} else if (referenceCount < 0)
-		{
+		if (referenceCount < 0)
 			throw new NucleusDataStoreException("Too many calls on release(): " + this);
-		}
-	}
-
-	private void enableExpirationTime()
-	{
-		this.expirationTime = System.currentTimeMillis() + idleTimeoutMills;
-	}
-
-	private void disableExpirationTime()
-	{
-		this.expirationTime = -1;
-	}
-
-	public void setIdleTimeoutMills(int mills)
-	{
-		this.idleTimeoutMills = mills;
-	}
-
-	public boolean isExpired()
-	{
-		return expirationTime > 0 && expirationTime > System.currentTimeMillis();
-	}
-
-	public void dispose()
-	{
-		isDisposed = true;
-	}
-
-	public boolean isDisposed()
-	{
-		return isDisposed;
 	}
 }
