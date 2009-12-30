@@ -83,7 +83,7 @@ public class AtomarCondition implements Serializable
 
 		case GREATER:
 			// Schema: appId/Kind/property/value/entityKey
-			// Start: gogo/Person/username/Bob[++]/0x00
+			// Start: gogo/Person/username/Bob++/0x00
 			// Stop: gogo/Person/username/0xFFFF
 
 			bValue = StorageUtils.incrementByteArray(bValue);
@@ -97,12 +97,43 @@ public class AtomarCondition implements Serializable
 			stopKey = Bytes.add(stopKey, StorageUtils.bSlash, StorageUtils.getArrayOfOnes());
 
 			return new Scan(startKey, stopKey);
+
+		case LOWER_EQUALS:
+			// Schema: appId/Kind/property/value/entityKey
+			// Start: gogo/Person/username/0x00/0x00
+			// Stop: gogo/Person/username/Bob++/0xFFFF
+			startKey = Bytes.add(bAppId, StorageUtils.bSlash, bKind);
+			startKey = Bytes.add(startKey, StorageUtils.bSlash, bProperty);
+			startKey = Bytes.add(startKey, StorageUtils.bSlash, new byte[] { 0 });
+
+			bValue = StorageUtils.incrementByteArray(bValue);
+
+			stopKey = Bytes.add(bAppId, StorageUtils.bSlash, bKind);
+			stopKey = Bytes.add(stopKey, StorageUtils.bSlash, bProperty);
+			stopKey = Bytes.add(stopKey, StorageUtils.bSlash, bValue);
+
+			return new Scan(startKey, stopKey);
+
+		case LOWER:
+			// Schema: appId/Kind/property/value/entityKey
+			// Start: gogo/Person/username/0x00/0x00
+			// Stop: gogo/Person/username/Bob/0xFFFF
+			startKey = Bytes.add(bAppId, StorageUtils.bSlash, bKind);
+			startKey = Bytes.add(startKey, StorageUtils.bSlash, bProperty);
+			startKey = Bytes.add(startKey, StorageUtils.bSlash, new byte[] { 0 });
+
+			stopKey = Bytes.add(bAppId, StorageUtils.bSlash, bKind);
+			stopKey = Bytes.add(stopKey, StorageUtils.bSlash, bProperty);
+			stopKey = Bytes.add(stopKey, StorageUtils.bSlash, bValue);
+
+			return new Scan(startKey, stopKey);
 		}
 
 		return null;
 	}
 
-	private Set<byte[]> findIn(StorageQuery query, HTable indexTable, LimitCondition limit) throws IOException
+	private Set<byte[]> findIn(StorageQuery query, HTable indexTable, LimitCondition limit)
+			throws IOException
 	{
 		byte[] bAppId = Bytes.toBytes(query.getAppId());
 		byte[] bKind = Bytes.toBytes(query.getKind());
@@ -174,11 +205,16 @@ public class AtomarCondition implements Serializable
 		case EQUALS:
 		case GREATER:
 		case GREATER_EQUALS:
+		case LOWER_EQUALS:
+		case LOWER:
 			entityKeys = findIn(query, tableIndex, limit);
 			logger.debug("Found entity keys: " + entityKeys.size());
 
 			// Materialize the results
 			materialize(tableEntities, entityKeys, result);
+
+		default:
+			logger.warn("Unsupported condition operator");
 		}
 	}
 }

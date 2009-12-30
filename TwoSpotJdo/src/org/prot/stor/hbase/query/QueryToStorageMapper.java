@@ -207,12 +207,26 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 
 	protected Object processLteqExpression(Expression expr)
 	{
-		throw new NucleusException("Operator <= is currently not implemented");
+		AtomLiteral value = (AtomLiteral) stack.pop();
+		AtomLiteral property = (AtomLiteral) stack.pop();
+
+		AtomarCondition condition = new AtomarCondition(ConditionType.LOWER_EQUALS, property, value);
+		this.storageQuery.getCondition().addCondition(condition);
+		stack.push(condition);
+
+		return condition;
 	}
 
 	protected Object processLtExpression(Expression expr)
 	{
-		throw new NucleusException("Operator < is currently not implemented");
+		AtomLiteral value = (AtomLiteral) stack.pop();
+		AtomLiteral property = (AtomLiteral) stack.pop();
+
+		AtomarCondition condition = new AtomarCondition(ConditionType.LOWER, property, value);
+		this.storageQuery.getCondition().addCondition(condition);
+		stack.push(condition);
+
+		return condition;
 	}
 
 	protected Object processOrExpression(Expression expr)
