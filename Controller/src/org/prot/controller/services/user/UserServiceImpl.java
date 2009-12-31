@@ -41,6 +41,9 @@ public class UserServiceImpl implements UserService
 			{
 				String user = session.getUsername();
 				return user;
+			} else
+			{
+				logger.debug("Could not find user: " + uid);
 			}
 
 			return null;

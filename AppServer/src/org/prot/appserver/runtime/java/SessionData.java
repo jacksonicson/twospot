@@ -9,11 +9,12 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
+
+import org.prot.storage.Key;
 
 @PersistenceCapable
 public class SessionData implements Serializable
@@ -21,8 +22,8 @@ public class SessionData implements Serializable
 	private static final long serialVersionUID = -7629526712017876974L;
 
 	@PrimaryKey
-	@Persistent(valueStrategy = IdGeneratorStrategy.UUIDSTRING)
-	private String dbid;
+	@Persistent(customValueStrategy = "keygen")
+	private Key key;
 
 	@Persistent
 	private String sessionId;
@@ -215,13 +216,13 @@ public class SessionData implements Serializable
 		this.sessionId = sessionId;
 	}
 
-	public synchronized String getDbid()
+	public Key getKey()
 	{
-		return dbid;
+		return key;
 	}
 
-	public synchronized void setDbid(String dbid)
+	public void setKey(Key key)
 	{
-		this.dbid = dbid;
+		this.key = key;
 	}
 }

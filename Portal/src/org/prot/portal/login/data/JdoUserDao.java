@@ -17,15 +17,18 @@ public class JdoUserDao implements UserDao
 	{
 		PersistenceManager pm = jdoConnection.getPersistenceManager();
 
-		Query query = pm.newQuery();
-		query.setClass(PlatformUser.class);
+		Query query = pm.newQuery(PlatformUser.class);
 		query.setFilter("username == '" + username + "'");
 		query.setUnique(true);
-		
+
 		try
 		{
-			PlatformUser user = (PlatformUser) query.execute();
-			return user;
+			logger.warn("Class loader of the platfrom: " + this.getClass().getClassLoader().toString());
+
+			Object result = query.execute();
+			logger.warn("Result: " + result.getClass().getName());
+
+			return (PlatformUser) result;
 
 		} catch (Exception e)
 		{
@@ -44,13 +47,13 @@ public class JdoUserDao implements UserDao
 
 		try
 		{
-			logger.info("Making persistent"); 
+			logger.info("Making persistent");
 			pm.makePersistent(user);
 			logger.info("done");
 			tx.commit();
 		} catch (Exception e)
 		{
-			logger.info("Making persistent error", e); 
+			logger.info("Making persistent error", e);
 			tx.rollback();
 		}
 	}

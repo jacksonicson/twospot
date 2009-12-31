@@ -1,13 +1,22 @@
 package org.prot.portal.login.data;
 
+import java.io.Serializable;
+
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import org.prot.storage.Key;
+
 @PersistenceCapable
-public class PlatformUser
+public class PlatformUser implements Serializable
 {
+	private static final long serialVersionUID = 1858714976360637838L;
+
 	@PrimaryKey
+	@Persistent(customValueStrategy = "keygen")
+	private Key key;
+
 	@Persistent
 	private String username;
 
@@ -25,6 +34,11 @@ public class PlatformUser
 
 	@Persistent
 	private String forename;
+
+	public PlatformUser()
+	{
+
+	}
 
 	public String getUsername()
 	{
@@ -84,6 +98,16 @@ public class PlatformUser
 	public void setForename(String forename)
 	{
 		this.forename = forename;
+	}
+
+	public Key getKey()
+	{
+		return key;
+	}
+
+	public void setKey(Key key)
+	{
+		this.key = key;
 	}
 
 	public PlatformUser clone()

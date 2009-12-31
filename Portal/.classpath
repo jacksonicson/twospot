@@ -43,5 +43,6 @@
 	<classpathentry kind="lib" path="/Libs/gen/twospot-appserver.jar" sourcepath="/AppServer"/>
 	<classpathentry kind="lib" path="/Libs/gen/twospot-controller.jar"/>
 	<classpathentry kind="lib" path="/Libs/gen/twospot-util.jar"/>
+	<classpathentry kind="lib" path="/Libs/gen/hbaseplugin.jar"/>
 	<classpathentry kind="output" path="portal/WEB-INF/classes"/>
 </classpath>
