@@ -15,13 +15,13 @@ limitations under the License.
 Contributors :
     ...
  ***********************************************************************/
-package org.prot.stor.hbase;
+package org.prot.jdo.storage;
 
 import org.apache.log4j.Logger;
 
-public class HBaseUtils
+public class StorageHelper
 {
-	private static final Logger logger = Logger.getLogger(HBaseUtils.class);
+	private static final Logger logger = Logger.getLogger(StorageHelper.class);
 
 	public static String APP_ID = "null";
 

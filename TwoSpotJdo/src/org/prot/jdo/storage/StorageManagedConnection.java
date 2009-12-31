@@ -15,7 +15,7 @@ limitations under the License.
 Contributors :
     ...
  ***********************************************************************/
-package org.prot.stor.hbase;
+package org.prot.jdo.storage;
 
 import javax.transaction.xa.XAResource;
 

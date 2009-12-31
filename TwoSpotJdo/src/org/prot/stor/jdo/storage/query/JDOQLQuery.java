@@ -15,7 +15,7 @@ limitations under the License.
 Contributors :
     ...
  ***********************************************************************/
-package org.prot.stor.hbase.query;
+package org.prot.stor.jdo.storage.query;
 
 import java.util.Iterator;
 import java.util.List;
@@ -29,8 +29,8 @@ import org.datanucleus.exceptions.NucleusException;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.state.StateManagerFactory;
 import org.datanucleus.store.query.AbstractJDOQLQuery;
-import org.prot.stor.hbase.HBaseUtils;
-import org.prot.stor.hbase.StorageManagedConnection;
+import org.prot.jdo.storage.StorageHelper;
+import org.prot.jdo.storage.StorageManagedConnection;
 import org.prot.storage.Storage;
 import org.prot.storage.query.StorageQuery;
 
@@ -103,7 +103,7 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 
 	private StorageQuery compileQueryFull(Map parameters, AbstractClassMetaData acmd)
 	{
-		StorageQuery storageQuery = new StorageQuery(HBaseUtils.APP_ID, candidateClass.getSimpleName());
+		StorageQuery storageQuery = new StorageQuery(StorageHelper.APP_ID, candidateClass.getSimpleName());
 		QueryToStorageMapper mapper = new QueryToStorageMapper(storageQuery, compilation, parameters, acmd,
 				getFetchPlan(), om);
 

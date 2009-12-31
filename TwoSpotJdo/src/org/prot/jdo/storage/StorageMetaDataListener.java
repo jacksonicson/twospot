@@ -15,7 +15,7 @@ limitations under the License.
 Contributors:
    ...
  **********************************************************************/
-package org.prot.stor.hbase;
+package org.prot.jdo.storage;
 
 import org.apache.log4j.Logger;
 import org.datanucleus.metadata.AbstractClassMetaData;
@@ -28,16 +28,16 @@ import org.datanucleus.util.Localiser;
  * Listener for the load of metadata for classes. Allows us to reject metadata
  * when it isn't supported by this datastore.
  */
-public class HBaseMetaDataListener implements MetaDataListener
+public class StorageMetaDataListener implements MetaDataListener
 {
-	private static final Logger logger = Logger.getLogger(HBaseMetaDataListener.class);
+	private static final Logger logger = Logger.getLogger(StorageMetaDataListener.class);
 
 	protected static final Localiser LOCALISER = Localiser.getInstance(
-			"org.datanucleus.store.hbase.Localisation", HBaseStoreManager.class.getClassLoader());
+			"org.datanucleus.store.hbase.Localisation", StorageStoreManager.class.getClassLoader());
 
-	private HBaseStoreManager storeManager;
+	private StorageStoreManager storeManager;
 
-	HBaseMetaDataListener(HBaseStoreManager storeManager)
+	StorageMetaDataListener(StorageStoreManager storeManager)
 	{
 		this.storeManager = storeManager;
 	}

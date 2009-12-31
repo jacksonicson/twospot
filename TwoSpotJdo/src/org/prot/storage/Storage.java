@@ -12,8 +12,6 @@ public interface Storage
 	public void createObject(String appId, String kind, Key key, Object obj, Map<String, byte[]> index,
 			IndexDefinition indexDef);
 
-	public void updateObject(Key key, Object obj);
-
 	public boolean deleteObject(String appId, String kind, Key key);
 
 	public List<Object> query(StorageQuery query);

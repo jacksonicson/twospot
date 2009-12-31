@@ -1,4 +1,4 @@
-package org.prot.stor.hbase.query;
+package org.prot.stor.jdo.storage.query;
 
 import java.util.Map;
 import java.util.Stack;

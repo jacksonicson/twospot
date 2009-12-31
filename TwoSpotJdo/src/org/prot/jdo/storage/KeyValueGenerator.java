@@ -1,4 +1,4 @@
-package org.prot.stor.hbase;
+package org.prot.jdo.storage;
 
 import java.util.List;
 import java.util.Properties;
@@ -28,7 +28,7 @@ public class KeyValueGenerator extends AbstractDatastoreGenerator
 				.retrieveConnection();
 		Storage storage = connection.getStorage();
 
-		List<Key> keys = storage.createKey(HBaseUtils.APP_ID, size);
+		List<Key> keys = storage.createKey(StorageHelper.APP_ID, size);
 		return new ValueGenerationBlock(keys);
 	}
 

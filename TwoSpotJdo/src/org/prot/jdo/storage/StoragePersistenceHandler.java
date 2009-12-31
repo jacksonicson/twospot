@@ -15,7 +15,7 @@ limitations under the License.
 Contributors :
     ...
  ***********************************************************************/
-package org.prot.stor.hbase;
+package org.prot.jdo.storage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -41,18 +41,18 @@ import org.prot.storage.Storage;
  * @author Andreas Wolke
  * 
  */
-public class HBasePersistenceHandler implements StorePersistenceHandler
+public class StoragePersistenceHandler implements StorePersistenceHandler
 {
-	private static final Logger logger = Logger.getLogger(HBasePersistenceHandler.class);
+	private static final Logger logger = Logger.getLogger(StoragePersistenceHandler.class);
 
 	protected static final Localiser LOCALISER = Localiser.getInstance(
-			"org.datanucleus.store.hbase.Localisation", HBaseStoreManager.class.getClassLoader());
+			"org.datanucleus.store.hbase.Localisation", StorageStoreManager.class.getClassLoader());
 
-	private HBaseStoreManager storeMgr;
+	private StorageStoreManager storeMgr;
 
-	HBasePersistenceHandler(StoreManager storeMgr)
+	StoragePersistenceHandler(StoreManager storeMgr)
 	{
-		this.storeMgr = (HBaseStoreManager) storeMgr;
+		this.storeMgr = (StorageStoreManager) storeMgr;
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 		try
 		{
 			// Aquire object infos
-			String appId = HBaseUtils.APP_ID;
+			String appId = StorageHelper.APP_ID;
 			String kind = sm.getObject().getClass().getSimpleName();
 			Key key = (Key) sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
 
@@ -167,7 +167,7 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 				.getObjectManager());
 		try
 		{
-			String appId = HBaseUtils.APP_ID;
+			String appId = StorageHelper.APP_ID;
 			String kind = sm.getClassMetaData().getEntityName();
 			Key key = (Key) sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
 			Object obj = sm.getObject();

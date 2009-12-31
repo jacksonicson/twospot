@@ -15,7 +15,7 @@ limitations under the License.
 Contributors :
     ...
  ***********************************************************************/
-package org.prot.stor.hbase;
+package org.prot.jdo.storage;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -35,7 +35,7 @@ import org.datanucleus.store.NucleusConnection;
  * @author Andreas Wolke
  * 
  */
-public class HBaseStoreManager extends AbstractStoreManager
+public class StorageStoreManager extends AbstractStoreManager
 {
 	MetaDataListener metadataListener;
 
@@ -53,16 +53,16 @@ public class HBaseStoreManager extends AbstractStoreManager
 	 * @param omfContext
 	 *            ObjectManagerFactory context
 	 */
-	public HBaseStoreManager(ClassLoaderResolver clr, OMFContext omfContext)
+	public StorageStoreManager(ClassLoaderResolver clr, OMFContext omfContext)
 	{
 		super("hbase", clr, omfContext);
 
 		// Handler for metadata
-		metadataListener = new HBaseMetaDataListener(this);
+		metadataListener = new StorageMetaDataListener(this);
 		omfContext.getMetaDataManager().registerListener(metadataListener);
 
 		// Handler for persistence process
-		persistenceHandler = new HBasePersistenceHandler(this);
+		persistenceHandler = new StoragePersistenceHandler(this);
 
 		// Check the configuration
 		PersistenceConfiguration conf = omfContext.getPersistenceConfiguration();

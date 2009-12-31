@@ -88,10 +88,4 @@ public class StorageImpl implements Storage
 			return false;
 		}
 	}
-
-	@Override
-	public void updateObject(Key key, Object obj)
-	{
-
-	}
 }
