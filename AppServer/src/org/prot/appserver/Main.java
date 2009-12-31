@@ -5,11 +5,11 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.datanucleus.store.hbase.HBaseUtils;
 import org.prot.app.security.HardPolicy;
 import org.prot.appserver.config.ArgumentParser;
 import org.prot.appserver.config.Configuration;
 import org.prot.appserver.config.ServerMode;
+import org.prot.stor.hbase.HBaseUtils;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -43,8 +43,7 @@ public class Main
 		ArgumentParser.dump();
 
 		// Configure HBase namespace (TODO: Make this more generic)
-		HBaseUtils.setNamespace(Configuration.getInstance().getAppId() + "."
-				+ HBaseUtils.NAMESPACE_USER_TAGBLES);
+		HBaseUtils.setAppId(Configuration.getInstance().getAppId());
 
 		// Start the Monitor
 		if (Configuration.getInstance().isRequiresController())

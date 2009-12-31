@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 import org.prot.app.services.user.UserService;
 import org.prot.app.services.user.UserServiceFactory;
 import org.prot.appserver.config.Configuration;
-import org.prot.controller.services.db.DataTablet;
 import org.prot.controller.services.db.DbService;
 
 public final class DbBrowserService
@@ -42,7 +41,7 @@ public final class DbBrowserService
 		return dbService.getTables(Configuration.getInstance().getAuthenticationToken(), appId);
 	}
 
-	public DataTablet getTableData(String tableName, String startKey, long count)
+	public Object getTableData(String tableName, String startKey, long count)
 	{
 		String user = getUserService().getCurrentUser();
 		if (user == null)
@@ -51,7 +50,6 @@ public final class DbBrowserService
 			return null;
 		}
 
-		return dbService.getTableData(Configuration.getInstance().getAuthenticationToken(), tableName,
-				startKey, count);
+		return null;
 	}
 }
