@@ -107,23 +107,16 @@ public class ObjectRemover
 	{
 		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
 
-		byte[] bAppId = Bytes.toBytes(appId);
-		byte[] bKind = Bytes.toBytes(kind);
-
 		// Create a put operation for each property name
 		ArrayList<Delete> deleteList = new ArrayList<Delete>();
 		for (String propertyName : index.keySet())
 		{
-			logger.debug("Removing property " + propertyName);
+			byte[] propKey = KeyHelper.createIndexByPropertyKey(appId, kind, rowKey, propertyName, index
+					.get(propertyName));
 
-			byte[] bPropertyName = Bytes.toBytes(propertyName);
-
-			byte[] propKey = Bytes.add(bAppId, StorageUtils.bSlash, bKind);
-			propKey = Bytes.add(propKey, StorageUtils.bSlash, bPropertyName);
+			propKey = Bytes.add(propKey, StorageUtils.bSlash, Bytes.toBytes(propertyName));
 			propKey = Bytes.add(propKey, StorageUtils.bSlash, index.get(propertyName));
 			propKey = Bytes.add(propKey, StorageUtils.bSlash, rowKey);
-
-			logger.debug("Removing object from IndexByProperty " + propKey);
 
 			Delete delete = new Delete(propKey);
 			deleteList.add(delete);
@@ -137,13 +130,7 @@ public class ObjectRemover
 			throws IOException
 	{
 		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
-
-		// Construct the index key
-		byte[] bAppId = Bytes.toBytes(appId);
-		byte[] bKind = Bytes.toBytes(kind);
-
-		byte[] indexRowKey = Bytes.add(bAppId, StorageUtils.bSlash, bKind);
-		indexRowKey = Bytes.add(indexRowKey, StorageUtils.bSlash, rowKey);
+		byte[] indexRowKey = KeyHelper.createIndexByKindKey(appId, kind, rowKey);
 
 		Get get = new Get(indexRowKey);
 		if (!table.exists(get))
