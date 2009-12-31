@@ -2,7 +2,7 @@ package org.prot.controller;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.prot.controller.config.Configuration;
-import org.prot.stor.hbase.HBaseUtils;
+import org.prot.jdo.storage.StorageHelper;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -15,7 +15,7 @@ public class Main
 		DOMConfigurator.configure(Main.class.getResource("/etc/log4j.xml"));
 
 		// Configure HBase (TODO: Make this more generic)
-		HBaseUtils.setAppId("twospot");
+		StorageHelper.setAppId("twospot");
 
 		// Start spring ioc container
 		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("/etc/spring.xml", getClass()));

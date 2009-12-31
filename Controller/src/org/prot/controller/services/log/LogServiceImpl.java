@@ -25,24 +25,23 @@ public class LogServiceImpl implements LogService
 		try
 		{
 			LogMessage log = new LogMessage();
-			log.setKey(LogMessage.buildKey(appId, ""));
 			log.setAppId(appId);
 			log.setMessage(message);
 			log.setSeverity(severity);
 
 			try
 			{
-				tx.begin();
+				// tx.begin();
 				pm.makePersistent(log);
-				tx.commit();
+				// tx.commit();
 			} catch (Exception e)
 			{
 				logger.error("Could not write log message", e);
 			}
 		} finally
 		{
-			if (tx.isActive())
-				tx.rollback();
+			// if (tx.isActive())
+			// tx.rollback();
 
 			pm.close();
 		}

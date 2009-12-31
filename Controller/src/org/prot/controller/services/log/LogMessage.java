@@ -6,7 +6,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import org.apache.hadoop.hbase.util.Bytes;
+import org.prot.storage.Key;
 
 @PersistenceCapable
 public final class LogMessage implements Serializable
@@ -14,8 +14,8 @@ public final class LogMessage implements Serializable
 	private static final long serialVersionUID = 5182491041865229373L;
 
 	@PrimaryKey
-	@Persistent
-	private byte[] key;
+	@Persistent(customValueStrategy = "keygen")
+	private Key key;
 
 	@Persistent
 	private String id;
@@ -29,29 +29,17 @@ public final class LogMessage implements Serializable
 	@Persistent
 	private int severity;
 
-	public static final byte[] buildKey(String appId, String random)
+	public LogMessage()
 	{
-		byte[] key = new byte[28];
 
-		// Create the byte sequence for the AppId (20 bytes)
-		byte[] buffer = Bytes.toBytes(appId);
-		key = Bytes.add(key, buffer);
-		for (int i = buffer.length; i < 20; i++)
-			key[i] = 0;
-
-		// Insert the timestamp (8 bytes)
-		byte[] time = Bytes.toBytes(System.currentTimeMillis());
-		key = Bytes.add(key, time);
-
-		return key;
 	}
 
-	public byte[] getKey()
+	public Key getKey()
 	{
 		return key;
 	}
 
-	public void setKey(byte[] key)
+	public void setKey(Key key)
 	{
 		this.key = key;
 	}
