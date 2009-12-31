@@ -32,6 +32,7 @@ public class KeyCreator
 	private void createKeyEntry(HTable table, String appId) throws IOException
 	{
 		logger.debug("Creating key entry for " + appId);
+
 		Put put = new Put(Bytes.toBytes(appId));
 		put.add(family, qualifier, Bytes.toBytes(0l));
 		table.put(put);

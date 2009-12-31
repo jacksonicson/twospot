@@ -45,7 +45,7 @@ public class ObjectCreator
 			writeIndexByPropertyAsc(indexByPropertyAsc, rowKey, appId, kind, index);
 
 			logger.debug("Updating custom index");
-			writeIndexCustom(indexCustom, rowKey, appId, kind, index, indexDef);
+			// writeIndexCustom(indexCustom, rowKey, appId, kind, index, indexDef);
 
 		} catch (IOException e)
 		{
