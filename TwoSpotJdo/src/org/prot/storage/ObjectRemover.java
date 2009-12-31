@@ -59,8 +59,8 @@ public class ObjectRemover
 			String fieldName = field.getName();
 			try
 			{
-				fieldName = Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
-				Method method = obj.getClass().getMethod("get" + fieldName);
+				Method method = obj.getClass().getMethod(
+						"get" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1));
 				Object fieldValue = method.invoke(obj);
 				if (fieldValue != null)
 					index.put(fieldName, fieldValue.toString().getBytes());
@@ -114,7 +114,7 @@ public class ObjectRemover
 		ArrayList<Delete> deleteList = new ArrayList<Delete>();
 		for (String propertyName : index.keySet())
 		{
-			logger.debug("Adding property " + propertyName);
+			logger.debug("Removing property " + propertyName);
 
 			byte[] bPropertyName = Bytes.toBytes(propertyName);
 
@@ -122,6 +122,8 @@ public class ObjectRemover
 			propKey = Bytes.add(propKey, StorageUtils.bSlash, bPropertyName);
 			propKey = Bytes.add(propKey, StorageUtils.bSlash, index.get(propertyName));
 			propKey = Bytes.add(propKey, StorageUtils.bSlash, rowKey);
+
+			logger.debug("Removing object from IndexByProperty " + propKey);
 
 			Delete delete = new Delete(propKey);
 			deleteList.add(delete);
