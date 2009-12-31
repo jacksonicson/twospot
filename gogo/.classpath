@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jsp-api-2.1-7.0.0pre2.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/servlet-api-2.5.jar"/>
+	<classpathentry kind="lib" path="/Libs/gen/hbaseplugin.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>

@@ -39,9 +39,12 @@ public class GogoServlet extends HttpServlet
 	{
 		// DEMO: Using the LogService
 		LogService logService = LogServiceFactory.getLogService();
-		logService.debug("Debug log");
-		logService.info("Info log");
-		logService.error("Error log");
+		for (int i = 0; i < 100; i++)
+		{
+			logService.debug("Debug log");
+			logService.info("Info log");
+			logService.error("Error log");
+		}
 
 		// DEMO: Using the UserService
 		UserService userService = UserServiceFactory.getUserService();

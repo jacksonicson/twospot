@@ -15,7 +15,6 @@ public class MyStream extends ObjectInputStream
 	public MyStream(InputStream in, ClassLoaderResolver cls) throws IOException
 	{
 		super(in);
-		assert (cls != null);
 		setClassLoader(cls);
 	}
 
@@ -28,6 +27,18 @@ public class MyStream extends ObjectInputStream
 
 	protected Class<?> resolveClass(ObjectStreamClass desc)
 	{
+		if (classLoader == null)
+			try
+			{
+				return super.resolveClass(desc);
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			} catch (ClassNotFoundException e)
+			{
+				e.printStackTrace();
+			}
+
 		return classLoader.classForName(desc.getName());
 	}
 }

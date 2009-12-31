@@ -5,6 +5,7 @@
 <pathelement location="../Libs/lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar" />
 <pathelement location="../Libs/lib/jetty-7.0.0/jsp-api-2.1-7.0.0pre2.jar" />
 <pathelement location="../Libs/lib/jetty-7.0.0/servlet-api-2.5.jar" />
+<pathelement location="../Libs/gen/hbaseplugin.jar" />
 </path><fileset dir='../' id='gogo_libfiles'><include name="Libs/gen/twospot-appserver.jar" />
 <include name="Libs/lib/datanucleus/deps/asm-3.1.jar" />
 <include name="Libs/lib/datanucleus/deps/jdo2-api-2.3-eb.jar" />
@@ -12,4 +13,5 @@
 <include name="Libs/lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar" />
 <include name="Libs/lib/jetty-7.0.0/jsp-api-2.1-7.0.0pre2.jar" />
 <include name="Libs/lib/jetty-7.0.0/servlet-api-2.5.jar" />
+<include name="Libs/gen/hbaseplugin.jar" />
 </fileset></project>

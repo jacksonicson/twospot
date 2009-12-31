@@ -31,3 +31,7 @@
 ./Libs/lib/jasper/jasper.jar
 ./Libs/lib/jasper/jsp-api.jar
 ./Libs/lib/jasper/tomcat-juli.jar
+./Libs/gen/twospot-appserver.jar
+./Libs/gen/twospot-controller.jar
+./Libs/gen/twospot-util.jar
+./Libs/gen/hbaseplugin.jar

@@ -1,16 +1,17 @@
 package gogo.data;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import org.prot.storage.Key;
+
 @PersistenceCapable
 public class BlogEntry
 {
-	@Persistent(valueStrategy = IdGeneratorStrategy.UUIDSTRING)
+	@Persistent(customValueStrategy = "keygen")
 	@PrimaryKey
-	private String key;
+	private Key key;
 	
 	@Persistent
 	private String username;
@@ -38,15 +39,13 @@ public class BlogEntry
 		this.message = message;
 	}
 
-	public String getKey()
+	public Key getKey()
 	{
 		return key;
 	}
 
-	public void setKey(String key)
+	public void setKey(Key key)
 	{
 		this.key = key;
 	}
-	
-	
 }
