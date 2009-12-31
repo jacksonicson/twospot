@@ -6,5 +6,5 @@ interface DbDao
 {
 	public List<String> getTables(String appId);
 
-	public DataTablet getTableData(String tableName, String start, long count);
+	public void getTableData(String tableName, String start, long count);
 }

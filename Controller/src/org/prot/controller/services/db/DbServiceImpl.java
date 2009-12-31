@@ -11,12 +11,10 @@ public class DbServiceImpl implements DbService
 	private DbDao dbDao;
 
 	@Override
-	public DataTablet getTableData(String token, String tableName, String startKey, long count)
+	public void getTableData(String token, String tableName, String startKey, long count)
 	{
 		if (tokenChecker.checkToken(token) == false)
-			return null;
-
-		return dbDao.getTableData(tableName, startKey, count);
+			return;
 	}
 
 	@Override

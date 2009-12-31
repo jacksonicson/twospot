@@ -10,5 +10,5 @@ public interface DbService
 	public List<String> getTables(String token, String appId);
 
 	@PrivilegedAppServer
-	public DataTablet getTableData(String token, String tableName, String startKey, long count);
+	public void getTableData(String token, String tableName, String startKey, long count);
 }

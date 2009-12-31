@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.prot.app.services.db.DbBrowserService;
 import org.prot.app.services.db.DbBrowserServiceFactory;
-import org.prot.controller.services.db.DataTablet;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,10 +30,6 @@ public class DbQueryFormController extends AbstractCommandController
 		model.addAttribute("queryCommand", queryCommand);
 
 		DbBrowserService dbService = DbBrowserServiceFactory.getDbBrowserService();
-
-		DataTablet tablet = dbService.getTableData(queryCommand.getTable(), "", 100);
-		model.addAttribute("dataTableHead", tablet.getKeys());
-		model.addAttribute("dataTablet", tablet.iterator());
 
 		return mview;
 	}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="lib" name="HBasePlugin">
+	<target name="lib">
+		<jar destfile="../Libs/gen/hbaseplugin.jar">
+			<fileset dir="bin">
+			</fileset>
+			<fileset dir="./src">
+				<include name="plugin.xml"/>
+			</fileset>
+		</jar>		
+	</target>
+</project>
