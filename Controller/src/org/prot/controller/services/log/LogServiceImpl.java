@@ -64,14 +64,13 @@ public class LogServiceImpl implements LogService
 
 			if (severity != -1)
 			{
-				queryBuilder.append(" && severity == ");
-				queryBuilder.append(severity);
+				// Don't support this until there are custom indices
+				// queryBuilder.append(" && severity == ");
+				// queryBuilder.append(severity);
 			}
 
 			Query query = pm.newQuery(LogMessage.class);
 			query.setFilter(queryBuilder.toString());
-			// WARN: Use a range here - but hte HbasePlugin doesn't support
-			// this!
 
 			Object result = query.execute();
 			if (result == null)
