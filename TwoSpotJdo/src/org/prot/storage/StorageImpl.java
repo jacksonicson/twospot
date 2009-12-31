@@ -85,6 +85,15 @@ public class StorageImpl implements Storage
 			return true;
 		} catch (IOException e)
 		{
+			logger.error(e);
+			return false;
+		} catch (ClassNotFoundException e)
+		{
+			logger.error(e);
+			return false;
+		} catch (SecurityException e)
+		{
+			logger.error(e);
 			return false;
 		}
 	}
