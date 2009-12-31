@@ -86,7 +86,7 @@ public class StorageImpl implements Storage
 	}
 
 	@Override
-	public List<Object> query(StorageQuery query)
+	public List<byte[]> query(StorageQuery query)
 	{
 		QueryEngine queryEngine = new QueryEngine(connectionFactory);
 		return queryEngine.run(query);

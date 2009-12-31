@@ -46,9 +46,9 @@ public class StorageQuery implements Serializable
 		return this.condition;
 	}
 
-	List<Object> run(HBaseManagedConnection connection) throws IOException, ClassNotFoundException
+	List<byte[]> run(HBaseManagedConnection connection) throws IOException, ClassNotFoundException
 	{
-		List<Object> result = new ArrayList<Object>();
+		List<byte[]> result = new ArrayList<byte[]>();
 
 		if (key != null)
 		{
@@ -72,7 +72,7 @@ public class StorageQuery implements Serializable
 		return this.limit;
 	}
 	
-	private Object fetchObject(Key key)
+	private byte[] fetchObject(Key key)
 	{
 		return null;
 	}

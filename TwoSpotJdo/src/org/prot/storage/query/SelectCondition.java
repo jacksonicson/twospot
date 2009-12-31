@@ -21,7 +21,7 @@ public class SelectCondition implements Serializable
 		this.atoms.add(atom);
 	}
 
-	void run(HBaseManagedConnection connection, StorageQuery query, List<Object> result, LimitCondition limit)
+	void run(HBaseManagedConnection connection, StorageQuery query, List<byte[]> result, LimitCondition limit)
 			throws IOException, ClassNotFoundException
 	{
 		logger.debug("Atomar conditions: " + atoms.size());

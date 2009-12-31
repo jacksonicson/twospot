@@ -17,6 +17,8 @@ Contributors :
  ***********************************************************************/
 package org.prot.stor.jdo.storage.query;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,7 @@ import org.datanucleus.store.query.AbstractJDOQLQuery;
 import org.prot.jdo.storage.StorageHelper;
 import org.prot.jdo.storage.StorageManagedConnection;
 import org.prot.storage.Storage;
+import org.prot.storage.connection.StorageUtils;
 import org.prot.storage.query.StorageQuery;
 
 /**
@@ -120,18 +123,36 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 		StorageManagedConnection connection = (StorageManagedConnection) om.getStoreManager().getConnection(
 				om);
 		Storage storage = connection.getStorage();
-		List<Object> list = storage.query(this.storageQuery);
+		List<byte[]> list = storage.query(this.storageQuery);
+
+		List<Object> candidates = new ArrayList<Object>();
 
 		// Assign StateManagers to any returned objects
 		ClassLoaderResolver clr = om.getClassLoaderResolver();
-		Iterator<Object> iter = list.iterator();
+		Iterator<byte[]> iter = list.iterator();
 		while (iter.hasNext())
 		{
-			Object obj = iter.next();
+
+			final byte[] data = iter.next();
+			Object obj = null;
+			try
+			{
+				obj = StorageUtils.deserialize(clr, data);
+				logger.warn("Class now: " + obj.getClass().getName());
+				candidates.add(obj);
+
+			} catch (IOException e)
+			{
+				logger.error("", e);
+			} catch (ClassNotFoundException e)
+			{
+				logger.error("", e);
+			}
+
 			AbstractClassMetaData cmd = om.getMetaDataManager().getMetaDataForClass(obj.getClass(), clr);
-			
-			assert(cmd.getIdentityType() == IdentityType.APPLICATION);
-			
+
+			assert (cmd.getIdentityType() == IdentityType.APPLICATION);
+
 			StateManager sm = om.findStateManager(obj);
 			if (sm == null)
 			{
@@ -148,6 +169,6 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 			// any changes
 			sm.replaceAllLoadedSCOFieldsWithWrappers();
 		}
-		return list;
+		return candidates;
 	}
 }

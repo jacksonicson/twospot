@@ -168,7 +168,7 @@ public class AtomarCondition implements Serializable
 		return entityKeys;
 	}
 
-	private void materialize(HTable entityTable, Set<byte[]> keys, List<Object> result) throws IOException,
+	private void materialize(HTable entityTable, Set<byte[]> keys, List<byte[]> result) throws IOException,
 			ClassNotFoundException
 	{
 		logger.debug("Materializing entities");
@@ -186,12 +186,11 @@ public class AtomarCondition implements Serializable
 			byte[] data = entity.getMap().get(StorageUtils.bEntity).get(StorageUtils.bSerialized)
 					.firstEntry().getValue();
 
-			Object obj = StorageUtils.deserialize(data);
-			result.add(obj);
+			result.add(data);
 		}
 	}
 
-	void run(HBaseManagedConnection connection, StorageQuery query, List<Object> result, LimitCondition limit)
+	void run(HBaseManagedConnection connection, StorageQuery query, List<byte[]> result, LimitCondition limit)
 			throws IOException, ClassNotFoundException
 	{
 		logger.debug("Running atomar condition of type: " + type);

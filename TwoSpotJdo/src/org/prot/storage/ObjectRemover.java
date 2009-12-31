@@ -99,7 +99,7 @@ public class ObjectRemover
 
 		byte[] data = result.getMap().get(StorageUtils.bEntity).get(StorageUtils.bSerialized).lastEntry()
 				.getValue();
-		return StorageUtils.deserialize(data);
+		return StorageUtils.deserialize(null, data);
 	}
 
 	void removeObjectFromIndexByProperty(HTable table, String appId, String kind, Key key,

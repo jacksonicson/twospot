@@ -3,13 +3,16 @@ package org.prot.storage.connection;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.log4j.Logger;
+import org.datanucleus.ClassLoaderResolver;
 
 public class StorageUtils
 {
+	private static final Logger logger = Logger.getLogger(StorageUtils.class);
+
 	public static final String TABLE_SEQUENCES = "counters";
 	public static final String TABLE_ENTITIES = "entities";
 	public static final String TABLE_INDEX_BY_KIND = "indexByKind";
@@ -23,11 +26,16 @@ public class StorageUtils
 	public static final byte[] bSerialized = Bytes.toBytes("serialized");
 	public static final byte[] bCounter = Bytes.toBytes("counter");
 
-	public static Object deserialize(byte[] data) throws IOException, ClassNotFoundException
+	public static Object deserialize(ClassLoaderResolver clr, byte[] data) throws IOException,
+			ClassNotFoundException
 	{
-		// WARN: Impossible within the server - class is not in classpath
-		ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(data));
-		Object obj = in.readObject();
+		ByteArrayInputStream in = new ByteArrayInputStream(data);
+		MyStream s = new MyStream(in, clr);
+
+		logger.warn("Classloader: " + StorageUtils.class.getClassLoader());
+
+		Object obj = s.readObject();
+
 		return obj;
 	}
 
