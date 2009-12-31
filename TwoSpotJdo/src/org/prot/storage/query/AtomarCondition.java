@@ -14,6 +14,7 @@ import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
+import org.prot.storage.KeyHelper;
 import org.prot.storage.connection.HBaseManagedConnection;
 import org.prot.storage.connection.StorageUtils;
 
@@ -63,7 +64,7 @@ public class AtomarCondition implements Serializable
 			startKey = Bytes.add(startKey, StorageUtils.bSlash, bValue);
 			startKey = Bytes.add(startKey, StorageUtils.bSlash);
 
-			stopKey = Bytes.add(startKey, StorageUtils.getArrayOfOnes());
+			stopKey = Bytes.add(startKey, KeyHelper.getArrayOfOnes());
 
 			return new Scan(startKey, stopKey);
 
@@ -77,7 +78,7 @@ public class AtomarCondition implements Serializable
 
 			stopKey = Bytes.add(bAppId, StorageUtils.bSlash, bKind);
 			stopKey = Bytes.add(stopKey, StorageUtils.bSlash, bProperty);
-			stopKey = Bytes.add(stopKey, StorageUtils.bSlash, StorageUtils.getArrayOfOnes());
+			stopKey = Bytes.add(stopKey, StorageUtils.bSlash, KeyHelper.getArrayOfOnes());
 
 			return new Scan(startKey, stopKey);
 
@@ -86,7 +87,7 @@ public class AtomarCondition implements Serializable
 			// Start: gogo/Person/username/Bob++/0x00
 			// Stop: gogo/Person/username/0xFFFF
 
-			bValue = StorageUtils.incrementByteArray(bValue);
+			bValue = KeyHelper.incrementByteArray(bValue);
 
 			startKey = Bytes.add(bAppId, StorageUtils.bSlash, bKind);
 			startKey = Bytes.add(startKey, StorageUtils.bSlash, bProperty);
@@ -94,7 +95,7 @@ public class AtomarCondition implements Serializable
 
 			stopKey = Bytes.add(bAppId, StorageUtils.bSlash, bKind);
 			stopKey = Bytes.add(stopKey, StorageUtils.bSlash, bProperty);
-			stopKey = Bytes.add(stopKey, StorageUtils.bSlash, StorageUtils.getArrayOfOnes());
+			stopKey = Bytes.add(stopKey, StorageUtils.bSlash, KeyHelper.getArrayOfOnes());
 
 			return new Scan(startKey, stopKey);
 
@@ -106,7 +107,7 @@ public class AtomarCondition implements Serializable
 			startKey = Bytes.add(startKey, StorageUtils.bSlash, bProperty);
 			startKey = Bytes.add(startKey, StorageUtils.bSlash, new byte[] { 0 });
 
-			bValue = StorageUtils.incrementByteArray(bValue);
+			bValue = KeyHelper.incrementByteArray(bValue);
 
 			stopKey = Bytes.add(bAppId, StorageUtils.bSlash, bKind);
 			stopKey = Bytes.add(stopKey, StorageUtils.bSlash, bProperty);

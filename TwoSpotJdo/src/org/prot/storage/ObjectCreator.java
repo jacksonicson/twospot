@@ -7,8 +7,6 @@ import java.util.Map;
 
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
-import org.apache.hadoop.hbase.util.Bytes;
-import org.apache.hadoop.metrics.Updater;
 import org.apache.log4j.Logger;
 import org.prot.storage.connection.ConnectionFactory;
 import org.prot.storage.connection.HBaseManagedConnection;
@@ -56,14 +54,13 @@ public class ObjectCreator
 		}
 	}
 
-	byte[] writeEntity(HTable table, String appId, String kind, Key key, Object obj)
-			throws IOException
+	byte[] writeEntity(HTable table, String appId, String kind, Key key, Object obj) throws IOException
 	{
 		// Get the serialized version of the object
 		byte[] serObj = StorageUtils.serialize(obj);
 
 		// Create a new put operation
-		byte[] rowKey = createRowKey(appId, kind, key);
+		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
 		Put put = new Put(rowKey);
 		put.add(StorageUtils.bEntity, StorageUtils.bSerialized, serObj);
 
@@ -76,12 +73,7 @@ public class ObjectCreator
 
 	private void writeIndexByKind(HTable table, byte[] rowKey, String appId, String kind) throws IOException
 	{
-		// Construct the index key
-		byte[] bAppId = Bytes.toBytes(appId);
-		byte[] bKind = Bytes.toBytes(kind);
-
-		byte[] indexRowKey = Bytes.add(bAppId, StorageUtils.bSlash, bKind);
-		indexRowKey = Bytes.add(indexRowKey, StorageUtils.bSlash, rowKey);
+		byte[] indexRowKey = KeyHelper.createIndexByKindKey(appId, kind, rowKey);
 
 		// Create and execute the put operation
 		Put put = new Put(indexRowKey);
@@ -92,21 +84,14 @@ public class ObjectCreator
 	void writeIndexByPropertyAsc(HTable table, byte[] rowKey, String appId, String kind,
 			Map<String, byte[]> index) throws IOException
 	{
-		byte[] bAppId = Bytes.toBytes(appId);
-		byte[] bKind = Bytes.toBytes(kind);
-
 		// Create a put operation for each property name
 		List<Put> putList = new ArrayList<Put>();
 		for (String propertyName : index.keySet())
 		{
 			logger.debug("Adding property " + propertyName);
 
-			byte[] bPropertyName = Bytes.toBytes(propertyName);
-
-			byte[] propKey = Bytes.add(bAppId, StorageUtils.bSlash, bKind);
-			propKey = Bytes.add(propKey, StorageUtils.bSlash, bPropertyName);
-			propKey = Bytes.add(propKey, StorageUtils.bSlash, index.get(propertyName));
-			propKey = Bytes.add(propKey, StorageUtils.bSlash, rowKey);
+			byte[] propKey = KeyHelper.createIndexByPropertyKey(appId, kind, rowKey, propertyName, index
+					.get(propertyName));
 
 			Put put = new Put(propKey);
 			put.add(StorageUtils.bKey, StorageUtils.bKey, rowKey);
@@ -120,26 +105,7 @@ public class ObjectCreator
 	private void writeIndexCustom(HTable table, byte[] rowKey, String appId, String kind,
 			Map<String, byte[]> index, IndexDefinition indexDef)
 	{
-		// TODO:
-	}
-
-	private byte[] createRowKey(String appId, String kind, Key key)
-	{
-		assert (appId.length() < 20);
-		int diff = 20 - appId.length();
-		byte[] bAppId = appId.getBytes();
-		byte[] bDiff = new byte[diff];
-		bAppId = Bytes.add(bAppId, bDiff);
-
-		assert (kind.length() < 20);
-		diff = 20 - kind.length();
-		byte[] bKind = kind.getBytes();
-		bDiff = new byte[diff];
-		bKind = Bytes.add(bKind, bDiff);
-
-		byte[] bKey = key.getKey();
-
-		return Bytes.add(Bytes.add(bAppId, bKind), bKey);
+		throw new NotImplementedException();
 	}
 
 	private HTable getIndexByPropertyTableAsc()

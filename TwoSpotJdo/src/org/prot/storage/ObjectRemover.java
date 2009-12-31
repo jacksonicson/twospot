@@ -89,7 +89,7 @@ public class ObjectRemover
 	Object retrieveObject(HTable table, String appId, String kind, Key key) throws IOException,
 			ClassNotFoundException
 	{
-		byte[] rowKey = StorageUtils.createRowKey(appId, kind, key);
+		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
 
 		Get get = new Get(rowKey);
 		Result result = table.get(get);
@@ -105,7 +105,7 @@ public class ObjectRemover
 	void removeObjectFromIndexByProperty(HTable table, String appId, String kind, Key key,
 			Map<String, byte[]> index) throws IOException
 	{
-		byte[] rowKey = StorageUtils.createRowKey(appId, kind, key);
+		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
 
 		byte[] bAppId = Bytes.toBytes(appId);
 		byte[] bKind = Bytes.toBytes(kind);
@@ -136,7 +136,7 @@ public class ObjectRemover
 	private void removeObjectFromIndexByKind(HTable table, String appId, String kind, Key key)
 			throws IOException
 	{
-		byte[] rowKey = StorageUtils.createRowKey(appId, kind, key);
+		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
 
 		// Construct the index key
 		byte[] bAppId = Bytes.toBytes(appId);
@@ -156,7 +156,7 @@ public class ObjectRemover
 	private void removeObjectFromEntities(HTable table, String appId, String kind, Key key)
 			throws IOException
 	{
-		byte[] rowKey = StorageUtils.createRowKey(appId, kind, key);
+		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
 
 		Get get = new Get(rowKey);
 		if (!table.exists(get))
