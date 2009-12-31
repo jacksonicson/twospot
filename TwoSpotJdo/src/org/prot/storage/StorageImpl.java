@@ -69,6 +69,13 @@ public class StorageImpl implements Storage
 	}
 
 	@Override
+	public void updateObject(String appId, String kind, Key key, Object obj, Map<String, byte[]> index,
+			IndexDefinition indexDef)
+	{
+
+	}
+
+	@Override
 	public List<Object> query(StorageQuery query)
 	{
 		QueryEngine queryEngine = new QueryEngine(connectionFactory);

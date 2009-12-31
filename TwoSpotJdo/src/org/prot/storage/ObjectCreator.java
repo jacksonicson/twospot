@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.hadoop.metrics.Updater;
 import org.apache.log4j.Logger;
 import org.prot.storage.connection.ConnectionFactory;
 import org.prot.storage.connection.HBaseManagedConnection;
@@ -55,7 +56,7 @@ public class ObjectCreator
 		}
 	}
 
-	private byte[] writeEntity(HTable table, String appId, String kind, Key key, Object obj)
+	byte[] writeEntity(HTable table, String appId, String kind, Key key, Object obj)
 			throws IOException
 	{
 		// Get the serialized version of the object
@@ -88,7 +89,7 @@ public class ObjectCreator
 		table.put(put);
 	}
 
-	private void writeIndexByPropertyAsc(HTable table, byte[] rowKey, String appId, String kind,
+	void writeIndexByPropertyAsc(HTable table, byte[] rowKey, String appId, String kind,
 			Map<String, byte[]> index) throws IOException
 	{
 		byte[] bAppId = Bytes.toBytes(appId);

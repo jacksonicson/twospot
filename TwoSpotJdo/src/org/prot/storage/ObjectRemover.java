@@ -49,7 +49,7 @@ public class ObjectRemover
 		removeObjectFromIndexByProperty(tableIndexByPropertyAsc, appId, kind, key, indexMap);
 	}
 
-	private Map<String, byte[]> createIndexMap(Object obj)
+	Map<String, byte[]> createIndexMap(Object obj)
 	{
 		Map<String, byte[]> index = new HashMap<String, byte[]>();
 
@@ -86,7 +86,7 @@ public class ObjectRemover
 		return index;
 	}
 
-	private Object retrieveObject(HTable table, String appId, String kind, Key key) throws IOException,
+	Object retrieveObject(HTable table, String appId, String kind, Key key) throws IOException,
 			ClassNotFoundException
 	{
 		byte[] rowKey = StorageUtils.createRowKey(appId, kind, key);
@@ -102,7 +102,7 @@ public class ObjectRemover
 		return StorageUtils.deserialize(data);
 	}
 
-	private void removeObjectFromIndexByProperty(HTable table, String appId, String kind, Key key,
+	void removeObjectFromIndexByProperty(HTable table, String appId, String kind, Key key,
 			Map<String, byte[]> index) throws IOException
 	{
 		byte[] rowKey = StorageUtils.createRowKey(appId, kind, key);
