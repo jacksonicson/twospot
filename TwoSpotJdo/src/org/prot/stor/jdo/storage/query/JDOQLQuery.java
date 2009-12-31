@@ -27,6 +27,7 @@ import org.datanucleus.ObjectManager;
 import org.datanucleus.StateManager;
 import org.datanucleus.exceptions.NucleusException;
 import org.datanucleus.metadata.AbstractClassMetaData;
+import org.datanucleus.metadata.IdentityType;
 import org.datanucleus.state.StateManagerFactory;
 import org.datanucleus.store.query.AbstractJDOQLQuery;
 import org.prot.jdo.storage.StorageHelper;
@@ -121,20 +122,17 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 		Storage storage = connection.getStorage();
 		List<Object> list = storage.query(this.storageQuery);
 
-		/**
-		 * Copy&Paste-Hack vom DB4O
-		 */
-
 		// Assign StateManagers to any returned objects
 		ClassLoaderResolver clr = om.getClassLoaderResolver();
-		Iterator iter = list.iterator();
+		Iterator<Object> iter = list.iterator();
 		while (iter.hasNext())
 		{
 			Object obj = iter.next();
 			AbstractClassMetaData cmd = om.getMetaDataManager().getMetaDataForClass(obj.getClass(), clr);
-
+			
+			assert(cmd.getIdentityType() == IdentityType.APPLICATION);
+			
 			StateManager sm = om.findStateManager(obj);
-
 			if (sm == null)
 			{
 				// Find the identity
