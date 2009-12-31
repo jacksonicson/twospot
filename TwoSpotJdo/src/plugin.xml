@@ -19,26 +19,26 @@
 <plugin>
 	<!-- STORE MANAGER -->
 	<extension point="org.datanucleus.store_manager">
-		<store-manager class-name="org.prot.stor.hbase.HBaseStoreManager"
+		<store-manager class-name="org.prot.jdo.storage.StorageStoreManager"
 			key="hbase" url-key="hbase" />
 	</extension>
 
 	<!-- VALUE GENERATOR -->
 	<extension point="org.datanucleus.store_valuegenerator">
 		<valuegenerator name="keygen"
-			class-name="org.prot.stor.hbase.KeyValueGenerator" unique="true" />
+			class-name="org.prot.jdo.storage.KeyValueGenerator" unique="true" />
 	</extension>
 
 	<!-- QUERY LANGUAGES -->
 	<extension point="org.datanucleus.store_query_query">
-		<query class-name="org.prot.stor.hbase.query.JDOQLQuery"
+		<query class-name="org.prot.stor.jdo.storage.query.JDOQLQuery"
 			datastore="hbase" name="JDOQL" />
 	</extension>
 
 	<!-- CONNECTION FACTORY -->
 	<extension point="org.datanucleus.store_connectionfactory">
 		<connectionfactory name="hbase"
-			class-name="org.prot.stor.hbase.ConnectionFactoryImpl" transactional="true"
+			class-name="org.prot.jdo.storage.ConnectionFactoryImpl" transactional="true"
 			datastore="hbase" />
 	</extension>
 
