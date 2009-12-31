@@ -72,7 +72,17 @@ public class StorageImpl implements Storage
 	public void updateObject(String appId, String kind, Key key, Object obj, Map<String, byte[]> index,
 			IndexDefinition indexDef)
 	{
-
+		ObjectUpdater updater = new ObjectUpdater(connectionFactory);
+		try
+		{
+			updater.updateObject(appId, kind, key, obj, index, indexDef);
+		} catch (IOException e)
+		{
+			logger.error(e);
+		} catch (ClassNotFoundException e)
+		{
+			logger.error(e);
+		}
 	}
 
 	@Override

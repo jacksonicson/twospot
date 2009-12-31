@@ -28,6 +28,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 import org.datanucleus.ObjectManager;
 import org.datanucleus.StateManager;
+import org.datanucleus.exceptions.NucleusException;
 import org.datanucleus.store.StoreManager;
 import org.datanucleus.store.StorePersistenceHandler;
 import org.datanucleus.util.Localiser;
@@ -81,7 +82,7 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 
 		} finally
 		{
-			
+
 		}
 	}
 
@@ -112,7 +113,6 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 			spks.add(s);
 
 		Map<String, byte[]> index = new HashMap<String, byte[]>();
-
 		try
 		{
 			for (String name : sm.getLoadedFieldNames())
@@ -182,6 +182,31 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 
 	public void updateObject(StateManager sm, int[] fieldNumbers)
 	{
+		logger.debug("UPDATE OBJECT");
+		// Check if the storage manager manages the class
+		if (!storeMgr.managesClass(sm.getClassMetaData().getFullClassName()))
+		{
+			throw new NucleusException("Cannot update an unmanged class");
+		}
+		// Save the object
+		StorageManagedConnection mconn = (StorageManagedConnection) storeMgr.getConnection(sm
+				.getObjectManager());
+		try
+		{
+			String appId = StorageHelper.APP_ID;
+			String kind = sm.getClassMetaData().getEntityName();
+			Key key = (Key) sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
+			Object obj = sm.getObject();
+
+			Storage storage = mconn.getStorage();
+			storage.updateObject(appId, kind, key, obj, null, null);
+			
+			logger.debug("Update done");
+			
+		} finally
+		{
+			// mconn.release();
+		}
 	}
 
 	@Override
