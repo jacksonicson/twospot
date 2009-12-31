@@ -14,7 +14,7 @@ public interface Storage
 
 	public void updateObject(Key key, Object obj);
 
-	public void deleteObject(String appId, String kind, Key key);
+	public boolean deleteObject(String appId, String kind, Key key);
 
 	public List<Object> query(StorageQuery query);
 }

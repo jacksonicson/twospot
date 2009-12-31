@@ -76,9 +76,17 @@ public class StorageImpl implements Storage
 	}
 
 	@Override
-	public void deleteObject(String appId, String kind, Key key)
+	public boolean deleteObject(String appId, String kind, Key key)
 	{
-
+		ObjectRemover remover = new ObjectRemover(connectionFactory);
+		try
+		{
+			remover.removeObject(appId, kind, key);
+			return true;
+		} catch (IOException e)
+		{
+			return false;
+		}
 	}
 
 	@Override

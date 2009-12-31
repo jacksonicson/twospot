@@ -17,14 +17,17 @@ Contributors :
  ***********************************************************************/
 package org.prot.stor.hbase.query;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.ObjectManager;
+import org.datanucleus.StateManager;
 import org.datanucleus.exceptions.NucleusException;
 import org.datanucleus.metadata.AbstractClassMetaData;
+import org.datanucleus.state.StateManagerFactory;
 import org.datanucleus.store.query.AbstractJDOQLQuery;
 import org.prot.stor.hbase.HBaseUtils;
 import org.prot.stor.hbase.StorageManagedConnection;
@@ -117,6 +120,36 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 				om);
 		Storage storage = connection.getStorage();
 		List<Object> list = storage.query(this.storageQuery);
+
+		/**
+		 * Copy&Paste-Hack vom DB4O
+		 */
+
+		// Assign StateManagers to any returned objects
+		ClassLoaderResolver clr = om.getClassLoaderResolver();
+		Iterator iter = list.iterator();
+		while (iter.hasNext())
+		{
+			Object obj = iter.next();
+			AbstractClassMetaData cmd = om.getMetaDataManager().getMetaDataForClass(obj.getClass(), clr);
+
+			StateManager sm = om.findStateManager(obj);
+
+			if (sm == null)
+			{
+				// Find the identity
+				Object id = null;
+				id = om.getApiAdapter().getNewApplicationIdentityObjectId(obj, cmd);
+
+				// Object not managed so give it a StateManager before returning
+				// it
+				sm = StateManagerFactory.newStateManagerForPersistentClean(om, id, obj);
+			}
+
+			// Wrap all unwrapped SCO fields of this instance so we can pick up
+			// any changes
+			sm.replaceAllLoadedSCOFieldsWithWrappers();
+		}
 		return list;
 	}
 }

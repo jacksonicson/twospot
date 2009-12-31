@@ -23,6 +23,7 @@ import org.datanucleus.query.expression.ParameterExpression;
 import org.datanucleus.query.expression.PrimaryExpression;
 import org.datanucleus.query.expression.SubqueryExpression;
 import org.datanucleus.query.expression.VariableExpression;
+import org.prot.storage.Key;
 import org.prot.storage.query.AtomLiteral;
 import org.prot.storage.query.AtomarCondition;
 import org.prot.storage.query.ConditionType;
@@ -135,7 +136,7 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 	protected Object processParameterExpression(ParameterExpression expr)
 	{
 		logger.debug("TEST" + expr.getSymbol().getValueType());
-		
+
 		Object paramValue = null;
 		if (parameters != null && parameters.containsKey(expr.getId()))
 			paramValue = parameters.get(expr.getId());
@@ -203,6 +204,9 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 
 		else if (value instanceof Character)
 			bValue = Bytes.toBytes(((Character) value).toString());
+
+		else if (value instanceof Key)
+			bValue = ((Key) value).getKey();
 
 		else
 		{

@@ -25,7 +25,10 @@ public class SelectCondition implements Serializable
 			throws IOException, ClassNotFoundException
 	{
 		logger.debug("Atomar conditions: " + atoms.size());
+		
+		// Check if there is an index defintion which matches the query
 
+		// Run each atom
 		for (AtomarCondition atom : atoms)
 			atom.run(connection, query, result, limit);
 	}

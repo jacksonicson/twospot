@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import org.apache.hadoop.hbase.util.Bytes;
+import org.prot.storage.Key;
 
 public class StorageUtils
 {
@@ -23,6 +24,25 @@ public class StorageUtils
 	public static final byte[] bSerialized = Bytes.toBytes("serialized");
 	public static final byte[] bCounter = Bytes.toBytes("counter"); 
 
+	public static byte[] createRowKey(String appId, String kind, Key key)
+	{
+		assert (appId.length() < 20);
+		int diff = 20 - appId.length();
+		byte[] bAppId = appId.getBytes();
+		byte[] bDiff = new byte[diff];
+		bAppId = Bytes.add(bAppId, bDiff);
+
+		assert (kind.length() < 20);
+		diff = 20 - kind.length();
+		byte[] bKind = kind.getBytes();
+		bDiff = new byte[diff];
+		bKind = Bytes.add(bKind, bDiff);
+
+		byte[] bKey = key.getKey();
+
+		return Bytes.add(Bytes.add(bAppId, bKind), bKey);
+	}
+	
 	public static byte[] incrementByteArray(byte[] input)
 	{
 		boolean match = false;

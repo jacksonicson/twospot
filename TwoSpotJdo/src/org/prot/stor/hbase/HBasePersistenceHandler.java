@@ -63,8 +63,6 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 
 	public void deleteObject(StateManager sm)
 	{
-		logger.debug("Delete object");
-
 		// Cannot delete a read only object
 		storeMgr.assertReadOnlyForUpdateOfObject(sm);
 
@@ -83,25 +81,23 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 
 		} finally
 		{
-			mconn.release();
+			
 		}
 	}
 
 	public void fetchObject(StateManager sm, int[] fieldNumbers)
 	{
-		logger.debug("Fetch object");
+		logger.debug("FETCH OBJECT");
 	}
 
 	public Object findObject(ObjectManager om, Object id)
 	{
-		logger.debug("Find object");
+		logger.debug("FIND OBJECT");
 		return null;
 	}
 
 	public void insertObject(StateManager sm)
 	{
-		logger.debug("Insert object");
-
 		// Check if the storage manager manages the class
 		if (!storeMgr.managesClass(sm.getClassMetaData().getFullClassName()))
 		{
@@ -186,13 +182,11 @@ public class HBasePersistenceHandler implements StorePersistenceHandler
 
 	public void updateObject(StateManager sm, int[] fieldNumbers)
 	{
-		logger.debug("Updaging object");
-		// TODO
 	}
 
 	@Override
 	public void locateObject(StateManager sm)
 	{
-		logger.debug("Locate object");
+		logger.debug("LOCATING");
 	}
 }

@@ -157,7 +157,7 @@ public class AtomarCondition implements Serializable
 
 			// Increment the limit counter
 			limit.increment();
-			
+
 			// Extract the entity key
 			byte[] entityKey = result.getMap().get(StorageUtils.bKey).get(StorageUtils.bKey).lastEntry()
 					.getValue();
@@ -210,8 +210,8 @@ public class AtomarCondition implements Serializable
 		case GREATER_EQUALS:
 		case LOWER_EQUALS:
 		case LOWER:
+			// Lookup in the index-table
 			entityKeys = findIn(query, tableIndex, limit);
-			logger.debug("Found entity keys: " + entityKeys.size());
 
 			// Materialize the results
 			materialize(tableEntities, entityKeys, result);
