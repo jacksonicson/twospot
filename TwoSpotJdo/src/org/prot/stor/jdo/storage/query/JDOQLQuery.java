@@ -137,7 +137,9 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 			Object obj = null;
 			try
 			{
+				
 				obj = StorageUtils.deserialize(clr, data);
+				
 				logger.warn("Class now: " + obj.getClass().getName());
 				candidates.add(obj);
 

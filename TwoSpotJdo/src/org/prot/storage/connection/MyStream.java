@@ -25,20 +25,11 @@ public class MyStream extends ObjectInputStream
 		this.classLoader = cls;
 	}
 
-	protected Class<?> resolveClass(ObjectStreamClass desc)
+	protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException
 	{
-		if (classLoader == null)
-			try
-			{
-				return super.resolveClass(desc);
-			} catch (IOException e)
-			{
-				e.printStackTrace();
-			} catch (ClassNotFoundException e)
-			{
-				e.printStackTrace();
-			}
+		if (classLoader != null)
+			return classLoader.classForName(desc.getName());
 
-		return classLoader.classForName(desc.getName());
+		return super.resolveClass(desc);
 	}
 }
