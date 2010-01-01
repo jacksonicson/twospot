@@ -23,7 +23,7 @@ public class ObjectCreator
 		this.connection = connectionFactory.createManagedConnection();
 	}
 
-	public void createObject(String appId, String kind, Key key, Object obj, Map<String, byte[]> index,
+	public void createObject(String appId, String kind, Key key, byte[] obj, Map<String, byte[]> index,
 			IndexDefinition indexDef) throws IOException
 	{
 		HTable entitiesTable = getEntitiesTable();
@@ -45,7 +45,8 @@ public class ObjectCreator
 			writeIndexByPropertyAsc(indexByPropertyAsc, rowKey, appId, kind, index);
 
 			logger.debug("Updating custom index");
-			// writeIndexCustom(indexCustom, rowKey, appId, kind, index, indexDef);
+			// writeIndexCustom(indexCustom, rowKey, appId, kind, index,
+			// indexDef);
 
 		} catch (IOException e)
 		{
@@ -54,15 +55,12 @@ public class ObjectCreator
 		}
 	}
 
-	byte[] writeEntity(HTable table, String appId, String kind, Key key, Object obj) throws IOException
+	byte[] writeEntity(HTable table, String appId, String kind, Key key, byte[] obj) throws IOException
 	{
-		// Get the serialized version of the object
-		byte[] serObj = StorageUtils.serialize(obj);
-
 		// Create a new put operation
 		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
 		Put put = new Put(rowKey);
-		put.add(StorageUtils.bEntity, StorageUtils.bSerialized, serObj);
+		put.add(StorageUtils.bEntity, StorageUtils.bSerialized, obj);
 
 		// Execute put
 		table.put(put);

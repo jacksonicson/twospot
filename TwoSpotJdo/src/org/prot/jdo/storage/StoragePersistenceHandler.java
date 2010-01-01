@@ -17,6 +17,7 @@ Contributors :
  ***********************************************************************/
 package org.prot.jdo.storage;
 
+import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -29,11 +30,14 @@ import org.apache.log4j.Logger;
 import org.datanucleus.ObjectManager;
 import org.datanucleus.StateManager;
 import org.datanucleus.exceptions.NucleusException;
+import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.store.StoreManager;
 import org.datanucleus.store.StorePersistenceHandler;
 import org.datanucleus.util.Localiser;
 import org.prot.storage.Key;
 import org.prot.storage.Storage;
+
+import com.google.protobuf.CodedOutputStream;
 
 /**
  * Wichtigste Klasse. Hier werden die Objekte serialisiert und in der Datenbank
@@ -106,6 +110,23 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 					.getClassLoaderResolver());
 		}
 
+		// Create a protocol buffer message
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		final CodedOutputStream output = CodedOutputStream.newInstance(stream);
+
+		AbstractClassMetaData acmd = sm.getClassMetaData();
+
+		int[] memberPositions = acmd.getAllMemberPositions();
+		StorageFieldManager fieldManager = new StorageFieldManager(output);
+		sm.provideFields(memberPositions, fieldManager);
+
+		// Write everything to a byte array!
+		byte[] serializedObject = stream.toByteArray();
+
+		/**
+		 * 
+		 */
+
 		// Get all object properties except the primary key
 		String[] pks = sm.getClassMetaData().getPrimaryKeyMemberNames();
 		Set<String> spks = new HashSet<String>();
@@ -173,7 +194,7 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 			Object obj = sm.getObject();
 
 			Storage storage = mconn.getStorage();
-			storage.createObject(appId, kind, key, obj, index, null);
+			storage.createObject(appId, kind, key, serializedObject, index, null);
 		} finally
 		{
 			// mconn.release();
@@ -200,9 +221,9 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 
 			Storage storage = mconn.getStorage();
 			storage.updateObject(appId, kind, key, obj, null, null);
-			
+
 			logger.debug("Update done");
-			
+
 		} finally
 		{
 			// mconn.release();

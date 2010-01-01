@@ -31,19 +31,22 @@ public class ObjectUpdater
 			IndexDefinition indexDef) throws IOException, ClassNotFoundException
 
 	{
-		HTable tableEntities = getEntitiesTable();
-		HTable tableIndexByPropertyAsc = getIndexByPropertyTableAsc();
-
-		logger.debug("Removing entity from IndexByProperty");
-		Object oldObj = remover.retrieveObject(tableEntities, appId, kind, key);
-		index = remover.createIndexMap(oldObj);
-		remover.removeObjectFromIndexByProperty(tableIndexByPropertyAsc, appId, kind, key, index);
-
-		logger.debug("Updating entity in the Entities table");
-		byte[] rowKey = creator.writeEntity(tableEntities, appId, kind, key, obj);
-
-		logger.debug("CreatingIndexByProperty");
-		creator.writeIndexByPropertyAsc(tableIndexByPropertyAsc, rowKey, appId, kind, index);
+		// HTable tableEntities = getEntitiesTable();
+		// HTable tableIndexByPropertyAsc = getIndexByPropertyTableAsc();
+		//
+		// logger.debug("Removing entity from IndexByProperty");
+		// Object oldObj = remover.retrieveObject(tableEntities, appId, kind,
+		// key);
+		// index = remover.createIndexMap(oldObj);
+		// remover.removeObjectFromIndexByProperty(tableIndexByPropertyAsc,
+		// appId, kind, key, index);
+		//
+		// logger.debug("Updating entity in the Entities table");
+		// byte[] rowKey = creator.writeEntity(tableEntities, appId, kind, key,
+		// obj);
+		//
+		// logger.debug("CreatingIndexByProperty");
+		// creator.writeIndexByPropertyAsc(tableIndexByPropertyAsc, rowKey, appId, kind, index);
 	}
 
 	private HTable getIndexByPropertyTableAsc()
