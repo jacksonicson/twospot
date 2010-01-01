@@ -71,7 +71,7 @@ public class ObjectCreator
 
 	private void writeIndexByKind(HTable table, byte[] rowKey, String appId, String kind) throws IOException
 	{
-		byte[] indexRowKey = KeyHelper.createIndexByKindKey(appId, kind, rowKey);
+		byte[] indexRowKey = KeyHelper.createIndexByKindRowKey(appId, kind, rowKey);
 
 		// Create and execute the put operation
 		Put put = new Put(indexRowKey);

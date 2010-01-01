@@ -32,11 +32,13 @@ import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.IdentityType;
 import org.datanucleus.state.StateManagerFactory;
 import org.datanucleus.store.query.AbstractJDOQLQuery;
+import org.prot.jdo.storage.StorageFetchFieldManager;
 import org.prot.jdo.storage.StorageHelper;
 import org.prot.jdo.storage.StorageManagedConnection;
 import org.prot.storage.Storage;
-import org.prot.storage.connection.StorageUtils;
 import org.prot.storage.query.StorageQuery;
+
+import com.google.protobuf.CodedInputStream;
 
 /**
  * Implementation of JDOQL for HBase datastores.
@@ -135,21 +137,19 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 
 			final byte[] data = iter.next();
 			Object obj = null;
+			CodedInputStream in = CodedInputStream.newInstance(data);
 			try
 			{
-				
-				obj = StorageUtils.deserialize(clr, data);
-				
-				logger.warn("Class now: " + obj.getClass().getName());
-				candidates.add(obj);
-
+				StorageFetchFieldManager manager = new StorageFetchFieldManager(in, clr);
+				obj = manager.get();
 			} catch (IOException e)
 			{
-				logger.error("", e);
-			} catch (ClassNotFoundException e)
-			{
-				logger.error("", e);
+				e.printStackTrace();
+				continue;
 			}
+			
+			if(obj == null)
+				continue;
 
 			AbstractClassMetaData cmd = om.getMetaDataManager().getMetaDataForClass(obj.getClass(), clr);
 

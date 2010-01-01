@@ -21,6 +21,11 @@ public class SelectCondition implements Serializable
 		this.atoms.add(atom);
 	}
 
+	boolean isEmpty()
+	{
+		return atoms.isEmpty();
+	}
+	
 	void run(HBaseManagedConnection connection, StorageQuery query, List<byte[]> result, LimitCondition limit)
 			throws IOException, ClassNotFoundException
 	{

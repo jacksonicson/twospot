@@ -5,21 +5,26 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 import org.datanucleus.exceptions.NucleusException;
+import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.store.fieldmanager.AbstractFieldManager;
 import org.prot.storage.Key;
 
 import com.google.protobuf.CodedOutputStream;
 
-public class StorageFieldManager extends AbstractFieldManager
+public class StorageInsertFieldManager extends AbstractFieldManager
 {
-	private static final Logger logger = Logger.getLogger(StorageFieldManager.class);
+	private static final Logger logger = Logger.getLogger(StorageInsertFieldManager.class);
 
 	private CodedOutputStream codedOut;
-	private HashMap<Integer, String> keyMap = new HashMap<Integer, String>();
+	private HashMap<String, byte[]> index;
+	private AbstractClassMetaData acmd;
 
-	public StorageFieldManager(CodedOutputStream codedOut)
+	public StorageInsertFieldManager(CodedOutputStream codedOut, HashMap<String, byte[]> index,
+			AbstractClassMetaData acmd)
 	{
 		this.codedOut = codedOut;
+		this.index = index;
+		this.acmd = acmd;
 	}
 
 	public void storeObjectField(int fieldNumber, Object value)
@@ -43,11 +48,17 @@ public class StorageFieldManager extends AbstractFieldManager
 		{
 			if (value != null)
 			{
+				String name = acmd.getMetaDataForManagedMemberAtPosition(fieldNumber).getName();
+				logger.debug("Field name: " + name);
+				index.put(name, value.getBytes());
+
 				logger.debug("storing field number: " + fieldNumber);
-				codedOut.writeString(fieldNumber, value);
+				codedOut.writeString(fieldNumber + 100, "aslkdfjasjfklasdjfkaösdjfklasdjfklasdjf");
+				logger.debug("Write DONE");
 			}
 		} catch (IOException e)
 		{
+			logger.error("", e);
 			throw new NucleusException("Could not store field", e);
 		}
 	}

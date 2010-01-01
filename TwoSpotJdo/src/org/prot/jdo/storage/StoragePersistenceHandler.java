@@ -18,14 +18,9 @@ Contributors :
 package org.prot.jdo.storage;
 
 import java.io.ByteArrayOutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
-import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 import org.datanucleus.ObjectManager;
 import org.datanucleus.StateManager;
@@ -116,72 +111,22 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 
 		AbstractClassMetaData acmd = sm.getClassMetaData();
 
+		try
+		{
+			output.writeString(1, acmd.getFullClassName());
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		final HashMap<String, byte[]> index = new HashMap<String, byte[]>();
 		int[] memberPositions = acmd.getAllMemberPositions();
-		StorageFieldManager fieldManager = new StorageFieldManager(output);
+		StorageInsertFieldManager fieldManager = new StorageInsertFieldManager(output, index, acmd);
 		sm.provideFields(memberPositions, fieldManager);
 
 		// Write everything to a byte array!
 		byte[] serializedObject = stream.toByteArray();
-
-		/**
-		 * 
-		 */
-
-		// Get all object properties except the primary key
-		String[] pks = sm.getClassMetaData().getPrimaryKeyMemberNames();
-		Set<String> spks = new HashSet<String>();
-		for (String s : pks)
-			spks.add(s);
-
-		Map<String, byte[]> index = new HashMap<String, byte[]>();
-		try
-		{
-			for (String name : sm.getLoadedFieldNames())
-			{
-				if (spks.contains(name))
-					continue;
-
-				Object oobj = sm.getObject();
-				char[] cName = name.toCharArray();
-				cName[0] = Character.toUpperCase(cName[0]);
-				Method method;
-				method = oobj.getClass().getMethod("get" + new String(cName), new Class[0]);
-
-				Object value = method.invoke(oobj, new Object[0]);
-				byte[] bValue = null;
-				if (value instanceof Integer)
-					bValue = Bytes.toBytes((Integer) value);
-				else if (value instanceof String)
-					bValue = Bytes.toBytes((String) value);
-				else if (value instanceof Long)
-					bValue = Bytes.toBytes((Long) value);
-				else if (value instanceof Boolean)
-					bValue = Bytes.toBytes((Boolean) value);
-				else if (value instanceof Double)
-					bValue = Bytes.toBytes((Double) value);
-				else
-					continue;
-
-				// Add the property to the index
-				index.put(name, bValue);
-			}
-		} catch (SecurityException e)
-		{
-			e.printStackTrace();
-			return;
-		} catch (NoSuchMethodException e)
-		{
-			e.printStackTrace();
-		} catch (IllegalArgumentException e)
-		{
-			e.printStackTrace();
-		} catch (IllegalAccessException e)
-		{
-			e.printStackTrace();
-		} catch (InvocationTargetException e)
-		{
-			e.printStackTrace();
-		}
+		logger.debug("Serialized object: " + new String(serializedObject));
 
 		// Save the object
 		StorageManagedConnection mconn = (StorageManagedConnection) storeMgr.getConnection(sm

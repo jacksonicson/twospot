@@ -130,7 +130,7 @@ public class ObjectRemover
 			throws IOException
 	{
 		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
-		byte[] indexRowKey = KeyHelper.createIndexByKindKey(appId, kind, rowKey);
+		byte[] indexRowKey = KeyHelper.createIndexByKindRowKey(appId, kind, rowKey);
 
 		Get get = new Get(indexRowKey);
 		if (!table.exists(get))

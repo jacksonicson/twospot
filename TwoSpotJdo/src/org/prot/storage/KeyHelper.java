@@ -24,14 +24,21 @@ public class KeyHelper
 		return Bytes.add(Bytes.add(bAppId, bKind), bKey);
 	}
 
-	public static final byte[] createIndexByKindKey(String appId, String kind, byte[] rowKey)
+	public static final byte[] createIndexByKindRowKey(String appId, String kind, byte[] rowKey)
+	{
+		byte[] indexRowKey = createIndexByKindKey(appId, kind);
+		indexRowKey = Bytes.add(indexRowKey, StorageUtils.bSlash, rowKey);
+
+		return indexRowKey;
+	}
+
+	public static final byte[] createIndexByKindKey(String appId, String kind)
 	{
 		// Construct the index key
 		byte[] bAppId = Bytes.toBytes(appId);
 		byte[] bKind = Bytes.toBytes(kind);
 
 		byte[] indexRowKey = Bytes.add(bAppId, StorageUtils.bSlash, bKind);
-		indexRowKey = Bytes.add(indexRowKey, StorageUtils.bSlash, rowKey);
 
 		return indexRowKey;
 	}

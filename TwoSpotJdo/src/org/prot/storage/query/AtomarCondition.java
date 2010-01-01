@@ -168,7 +168,7 @@ public class AtomarCondition implements Serializable
 		return entityKeys;
 	}
 
-	private void materialize(HTable entityTable, Set<byte[]> keys, List<byte[]> result) throws IOException,
+	void materialize(HTable entityTable, Set<byte[]> keys, List<byte[]> result) throws IOException,
 			ClassNotFoundException
 	{
 		logger.debug("Materializing entities");
