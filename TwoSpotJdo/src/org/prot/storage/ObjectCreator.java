@@ -23,8 +23,7 @@ public class ObjectCreator
 		this.connection = connectionFactory.createManagedConnection();
 	}
 
-	public void createObject(String appId, String kind, Key key, byte[] obj, Map<String, byte[]> index,
-			IndexDefinition indexDef) throws IOException
+	public void createObject(String appId, String kind, Key key, byte[] obj) throws IOException
 	{
 		HTable entitiesTable = getEntitiesTable();
 		HTable indexByKindTable = getIndexByKindTable();
@@ -42,7 +41,8 @@ public class ObjectCreator
 			writeIndexByKind(indexByKindTable, rowKey, appId, kind);
 
 			logger.debug("Updating index by property");
-			writeIndexByPropertyAsc(indexByPropertyAsc, rowKey, appId, kind, index);
+			// writeIndexByPropertyAsc(indexByPropertyAsc, rowKey, appId, kind,
+			// index);
 
 			logger.debug("Updating custom index");
 			// writeIndexCustom(indexCustom, rowKey, appId, kind, index,

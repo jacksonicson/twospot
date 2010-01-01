@@ -32,7 +32,7 @@ import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.IdentityType;
 import org.datanucleus.state.StateManagerFactory;
 import org.datanucleus.store.query.AbstractJDOQLQuery;
-import org.prot.jdo.storage.StorageFetchFieldManager;
+import org.prot.jdo.storage.FetchFieldManager;
 import org.prot.jdo.storage.StorageHelper;
 import org.prot.jdo.storage.StorageManagedConnection;
 import org.prot.storage.Storage;
@@ -140,7 +140,7 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 			CodedInputStream in = CodedInputStream.newInstance(data);
 			try
 			{
-				StorageFetchFieldManager manager = new StorageFetchFieldManager(in, clr, om);
+				FetchFieldManager manager = new FetchFieldManager(in, clr, om);
 				obj = manager.get();
 			} catch (IOException e)
 			{

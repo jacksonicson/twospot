@@ -11,9 +11,9 @@ import org.datanucleus.store.fieldmanager.AbstractFieldManager;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.WireFormat;
 
-public class StorageFetchFieldManager extends AbstractFieldManager
+public class FetchFieldManager extends AbstractFieldManager
 {
-	private static final Logger logger = Logger.getLogger(StorageFetchFieldManager.class);
+	private static final Logger logger = Logger.getLogger(FetchFieldManager.class);
 
 	private CodedInputStream input;
 
@@ -34,16 +34,22 @@ public class StorageFetchFieldManager extends AbstractFieldManager
 		{
 
 			int tag = input.readTag();
-			logger.debug("tag: " + tag);
+			logger.debug("tag: " + WireFormat.getTagFieldNumber(tag));
 
 			if (tag == 0)
 			{
 				logger.debug("done with this entity");
 				break;
 			}
-
 			int field = WireFormat.getTagFieldNumber(tag);
-			if (field == 2)
+
+			if (field == 1)
+			{
+				logger.debug("there is a index definition");
+				IndexMessage msg = IndexMessage.parseFrom(input);
+				logger.debug("Done parsing index definition: " + msg.getFieldName());
+				continue;
+			} else if (field == 2)
 			{
 				String className = input.readString();
 				logger.debug("Classname is: " + className);
@@ -100,7 +106,7 @@ public class StorageFetchFieldManager extends AbstractFieldManager
 		return null;
 	}
 
-	public StorageFetchFieldManager(CodedInputStream input, ClassLoaderResolver clr, ObjectManager om)
+	public FetchFieldManager(CodedInputStream input, ClassLoaderResolver clr, ObjectManager om)
 			throws IOException
 	{
 		this.input = input;
