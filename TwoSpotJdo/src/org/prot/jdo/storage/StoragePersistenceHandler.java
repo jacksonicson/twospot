@@ -105,9 +105,9 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 		int[] memberPositions = acmd.getAllMemberPositions();
 		for (int memberPosition : memberPositions)
 		{
-
 			AbstractMemberMetaData member = acmd.getMetaDataForManagedMemberAtPosition(memberPosition);
-			int fieldNumber = member.getAbsoluteFieldNumber();
+
+			int fieldNumber = 100 + member.getAbsoluteFieldNumber();
 			String fieldName = member.getName();
 			int fieldType;
 
@@ -135,8 +135,12 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 				throw new NucleusException("Unknown field type");
 			}
 
-			IndexMessage message = new IndexMessage(fieldNumber, fieldName, fieldType);
-			index.add(message);
+			IndexMessage.Builder builder = IndexMessage.newBuilder();
+			builder.setFieldNumber(fieldNumber);
+			builder.setFieldName(fieldName);
+			builder.setFieldType(fieldType);
+
+			index.add(builder.build());
 		}
 
 		return index;
@@ -146,26 +150,31 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 	{
 		AbstractClassMetaData acmd = sm.getClassMetaData();
 
+		// Create the index
+		List<IndexMessage> index = buildIndex(acmd);
+
+		// Write the class-name
+		String className = acmd.getFullClassName();
+
+		EntityMessage.Builder entity = EntityMessage.newBuilder();
+		entity.addAllIndexMessages(index);
+		entity.setClassName(className);
+
+		// Fetch and write all fields (serialize the object)
+		InsertFieldManager fieldManager = new InsertFieldManager(entity);
+		sm.provideFields(acmd.getAllMemberPositions(), fieldManager);
+
 		// Create a protocol buffer message
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		final CodedOutputStream output = CodedOutputStream.newInstance(stream);
 
-		// Create and write the index data
-		List<IndexMessage> index = buildIndex(acmd);
-		for (IndexMessage message : index)
-			message.writeTo(1, output);
-
-		// Write the class-name
-		String className = acmd.getFullClassName();
-		output.writeString(2, className);
-
-		// Fetch and write all fields (serialize the object)
-		InsertFieldManager fieldManager = new InsertFieldManager(output);
-		sm.provideFields(acmd.getAllMemberPositions(), fieldManager);
+		// Serialize the entity
+		entity.build().writeTo(output);
 
 		// Flush
 		output.flush();
 
+		// Return the serialized message
 		return stream.toByteArray();
 	}
 
@@ -191,8 +200,10 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 			byte[] serializedObject = createMessage(sm);
 			logger.debug("Serialized object: " + new String(serializedObject));
 
-			// Call storage to create the object
+			// Get the primary key of the entity
 			Key key = (Key) sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
+
+			// Create the object in the storage service
 			storage.createObject(appId, kind, key, serializedObject);
 
 		} catch (IOException e)

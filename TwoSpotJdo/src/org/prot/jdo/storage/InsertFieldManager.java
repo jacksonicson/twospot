@@ -1,23 +1,21 @@
 package org.prot.jdo.storage;
 
-import java.io.IOException;
-
 import org.apache.log4j.Logger;
 import org.datanucleus.exceptions.NucleusException;
 import org.datanucleus.store.fieldmanager.AbstractFieldManager;
+import org.prot.jdo.storage.types.StorageProperty;
+import org.prot.jdo.storage.types.StorageType;
 import org.prot.storage.Key;
-
-import com.google.protobuf.CodedOutputStream;
 
 public class InsertFieldManager extends AbstractFieldManager
 {
 	private static final Logger logger = Logger.getLogger(InsertFieldManager.class);
 
-	private final CodedOutputStream codedOut;
+	private final EntityMessage.Builder entity;
 
-	public InsertFieldManager(CodedOutputStream codedOut)
+	public InsertFieldManager(EntityMessage.Builder entity)
 	{
-		this.codedOut = codedOut;
+		this.entity = entity;
 	}
 
 	public void storeObjectField(int fieldNumber, Object value)
@@ -25,21 +23,14 @@ public class InsertFieldManager extends AbstractFieldManager
 		if (value == null)
 			return;
 
-		try
+		if (value instanceof Key)
 		{
-			if (value instanceof Key)
-			{
-				Key key = (Key) value;
-				String skey = key.toString();
-				codedOut.writeString(fieldNumber + 100, skey);
-
-			} else
-			{
-				throw new NucleusException("Cannot store object fields");
-			}
-		} catch (IOException e)
+			Key key = (Key) value;
+			String skey = key.toString();
+			entity.addProperty(new StorageProperty(fieldNumber + 100, "", StorageType.STRING, skey));
+		} else
 		{
-			throw new NucleusException("Could not store string field", e);
+			throw new NucleusException("Cannot store object fields");
 		}
 	}
 
@@ -48,100 +39,46 @@ public class InsertFieldManager extends AbstractFieldManager
 		if (value == null)
 			return;
 
-		try
-		{
-			codedOut.writeString(fieldNumber + 100, value);
-		} catch (IOException e)
-		{
-			throw new NucleusException("Could not store string field", e);
-		}
+		entity.addProperty(new StorageProperty(fieldNumber + 100, "", StorageType.STRING, value));
 	}
 
 	public void storeBooleanField(int fieldNumber, boolean value)
 	{
-		try
-		{
-			codedOut.writeBool(fieldNumber + 100, value);
-		} catch (IOException e)
-		{
-			throw new NucleusException("Could not store string field", e);
-		}
+		entity.addProperty(new StorageProperty(fieldNumber + 100, "", StorageType.BOOLEAN, value));
 	}
 
 	public void storeCharField(int fieldNumber, char value)
 	{
-		try
-		{
-			codedOut.writeInt32(fieldNumber + 100, value);
-		} catch (IOException e)
-		{
-			throw new NucleusException("Could not store string field", e);
-		}
+		entity.addProperty(new StorageProperty(fieldNumber + 100, "", StorageType.CHAR, value));
 	}
 
 	public void storeByteField(int fieldNumber, byte value)
 	{
-		try
-		{
-			codedOut.writeInt32(fieldNumber + 100, value);
-		} catch (IOException e)
-		{
-			throw new NucleusException("Could not store string field", e);
-		}
+		entity.addProperty(new StorageProperty(fieldNumber + 100, "", StorageType.BYTE, value));
 	}
 
 	public void storeShortField(int fieldNumber, short value)
 	{
-		try
-		{
-			codedOut.writeInt32(fieldNumber + 100, value);
-		} catch (IOException e)
-		{
-			throw new NucleusException("Could not store string field", e);
-		}
+		entity.addProperty(new StorageProperty(fieldNumber + 100, "", StorageType.SHORT, value));
 	}
 
 	public void storeIntField(int fieldNumber, int value)
 	{
-		try
-		{
-			codedOut.writeInt32(fieldNumber + 100, value);
-		} catch (IOException e)
-		{
-			throw new NucleusException("Could not store string field", e);
-		}
+		entity.addProperty(new StorageProperty(fieldNumber + 100, "", StorageType.INTEGER, value));
 	}
 
 	public void storeLongField(int fieldNumber, long value)
 	{
-		try
-		{
-			codedOut.writeInt64(fieldNumber + 100, value);
-		} catch (IOException e)
-		{
-			throw new NucleusException("Could not store string field", e);
-		}
+		entity.addProperty(new StorageProperty(fieldNumber + 100, "", StorageType.LONG, value));
 	}
 
 	public void storeFloatField(int fieldNumber, float value)
 	{
-		try
-		{
-			codedOut.writeFloat(fieldNumber + 100, value);
-		} catch (IOException e)
-		{
-			throw new NucleusException("Could not store string field", e);
-		}
+		entity.addProperty(new StorageProperty(fieldNumber + 100, "", StorageType.FLOAT, value));
 	}
 
 	public void storeDoubleField(int fieldNumber, double value)
 	{
-		try
-		{
-			codedOut.writeDouble(fieldNumber + 100, value);
-		} catch (IOException e)
-		{
-			throw new NucleusException("Could not store string field", e);
-		}
+		entity.addProperty(new StorageProperty(fieldNumber + 100, "", StorageType.DOUBLE, value));
 	}
 }

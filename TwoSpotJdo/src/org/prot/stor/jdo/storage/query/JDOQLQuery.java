@@ -140,8 +140,12 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 			CodedInputStream in = CodedInputStream.newInstance(data);
 			try
 			{
-				FetchFieldManager manager = new FetchFieldManager(in, clr, om);
-				obj = manager.get();
+				final FetchFieldManager manager = new FetchFieldManager(in, clr, om);
+				
+//				obj = om.findObjectUsingAID(arg0, arg1, arg2, arg3)
+//				
+//				
+//				obj = manager.get();
 			} catch (IOException e)
 			{
 				e.printStackTrace();

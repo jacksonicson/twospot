@@ -1,11 +1,12 @@
 package org.prot.jdo.storage;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.ObjectManager;
-import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.store.fieldmanager.AbstractFieldManager;
 
 import com.google.protobuf.CodedInputStream;
@@ -21,89 +22,57 @@ public class FetchFieldManager extends AbstractFieldManager
 
 	private ObjectManager om;
 
-	public Object get() throws IOException
+	private Object createObject(String className)
 	{
-		logger.debug("getting object");
-
-		Object instance = null;
-		Class cls = null;
-
-		int[] memberPos = null;
-
-		main: while (true)
+		try
 		{
-
-			int tag = input.readTag();
-			logger.debug("tag: " + WireFormat.getTagFieldNumber(tag));
-
-			if (tag == 0)
-			{
-				logger.debug("done with this entity");
-				break;
-			}
-			int field = WireFormat.getTagFieldNumber(tag);
-
-			if (field == 1)
-			{
-				logger.debug("there is a index definition");
-				IndexMessage msg = IndexMessage.parseFrom(input);
-				logger.debug("Done parsing index definition: " + msg.getFieldName());
-				continue;
-			} else if (field == 2)
-			{
-				String className = input.readString();
-				logger.debug("Classname is: " + className);
-				cls = clr.classForName(className);
-
-				memberPos = om.getMetaDataManager().getMetaDataForClass(cls, clr).getAllMemberPositions();
-
-				logger.debug("Member positionts: " + memberPos);
-				logger.debug("class resolved: " + cls.getName());
-
-				try
-				{
-					instance = cls.newInstance();
-				} catch (InstantiationException e)
-				{
-					e.printStackTrace();
-				} catch (IllegalAccessException e)
-				{
-					e.printStackTrace();
-				}
-				continue;
-			}
-
-			if (field >= 100)
-			{
-				logger.debug("Field detected: " + field);
-				if (cls == null)
-				{
-					logger.debug("class is still null - we did not find a class name until now!");
-
-				} else
-				{
-					for (int test : memberPos)
-						if (test + 100 == field)
-						{
-							AbstractMemberMetaData ammd = om.getMetaDataManager().getMetaDataForClass(cls,
-									clr).getMetaDataForMemberAtRelativePosition(test);
-							logger.debug("Restoring field " + ammd.getName());
-
-							Class type = ammd.getType();
-							if (type == String.class)
-							{
-								logger.debug("String value is: " + input.readString());
-								continue main;
-							}
-						}
-				}
-			}
-
-			logger.debug("skipping field");
-			input.skipField(tag);
+			Class<?> cls = clr.classForName(className);
+			return cls.newInstance();
+		} catch (InstantiationException e)
+		{
+			logger.error("", e);
+		} catch (IllegalAccessException e)
+		{
+			logger.error("", e);
 		}
 
 		return null;
+	}
+
+	private void parseFrom(CodedInputStream input) throws IOException
+	{
+		Map<String, IndexMessage> index = new HashMap<String, IndexMessage>();
+		Object obj = null;
+
+//		while (true)
+//		{
+//			int tag = input.readTag();
+//			if (tag == 0)
+//				break;
+//
+//			int fieldNumber = WireFormat.getTagFieldNumber(tag);
+//			switch (fieldNumber)
+//			{
+//			case 1:
+//				IndexMessage indexMessage = IndexMessage.parseFrom(input);
+//				index.put(indexMessage.getFieldName(), indexMessage);
+//				continue;
+//
+//			case 2:
+//				String classname = input.readString();
+//				obj = createObject(classname);
+//				continue;
+//
+//			default:
+//				// if (fieldNumber > 100 && obj != null)
+//				// {
+//				// int fieldIndex = fieldNumber - 100;
+//				//
+//				// // Fill the object
+//				// om.
+//				// }
+//			}
+//		}
 	}
 
 	public FetchFieldManager(CodedInputStream input, ClassLoaderResolver clr, ObjectManager om)
@@ -118,5 +87,4 @@ public class FetchFieldManager extends AbstractFieldManager
 	{
 		return null;
 	}
-
 }
