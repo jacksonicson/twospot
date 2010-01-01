@@ -53,7 +53,7 @@ public class StorageInsertFieldManager extends AbstractFieldManager
 				index.put(name, value.getBytes());
 
 				logger.debug("storing field number: " + fieldNumber);
-				codedOut.writeString(fieldNumber + 100, "aslkdfjasjfklasdjfkaösdjfklasdjfklasdjf");
+				codedOut.writeString(fieldNumber + 100, value);
 				logger.debug("Write DONE");
 			}
 		} catch (IOException e)

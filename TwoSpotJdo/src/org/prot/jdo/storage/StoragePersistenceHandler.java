@@ -111,18 +111,26 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 
 		AbstractClassMetaData acmd = sm.getClassMetaData();
 
-		try
-		{
-			output.writeString(1, acmd.getFullClassName());
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		 try
+		 {
+		 output.writeString(2, acmd.getFullClassName());
+		 } catch (IOException e)
+		 {
+		 throw new NucleusException("could not create protocol buffer", e);
+		 }
 
 		final HashMap<String, byte[]> index = new HashMap<String, byte[]>();
 		int[] memberPositions = acmd.getAllMemberPositions();
 		StorageInsertFieldManager fieldManager = new StorageInsertFieldManager(output, index, acmd);
 		sm.provideFields(memberPositions, fieldManager);
+
+		try
+		{
+			output.flush();
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 
 		// Write everything to a byte array!
 		byte[] serializedObject = stream.toByteArray();

@@ -140,15 +140,15 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 			CodedInputStream in = CodedInputStream.newInstance(data);
 			try
 			{
-				StorageFetchFieldManager manager = new StorageFetchFieldManager(in, clr);
+				StorageFetchFieldManager manager = new StorageFetchFieldManager(in, clr, om);
 				obj = manager.get();
 			} catch (IOException e)
 			{
 				e.printStackTrace();
 				continue;
 			}
-			
-			if(obj == null)
+
+			if (obj == null)
 				continue;
 
 			AbstractClassMetaData cmd = om.getMetaDataManager().getMetaDataForClass(obj.getClass(), clr);
