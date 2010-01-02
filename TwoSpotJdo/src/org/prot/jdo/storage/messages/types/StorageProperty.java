@@ -78,6 +78,9 @@ public class StorageProperty implements IStorageProperty
 		if (type == String.class)
 		{
 			return StorageType.STRING;
+		} else if (type == Key.class)
+		{
+			return StorageType.KEY;
 		} else if (type == Integer.class)
 		{
 			return StorageType.INTEGER;
@@ -105,6 +108,10 @@ public class StorageProperty implements IStorageProperty
 		switch (type)
 		{
 		case STRING:
+			value = input.readString();
+			bValue = Bytes.toBytes((String) value);
+			break;
+		case KEY:
 			value = input.readString();
 			bValue = Bytes.toBytes((String) value);
 			break;
@@ -140,6 +147,8 @@ public class StorageProperty implements IStorageProperty
 			value = (short) input.readInt32();
 			bValue = Bytes.toBytes((Short) value);
 			break;
+		default:
+			throw new NucleusException("Unknown type");
 		}
 	}
 
@@ -151,22 +160,33 @@ public class StorageProperty implements IStorageProperty
 		case STRING:
 			out.writeString(fieldNumber, (String) value);
 			break;
+		case KEY:
+			out.writeString(fieldNumber, (String) value);
+			break;
 		case BOOLEAN:
 			out.writeBool(fieldNumber, (Boolean) value);
+			break;
 		case BYTE:
 			out.writeInt32(fieldNumber, (Byte) value);
+			break;
 		case CHAR:
 			out.writeInt32(fieldNumber, ((Character) value));
+			break;
 		case DOUBLE:
 			out.writeDouble(fieldNumber, (Double) value);
+			break;
 		case FLOAT:
 			out.writeFloat(fieldNumber, (Float) value);
+			break;
 		case INTEGER:
 			out.writeInt32(fieldNumber, (Integer) value);
+			break;
 		case LONG:
 			out.writeInt64(fieldNumber, (Long) value);
+			break;
 		case SHORT:
 			out.writeInt32(fieldNumber, ((Short) value).intValue());
+			break;
 		}
 	}
 }

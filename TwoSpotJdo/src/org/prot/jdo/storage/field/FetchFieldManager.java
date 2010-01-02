@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.ObjectManager;
+import org.datanucleus.exceptions.NucleusException;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.store.fieldmanager.AbstractFieldManager;
 import org.prot.jdo.storage.messages.EntityMessage;
@@ -17,7 +18,7 @@ import com.google.protobuf.CodedInputStream;
 public class FetchFieldManager extends AbstractFieldManager
 {
 	private static final Logger logger = Logger.getLogger(FetchFieldManager.class);
-	
+
 	private EntityMessage msg;
 
 	private AbstractClassMetaData acmd;
@@ -58,18 +59,16 @@ public class FetchFieldManager extends AbstractFieldManager
 		IStorageProperty property = getProperty(fieldNumber);
 		if(property != null)
 		{
-			if(property.getType() == StorageType.STRING)
+			if(property.getType() == StorageType.KEY)
 			{
 				Key key = new Key((String)property.getValue());
 				return key;
 			}
 			else
 			{
-				logger.debug("fetch object not a string");
+				throw new NucleusException("Could not fetch object field - unknown type");
 			}
 		}
-		
-		logger.debug("fetch object failed"); 
 		
 		return null;
 	}

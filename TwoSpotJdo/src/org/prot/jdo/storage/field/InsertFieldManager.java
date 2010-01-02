@@ -23,9 +23,12 @@ public class InsertFieldManager extends AbstractFieldManager
 
 		if (value instanceof Key)
 		{
+			// Get an string encoded version of the key
 			Key key = (Key) value;
 			String skey = key.toString();
-			entity.addProperty(new StorageProperty(fieldNumber, StorageType.STRING, skey));
+			
+			// Use the property type key
+			entity.addProperty(new StorageProperty(fieldNumber, StorageType.KEY, skey));
 		} else
 		{
 			throw new NucleusException("Cannot store object fields");

@@ -3,11 +3,14 @@ package org.prot.storage;
 import java.io.Serializable;
 
 import org.apache.hadoop.hbase.util.Base64;
+import org.apache.log4j.Logger;
 
 public class Key implements Serializable
 {
 	private static final long serialVersionUID = -1077956197302875365L;
 
+	private static final Logger logger = Logger.getLogger(Key.class);
+	
 	byte[] key = null;
 
 	public Key()
@@ -17,6 +20,7 @@ public class Key implements Serializable
 	
 	public Key(String stringKey)
 	{
+		logger.debug("Restoring key from base64 string: " + stringKey);
 		this.key = Base64.decode(stringKey);
 	}
 
