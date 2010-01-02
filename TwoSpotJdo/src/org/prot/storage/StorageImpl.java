@@ -2,7 +2,6 @@ package org.prot.storage;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.hadoop.hbase.MasterNotRunningException;
 import org.apache.log4j.Logger;
@@ -68,13 +67,12 @@ public class StorageImpl implements Storage
 	}
 
 	@Override
-	public void updateObject(String appId, String kind, Key key, Object obj, Map<String, byte[]> index,
-			IndexDefinition indexDef)
+	public void updateObject(String appId, String kind, Key key, byte[] obj)
 	{
 		ObjectUpdater updater = new ObjectUpdater(connectionFactory);
 		try
 		{
-			updater.updateObject(appId, kind, key, obj, index, indexDef);
+			updater.updateObject(appId, kind, key, obj);
 		} catch (IOException e)
 		{
 			logger.error(e);

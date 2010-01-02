@@ -141,7 +141,7 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 			try
 			{
 				final ClassLoaderResolver clr2 = clr;
-				final FetchFieldManager manager = new FetchFieldManager(in, clr, om);
+				final FetchFieldManager manager = new FetchFieldManager(in, om, clr);
 				Class cls = clr.classForName(manager.getClassName());
 				final AbstractClassMetaData acmd = om.getMetaDataManager().getMetaDataForClass(cls, clr2);
 				obj = om.findObjectUsingAID(cls, new FieldValues()

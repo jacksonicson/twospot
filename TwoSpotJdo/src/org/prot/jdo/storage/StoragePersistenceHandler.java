@@ -109,20 +109,25 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 	{
 		List<IndexMessage> index = new ArrayList<IndexMessage>();
 
+		// Iterate over all fields
 		int[] memberPositions = acmd.getAllMemberPositions();
 		for (int memberPosition : memberPositions)
 		{
+			// Get field finso
 			AbstractMemberMetaData member = acmd.getMetaDataForManagedMemberAtPosition(memberPosition);
 
+			// Get infos about this field
 			int fieldNumber = member.getAbsoluteFieldNumber();
 			String fieldName = member.getName();
 			StorageType fieldType = StorageProperty.newType(member.getType());
 
+			// Build the index message
 			IndexMessage.Builder builder = IndexMessage.newBuilder();
-			builder.setFieldNumber(fieldNumber);
+			builder.setFieldNumber(StorageProperty.messageFieldNumber(fieldNumber));
 			builder.setFieldName(fieldName);
 			builder.setFieldType(fieldType);
 
+			// Add index message to index list 
 			index.add(builder.build());
 		}
 
@@ -174,8 +179,6 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 		// Create a connection
 		StorageManagedConnection connection = (StorageManagedConnection) storeManager.getConnection(sm
 				.getObjectManager());
-		String appId = StorageHelper.APP_ID;
-		String kind = sm.getClassMetaData().getEntityName();
 		Storage storage = connection.getStorage();
 
 		try
@@ -188,6 +191,8 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 			Key key = (Key) sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
 
 			// Create the object in the storage service
+			String appId = StorageHelper.APP_ID;
+			String kind = sm.getClassMetaData().getEntityName();
 			storage.createObject(appId, kind, key, serializedObject);
 
 		} catch (IOException e)
@@ -212,15 +217,15 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 				.getObjectManager());
 		try
 		{
-			String appId = StorageHelper.APP_ID;
-			String kind = sm.getClassMetaData().getEntityName();
-			Key key = (Key) sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
-			Object obj = sm.getObject();
-
-			Storage storage = mconn.getStorage();
-			storage.updateObject(appId, kind, key, obj, null, null);
-
-			logger.debug("Update done");
+//			String appId = StorageHelper.APP_ID;
+//			String kind = sm.getClassMetaData().getEntityName();
+//			Key key = (Key) sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
+//			Object obj = sm.getObject();
+//
+//			Storage storage = mconn.getStorage();
+//			storage.updateObject(appId, kind, key, obj, null, null);
+//
+//			logger.debug("Update done");
 
 		} finally
 		{

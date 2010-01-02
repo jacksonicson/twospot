@@ -1,7 +1,6 @@
 package org.prot.storage;
 
 import java.util.List;
-import java.util.Map;
 
 import org.prot.storage.query.StorageQuery;
 
@@ -11,8 +10,7 @@ public interface Storage
 
 	public void createObject(String appId, String kind, Key key, byte[] obj);
 
-	public void updateObject(String appId, String kind, Key key, Object obj, Map<String, byte[]> index,
-			IndexDefinition indexDef);
+	public void updateObject(String appId, String kind, Key key, byte[] obj);
 
 	public boolean deleteObject(String appId, String kind, Key key);
 

@@ -30,7 +30,7 @@ public class StorageProperty implements IStorageProperty
 
 	// The fieldNumber of a storage property is the fieldNumber of the property
 	// in the persistent class plus an offset
-	private static final int INDEX_OFFSET = 100;
+	public static final int INDEX_OFFSET = 100;
 
 	public static final int messageFieldNumber(final int classFieldNumber)
 	{

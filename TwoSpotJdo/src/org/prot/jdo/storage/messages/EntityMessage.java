@@ -173,7 +173,7 @@ public class EntityMessage extends AbstractMessageLite
 					continue;
 
 				default:
-					if (fieldNumber >= 100)
+					if (fieldNumber >= StorageProperty.INDEX_OFFSET)
 					{
 						int fieldIndex = StorageProperty.classFieldNumber(fieldNumber);
 

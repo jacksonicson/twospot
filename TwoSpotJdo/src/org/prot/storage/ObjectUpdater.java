@@ -1,7 +1,6 @@
 package org.prot.storage;
 
 import java.io.IOException;
-import java.util.Map;
 
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.log4j.Logger;
@@ -27,8 +26,8 @@ public class ObjectUpdater
 		this.remover = new ObjectRemover(connectionFactory);
 	}
 
-	public void updateObject(String appId, String kind, Key key, Object obj, Map<String, byte[]> index,
-			IndexDefinition indexDef) throws IOException, ClassNotFoundException
+	public void updateObject(String appId, String kind, Key key, byte[] obj) throws IOException,
+			ClassNotFoundException
 
 	{
 		// HTable tableEntities = getEntitiesTable();
@@ -46,7 +45,8 @@ public class ObjectUpdater
 		// obj);
 		//
 		// logger.debug("CreatingIndexByProperty");
-		// creator.writeIndexByPropertyAsc(tableIndexByPropertyAsc, rowKey, appId, kind, index);
+		// creator.writeIndexByPropertyAsc(tableIndexByPropertyAsc, rowKey,
+		// appId, kind, index);
 	}
 
 	private HTable getIndexByPropertyTableAsc()

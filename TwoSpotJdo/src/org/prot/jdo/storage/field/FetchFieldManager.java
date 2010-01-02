@@ -2,7 +2,6 @@ package org.prot.jdo.storage.field;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
 import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.ObjectManager;
 import org.datanucleus.metadata.AbstractClassMetaData;
@@ -15,31 +14,15 @@ import com.google.protobuf.CodedInputStream;
 
 public class FetchFieldManager extends AbstractFieldManager
 {
-	private static final Logger logger = Logger.getLogger(FetchFieldManager.class);
-
-	private CodedInputStream input;
-
-	private ClassLoaderResolver clr;
-
-	private ObjectManager om;
-
 	private EntityMessage msg;
 
-	private Object createObject(String className)
-	{
-		try
-		{
-			Class<?> cls = clr.classForName(className);
-			return cls.newInstance();
-		} catch (InstantiationException e)
-		{
-			logger.error("", e);
-		} catch (IllegalAccessException e)
-		{
-			logger.error("", e);
-		}
+	private AbstractClassMetaData acmd;
 
-		return null;
+	public FetchFieldManager(CodedInputStream input, ObjectManager om, ClassLoaderResolver clr)
+			throws IOException
+	{
+		parseFrom(input);
+		this.acmd = om.getMetaDataManager().getMetaDataForClass(getClassName(), clr);
 	}
 
 	public String getClassName()
@@ -52,20 +35,6 @@ public class FetchFieldManager extends AbstractFieldManager
 		EntityMessage.Builder builder = EntityMessage.newBuilder();
 		builder.mergeFrom(input);
 		this.msg = builder.build();
-	}
-
-	private AbstractClassMetaData acmd;
-
-	public FetchFieldManager(CodedInputStream input, ClassLoaderResolver clr, ObjectManager om)
-			throws IOException
-	{
-		this.input = input;
-		this.clr = clr;
-		this.om = om;
-
-		parseFrom(input);
-
-		this.acmd = om.getMetaDataManager().getMetaDataForClass(getClassName(), clr);
 	}
 
 	private IStorageProperty getProperty(int fieldNumber)
