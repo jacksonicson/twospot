@@ -31,6 +31,8 @@ import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.store.StoreManager;
 import org.datanucleus.store.StorePersistenceHandler;
 import org.datanucleus.util.Localiser;
+import org.prot.jdo.storage.messages.EntityMessage;
+import org.prot.jdo.storage.messages.IndexMessage;
 import org.prot.jdo.storage.types.StorageType;
 import org.prot.storage.Key;
 import org.prot.storage.Storage;

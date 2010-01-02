@@ -7,6 +7,7 @@ import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.ObjectManager;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.store.fieldmanager.AbstractFieldManager;
+import org.prot.jdo.storage.messages.EntityMessage;
 import org.prot.jdo.storage.types.IStorageProperty;
 import org.prot.storage.Key;
 

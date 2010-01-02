@@ -3,6 +3,7 @@ package org.prot.jdo.storage;
 import org.apache.log4j.Logger;
 import org.datanucleus.exceptions.NucleusException;
 import org.datanucleus.store.fieldmanager.AbstractFieldManager;
+import org.prot.jdo.storage.messages.EntityMessage;
 import org.prot.jdo.storage.types.StorageProperty;
 import org.prot.jdo.storage.types.StorageType;
 import org.prot.storage.Key;
@@ -40,55 +41,55 @@ public class InsertFieldManager extends AbstractFieldManager
 			return;
 
 		entity
-				.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.STRING,
+				.addProperty(new StorageProperty(fieldNumber + 100, null, StorageType.STRING,
 						value));
 	}
 
 	public void storeBooleanField(int fieldNumber, boolean value)
 	{
-		entity.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.BOOLEAN,
+		entity.addProperty(new StorageProperty(fieldNumber + 100, null, StorageType.BOOLEAN,
 				value));
 	}
 
 	public void storeCharField(int fieldNumber, char value)
 	{
-		entity.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.CHAR, value));
+		entity.addProperty(new StorageProperty(fieldNumber + 100, null, StorageType.CHAR, value));
 	}
 
 	public void storeByteField(int fieldNumber, byte value)
 	{
-		entity.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.BYTE, value));
+		entity.addProperty(new StorageProperty(fieldNumber + 100, null, StorageType.BYTE, value));
 	}
 
 	public void storeShortField(int fieldNumber, short value)
 	{
 		entity
-				.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.SHORT,
+				.addProperty(new StorageProperty(fieldNumber + 100, null, StorageType.SHORT,
 						value));
 	}
 
 	public void storeIntField(int fieldNumber, int value)
 	{
-		entity.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.INTEGER,
+		entity.addProperty(new StorageProperty(fieldNumber + 100, null, StorageType.INTEGER,
 				value));
 	}
 
 	public void storeLongField(int fieldNumber, long value)
 	{
-		entity.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.LONG, value));
+		entity.addProperty(new StorageProperty(fieldNumber + 100, null, StorageType.LONG, value));
 	}
 
 	public void storeFloatField(int fieldNumber, float value)
 	{
 		entity
-				.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.FLOAT,
+				.addProperty(new StorageProperty(fieldNumber + 100, null, StorageType.FLOAT,
 						value));
 	}
 
 	public void storeDoubleField(int fieldNumber, double value)
 	{
 		entity
-				.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.DOUBLE,
+.addProperty(new StorageProperty(fieldNumber + 100, null, StorageType.DOUBLE,
 						value));
 	}
 }

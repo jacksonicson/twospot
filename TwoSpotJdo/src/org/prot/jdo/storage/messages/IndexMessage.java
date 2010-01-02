@@ -1,4 +1,4 @@
-package org.prot.jdo.storage;
+package org.prot.jdo.storage.messages;
 
 import java.io.IOException;
 
