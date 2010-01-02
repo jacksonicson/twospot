@@ -119,7 +119,7 @@ public class ObjectCreator
 
 	private void writeIndexCustom(HTable table, byte[] rowKey, String appId, String kind, byte[] obj)
 	{
-		throw new NotImplementedException();
+		// Not implemented
 	}
 
 	private HTable getIndexByPropertyTableAsc()
