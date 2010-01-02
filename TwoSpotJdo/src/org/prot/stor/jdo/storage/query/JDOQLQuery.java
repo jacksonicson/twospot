@@ -25,12 +25,12 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.datanucleus.ClassLoaderResolver;
+import org.datanucleus.FetchPlan;
 import org.datanucleus.ObjectManager;
 import org.datanucleus.StateManager;
 import org.datanucleus.exceptions.NucleusException;
 import org.datanucleus.metadata.AbstractClassMetaData;
-import org.datanucleus.metadata.IdentityType;
-import org.datanucleus.state.StateManagerFactory;
+import org.datanucleus.store.FieldValues;
 import org.datanucleus.store.query.AbstractJDOQLQuery;
 import org.prot.jdo.storage.FetchFieldManager;
 import org.prot.jdo.storage.StorageHelper;
@@ -140,12 +140,39 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 			CodedInputStream in = CodedInputStream.newInstance(data);
 			try
 			{
+				final ClassLoaderResolver clr2 = clr;
 				final FetchFieldManager manager = new FetchFieldManager(in, clr, om);
-				
-//				obj = om.findObjectUsingAID(arg0, arg1, arg2, arg3)
-//				
-//				
-//				obj = manager.get();
+				Class cls = clr.classForName(manager.getClassName());
+				final AbstractClassMetaData acmd = om.getMetaDataManager().getMetaDataForClass(cls, clr2);
+				obj = om.findObjectUsingAID(cls, new FieldValues()
+				{
+
+					@Override
+					public void fetchFields(StateManager sm)
+					{
+						sm.replaceFields(acmd.getPKMemberPositions(), manager);
+						sm
+								.replaceFields(acmd.getBasicMemberPositions(clr2, om.getMetaDataManager()),
+										manager);
+					}
+
+					@Override
+					public void fetchNonLoadedFields(StateManager sm)
+					{
+					}
+
+					@Override
+					public FetchPlan getFetchPlanForLoading()
+					{
+						return null;
+					}
+
+				}, true, true);
+
+				// obj = om.findObjectUsingAID(arg0, arg1, arg2, arg3)
+				//				
+				//				
+				// obj = manager.get();
 			} catch (IOException e)
 			{
 				e.printStackTrace();
@@ -155,25 +182,7 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 			if (obj == null)
 				continue;
 
-			AbstractClassMetaData cmd = om.getMetaDataManager().getMetaDataForClass(obj.getClass(), clr);
-
-			assert (cmd.getIdentityType() == IdentityType.APPLICATION);
-
-			StateManager sm = om.findStateManager(obj);
-			if (sm == null)
-			{
-				// Find the identity
-				Object id = null;
-				id = om.getApiAdapter().getNewApplicationIdentityObjectId(obj, cmd);
-
-				// Object not managed so give it a StateManager before returning
-				// it
-				sm = StateManagerFactory.newStateManagerForPersistentClean(om, id, obj);
-			}
-
-			// Wrap all unwrapped SCO fields of this instance so we can pick up
-			// any changes
-			sm.replaceAllLoadedSCOFieldsWithWrappers();
+			candidates.add(obj);
 		}
 		return candidates;
 	}
