@@ -1,10 +1,11 @@
-package org.prot.jdo.storage.types;
+package org.prot.jdo.storage.messages.types;
 
 import java.io.IOException;
 
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 import org.datanucleus.exceptions.NucleusException;
+import org.prot.jdo.storage.messages.IndexMessage;
 import org.prot.storage.Key;
 
 import com.google.protobuf.CodedInputStream;
@@ -12,35 +13,46 @@ import com.google.protobuf.CodedOutputStream;
 
 public class StorageProperty implements IStorageProperty
 {
+	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(StorageProperty.class);
 
+	// Field number in the message
 	private int fieldNumber;
 
-	private String name;
-
+	// Type of the property value
 	private StorageType type;
 
+	// Value
 	private Object value;
 
+	// Binary value
 	private byte[] bValue;
 
-	public StorageProperty(int fieldNumber, String name, StorageType type)
+	// The fieldNumber of a storage property is the fieldNumber of the property
+	// in the persistent class plus an offset
+	private static final int INDEX_OFFSET = 100;
+
+	public static final int messageFieldNumber(final int classFieldNumber)
 	{
-		this(fieldNumber, name, type, null);
+		return classFieldNumber + INDEX_OFFSET;
 	}
 
-	public StorageProperty(int fieldNumber, String name, StorageType type, Object value)
+	public static final int classFieldNumber(final int messageFieldNumber)
 	{
-		this.fieldNumber = fieldNumber;
-		this.name = name;
+		return messageFieldNumber - INDEX_OFFSET;
+	}
+
+	public StorageProperty(IndexMessage indexMsg)
+	{
+		this.fieldNumber = indexMsg.getFieldNumber();
+		this.type = indexMsg.getFieldType();
+	}
+
+	public StorageProperty(int classFieldNumber, StorageType type, Object value)
+	{
+		this.fieldNumber = messageFieldNumber(classFieldNumber);
 		this.type = type;
 		this.value = value;
-	}
-
-	@Override
-	public String getName()
-	{
-		return name;
 	}
 
 	@Override
@@ -134,8 +146,6 @@ public class StorageProperty implements IStorageProperty
 	@Override
 	public void writeTo(CodedOutputStream out) throws IOException
 	{
-		logger.debug("Writing property");
-
 		switch (type)
 		{
 		case STRING:

@@ -3,7 +3,7 @@ package org.prot.jdo.storage.messages;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.prot.jdo.storage.types.StorageType;
+import org.prot.jdo.storage.messages.types.StorageType;
 import org.prot.storage.NotImplementedException;
 
 import com.google.protobuf.AbstractMessageLite;
@@ -16,13 +16,13 @@ public class IndexMessage extends AbstractMessageLite
 {
 	private static final Logger logger = Logger.getLogger(IndexMessage.class);
 
-	// Field number in the entity message
+	// Field number of the storage property in the message
 	private int fieldNumber;
 
-	// The name of the field
+	// Name of the storage property at the field number
 	private String fieldName;
 
-	// The type of the field
+	// Data type of the storage property at the fieldNumber
 	private StorageType fieldType;
 
 	public int getFieldNumber()
@@ -45,8 +45,13 @@ public class IndexMessage extends AbstractMessageLite
 	{
 		int size = 0;
 
+		// Write the field number
 		size += CodedOutputStream.computeInt32Size(1, fieldNumber);
+
+		// Write the field name
 		size += CodedOutputStream.computeStringSize(2, fieldName);
+
+		// Write the field type
 		size += CodedOutputStream.computeInt32Size(3, fieldType.getCode());
 
 		return size;

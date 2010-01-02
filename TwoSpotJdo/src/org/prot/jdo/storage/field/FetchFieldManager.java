@@ -8,7 +8,7 @@ import org.datanucleus.ObjectManager;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.store.fieldmanager.AbstractFieldManager;
 import org.prot.jdo.storage.messages.EntityMessage;
-import org.prot.jdo.storage.types.IStorageProperty;
+import org.prot.jdo.storage.messages.types.IStorageProperty;
 import org.prot.storage.Key;
 
 import com.google.protobuf.CodedInputStream;
@@ -70,8 +70,13 @@ public class FetchFieldManager extends AbstractFieldManager
 
 	private IStorageProperty getProperty(int fieldNumber)
 	{
-		String name = acmd.getMetaDataForManagedMemberAtPosition(fieldNumber).getName();
-		IStorageProperty property = msg.propertyFromName(name);
+		// Get the name of the field
+		String fieldName = acmd.getMetaDataForManagedMemberAtPosition(fieldNumber).getName();
+
+		// The the property by the field name
+		IStorageProperty property = msg.getProperty(fieldName);
+
+		// Return the property or null if no property was found
 		return property;
 	}
 

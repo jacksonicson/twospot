@@ -1,4 +1,4 @@
-package org.prot.jdo.storage.types;
+package org.prot.jdo.storage.messages.types;
 
 import java.io.IOException;
 
@@ -8,8 +8,6 @@ import com.google.protobuf.CodedOutputStream;
 public interface IStorageProperty
 {
 	public StorageType getType();
-
-	public String getName();
 
 	public Object getValue();
 	

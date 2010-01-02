@@ -1,4 +1,4 @@
-package org.prot.jdo.storage.types;
+package org.prot.jdo.storage.messages.types;
 
 import java.util.EnumSet;
 import java.util.HashMap;

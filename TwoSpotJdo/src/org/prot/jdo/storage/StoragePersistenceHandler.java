@@ -34,8 +34,8 @@ import org.datanucleus.util.Localiser;
 import org.prot.jdo.storage.field.InsertFieldManager;
 import org.prot.jdo.storage.messages.EntityMessage;
 import org.prot.jdo.storage.messages.IndexMessage;
-import org.prot.jdo.storage.types.StorageProperty;
-import org.prot.jdo.storage.types.StorageType;
+import org.prot.jdo.storage.messages.types.StorageProperty;
+import org.prot.jdo.storage.messages.types.StorageType;
 import org.prot.storage.Key;
 import org.prot.storage.Storage;
 

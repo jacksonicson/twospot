@@ -9,7 +9,7 @@ import org.apache.hadoop.hbase.client.Put;
 import org.apache.log4j.Logger;
 import org.prot.jdo.storage.messages.EntityMessage;
 import org.prot.jdo.storage.messages.IndexMessage;
-import org.prot.jdo.storage.types.IStorageProperty;
+import org.prot.jdo.storage.messages.types.IStorageProperty;
 import org.prot.storage.connection.ConnectionFactory;
 import org.prot.storage.connection.HBaseManagedConnection;
 import org.prot.storage.connection.StorageUtils;
@@ -95,7 +95,7 @@ public class ObjectCreator
 			String propertyName = indexMsg.getFieldName();
 			logger.debug("Adding property " + propertyName);
 
-			IStorageProperty property = entityMsg.propertyFromName(propertyName);
+			IStorageProperty property = entityMsg.getProperty(propertyName);
 			byte[] bValue = property.getValueAsBytes();
 			if (bValue == null)
 			{

@@ -5,11 +5,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
-import org.prot.jdo.storage.types.IStorageProperty;
-import org.prot.jdo.storage.types.StorageProperty;
+import org.prot.jdo.storage.messages.types.IStorageProperty;
+import org.prot.jdo.storage.messages.types.StorageProperty;
 import org.prot.storage.NotImplementedException;
 
 import com.google.protobuf.AbstractMessageLite;
@@ -24,11 +23,19 @@ public class EntityMessage extends AbstractMessageLite
 
 	private static final EntityMessage defaultInstance = new EntityMessage();
 
-	private List<IndexMessage> indexMessages = new ArrayList<IndexMessage>();
-
+	// Full qualified class name of the entity
+	private static final int FIELD_NUMBER_CLASSNAME = 2;
 	private String className;
 
-	private Map<String, IStorageProperty> properties = new HashMap<String, IStorageProperty>();
+	// List of all index messages
+	private static final int FIELD_NUMBER_INDEXMESSAGE = 1;
+	private List<IndexMessage> indexMessages = new ArrayList<IndexMessage>();
+
+	// List of all properties
+	private List<IStorageProperty> allProperties = new ArrayList<IStorageProperty>();
+
+	// Lookup-table to get a property by its field name
+	private Map<String, IStorageProperty> propertiesByName = new HashMap<String, IStorageProperty>();
 
 	/*
 	 * Getter & Setter
@@ -44,9 +51,9 @@ public class EntityMessage extends AbstractMessageLite
 		return className;
 	}
 
-	public IStorageProperty propertyFromName(String name)
+	public IStorageProperty getProperty(String name)
 	{
-		return properties.get(name);
+		return propertiesByName.get(name);
 	}
 
 	/*
@@ -62,16 +69,16 @@ public class EntityMessage extends AbstractMessageLite
 	@Override
 	public void writeTo(CodedOutputStream out) throws IOException
 	{
+		// Write all index messages
 		for (IndexMessage index : indexMessages)
-			out.writeMessage(1, index);
+			out.writeMessage(FIELD_NUMBER_INDEXMESSAGE, index);
 
-		out.writeString(2, className);
+		// Write the classname
+		out.writeString(FIELD_NUMBER_CLASSNAME, className);
 
-		for (Entry<String, IStorageProperty> entry : properties.entrySet())
-		{
-			IStorageProperty type = entry.getValue();
+		// Write all properties
+		for (IStorageProperty type : allProperties)
 			type.writeTo(out);
-		}
 	}
 
 	@Override
@@ -147,36 +154,40 @@ public class EntityMessage extends AbstractMessageLite
 				switch (fieldNumber)
 				{
 				case 1:
+					// Deserialize the index message
 					IndexMessage.Builder subBuilder = IndexMessage.newBuilder();
 					input.readMessage(subBuilder, extensionRegistry);
 					IndexMessage msg = subBuilder.build();
-					current.indexMessages.add(msg);
-					index.put(msg.getFieldNumber(), msg);
 
-					logger.debug("Index done");
+					// Save the index message
+					current.indexMessages.add(msg);
+
+					// Update the lookup table
+					index.put(msg.getFieldNumber(), msg);
 					continue;
 
 				case 2:
+					// Read the classname
 					current.className = input.readString();
-					logger.debug("Classname done");
+					logger.debug("Class: " + current.className);
 					continue;
 
 				default:
 					if (fieldNumber >= 100)
 					{
-						int fieldIndex = fieldNumber;
-						IndexMessage imsg = index.get(fieldIndex);
-						logger.debug("Type is: " + imsg.getFieldType());
-						StorageProperty property = new StorageProperty(fieldIndex, imsg.getFieldName(), imsg
-								.getFieldType());
+						int fieldIndex = StorageProperty.classFieldNumber(fieldNumber);
+
+						// Get index info for this field entry
+						IndexMessage indexMsg = index.get(fieldIndex);
+						StorageProperty property = new StorageProperty(indexMsg);
 						property.mergeFrom(input);
 
-						current.properties.put(property.getName(), property);
+						current.allProperties.add(property);
+						current.propertiesByName.put(indexMsg.getFieldName(), property);
 
-						logger.debug("Value of property: " + property.getValue());
 					} else
 					{
-						logger.debug("Skipping " + fieldNumber);
+						logger.warn("Skipping field: " + fieldNumber);
 						input.skipField(tag);
 					}
 				}
@@ -236,7 +247,7 @@ public class EntityMessage extends AbstractMessageLite
 
 		public void addProperty(IStorageProperty property)
 		{
-			current.properties.put(property.getName(), property);
+			current.allProperties.add(property);
 		}
 	}
 }
