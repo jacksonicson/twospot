@@ -2,6 +2,7 @@ package org.prot.jdo.storage.types;
 
 import java.io.IOException;
 
+import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 
 import com.google.protobuf.CodedInputStream;
@@ -18,6 +19,8 @@ public class StorageProperty implements IStorageProperty
 	private StorageType type;
 
 	private Object value;
+
+	private byte[] bValue;
 
 	public StorageProperty(int fieldNumber, String name, StorageType type)
 	{
@@ -51,36 +54,51 @@ public class StorageProperty implements IStorageProperty
 	}
 
 	@Override
+	public byte[] getValueAsBytes()
+	{
+		return this.bValue;
+	}
+
+	@Override
 	public void mergeFrom(CodedInputStream input) throws IOException
 	{
 		switch (type)
 		{
 		case STRING:
 			value = input.readString();
+			bValue = Bytes.toBytes((String) value);
 			break;
 		case BOOLEAN:
 			value = input.readBool();
+			bValue = Bytes.toBytes((Boolean) value);
 			break;
 		case BYTE:
 			value = (byte) input.readInt32();
+			bValue = Bytes.toBytes((Byte) value);
 			break;
 		case CHAR:
 			value = (char) input.readInt32();
+			bValue = Bytes.toBytes((Character) value);
 			break;
 		case DOUBLE:
 			value = input.readDouble();
+			bValue = Bytes.toBytes((Double) value);
 			break;
 		case FLOAT:
 			value = input.readFloat();
+			bValue = Bytes.toBytes((Float) value);
 			break;
 		case INTEGER:
 			value = input.readInt32();
+			bValue = Bytes.toBytes((Integer) value);
 			break;
 		case LONG:
 			value = input.readInt64();
+			bValue = Bytes.toBytes((Long) value);
 			break;
 		case SHORT:
 			value = (short) input.readInt32();
+			bValue = Bytes.toBytes((Short) value);
 			break;
 		}
 	}

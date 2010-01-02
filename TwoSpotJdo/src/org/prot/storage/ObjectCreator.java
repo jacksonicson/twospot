@@ -3,11 +3,13 @@ package org.prot.storage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.log4j.Logger;
+import org.prot.jdo.storage.messages.EntityMessage;
+import org.prot.jdo.storage.messages.IndexMessage;
+import org.prot.jdo.storage.types.IStorageProperty;
 import org.prot.storage.connection.ConnectionFactory;
 import org.prot.storage.connection.HBaseManagedConnection;
 import org.prot.storage.connection.StorageUtils;
@@ -41,12 +43,10 @@ public class ObjectCreator
 			writeIndexByKind(indexByKindTable, rowKey, appId, kind);
 
 			logger.debug("Updating index by property");
-			// writeIndexByPropertyAsc(indexByPropertyAsc, rowKey, appId, kind,
-			// index);
+			writeIndexByPropertyAsc(indexByPropertyAsc, rowKey, appId, kind, obj);
 
 			logger.debug("Updating custom index");
-			// writeIndexCustom(indexCustom, rowKey, appId, kind, index,
-			// indexDef);
+			writeIndexCustom(indexCustom, rowKey, appId, kind, obj);
 
 		} catch (IOException e)
 		{
@@ -79,17 +79,34 @@ public class ObjectCreator
 		table.put(put);
 	}
 
-	void writeIndexByPropertyAsc(HTable table, byte[] rowKey, String appId, String kind,
-			Map<String, byte[]> index) throws IOException
+	void writeIndexByPropertyAsc(HTable table, byte[] rowKey, String appId, String kind, byte[] obj)
+			throws IOException
 	{
-		// Create a put operation for each property name
+		// Deserialize the message (get the index)
+		EntityMessage.Builder builder = EntityMessage.newBuilder();
+		builder.mergeFrom(obj);
+		EntityMessage entityMsg = builder.build();
+
+		List<IndexMessage> indexMsgs = entityMsg.getIndexMessages();
+
 		List<Put> putList = new ArrayList<Put>();
-		for (String propertyName : index.keySet())
+		for (IndexMessage indexMsg : indexMsgs)
 		{
+			String propertyName = indexMsg.getFieldName();
 			logger.debug("Adding property " + propertyName);
 
-			byte[] propKey = KeyHelper.createIndexByPropertyKey(appId, kind, rowKey, propertyName, index
-					.get(propertyName));
+			IStorageProperty property = entityMsg.propertyFromName(propertyName);
+			byte[] bValue = property.getValueAsBytes();
+			if (bValue == null)
+			{
+				logger.debug("not adding null properties");
+				continue;
+			}
+
+			logger.debug("property value is: " + new String(bValue));
+
+			byte[] propKey = KeyHelper.createIndexByPropertyKey(appId, kind, rowKey, propertyName, property
+					.getValueAsBytes());
 
 			Put put = new Put(propKey);
 			put.add(StorageUtils.bKey, StorageUtils.bKey, rowKey);
@@ -100,8 +117,7 @@ public class ObjectCreator
 		table.put(putList);
 	}
 
-	private void writeIndexCustom(HTable table, byte[] rowKey, String appId, String kind,
-			Map<String, byte[]> index, IndexDefinition indexDef)
+	private void writeIndexCustom(HTable table, byte[] rowKey, String appId, String kind, byte[] obj)
 	{
 		throw new NotImplementedException();
 	}

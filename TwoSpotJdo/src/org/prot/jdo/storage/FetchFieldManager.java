@@ -68,6 +68,13 @@ public class FetchFieldManager extends AbstractFieldManager
 		this.acmd = om.getMetaDataManager().getMetaDataForClass(getClassName(), clr);
 	}
 
+	private IStorageProperty getProperty(int fieldNumber)
+	{
+		String name = acmd.getMetaDataForManagedMemberAtPosition(fieldNumber).getName();
+		IStorageProperty property = msg.propertyFromName(name);
+		return property;
+	}
+
 	public Object fetchObjectField(int fieldNumber)
 	{
 		return new Key();
@@ -75,9 +82,82 @@ public class FetchFieldManager extends AbstractFieldManager
 
 	public String fetchStringField(int fieldNumber)
 	{
-		String name = acmd.getMetaDataForManagedMemberAtPosition(fieldNumber).getName();
-		IStorageProperty property = msg.proertyFromName(name);
-		logger.debug("Fetching string field: " + property.getValue());
-		return "asdf";
+		IStorageProperty property = getProperty(fieldNumber);
+		if (property != null)
+			return (String) property.getValue();
+
+		return null;
+	}
+
+	public double fetchDoubleField(int fieldNumber)
+	{
+		IStorageProperty property = getProperty(fieldNumber);
+		if (property != null)
+			return (Double) property.getValue();
+
+		return 0;
+	}
+
+	public float fetchFloatField(int fieldNumber)
+	{
+		IStorageProperty property = getProperty(fieldNumber);
+		if (property != null)
+			return (Float) property.getValue();
+
+		return 0;
+	}
+
+	public long fetchLongField(int fieldNumber)
+	{
+		IStorageProperty property = getProperty(fieldNumber);
+		if (property != null)
+			return (Long) property.getValue();
+
+		return 0;
+	}
+
+	public int fetchIntField(int fieldNumber)
+	{
+		IStorageProperty property = getProperty(fieldNumber);
+		if (property != null)
+			return (Integer) property.getValue();
+
+		return 0;
+	}
+
+	public short fetchShortField(int fieldNumber)
+	{
+		IStorageProperty property = getProperty(fieldNumber);
+		if (property != null)
+			return (Short) property.getValue();
+
+		return 0;
+	}
+
+	public byte fetchByteField(int fieldNumber)
+	{
+		IStorageProperty property = getProperty(fieldNumber);
+		if (property != null)
+			return (Byte) property.getValue();
+
+		return 0;
+	}
+
+	public char fetchCharField(int fieldNumber)
+	{
+		IStorageProperty property = getProperty(fieldNumber);
+		if (property != null)
+			return (Character) property.getValue();
+
+		return 0;
+	}
+
+	public boolean fetchBooleanField(int fieldNumber)
+	{
+		IStorageProperty property = getProperty(fieldNumber);
+		if (property != null)
+			return (Boolean) property.getValue();
+
+		return false;
 	}
 }

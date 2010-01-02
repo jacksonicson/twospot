@@ -41,55 +41,55 @@ public class InsertFieldManager extends AbstractFieldManager
 			return;
 
 		entity
-				.addProperty(new StorageProperty(fieldNumber + 100, null, StorageType.STRING,
+				.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.STRING,
 						value));
 	}
 
 	public void storeBooleanField(int fieldNumber, boolean value)
 	{
-		entity.addProperty(new StorageProperty(fieldNumber + 100, null, StorageType.BOOLEAN,
+		entity.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.BOOLEAN,
 				value));
 	}
 
 	public void storeCharField(int fieldNumber, char value)
 	{
-		entity.addProperty(new StorageProperty(fieldNumber + 100, null, StorageType.CHAR, value));
+		entity.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.CHAR, value));
 	}
 
 	public void storeByteField(int fieldNumber, byte value)
 	{
-		entity.addProperty(new StorageProperty(fieldNumber + 100, null, StorageType.BYTE, value));
+		entity.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.BYTE, value));
 	}
 
 	public void storeShortField(int fieldNumber, short value)
 	{
 		entity
-				.addProperty(new StorageProperty(fieldNumber + 100, null, StorageType.SHORT,
+				.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.SHORT,
 						value));
 	}
 
 	public void storeIntField(int fieldNumber, int value)
 	{
-		entity.addProperty(new StorageProperty(fieldNumber + 100, null, StorageType.INTEGER,
+		entity.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.INTEGER,
 				value));
 	}
 
 	public void storeLongField(int fieldNumber, long value)
 	{
-		entity.addProperty(new StorageProperty(fieldNumber + 100, null, StorageType.LONG, value));
+		entity.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.LONG, value));
 	}
 
 	public void storeFloatField(int fieldNumber, float value)
 	{
 		entity
-				.addProperty(new StorageProperty(fieldNumber + 100, null, StorageType.FLOAT,
+				.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.FLOAT,
 						value));
 	}
 
 	public void storeDoubleField(int fieldNumber, double value)
 	{
 		entity
-.addProperty(new StorageProperty(fieldNumber + 100, null, StorageType.DOUBLE,
+.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.DOUBLE,
 						value));
 	}
 }

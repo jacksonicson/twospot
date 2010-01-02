@@ -13,6 +13,8 @@ public interface IStorageProperty
 
 	public Object getValue();
 	
+	public byte[] getValueAsBytes();
+	
 	public void writeTo(CodedOutputStream out) throws IOException;
 
 	public void mergeFrom(CodedInputStream input) throws IOException;

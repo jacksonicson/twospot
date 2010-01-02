@@ -30,15 +30,28 @@ public class EntityMessage extends AbstractMessageLite
 
 	private Map<String, IStorageProperty> properties = new HashMap<String, IStorageProperty>();
 
+	/*
+	 * Getter & Setter
+	 */
+
+	public List<IndexMessage> getIndexMessages()
+	{
+		return indexMessages;
+	}
+
 	public String getClassName()
 	{
 		return className;
 	}
 
-	public IStorageProperty proertyFromName(String name)
+	public IStorageProperty propertyFromName(String name)
 	{
 		return properties.get(name);
 	}
+
+	/*
+	 * Implementation
+	 */
 
 	@Override
 	public int getSerializedSize()
@@ -157,10 +170,10 @@ public class EntityMessage extends AbstractMessageLite
 						StorageProperty property = new StorageProperty(fieldIndex, imsg.getFieldName(), imsg
 								.getFieldType());
 						property.mergeFrom(input);
-						
+
 						current.properties.put(property.getName(), property);
-						
-						logger.debug("Value of property: " + property.getName());
+
+						logger.debug("Value of property: " + property.getValue());
 					} else
 					{
 						logger.debug("Skipping " + fieldNumber);
