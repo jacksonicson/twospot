@@ -3,13 +3,11 @@ package org.prot.storage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.log4j.Logger;
-import org.prot.jdo.storage.messages.EntityMessage;
-import org.prot.jdo.storage.messages.IndexMessage;
-import org.prot.jdo.storage.messages.types.IStorageProperty;
 import org.prot.storage.connection.ConnectionFactory;
 import org.prot.storage.connection.HBaseManagedConnection;
 import org.prot.storage.connection.StorageUtils;
@@ -18,10 +16,13 @@ public class ObjectCreator
 {
 	private static final Logger logger = Logger.getLogger(ObjectCreator.class);
 
+	private ConnectionFactory connectionFactory; 
+	
 	private HBaseManagedConnection connection;
 
 	public ObjectCreator(ConnectionFactory connectionFactory)
 	{
+		this.connectionFactory = connectionFactory;
 		this.connection = connectionFactory.createManagedConnection();
 	}
 
@@ -43,7 +44,9 @@ public class ObjectCreator
 			writeIndexByKind(indexByKindTable, rowKey, appId, kind);
 
 			logger.debug("Updating index by property");
-			writeIndexByPropertyAsc(indexByPropertyAsc, rowKey, appId, kind, obj);
+			ObjectRemover remover = new ObjectRemover(connectionFactory);
+			Map<String, byte[]> index = remover.createIndexMap(obj);
+			writeIndexByPropertyAsc(indexByPropertyAsc, rowKey, appId, kind, index);
 
 			logger.debug("Updating custom index");
 			writeIndexCustom(indexCustom, rowKey, appId, kind, obj);
@@ -79,34 +82,22 @@ public class ObjectCreator
 		table.put(put);
 	}
 
-	void writeIndexByPropertyAsc(HTable table, byte[] rowKey, String appId, String kind, byte[] obj)
-			throws IOException
+	void writeIndexByPropertyAsc(HTable table, byte[] rowKey, String appId, String kind,
+			Map<String, byte[]> index) throws IOException
 	{
-		// Deserialize the message (get the index)
-		EntityMessage.Builder builder = EntityMessage.newBuilder();
-		builder.mergeFrom(obj);
-		EntityMessage entityMsg = builder.build();
-
-		List<IndexMessage> indexMsgs = entityMsg.getIndexMessages();
-
 		List<Put> putList = new ArrayList<Put>();
-		for (IndexMessage indexMsg : indexMsgs)
+		for (String propertyName : index.keySet())
 		{
-			String propertyName = indexMsg.getFieldName();
-			logger.debug("Adding property " + propertyName);
-
-			IStorageProperty property = entityMsg.getProperty(propertyName);
-			byte[] bValue = property.getValueAsBytes();
+			byte[] bValue = index.get(propertyName);
 			if (bValue == null)
 			{
-				logger.debug("not adding null properties");
+				logger.debug("Property is null: " + propertyName);
 				continue;
 			}
 
-			logger.debug("property value is: " + new String(bValue));
+			logger.debug("Adding property to index: " + propertyName);
 
-			byte[] propKey = KeyHelper.createIndexByPropertyKey(appId, kind, rowKey, propertyName, property
-					.getValueAsBytes());
+			byte[] propKey = KeyHelper.createIndexByPropertyKey(appId, kind, rowKey, propertyName, bValue);
 
 			Put put = new Put(propKey);
 			put.add(StorageUtils.bKey, StorageUtils.bKey, rowKey);

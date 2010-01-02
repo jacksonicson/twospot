@@ -1,11 +1,9 @@
 package org.prot.storage;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.hadoop.hbase.client.Delete;
@@ -14,9 +12,14 @@ import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
+import org.prot.jdo.storage.messages.EntityMessage;
+import org.prot.jdo.storage.messages.IndexMessage;
+import org.prot.jdo.storage.messages.types.IStorageProperty;
 import org.prot.storage.connection.ConnectionFactory;
 import org.prot.storage.connection.HBaseManagedConnection;
 import org.prot.storage.connection.StorageUtils;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 
 public class ObjectRemover
 {
@@ -36,7 +39,7 @@ public class ObjectRemover
 		HTable tableIndexByPropertyAsc = getIndexByPropertyTableAsc();
 
 		logger.debug("Retrieving the entity");
-		Object obj = retrieveObject(tableEntities, appId, kind, key);
+		byte[] obj = retrieveObject(tableEntities, appId, kind, key);
 		Map<String, byte[]> indexMap = createIndexMap(obj);
 
 		logger.debug("Removing object from entities");
@@ -49,44 +52,38 @@ public class ObjectRemover
 		removeObjectFromIndexByProperty(tableIndexByPropertyAsc, appId, kind, key, indexMap);
 	}
 
-	Map<String, byte[]> createIndexMap(Object obj)
+	Map<String, byte[]> createIndexMap(byte[] obj) throws InvalidProtocolBufferException
 	{
+		// Deserialize the message (get the index)
+		EntityMessage.Builder builder = EntityMessage.newBuilder();
+		builder.mergeFrom(obj);
+		EntityMessage entityMsg = builder.build();
+
+		// Get all index messages
+		List<IndexMessage> indexMsgs = entityMsg.getIndexMessages();
+
+		// Index map
 		Map<String, byte[]> index = new HashMap<String, byte[]>();
-
-		Field[] fields = obj.getClass().getDeclaredFields();
-		for (Field field : fields)
+		for (IndexMessage indexMsg : indexMsgs)
 		{
-			String fieldName = field.getName();
-			try
-			{
-				Method method = obj.getClass().getMethod(
-						"get" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1));
-				Object fieldValue = method.invoke(obj);
-				if (fieldValue != null)
-					index.put(fieldName, fieldValue.toString().getBytes());
+			String propertyName = indexMsg.getFieldName();
 
-			} catch (IllegalArgumentException e)
+			IStorageProperty property = entityMsg.getProperty(propertyName);
+			byte[] bValue = property.getValueAsBytes();
+			if (bValue == null)
 			{
-				continue;
-			} catch (IllegalAccessException e)
-			{
-				continue;
-			} catch (SecurityException e)
-			{
-				continue;
-			} catch (NoSuchMethodException e)
-			{
-				continue;
-			} catch (InvocationTargetException e)
-			{
+				logger.debug("Not adding null properties to index map");
 				continue;
 			}
+
+			logger.debug("Adding property to index map: " + propertyName);
+			index.put(propertyName, bValue);
 		}
 
 		return index;
 	}
 
-	Object retrieveObject(HTable table, String appId, String kind, Key key) throws IOException,
+	byte[] retrieveObject(HTable table, String appId, String kind, Key key) throws IOException,
 			ClassNotFoundException
 	{
 		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
@@ -99,7 +96,7 @@ public class ObjectRemover
 
 		byte[] data = result.getMap().get(StorageUtils.bEntity).get(StorageUtils.bSerialized).lastEntry()
 				.getValue();
-		return StorageUtils.deserialize(null, data);
+		return data;
 	}
 
 	void removeObjectFromIndexByProperty(HTable table, String appId, String kind, Key key,

@@ -14,6 +14,11 @@ public class Key implements Serializable
 	{
 		// Empty constructor is required
 	}
+	
+	public Key(String stringKey)
+	{
+		this.key = Base64.decode(stringKey);
+	}
 
 	public byte[] getKey()
 	{

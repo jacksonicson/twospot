@@ -6,7 +6,7 @@ import java.util.Map;
 
 public enum StorageType
 {
-	STRING(0), INTEGER(1), DOUBLE(2), LONG(3), FLOAT(4), CHAR(5), BOOLEAN(6), BYTE(7), SHORT(8);
+	STRING(0), INTEGER(1), DOUBLE(2), LONG(3), FLOAT(4), CHAR(5), BOOLEAN(6), BYTE(7), SHORT(8), KEY(9);
 
 	private static final Map<Integer, StorageType> lookup = new HashMap<Integer, StorageType>();
 

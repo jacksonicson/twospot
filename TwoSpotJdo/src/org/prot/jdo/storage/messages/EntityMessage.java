@@ -175,10 +175,8 @@ public class EntityMessage extends AbstractMessageLite
 				default:
 					if (fieldNumber >= StorageProperty.INDEX_OFFSET)
 					{
-						int fieldIndex = StorageProperty.classFieldNumber(fieldNumber);
-
 						// Get index info for this field entry
-						IndexMessage indexMsg = index.get(fieldIndex);
+						IndexMessage indexMsg = index.get(fieldNumber);
 						StorageProperty property = new StorageProperty(indexMsg);
 						property.mergeFrom(input);
 

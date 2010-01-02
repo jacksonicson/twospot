@@ -127,7 +127,7 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 			builder.setFieldName(fieldName);
 			builder.setFieldType(fieldType);
 
-			// Add index message to index list 
+			// Add index message to index list
 			index.add(builder.build());
 		}
 
@@ -206,7 +206,6 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 
 	public void updateObject(StateManager sm, int[] fieldNumbers)
 	{
-		logger.debug("UPDATE OBJECT");
 		// Check if the storage manager manages the class
 		if (!storeManager.managesClass(sm.getClassMetaData().getFullClassName()))
 		{
@@ -215,21 +214,28 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 		// Save the object
 		StorageManagedConnection mconn = (StorageManagedConnection) storeManager.getConnection(sm
 				.getObjectManager());
+		Storage storage = mconn.getStorage();
+
 		try
 		{
-//			String appId = StorageHelper.APP_ID;
-//			String kind = sm.getClassMetaData().getEntityName();
-//			Key key = (Key) sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
-//			Object obj = sm.getObject();
-//
-//			Storage storage = mconn.getStorage();
-//			storage.updateObject(appId, kind, key, obj, null, null);
-//
-//			logger.debug("Update done");
+			// Serialize the message
+			byte[] serializedObject = createMessage(sm);
+			logger.debug("Serialized object: " + new String(serializedObject));
 
+			// Get the primary key of the entity
+			Key key = (Key) sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
+
+			// Create the object in the storage service
+			String appId = StorageHelper.APP_ID;
+			String kind = sm.getClassMetaData().getEntityName();
+			storage.updateObject(appId, kind, key, serializedObject);
+
+		} catch (IOException e)
+		{
+			throw new NucleusException("Error while updating object", e); 
 		} finally
 		{
-			// mconn.release();
+			mconn.release();
 		}
 	}
 
