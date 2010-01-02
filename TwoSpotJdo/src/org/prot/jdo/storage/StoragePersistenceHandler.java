@@ -31,6 +31,7 @@ import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.store.StoreManager;
 import org.datanucleus.store.StorePersistenceHandler;
 import org.datanucleus.util.Localiser;
+import org.prot.jdo.storage.types.StorageType;
 import org.prot.storage.Key;
 import org.prot.storage.Storage;
 
@@ -109,27 +110,27 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 
 			int fieldNumber = 100 + member.getAbsoluteFieldNumber();
 			String fieldName = member.getName();
-			int fieldType;
+			StorageType fieldType;
 
 			Class<?> type = member.getType();
 			if (type == String.class)
 			{
-				fieldType = 0;
+				fieldType = StorageType.STRING;
 			} else if (type == Integer.class)
 			{
-				fieldType = 1;
+				fieldType = StorageType.INTEGER;
 			} else if (type == Long.class)
 			{
-				fieldType = 2;
+				fieldType = StorageType.LONG;
 			} else if (type == Double.class)
 			{
-				fieldType = 3;
+				fieldType = StorageType.DOUBLE;
 			} else if (type == Boolean.class)
 			{
-				fieldType = 4;
+				fieldType = StorageType.BOOLEAN;
 			} else if (type == Key.class)
 			{
-				fieldType = 5;
+				fieldType = StorageType.STRING;
 			} else
 			{
 				throw new NucleusException("Unknown field type");

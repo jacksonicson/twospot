@@ -11,7 +11,9 @@ public interface IStorageProperty
 
 	public String getName();
 
+	public Object getValue();
+	
 	public void writeTo(CodedOutputStream out) throws IOException;
 
-	public void mergeFrom(CodedInputStream input);
+	public void mergeFrom(CodedInputStream input) throws IOException;
 }

@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.prot.jdo.storage.types.IStorageProperty;
+import org.prot.jdo.storage.types.StorageProperty;
 import org.prot.storage.NotImplementedException;
 
 import com.google.protobuf.AbstractMessageLite;
@@ -114,6 +115,7 @@ public class EntityMessage extends AbstractMessageLite
 		{
 			int tag;
 			int fieldNumber;
+			Map<Integer, IndexMessage> index = new HashMap<Integer, IndexMessage>();
 			while (true)
 			{
 				tag = input.readTag();
@@ -126,13 +128,33 @@ public class EntityMessage extends AbstractMessageLite
 				case 1:
 					IndexMessage.Builder subBuilder = IndexMessage.newBuilder();
 					input.readMessage(subBuilder, extensionRegistry);
-					current.indexMessages.add(subBuilder.build());
+					IndexMessage msg = subBuilder.build();
+					current.indexMessages.add(msg);
+					index.put(msg.getFieldNumber(), msg);
+
+					logger.debug("Index done");
 					continue;
+
 				case 2:
 					current.className = input.readString();
+					logger.debug("Classname done");
 					continue;
+
 				default:
-					// TODO:
+					if (fieldNumber >= 100)
+					{
+						int fieldIndex = fieldNumber;
+						IndexMessage imsg = index.get(fieldIndex);
+						logger.debug("Type is: " + imsg.getFieldType());
+						StorageProperty property = new StorageProperty(fieldIndex, imsg.getFieldName(), imsg
+								.getFieldType());
+						property.mergeFrom(input);
+						logger.debug("Value of property: " + property.getValue());
+					} else
+					{
+						logger.debug("Skipping " + fieldNumber);
+						input.skipField(tag);
+					}
 				}
 			}
 

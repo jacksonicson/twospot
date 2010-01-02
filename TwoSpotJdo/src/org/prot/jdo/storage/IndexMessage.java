@@ -3,6 +3,7 @@ package org.prot.jdo.storage;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.prot.jdo.storage.types.StorageType;
 import org.prot.storage.NotImplementedException;
 
 import com.google.protobuf.AbstractMessageLite;
@@ -22,7 +23,7 @@ public class IndexMessage extends AbstractMessageLite
 	private String fieldName;
 
 	// The type of the field
-	private int fieldType;
+	private StorageType fieldType;
 
 	public int getFieldNumber()
 	{
@@ -34,7 +35,7 @@ public class IndexMessage extends AbstractMessageLite
 		return fieldName;
 	}
 
-	public int getFieldType()
+	public StorageType getFieldType()
 	{
 		return fieldType;
 	}
@@ -46,7 +47,7 @@ public class IndexMessage extends AbstractMessageLite
 
 		size += CodedOutputStream.computeInt32Size(1, fieldNumber);
 		size += CodedOutputStream.computeStringSize(2, fieldName);
-		size += CodedOutputStream.computeInt32Size(3, fieldType);
+		size += CodedOutputStream.computeInt32Size(3, fieldType.getCode());
 
 		return size;
 	}
@@ -57,7 +58,7 @@ public class IndexMessage extends AbstractMessageLite
 		// Write the message
 		out.writeInt32(1, fieldNumber);
 		out.writeString(2, fieldName);
-		out.writeInt32(3, fieldType);
+		out.writeInt32(3, fieldType.getCode());
 	}
 
 	private static final IndexMessage defaultInstance = new IndexMessage();
@@ -122,47 +123,31 @@ public class IndexMessage extends AbstractMessageLite
 		public Builder mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry)
 				throws IOException
 		{
-			final int length = input.readRawVarint32();
-			logger.debug("Length: " + length);
-			final int oldLimit = input.pushLimit(length);
-			logger.debug("Pushing limit");
-
-			int fieldNumber = 0;
-			String fieldName = null;
-			int fieldType = 0;
-
 			while (true)
 			{
 				int tag = input.readTag();
+				int fieldNumber = WireFormat.getTagFieldNumber(tag);
 
 				if (tag == 0)
-				{
 					break;
-				} else if (1 == WireFormat.getTagFieldNumber(tag))
+
+				switch (fieldNumber)
 				{
-					logger.debug("field number");
-					fieldNumber = input.readInt32();
-				} else if (2 == WireFormat.getTagFieldNumber(tag))
-				{
-					logger.debug("field name");
-					fieldName = input.readString();
-				} else if (3 == WireFormat.getTagFieldNumber(tag))
-				{
-					logger.debug("field type");
-					fieldType = input.readInt32();
-				} else
-				{
+				case 1:
+					current.fieldNumber = input.readInt32();
+					break;
+				case 2:
+					current.fieldName = input.readString();
+					break;
+				case 3:
+					current.fieldType = StorageType.fromCode(input.readInt32());
+					break;
+				default:
 					input.skipField(tag);
+					break;
 				}
 			}
 
-			input.checkLastTagWas(0);
-			input.popLimit(oldLimit);
-
-			current = new IndexMessage();
-			current.fieldNumber = fieldNumber;
-			current.fieldName = fieldName;
-			current.fieldType = fieldType;
 			return this;
 		}
 
@@ -215,7 +200,7 @@ public class IndexMessage extends AbstractMessageLite
 			current.fieldName = fieldName;
 		}
 
-		public void setFieldType(int fieldType)
+		public void setFieldType(StorageType fieldType)
 		{
 			current.fieldType = fieldType;
 		}
