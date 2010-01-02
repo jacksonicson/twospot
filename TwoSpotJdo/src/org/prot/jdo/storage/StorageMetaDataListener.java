@@ -35,18 +35,11 @@ public class StorageMetaDataListener implements MetaDataListener
 	protected static final Localiser LOCALISER = Localiser.getInstance(
 			"org.datanucleus.store.hbase.Localisation", StorageStoreManager.class.getClassLoader());
 
-	private StorageStoreManager storeManager;
-
-	StorageMetaDataListener(StorageStoreManager storeManager)
-	{
-		this.storeManager = storeManager;
-	}
-
 	public void loaded(AbstractClassMetaData cmd)
 	{
 		logger.debug("Meta data listener loaded");
 
-		if (cmd.getIdentityType() == IdentityType.DATASTORE && !cmd.isEmbeddedOnly())
+		if (cmd.getIdentityType() != IdentityType.APPLICATION)
 		{
 			throw new InvalidMetaDataException(LOCALISER, "HBase.DatastoreID", cmd.getFullClassName());
 		}

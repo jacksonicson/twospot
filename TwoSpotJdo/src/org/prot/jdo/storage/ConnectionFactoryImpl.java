@@ -27,22 +27,28 @@ import org.datanucleus.store.connection.ManagedConnection;
 
 public class ConnectionFactoryImpl extends AbstractConnectionFactory
 {
+	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(ConnectionFactoryImpl.class);
 
-	private StorageManagedConnection connection;
+	// There is only one managed connection
+	private final StorageManagedConnection connection;
 
 	public ConnectionFactoryImpl(OMFContext omfContext, String resourceType)
 	{
 		super(omfContext, resourceType);
 
 		// Create a new managed connection
-		this.connection = new StorageManagedConnection();
+		connection = new StorageManagedConnection();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public ManagedConnection createManagedConnection(ObjectManager om, Map options)
 	{
+		// Increment the reference counter on this connection
 		this.connection.incrementReferenceCount();
+
+		// Return the reference to the storage service
 		return this.connection;
 	}
 }

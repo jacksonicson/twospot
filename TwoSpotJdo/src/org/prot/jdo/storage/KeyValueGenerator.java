@@ -22,14 +22,20 @@ public class KeyValueGenerator extends AbstractDatastoreGenerator
 	protected ValueGenerationBlock reserveBlock(long size)
 	{
 		logger.debug("Reserving keys: " + size);
-		
+
 		// Get the connection
 		StorageManagedConnection connection = (StorageManagedConnection) connectionProvider
 				.retrieveConnection();
-		Storage storage = connection.getStorage();
 
-		List<Key> keys = storage.createKey(StorageHelper.APP_ID, size);
-		return new ValueGenerationBlock(keys);
+		try
+		{
+			Storage storage = connection.getStorage();
+			List<Key> keys = storage.createKey(StorageHelper.APP_ID, size);
+			return new ValueGenerationBlock(keys);
+		} finally
+		{
+			connection.release();
+		}
 	}
 
 	protected boolean requiresRepository()
@@ -40,7 +46,7 @@ public class KeyValueGenerator extends AbstractDatastoreGenerator
 
 	protected boolean repositoryExists()
 	{
-		// Repository does always exist
+		// Repository does always exist (storage creates it)
 		return true;
 	}
 

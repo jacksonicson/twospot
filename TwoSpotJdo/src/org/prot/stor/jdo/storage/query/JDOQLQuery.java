@@ -32,9 +32,9 @@ import org.datanucleus.exceptions.NucleusException;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.store.FieldValues;
 import org.datanucleus.store.query.AbstractJDOQLQuery;
-import org.prot.jdo.storage.FetchFieldManager;
 import org.prot.jdo.storage.StorageHelper;
 import org.prot.jdo.storage.StorageManagedConnection;
+import org.prot.jdo.storage.field.FetchFieldManager;
 import org.prot.storage.Storage;
 import org.prot.storage.query.StorageQuery;
 

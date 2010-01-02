@@ -17,12 +17,9 @@ Contributors :
  ***********************************************************************/
 package org.prot.jdo.storage;
 
-import org.apache.log4j.Logger;
 
 public class StorageHelper
 {
-	private static final Logger logger = Logger.getLogger(StorageHelper.class);
-
 	public static String APP_ID = "null";
 
 	public static void setAppId(String appId)

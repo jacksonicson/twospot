@@ -1,6 +1,5 @@
-package org.prot.jdo.storage;
+package org.prot.jdo.storage.field;
 
-import org.apache.log4j.Logger;
 import org.datanucleus.exceptions.NucleusException;
 import org.datanucleus.store.fieldmanager.AbstractFieldManager;
 import org.prot.jdo.storage.messages.EntityMessage;
@@ -10,8 +9,6 @@ import org.prot.storage.Key;
 
 public class InsertFieldManager extends AbstractFieldManager
 {
-	private static final Logger logger = Logger.getLogger(InsertFieldManager.class);
-
 	private final EntityMessage.Builder entity;
 
 	public InsertFieldManager(EntityMessage.Builder entity)
@@ -89,7 +86,7 @@ public class InsertFieldManager extends AbstractFieldManager
 	public void storeDoubleField(int fieldNumber, double value)
 	{
 		entity
-.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.DOUBLE,
+				.addProperty(new StorageProperty(fieldNumber + 100, fieldNumber + "", StorageType.DOUBLE,
 						value));
 	}
 }

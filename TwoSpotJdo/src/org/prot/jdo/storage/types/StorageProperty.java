@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
+import org.datanucleus.exceptions.NucleusException;
+import org.prot.storage.Key;
 
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
@@ -57,6 +59,32 @@ public class StorageProperty implements IStorageProperty
 	public byte[] getValueAsBytes()
 	{
 		return this.bValue;
+	}
+
+	public static final StorageType newType(Class<?> type)
+	{
+		if (type == String.class)
+		{
+			return StorageType.STRING;
+		} else if (type == Integer.class)
+		{
+			return StorageType.INTEGER;
+		} else if (type == Long.class)
+		{
+			return StorageType.LONG;
+		} else if (type == Double.class)
+		{
+			return StorageType.DOUBLE;
+		} else if (type == Boolean.class)
+		{
+			return StorageType.BOOLEAN;
+		} else if (type == Key.class)
+		{
+			return StorageType.STRING;
+		} else
+		{
+			throw new NucleusException("Unknown field type");
+		}
 	}
 
 	@Override

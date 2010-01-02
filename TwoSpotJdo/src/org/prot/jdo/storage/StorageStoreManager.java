@@ -58,7 +58,7 @@ public class StorageStoreManager extends AbstractStoreManager
 		super("hbase", clr, omfContext);
 
 		// Handler for metadata
-		metadataListener = new StorageMetaDataListener(this);
+		metadataListener = new StorageMetaDataListener();
 		omfContext.getMetaDataManager().registerListener(metadataListener);
 
 		// Handler for persistence process

@@ -31,21 +31,16 @@ import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.store.StoreManager;
 import org.datanucleus.store.StorePersistenceHandler;
 import org.datanucleus.util.Localiser;
+import org.prot.jdo.storage.field.InsertFieldManager;
 import org.prot.jdo.storage.messages.EntityMessage;
 import org.prot.jdo.storage.messages.IndexMessage;
+import org.prot.jdo.storage.types.StorageProperty;
 import org.prot.jdo.storage.types.StorageType;
 import org.prot.storage.Key;
 import org.prot.storage.Storage;
 
 import com.google.protobuf.CodedOutputStream;
 
-/**
- * Wichtigste Klasse. Hier werden die Objekte serialisiert und in der Datenbank
- * gespeichert. Außerdem müssen die Index-Tabellen hier aktualisiert werden.
- * 
- * @author Andreas Wolke
- * 
- */
 public class StoragePersistenceHandler implements StorePersistenceHandler
 {
 	private static final Logger logger = Logger.getLogger(StoragePersistenceHandler.class);
@@ -53,11 +48,11 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 	protected static final Localiser LOCALISER = Localiser.getInstance(
 			"org.datanucleus.store.hbase.Localisation", StorageStoreManager.class.getClassLoader());
 
-	private StorageStoreManager storeMgr;
+	private StorageStoreManager storeManager;
 
 	StoragePersistenceHandler(StoreManager storeMgr)
 	{
-		this.storeMgr = (StorageStoreManager) storeMgr;
+		this.storeManager = (StorageStoreManager) storeMgr;
 	}
 
 	@Override
@@ -69,16 +64,21 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 	public void deleteObject(StateManager sm)
 	{
 		// Cannot delete a read only object
-		storeMgr.assertReadOnlyForUpdateOfObject(sm);
+		storeManager.assertReadOnlyForUpdateOfObject(sm);
 
-		StorageManagedConnection mconn = (StorageManagedConnection) storeMgr.getConnection(sm
+		// Get a connection
+		StorageManagedConnection mconn = (StorageManagedConnection) storeManager.getConnection(sm
 				.getObjectManager());
 		try
 		{
 			// Aquire object infos
 			String appId = StorageHelper.APP_ID;
 			String kind = sm.getObject().getClass().getSimpleName();
-			Key key = (Key) sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
+
+			// Get the primary key
+			Object pKeyObj = sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
+			assert (pKeyObj instanceof Key);
+			Key key = (Key) pKeyObj;
 
 			// Delete the object
 			Storage storage = mconn.getStorage();
@@ -86,22 +86,26 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 
 		} finally
 		{
-
+			// Release the connection
+			mconn.release();
 		}
 	}
 
 	public void fetchObject(StateManager sm, int[] fieldNumbers)
 	{
-		logger.debug("FETCH OBJECT");
+		logger.debug("FETCH OBJECT - NOT IMPLEMENTED");
 	}
 
 	public Object findObject(ObjectManager om, Object id)
 	{
-		logger.debug("FIND OBJECT");
+		logger.debug("FIND OBJECT - NOT IMPLEMENTED");
+
+		// TODO: Create a new StateManger by using the ObjectManager
+
 		return null;
 	}
 
-	private List<IndexMessage> buildIndex(AbstractClassMetaData acmd)
+	private List<IndexMessage> buildIndexMessages(AbstractClassMetaData acmd)
 	{
 		List<IndexMessage> index = new ArrayList<IndexMessage>();
 
@@ -110,33 +114,9 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 		{
 			AbstractMemberMetaData member = acmd.getMetaDataForManagedMemberAtPosition(memberPosition);
 
-			int fieldNumber = 100 + member.getAbsoluteFieldNumber();
+			int fieldNumber = member.getAbsoluteFieldNumber();
 			String fieldName = member.getName();
-			StorageType fieldType;
-
-			Class<?> type = member.getType();
-			if (type == String.class)
-			{
-				fieldType = StorageType.STRING;
-			} else if (type == Integer.class)
-			{
-				fieldType = StorageType.INTEGER;
-			} else if (type == Long.class)
-			{
-				fieldType = StorageType.LONG;
-			} else if (type == Double.class)
-			{
-				fieldType = StorageType.DOUBLE;
-			} else if (type == Boolean.class)
-			{
-				fieldType = StorageType.BOOLEAN;
-			} else if (type == Key.class)
-			{
-				fieldType = StorageType.STRING;
-			} else
-			{
-				throw new NucleusException("Unknown field type");
-			}
+			StorageType fieldType = StorageProperty.newType(member.getType());
 
 			IndexMessage.Builder builder = IndexMessage.newBuilder();
 			builder.setFieldNumber(fieldNumber);
@@ -153,12 +133,13 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 	{
 		AbstractClassMetaData acmd = sm.getClassMetaData();
 
-		// Create the index
-		List<IndexMessage> index = buildIndex(acmd);
-
 		// Write the class-name
 		String className = acmd.getFullClassName();
 
+		// Build the IndexMessages
+		List<IndexMessage> index = buildIndexMessages(acmd);
+
+		// Build the EntityMessage
 		EntityMessage.Builder entity = EntityMessage.newBuilder();
 		entity.addAllIndexMessages(index);
 		entity.setClassName(className);
@@ -184,14 +165,14 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 	public void insertObject(StateManager sm)
 	{
 		// Check if the storage manager manages the class
-		if (!storeMgr.managesClass(sm.getClassMetaData().getFullClassName()))
+		if (!storeManager.managesClass(sm.getClassMetaData().getFullClassName()))
 		{
-			storeMgr.addClass(sm.getClassMetaData().getFullClassName(), sm.getObjectManager()
+			storeManager.addClass(sm.getClassMetaData().getFullClassName(), sm.getObjectManager()
 					.getClassLoaderResolver());
 		}
 
 		// Create a connection
-		StorageManagedConnection connection = (StorageManagedConnection) storeMgr.getConnection(sm
+		StorageManagedConnection connection = (StorageManagedConnection) storeManager.getConnection(sm
 				.getObjectManager());
 		String appId = StorageHelper.APP_ID;
 		String kind = sm.getClassMetaData().getEntityName();
@@ -222,12 +203,12 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 	{
 		logger.debug("UPDATE OBJECT");
 		// Check if the storage manager manages the class
-		if (!storeMgr.managesClass(sm.getClassMetaData().getFullClassName()))
+		if (!storeManager.managesClass(sm.getClassMetaData().getFullClassName()))
 		{
 			throw new NucleusException("Cannot update an unmanged class");
 		}
 		// Save the object
-		StorageManagedConnection mconn = (StorageManagedConnection) storeMgr.getConnection(sm
+		StorageManagedConnection mconn = (StorageManagedConnection) storeManager.getConnection(sm
 				.getObjectManager());
 		try
 		{

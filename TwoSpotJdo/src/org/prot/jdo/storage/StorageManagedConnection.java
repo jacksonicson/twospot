@@ -19,6 +19,7 @@ package org.prot.jdo.storage;
 
 import javax.transaction.xa.XAResource;
 
+import org.apache.log4j.Logger;
 import org.datanucleus.exceptions.NucleusDataStoreException;
 import org.datanucleus.store.connection.AbstractManagedConnection;
 import org.prot.storage.Storage;
@@ -29,14 +30,17 @@ import org.prot.storage.StorageImpl;
  */
 public class StorageManagedConnection extends AbstractManagedConnection
 {
+	private static final Logger logger = Logger.getLogger(StorageManagedConnection.class);
+
 	// Reference to the storage implementation
-	private Storage storage;
+	private final Storage storage;
 
 	// Counts the number of references to this connection
 	private int referenceCount = 0;
 
 	public StorageManagedConnection()
 	{
+		// Create the storage
 		this.storage = new StorageImpl();
 	}
 
@@ -73,6 +77,6 @@ public class StorageManagedConnection extends AbstractManagedConnection
 		referenceCount--;
 
 		if (referenceCount < 0)
-			throw new NucleusDataStoreException("Too many calls on release(): " + this);
+			logger.warn("Too many calls to release()");
 	}
 }
