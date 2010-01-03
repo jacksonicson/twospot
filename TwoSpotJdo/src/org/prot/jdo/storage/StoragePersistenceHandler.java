@@ -60,7 +60,7 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 	@Override
 	public void close()
 	{
-		// Do nothing
+		// Do nothing here
 	}
 
 	public void deleteObject(StateManager sm)
@@ -168,9 +168,13 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 
 	public void insertObject(StateManager sm)
 	{
+		// Check if read-only so update not permitted
+		storeManager.assertReadOnlyForUpdateOfObject(sm);
+
 		// Check if the storage manager manages the class
 		if (!storeManager.managesClass(sm.getClassMetaData().getFullClassName()))
 		{
+			// Manage the class
 			storeManager.addClass(sm.getClassMetaData().getFullClassName(), sm.getObjectManager()
 					.getClassLoaderResolver());
 		}
@@ -198,15 +202,15 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 			throw new NucleusException("Error while inserting object", e);
 		} finally
 		{
-			// TODO: Release the connection
+			// Release the connection
+			connection.release();
 		}
 	}
 
 	public void updateObject(StateManager sm, int[] fieldNumbers)
 	{
-		// Check if the storage manager manages the class
-//		if (!storeManager.managesClass(sm.getClassMetaData().getFullClassName()))
-//			throw new NucleusException("Cannot update an unmanged class");
+		// Check if read-only so update not permitted
+		storeManager.assertReadOnlyForUpdateOfObject(sm);
 
 		// Save the object
 		StorageManagedConnection mconn = (StorageManagedConnection) storeManager.getConnection(sm
@@ -232,6 +236,7 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 			throw new NucleusException("Error while updating object", e);
 		} finally
 		{
+			// Release the connection
 			mconn.release();
 		}
 	}
@@ -239,6 +244,6 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 	@Override
 	public void locateObject(StateManager sm)
 	{
-		logger.debug("LOCATING");
+		throw new NotImplementedException();
 	}
 }
