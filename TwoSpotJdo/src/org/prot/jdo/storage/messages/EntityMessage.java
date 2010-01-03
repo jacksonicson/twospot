@@ -169,7 +169,6 @@ public class EntityMessage extends AbstractMessageLite
 				case 2:
 					// Read the classname
 					current.className = input.readString();
-					logger.debug("Class: " + current.className);
 					continue;
 
 				default:
