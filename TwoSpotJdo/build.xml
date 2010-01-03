@@ -18,7 +18,7 @@
 	</target>
 
 	<target name="build" depends="prepare">
-		<javac srcdir="${src}" destdir="${build}" debug="true" >
+		<javac srcdir="${src}" destdir="${build}" debug="true">
 			<classpath refid="classpath" />
 		</javac>
 	</target>
@@ -26,6 +26,9 @@
 	<target name="package" depends="build">
 		<jar destfile="${jar}">
 			<fileset dir="${build}" />
+			<fileset dir="./src">
+				<include name="plugin.xml" />
+			</fileset>
 		</jar>
 	</target>
 

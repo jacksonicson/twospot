@@ -19,7 +19,6 @@
 ./Libs/lib/jetty-7.0.0/jetty-xml-7.0.0.v20091005.jar
 ./Libs/lib/jetty-7.0.0/servlet-api-2.5.jar
 ./Libs/lib/apache_commons/apache-mime4j-0.6.jar
-./Libs/lib/apache_commons/commons-codec-1.3.jar
 ./Libs/lib/apache_commons/commons-logging-1.1.1.jar
 ./Libs/lib/apache_commons/ws-commons-util-1.0.2.jar
 ./Libs/lib/log4j-1.2.15/log4j-1.2.15.jar
@@ -48,3 +47,4 @@
 ./Libs/lib/datanucleus/datanucleus-management-1.0.2.jar
 ./Libs/gen/hbaseplugin.jar
 ./Libs/gen/twospot-util.jar
+./Libs/lib/apache_commons/commons-codec-1.3.jar

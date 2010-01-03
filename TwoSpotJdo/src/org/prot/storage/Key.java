@@ -24,10 +24,10 @@ public class Key implements Serializable
 	{
 		if (!isCompact)
 		{
-			this.key = Base64.decodeBase64(key);
+			this.key = Base64.decodeBase64(key.getBytes());
 		} else
 		{
-			this.key = Base64.decodeBase64(key);
+			this.key = Base64.decodeBase64(key.getBytes());
 		}
 	}
 
@@ -66,7 +66,7 @@ public class Key implements Serializable
 
 	public String toCompactString()
 	{
-		return Base64.encodeBase64String(key);
+		return new String(Base64.encodeBase64(this.key));
 	}
 
 	public String toString()
@@ -75,6 +75,6 @@ public class Key implements Serializable
 			return "";
 
 		// URL-Safe encoding
-		return new String(Base64.encodeBase64URLSafe(key));
+		return new String(Base64.encodeBase64(key, true));
 	}
 }

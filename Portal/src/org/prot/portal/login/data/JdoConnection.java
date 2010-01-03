@@ -11,7 +11,8 @@ public class JdoConnection
 
 	public void init()
 	{
-		pmf = JDOHelper.getPersistenceManagerFactory("etc/jdoDefault.properties");
+		ClassLoader loader = this.getClass().getClassLoader();
+		pmf = JDOHelper.getPersistenceManagerFactory("etc/jdoDefault.properties", loader, loader);
 		pm = pmf.getPersistenceManager();
 	}
 
