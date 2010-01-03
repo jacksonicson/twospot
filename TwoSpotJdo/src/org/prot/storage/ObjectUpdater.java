@@ -24,7 +24,7 @@ public class ObjectUpdater
 		this.connection = connectionFactory.createManagedConnection();
 
 		this.creator = new ObjectCreator(connection);
-		
+
 		this.remover = new ObjectRemover(connection);
 	}
 
@@ -35,9 +35,10 @@ public class ObjectUpdater
 		HTable tableEntities = StorageUtils.getTableEntity(connection);
 		HTable tableIndexByPropertyAsc = StorageUtils.getTableIndexByPropertyAsc(connection);
 
-		logger.debug("Removing entity from index IndexByProperty");
 		byte[] oldObj = remover.retrieveObject(tableEntities, appId, kind, key);
 		Map<String, byte[]> index = remover.createIndexMap(oldObj);
+
+		logger.debug("Removing entity from index IndexByProperty");
 		remover.removeObjectFromIndexByProperty(tableIndexByPropertyAsc, appId, kind, key, index);
 
 		logger.debug("Updating entity in the Entities table");

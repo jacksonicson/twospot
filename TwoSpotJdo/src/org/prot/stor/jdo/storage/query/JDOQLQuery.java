@@ -19,7 +19,6 @@ package org.prot.stor.jdo.storage.query;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +30,6 @@ import org.datanucleus.ObjectManager;
 import org.datanucleus.StateManager;
 import org.datanucleus.exceptions.NucleusException;
 import org.datanucleus.metadata.AbstractClassMetaData;
-import org.datanucleus.query.evaluator.JDOQLEvaluator;
-import org.datanucleus.query.evaluator.JavaQueryEvaluator;
 import org.datanucleus.store.FieldValues;
 import org.datanucleus.store.query.AbstractJDOQLQuery;
 import org.prot.jdo.storage.StorageHelper;
@@ -145,11 +142,10 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 			{
 				final ClassLoaderResolver clr2 = clr;
 				final FetchFieldManager manager = new FetchFieldManager(in, om, clr);
-				Class<?> cls = clr.classForName(manager.getClassName());
+				Class cls = clr.classForName(manager.getClassName());
 				final AbstractClassMetaData acmd = om.getMetaDataManager().getMetaDataForClass(cls, clr2);
 				obj = om.findObjectUsingAID(cls, new FieldValues()
 				{
-
 					@Override
 					public void fetchFields(StateManager sm)
 					{
@@ -187,10 +183,11 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 		}
 
 		// Filter the candidates
-		JavaQueryEvaluator evaluator = new JDOQLEvaluator(this, candidates, compilation, parameters, om
-				.getClassLoaderResolver());
-		Collection results = evaluator.execute(true, true, true, true, true);
+		// JavaQueryEvaluator evaluator = new JDOQLEvaluator(this, candidates,
+		// compilation, parameters, om
+		// .getClassLoaderResolver());
+		// Collection results = evaluator.execute(true, true, true, true, true);
 
-		return results;
+		return candidates;
 	}
 }

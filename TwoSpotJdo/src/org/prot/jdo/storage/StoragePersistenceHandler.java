@@ -205,10 +205,9 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 	public void updateObject(StateManager sm, int[] fieldNumbers)
 	{
 		// Check if the storage manager manages the class
-		if (!storeManager.managesClass(sm.getClassMetaData().getFullClassName()))
-		{
-			throw new NucleusException("Cannot update an unmanged class");
-		}
+//		if (!storeManager.managesClass(sm.getClassMetaData().getFullClassName()))
+//			throw new NucleusException("Cannot update an unmanged class");
+
 		// Save the object
 		StorageManagedConnection mconn = (StorageManagedConnection) storeManager.getConnection(sm
 				.getObjectManager());

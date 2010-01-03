@@ -10,7 +10,6 @@ import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Result;
-import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 import org.prot.jdo.storage.messages.EntityMessage;
 import org.prot.jdo.storage.messages.IndexMessage;
@@ -114,10 +113,6 @@ public class ObjectRemover
 		{
 			byte[] propKey = KeyHelper.createIndexByPropertyKey(appId, kind, rowKey, propertyName, index
 					.get(propertyName));
-
-			propKey = Bytes.add(propKey, StorageUtils.bSlash, Bytes.toBytes(propertyName));
-			propKey = Bytes.add(propKey, StorageUtils.bSlash, index.get(propertyName));
-			propKey = Bytes.add(propKey, StorageUtils.bSlash, rowKey);
 
 			Delete delete = new Delete(propKey);
 			deleteList.add(delete);
