@@ -23,6 +23,8 @@ public class ObjectUpdater
 	{
 		this.connection = connectionFactory.createManagedConnection();
 
+		this.creator = new ObjectCreator(connection);
+		
 		this.remover = new ObjectRemover(connection);
 	}
 
