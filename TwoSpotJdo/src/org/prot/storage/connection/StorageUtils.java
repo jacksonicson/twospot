@@ -9,11 +9,14 @@ import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
+import org.prot.storage.TooMuchDataException;
 import org.prot.storage.query.LimitCondition;
 
 public class StorageUtils
 {
 	private static final Logger logger = Logger.getLogger(StorageUtils.class);
+
+	private static final long MAX_FIELD_SIZE = 1024 * 1024 * 2; // 2MB
 
 	public static final String TABLE_SEQUENCES = "counters";
 	public static final String TABLE_ENTITIES = "entities";
@@ -27,6 +30,12 @@ public class StorageUtils
 	public static final byte[] bEntity = Bytes.toBytes("entity");
 	public static final byte[] bSerialized = Bytes.toBytes("serialized");
 	public static final byte[] bCounter = Bytes.toBytes("counter");
+
+	public static final void assertFieldSize(long length)
+	{
+		if (length > MAX_FIELD_SIZE)
+			throw new TooMuchDataException();
+	}
 
 	public static final HTable getTableEntity(HBaseManagedConnection connection)
 	{
@@ -58,7 +67,7 @@ public class StorageUtils
 		for (byte[] key : keys)
 		{
 			// Check limits
-			if(!limit.incrementResult())
+			if (!limit.incrementResult())
 				return;
 
 			// Create a new get

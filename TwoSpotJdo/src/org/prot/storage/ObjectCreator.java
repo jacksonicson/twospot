@@ -60,7 +60,8 @@ public class ObjectCreator
 		}
 	}
 
-	public static final byte[] writeEntity(HTable table, String appId, String kind, Key key, byte[] obj) throws IOException
+	public static final byte[] writeEntity(HTable table, String appId, String kind, Key key, byte[] obj)
+			throws IOException
 	{
 		// Create a new put operation
 		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
@@ -73,7 +74,7 @@ public class ObjectCreator
 		// Return the key
 		return rowKey;
 	}
-	
+
 	private void writeIndexByKind(HTable table, byte[] rowKey, String appId, String kind) throws IOException
 	{
 		byte[] indexRowKey = KeyHelper.createIndexByKindRowKey(appId, kind, rowKey);

@@ -7,6 +7,7 @@ import org.apache.hadoop.hbase.MasterNotRunningException;
 import org.apache.log4j.Logger;
 import org.prot.storage.connection.ConnectionFactory;
 import org.prot.storage.connection.SchemaCreator;
+import org.prot.storage.connection.StorageUtils;
 import org.prot.storage.query.QueryEngine;
 import org.prot.storage.query.StorageQuery;
 
@@ -53,8 +54,13 @@ public class StorageImpl implements Storage
 	@Override
 	public void createObject(String appId, String kind, Key key, byte[] obj)
 	{
+		// Asserts
 		assert (key != null);
 
+		// Assert field size
+		StorageUtils.assertFieldSize(obj.length);
+		
+		// Create the entity
 		logger.debug("Creating object of kind: " + kind);
 		ObjectCreator creator = new ObjectCreator(connectionFactory);
 		try
@@ -69,6 +75,13 @@ public class StorageImpl implements Storage
 	@Override
 	public void updateObject(String appId, String kind, Key key, byte[] obj)
 	{
+		// Asserts
+		assert(key != null);
+		
+		// Assert field size
+		StorageUtils.assertFieldSize(obj.length);
+		
+		// Update the entity; 
 		ObjectUpdater updater = new ObjectUpdater(connectionFactory);
 		try
 		{
