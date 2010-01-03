@@ -69,12 +69,27 @@ public class Storage
 		Query query = manager.newQuery(Person.class);
 		query.setFilter("asdf > 25 && asdf < 30");
 		List<Person> persons = (List<Person>) query.execute();
-		Assert.assertTrue(persons.size() > 0);
+		Assert.assertTrue(persons.size() == 4);
 		for (Person p : persons)
-		{
-			System.out.println("p _ " + p.getAsdf());
 			Assert.assertTrue(p.getAsdf() > 25 && p.getAsdf() < 30);
-		}
+
+		query.setFilter("asdf > 25 && asdf <= 30");
+		persons = (List<Person>) query.execute();
+		Assert.assertTrue(persons.size() == 5);
+		for (Person p : persons)
+			Assert.assertTrue(p.getAsdf() > 25 && p.getAsdf() <= 30);
+
+		query.setFilter("asdf >= 25 && asdf <= 30");
+		persons = (List<Person>) query.execute();
+		Assert.assertTrue(persons.size() == 6);
+		for (Person p : persons)
+			Assert.assertTrue(p.getAsdf() >= 25 && p.getAsdf() <= 30);
+
+		query.setFilter("asdf >= 25 && asdf < 30");
+		persons = (List<Person>) query.execute();
+		Assert.assertTrue(persons.size() == 5);
+		for (Person p : persons)
+			Assert.assertTrue(p.getAsdf() >= 25 && p.getAsdf() < 30);
 	}
 
 	@Test
