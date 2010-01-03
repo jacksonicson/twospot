@@ -1,0 +1,13 @@
+./Libs/lib/datanucleus/deps/hbase-0.20.0.jar
+./Libs/lib/datanucleus/datanucleus-cache-2.0.0-m2.jar
+./Libs/lib/datanucleus/datanucleus-core-2.0.0-m3.jar
+./Libs/lib/log4j-1.2.15/log4j-1.2.15.jar
+./Libs/lib/datanucleus/deps/hadoop-core-0.20.1.jar
+./Libs/lib/datanucleus/deps/asm-3.1.jar
+./Libs/lib/datanucleus/deps/jdo2-api-2.3-eb.jar
+./Libs/lib/datanucleus/deps/joda-time-1.6.jar
+./Libs/lib/datanucleus/datanucleus-jpa-2.0.0-m3.jar
+./Libs/lib/apache_commons/commons-logging-1.1.1.jar
+./Libs/lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar
+./Libs/lib/zookeeper-3.2.1/zookeeper-3.2.1.jar
+./Libs/lib/apache_commons/commons-codec-1.4/commons-codec-1.4.jar
