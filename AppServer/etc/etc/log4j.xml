@@ -5,7 +5,7 @@
 
 	<appender name="SocketAppender" class="org.apache.log4j.net.SocketAppender">
 		<param name="Port" value="4445" />
-		<param name="RemoteHost" value="localhost" />
+		<param name="RemoteHost" value="192.168.178.12" />
 	</appender>
 
 	<appender name="ConsoleAppender" class="org.apache.log4j.ConsoleAppender">

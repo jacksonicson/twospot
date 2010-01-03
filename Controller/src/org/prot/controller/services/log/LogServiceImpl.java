@@ -68,8 +68,10 @@ public class LogServiceImpl implements LogService
 				// queryBuilder.append(severity);
 			}
 
+			String squery = queryBuilder.toString();
+
 			Query query = pm.newQuery(LogMessage.class);
-			query.setFilter(queryBuilder.toString());
+			query.setFilter(squery);
 
 			Object result = query.execute();
 			if (result == null)
