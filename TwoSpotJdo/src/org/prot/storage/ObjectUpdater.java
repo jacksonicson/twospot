@@ -36,15 +36,16 @@ public class ObjectUpdater
 		HTable tableIndexByPropertyAsc = StorageUtils.getTableIndexByPropertyAsc(connection);
 
 		byte[] oldObj = remover.retrieveObject(tableEntities, appId, kind, key);
-		Map<String, byte[]> index = remover.createIndexMap(oldObj);
+		Map<String, byte[]> oldIndex = remover.createIndexMap(oldObj);
+		Map<String, byte[]> newIndex = remover.createIndexMap(obj);
 
 		logger.debug("Removing entity from index IndexByProperty");
-		remover.removeObjectFromIndexByProperty(tableIndexByPropertyAsc, appId, kind, key, index);
+		remover.removeObjectFromIndexByProperty(tableIndexByPropertyAsc, appId, kind, key, oldIndex);
 
 		logger.debug("Updating entity in the Entities table");
 		byte[] rowKey = ObjectCreator.writeEntity(tableEntities, appId, kind, key, obj);
 
 		logger.debug("Creating index IndexByProperty");
-		creator.writeIndexByPropertyAsc(tableIndexByPropertyAsc, rowKey, appId, kind, index);
+		creator.writeIndexByPropertyAsc(tableIndexByPropertyAsc, rowKey, appId, kind, newIndex);
 	}
 }
