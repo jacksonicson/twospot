@@ -23,18 +23,18 @@ public class ObjectUpdater
 	{
 		this.connection = connectionFactory.createManagedConnection();
 
-		this.creator = new ObjectCreator(connectionFactory);
-		this.remover = new ObjectRemover(connectionFactory);
+		this.creator = new ObjectCreator(connection);
+		this.remover = new ObjectRemover(connection);
 	}
 
 	public void updateObject(String appId, String kind, Key key, byte[] obj) throws IOException,
 			ClassNotFoundException
 
 	{
-		HTable tableEntities = getEntitiesTable();
-		HTable tableIndexByPropertyAsc = getIndexByPropertyTableAsc();
+		HTable tableEntities = StorageUtils.getTableEntity(connection);
+		HTable tableIndexByPropertyAsc = StorageUtils.getTableIndexByPropertyAsc(connection);
 
-		logger.debug("Removing entity from IndexByProperty");
+		logger.debug("Removing entity from index IndexByProperty");
 		byte[] oldObj = remover.retrieveObject(tableEntities, appId, kind, key);
 		Map<String, byte[]> index = remover.createIndexMap(oldObj);
 		remover.removeObjectFromIndexByProperty(tableIndexByPropertyAsc, appId, kind, key, index);
@@ -42,19 +42,7 @@ public class ObjectUpdater
 		logger.debug("Updating entity in the Entities table");
 		byte[] rowKey = creator.writeEntity(tableEntities, appId, kind, key, obj);
 
-		logger.debug("CreatingIndexByProperty");
+		logger.debug("Creating index IndexByProperty");
 		creator.writeIndexByPropertyAsc(tableIndexByPropertyAsc, rowKey, appId, kind, index);
-	}
-
-	private HTable getIndexByPropertyTableAsc()
-	{
-		HTable table = connection.getHTable(StorageUtils.TABLE_INDEX_BY_PROPERTY_ASC);
-		return table;
-	}
-
-	private HTable getEntitiesTable()
-	{
-		HTable table = connection.getHTable(StorageUtils.TABLE_ENTITIES);
-		return table;
 	}
 }

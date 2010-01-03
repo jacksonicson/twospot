@@ -1,14 +1,14 @@
 package org.prot.storage.connection;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.util.List;
+import java.util.Set;
 
+import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.HTable;
+import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
-import org.datanucleus.ClassLoaderResolver;
 
 public class StorageUtils
 {
@@ -27,29 +27,6 @@ public class StorageUtils
 	public static final byte[] bSerialized = Bytes.toBytes("serialized");
 	public static final byte[] bCounter = Bytes.toBytes("counter");
 
-	public static Object deserialize(ClassLoaderResolver clr, byte[] data) throws IOException,
-			ClassNotFoundException
-	{
-		ByteArrayInputStream in = new ByteArrayInputStream(data);
-		MyStream s = new MyStream(in, clr);
-
-		logger.warn("Classloader: " + StorageUtils.class.getClassLoader());
-
-		Object obj = s.readObject();
-
-		return obj;
-	}
-
-	public static byte[] serialize(Object obj) throws IOException
-	{
-		// WARN: Imposssible within the server - class is not in classpath
-		ByteArrayOutputStream arrayOut = new ByteArrayOutputStream();
-		ObjectOutputStream out = new ObjectOutputStream(arrayOut);
-		out.writeObject(obj);
-
-		return arrayOut.toByteArray();
-	}
-
 	public static final HTable getTableEntity(HBaseManagedConnection connection)
 	{
 		HTable table = connection.getHTable(StorageUtils.TABLE_ENTITIES);
@@ -66,5 +43,27 @@ public class StorageUtils
 	{
 		HTable table = connection.getHTable(StorageUtils.TABLE_INDEX_BY_KIND);
 		return table;
+	}
+
+	public static final void materialize(HTable entityTable, Set<byte[]> keys, List<byte[]> result)
+			throws IOException
+	{
+		logger.trace("Materializing entities");
+
+		for (byte[] key : keys)
+		{
+			Get get = new Get(key);
+			Result entity = entityTable.get(get);
+			if (entity.getMap() == null)
+			{
+				logger.warn("Could not fetch the entity");
+				continue;
+			}
+
+			byte[] data = entity.getMap().get(StorageUtils.bEntity).get(StorageUtils.bSerialized)
+					.firstEntry().getValue();
+
+			result.add(data);
+		}
 	}
 }

@@ -16,14 +16,16 @@ public class ObjectCreator
 {
 	private static final Logger logger = Logger.getLogger(ObjectCreator.class);
 
-	private ConnectionFactory connectionFactory; 
-	
 	private HBaseManagedConnection connection;
 
 	public ObjectCreator(ConnectionFactory connectionFactory)
 	{
-		this.connectionFactory = connectionFactory;
 		this.connection = connectionFactory.createManagedConnection();
+	}
+
+	public ObjectCreator(HBaseManagedConnection connection)
+	{
+		this.connection = connection;
 	}
 
 	public void createObject(String appId, String kind, Key key, byte[] obj) throws IOException
@@ -44,7 +46,7 @@ public class ObjectCreator
 			writeIndexByKind(indexByKindTable, rowKey, appId, kind);
 
 			logger.debug("Updating index by property");
-			ObjectRemover remover = new ObjectRemover(connectionFactory);
+			ObjectRemover remover = new ObjectRemover(connection);
 			Map<String, byte[]> index = remover.createIndexMap(obj);
 			writeIndexByPropertyAsc(indexByPropertyAsc, rowKey, appId, kind, index);
 

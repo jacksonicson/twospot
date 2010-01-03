@@ -93,8 +93,7 @@ public class StorageQuery implements Serializable
 		Set<byte[]> keySet = new HashSet<byte[]>();
 		keySet.add(rowKey);
 
-		AtomarCondition condition = new AtomarCondition(null, null, null);
-		condition.materialize(entityTable, keySet, result);
+		StorageUtils.materialize(entityTable, keySet, result);
 	}
 
 	private void fetchByKind(HBaseManagedConnection connection, List<byte[]> result) throws IOException
@@ -124,7 +123,7 @@ public class StorageQuery implements Serializable
 
 		// Materialize all entities
 		AtomarCondition condition = new AtomarCondition(null, null, null);
-		condition.materialize(entityTable, keySet, result);
+		StorageUtils.materialize(entityTable, keySet, result);
 	}
 
 	public LimitCondition getLimit()

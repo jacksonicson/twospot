@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
@@ -135,7 +134,6 @@ public class AtomarCondition implements Serializable
 
 		// Create the scanner
 		Scan scan = createScanner(bAppId, bKind, bProperty, bValue);
-		logger.debug("Starting at: " + new String(scan.getStartRow()));
 		ResultScanner resultScanner = indexTable.getScanner(scan);
 
 		// Create a new set for the results
@@ -158,27 +156,6 @@ public class AtomarCondition implements Serializable
 		}
 
 		return entityKeys;
-	}
-
-	void materialize(HTable entityTable, Set<byte[]> keys, List<byte[]> result) throws IOException
-	{
-		logger.debug("Materializing entities");
-
-		for (byte[] key : keys)
-		{
-			Get get = new Get(key);
-			Result entity = entityTable.get(get);
-			if (entity.getMap() == null)
-			{
-				logger.warn("Could not fetch the entity");
-				continue;
-			}
-
-			byte[] data = entity.getMap().get(StorageUtils.bEntity).get(StorageUtils.bSerialized)
-					.firstEntry().getValue();
-
-			result.add(data);
-		}
 	}
 
 	void run(HBaseManagedConnection connection, StorageQuery query, List<byte[]> result, LimitCondition limit)
@@ -205,7 +182,7 @@ public class AtomarCondition implements Serializable
 			entityKeys = findIn(query, tableIndex, limit);
 
 			// Materialize the results
-			materialize(tableEntities, entityKeys, result);
+			StorageUtils.materialize(tableEntities, entityKeys, result);
 			break;
 
 		default:

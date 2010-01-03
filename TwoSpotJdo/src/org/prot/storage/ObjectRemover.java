@@ -32,7 +32,12 @@ public class ObjectRemover
 		this.connection = (HBaseManagedConnection) connectionFactory.createManagedConnection();
 	}
 
-	public void removeObject(String appId, String kind, Key key) throws IOException, ClassNotFoundException
+	public ObjectRemover(HBaseManagedConnection connection)
+	{
+		this.connection = connection;
+	}
+
+	public void removeObject(String appId, String kind, Key key) throws IOException
 	{
 		HTable tableEntities = getEntitiesTable();
 		HTable tableIndexByKind = getIndexByKindTable();
@@ -83,8 +88,7 @@ public class ObjectRemover
 		return index;
 	}
 
-	byte[] retrieveObject(HTable table, String appId, String kind, Key key) throws IOException,
-			ClassNotFoundException
+	byte[] retrieveObject(HTable table, String appId, String kind, Key key) throws IOException
 	{
 		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
 

@@ -88,7 +88,7 @@ public class StorageImpl implements Storage
 		QueryEngine queryEngine = new QueryEngine(connectionFactory);
 		return queryEngine.run(query);
 	}
-	
+
 	@Override
 	public byte[] query(String appId, String kind, Key key)
 	{
@@ -99,20 +99,12 @@ public class StorageImpl implements Storage
 	@Override
 	public boolean deleteObject(String appId, String kind, Key key)
 	{
-		ObjectRemover remover = new ObjectRemover(connectionFactory);
 		try
 		{
+			ObjectRemover remover = new ObjectRemover(connectionFactory);
 			remover.removeObject(appId, kind, key);
 			return true;
 		} catch (IOException e)
-		{
-			logger.error(e);
-			return false;
-		} catch (ClassNotFoundException e)
-		{
-			logger.error(e);
-			return false;
-		} catch (SecurityException e)
 		{
 			logger.error(e);
 			return false;
