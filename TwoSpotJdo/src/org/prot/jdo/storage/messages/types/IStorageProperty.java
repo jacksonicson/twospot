@@ -11,6 +11,8 @@ public interface IStorageProperty
 
 	public Object getValue();
 	
+	public Object getValue(StorageType requiredType);
+	
 	public byte[] getValueAsBytes();
 	
 	public void writeTo(CodedOutputStream out) throws IOException;

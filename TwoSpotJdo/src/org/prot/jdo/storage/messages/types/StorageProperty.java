@@ -68,6 +68,15 @@ public class StorageProperty implements IStorageProperty
 	}
 
 	@Override
+	public Object getValue(StorageType requiredType)
+	{
+		if (this.type != requiredType)
+			return null;
+
+		return getValue();
+	}
+
+	@Override
 	public byte[] getValueAsBytes()
 	{
 		return this.bValue;
@@ -81,24 +90,21 @@ public class StorageProperty implements IStorageProperty
 		} else if (type == Key.class)
 		{
 			return StorageType.KEY;
-		} else if (type == Integer.class)
+		} else if (type == Integer.class || type == int.class)
 		{
 			return StorageType.INTEGER;
-		} else if (type == Long.class)
+		} else if (type == Long.class || type == long.class)
 		{
 			return StorageType.LONG;
-		} else if (type == Double.class)
+		} else if (type == Double.class || type == double.class)
 		{
 			return StorageType.DOUBLE;
-		} else if (type == Boolean.class)
+		} else if (type == Boolean.class || type == boolean.class)
 		{
 			return StorageType.BOOLEAN;
-		} else if (type == Key.class)
-		{
-			return StorageType.STRING;
 		} else
 		{
-			throw new NucleusException("Unknown field type");
+			throw new NucleusException("Unknown field type: " + type);
 		}
 	}
 

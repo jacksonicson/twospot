@@ -57,19 +57,22 @@ public class FetchFieldManager extends AbstractFieldManager
 	public Object fetchObjectField(int fieldNumber)
 	{
 		IStorageProperty property = getProperty(fieldNumber);
-		if(property != null)
+		if (property != null)
 		{
-			if(property.getType() == StorageType.KEY)
+			if (property.getType() == StorageType.KEY)
 			{
-				Key key = new Key((String)property.getValue());
-				return key;
-			}
-			else
+				String value = (String) property.getValue(StorageType.KEY);
+				if (value != null)
+				{
+					Key key = new Key(value);
+					return key;
+				}
+			} else
 			{
 				throw new NucleusException("Could not fetch object field - unknown type");
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -77,7 +80,11 @@ public class FetchFieldManager extends AbstractFieldManager
 	{
 		IStorageProperty property = getProperty(fieldNumber);
 		if (property != null)
-			return (String) property.getValue();
+		{
+			String value = (String) property.getValue(StorageType.STRING);
+			if (value != null)
+				return value;
+		}
 
 		return null;
 	}
@@ -86,7 +93,11 @@ public class FetchFieldManager extends AbstractFieldManager
 	{
 		IStorageProperty property = getProperty(fieldNumber);
 		if (property != null)
-			return (Double) property.getValue();
+		{
+			Double value = (Double) property.getValue(StorageType.DOUBLE);
+			if (value != null)
+				return value;
+		}
 
 		return 0;
 	}
@@ -95,7 +106,11 @@ public class FetchFieldManager extends AbstractFieldManager
 	{
 		IStorageProperty property = getProperty(fieldNumber);
 		if (property != null)
-			return (Float) property.getValue();
+		{
+			Float value = (Float) property.getValue(StorageType.FLOAT);
+			if (value != null)
+				return value;
+		}
 
 		return 0;
 	}
@@ -104,7 +119,11 @@ public class FetchFieldManager extends AbstractFieldManager
 	{
 		IStorageProperty property = getProperty(fieldNumber);
 		if (property != null)
-			return (Long) property.getValue();
+		{
+			Long value = (Long) property.getValue(StorageType.LONG);
+			if (value != null)
+				return value;
+		}
 
 		return 0;
 	}
@@ -113,7 +132,11 @@ public class FetchFieldManager extends AbstractFieldManager
 	{
 		IStorageProperty property = getProperty(fieldNumber);
 		if (property != null)
-			return (Integer) property.getValue();
+		{
+			Integer value = (Integer) property.getValue(StorageType.INTEGER);
+			if (value != null)
+				return value;
+		}
 
 		return 0;
 	}
@@ -122,7 +145,11 @@ public class FetchFieldManager extends AbstractFieldManager
 	{
 		IStorageProperty property = getProperty(fieldNumber);
 		if (property != null)
-			return (Short) property.getValue();
+		{
+			Short value = (Short) property.getValue(StorageType.SHORT);
+			if (value != null)
+				return value;
+		}
 
 		return 0;
 	}
@@ -131,7 +158,11 @@ public class FetchFieldManager extends AbstractFieldManager
 	{
 		IStorageProperty property = getProperty(fieldNumber);
 		if (property != null)
-			return (Byte) property.getValue();
+		{
+			Byte value = (Byte) property.getValue(StorageType.BYTE);
+			if (value != null)
+				return value;
+		}
 
 		return 0;
 	}
@@ -140,7 +171,11 @@ public class FetchFieldManager extends AbstractFieldManager
 	{
 		IStorageProperty property = getProperty(fieldNumber);
 		if (property != null)
-			return (Character) property.getValue();
+		{
+			Character value = (Character) property.getValue(StorageType.CHAR);
+			if (value != null)
+				return value;
+		}
 
 		return 0;
 	}
@@ -149,7 +184,11 @@ public class FetchFieldManager extends AbstractFieldManager
 	{
 		IStorageProperty property = getProperty(fieldNumber);
 		if (property != null)
-			return (Boolean) property.getValue();
+		{
+			Boolean value = (Boolean) property.getValue(StorageType.BOOLEAN);
+			if (value != null)
+				return value;
+		}
 
 		return false;
 	}
