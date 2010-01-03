@@ -108,6 +108,46 @@ public class StorageProperty implements IStorageProperty
 		}
 	}
 
+	public static final byte[] bytesFrom(Class<?> cls, Object value)
+	{
+		StorageType type = newType(cls);
+		switch (type)
+		{
+		case STRING:
+			return Bytes.toBytes((String) value);
+
+		case KEY:
+			return Bytes.toBytes((String) value);
+
+		case BOOLEAN:
+			return Bytes.toBytes((Boolean) value);
+
+		case BYTE:
+			return Bytes.toBytes((Byte) value);
+
+		case CHAR:
+			return Bytes.toBytes((Character) value);
+
+		case DOUBLE:
+			return Bytes.toBytes((Double) value);
+
+		case FLOAT:
+			return Bytes.toBytes((Float) value);
+
+		case INTEGER:
+			return Bytes.toBytes((Integer) value);
+
+		case LONG:
+			return Bytes.toBytes((Long) value);
+
+		case SHORT:
+			return Bytes.toBytes((Short) value);
+
+		default:
+			throw new NucleusException("Unknown type");
+		}
+	}
+
 	@Override
 	public void mergeFrom(CodedInputStream input) throws IOException
 	{

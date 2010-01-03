@@ -23,7 +23,7 @@ import org.datanucleus.query.expression.ParameterExpression;
 import org.datanucleus.query.expression.PrimaryExpression;
 import org.datanucleus.query.expression.SubqueryExpression;
 import org.datanucleus.query.expression.VariableExpression;
-import org.prot.storage.Key;
+import org.prot.jdo.storage.messages.types.StorageProperty;
 import org.prot.storage.query.AtomLiteral;
 import org.prot.storage.query.AtomarCondition;
 import org.prot.storage.query.ConditionType;
@@ -130,8 +130,6 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 
 	protected Object processParameterExpression(ParameterExpression expr)
 	{
-		logger.debug("TEST" + expr.getSymbol().getValueType());
-
 		Object paramValue = null;
 		if (parameters != null && parameters.containsKey(expr.getId()))
 			paramValue = parameters.get(expr.getId());
@@ -140,32 +138,7 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 			throw new NucleusException("Undeclared parameter: " + expr.getId());
 
 		Object value = paramValue;
-		byte[] bValue = null;
-
-		if (value instanceof String)
-			bValue = Bytes.toBytes((String) value);
-
-		else if (value instanceof Double)
-			bValue = Bytes.toBytes((Double) value);
-
-		else if (value instanceof Long)
-			bValue = Bytes.toBytes((Long) value);
-
-		else if (value instanceof Integer)
-			bValue = Bytes.toBytes((Integer) value);
-
-		else if (value instanceof Boolean)
-			bValue = Bytes.toBytes((Boolean) value);
-
-		else if (value instanceof Character)
-			bValue = Bytes.toBytes(((Character) value).toString());
-
-		else
-		{
-			logger.error("Unsupported paramter value type: " + value.getClass());
-			return null;
-		}
-
+		byte[] bValue = StorageProperty.bytesFrom(value.getClass(), value);
 		AtomLiteral literal = new AtomLiteral(bValue);
 		stack.push(literal);
 
@@ -180,35 +153,7 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 	protected Object processLiteral(Literal expr)
 	{
 		Object value = expr.getLiteral();
-		byte[] bValue = null;
-
-		if (value instanceof String)
-			bValue = Bytes.toBytes((String) value);
-
-		else if (value instanceof Double)
-			bValue = Bytes.toBytes((Double) value);
-
-		else if (value instanceof Long)
-			bValue = Bytes.toBytes((Long) value);
-
-		else if (value instanceof Integer)
-			bValue = Bytes.toBytes((Integer) value);
-
-		else if (value instanceof Boolean)
-			bValue = Bytes.toBytes((Boolean) value);
-
-		else if (value instanceof Character)
-			bValue = Bytes.toBytes(((Character) value).toString());
-
-		else if (value instanceof Key)
-			bValue = ((Key) value).getKey();
-
-		else
-		{
-			logger.error("Unsupported literal type: " + value);
-			return null;
-		}
-
+		byte[] bValue = StorageProperty.bytesFrom(value.getClass(), value);
 		AtomLiteral literal = new AtomLiteral(bValue);
 		stack.push(literal);
 
