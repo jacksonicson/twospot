@@ -24,9 +24,13 @@ public class AtomarCondition implements Serializable
 
 	private static final Logger logger = Logger.getLogger(AtomarCondition.class);
 
+	// Condition type (equals, lower than, greater than, greater)
 	private ConditionType type;
 
+	// Property (left side)
 	private AtomLiteral property;
+
+	// Value to check (right side)
 	private AtomLiteral value;
 
 	public AtomarCondition(ConditionType type, AtomLiteral property, AtomLiteral value)
@@ -34,18 +38,6 @@ public class AtomarCondition implements Serializable
 		this.type = type;
 		this.property = property;
 		this.value = value;
-	}
-
-	private HTable getTableEntity(HBaseManagedConnection connection)
-	{
-		HTable table = connection.getHTable(StorageUtils.TABLE_ENTITIES);
-		return table;
-	}
-
-	private HTable getTableIndexByPropertyAsc(HBaseManagedConnection connection)
-	{
-		HTable table = connection.getHTable(StorageUtils.TABLE_INDEX_BY_PROPERTY_ASC);
-		return table;
 	}
 
 	private Scan createScanner(byte[] bAppId, byte[] bKind, byte[] bProperty, byte[] bValue)
@@ -168,8 +160,7 @@ public class AtomarCondition implements Serializable
 		return entityKeys;
 	}
 
-	void materialize(HTable entityTable, Set<byte[]> keys, List<byte[]> result) throws IOException,
-			ClassNotFoundException
+	void materialize(HTable entityTable, Set<byte[]> keys, List<byte[]> result) throws IOException
 	{
 		logger.debug("Materializing entities");
 
@@ -198,8 +189,8 @@ public class AtomarCondition implements Serializable
 		logger.debug("Value is: " + new String(value.getValue()));
 
 		// Get the tables
-		HTable tableEntities = getTableEntity(connection);
-		HTable tableIndex = getTableIndexByPropertyAsc(connection);
+		HTable tableEntities = StorageUtils.getTableEntity(connection);
+		HTable tableIndex = StorageUtils.getTableIndexByPropertyAsc(connection);
 
 		// Find the entity keys using the index table
 		Set<byte[]> entityKeys = null;

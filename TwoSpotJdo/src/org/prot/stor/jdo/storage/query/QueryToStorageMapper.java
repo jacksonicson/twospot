@@ -9,9 +9,9 @@ import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.FetchPlan;
 import org.datanucleus.ObjectManager;
 import org.datanucleus.exceptions.NucleusException;
+import org.datanucleus.exceptions.NucleusUnsupportedOptionException;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.query.QueryUtils;
-import org.datanucleus.query.compiler.CompilationComponent;
 import org.datanucleus.query.compiler.QueryCompilation;
 import org.datanucleus.query.evaluator.AbstractExpressionEvaluator;
 import org.datanucleus.query.expression.CastExpression;
@@ -36,8 +36,6 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 	private StorageQuery storageQuery;
 
 	private QueryCompilation compilation;
-
-	private CompilationComponent compilationComponent;
 
 	private Map parameters;
 
@@ -105,9 +103,6 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 		// Get the filter expression
 		if (compilation.getExprFilter() != null)
 		{
-			// Update compilation comopnent
-			compilationComponent = CompilationComponent.FILTER;
-
 			// Check if there is an OR operator in the expression (unsupported)
 			if (QueryUtils.expressionHasOrOperator(compilation.getExprFilter()))
 				throw new NucleusException("OR filterin is unsupported");
@@ -248,14 +243,7 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 
 	protected Object processNoteqExpression(Expression expr)
 	{
-		AtomLiteral value = (AtomLiteral) stack.pop();
-		AtomLiteral property = (AtomLiteral) stack.pop();
-
-		AtomarCondition condition = new AtomarCondition(ConditionType.NOT_EQUALS, property, value);
-		this.storageQuery.getCondition().addCondition(condition);
-		stack.push(condition);
-
-		return condition;
+		throw new NucleusUnsupportedOptionException("Unsupported query operator: !=");
 	}
 
 	protected Object processGteqExpression(Expression expr)
@@ -308,76 +296,76 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 
 	protected Object processOrExpression(Expression expr)
 	{
-		throw new NucleusException("OR expressions are not supported");
+		throw new NucleusUnsupportedOptionException("Unsupported query operator: OR");
 	}
 
 	protected Object processInvokeExpression(InvokeExpression expr)
 	{
-		throw new NucleusException("InvokeExpressions are not supported");
+		throw new NucleusUnsupportedOptionException("Unsupported query operator: INVOKE");
 	}
 
 	protected Object processSubqueryExpression(SubqueryExpression expr)
 	{
-		throw new NucleusException("Subqueries are not supported");
+		throw new NucleusUnsupportedOptionException("Unsupported query operator: SUBQUERY");
 	}
 
 	protected Object processAddExpression(Expression expr)
 	{
-		throw new NucleusException("Add expressions are not supported");
+		throw new NucleusUnsupportedOptionException("Unsupported query operator: AND");
 	}
 
 	protected Object processDivExpression(Expression expr)
 	{
-		throw new NucleusException("Div expressions are not supported");
+		throw new NucleusUnsupportedOptionException("Unsupported query operator: DIV");
 	}
 
 	protected Object processMulExpression(Expression expr)
 	{
-		throw new NucleusException("Mul expressions are not supported");
+		throw new NucleusUnsupportedOptionException("Unsupported query operator: MUL");
 	}
 
 	protected Object processSubExpression(Expression expr)
 	{
-		throw new NucleusException("Sub expressions are not supported");
+		throw new NucleusUnsupportedOptionException("Unsupported query operator: SUB");
 	}
 
 	protected Object processComExpression(Expression expr)
 	{
-		throw new NucleusException("Com expressions are not supported");
+		throw new NucleusUnsupportedOptionException("Unsupported query operator: COMPARE");
 	}
 
 	protected Object processModExpression(Expression expr)
 	{
-		throw new NucleusException("Mod expressions are not supported");
+		throw new NucleusUnsupportedOptionException("Unsupported query operator: MOD");
 	}
 
 	protected Object processNegExpression(Expression expr)
 	{
-		throw new NucleusException("Neg expressions are not supported");
+		throw new NucleusUnsupportedOptionException("Unsupported query operator: NEG");
 	}
 
 	protected Object processNotExpression(Expression expr)
 	{
-		throw new NucleusException("Not expressions are not supported");
+		throw new NucleusUnsupportedOptionException("Unsupported query operator: NOT");
 	}
 
 	protected Object processCastExpression(CastExpression expr)
 	{
-		throw new NucleusException("Cast expressions are not supported");
+		throw new NucleusUnsupportedOptionException("Unsupported query operator: CAST");
 	}
 
 	protected Object processIsExpression(Expression expr)
 	{
-		throw new NucleusException("Is expressions are not supported");
+		throw new NucleusUnsupportedOptionException("Unsupported query operator: IS");
 	}
 
 	protected Object processCreatorExpression(CreatorExpression expr)
 	{
-		throw new NucleusException("Creator expressions are not supported");
+		throw new NucleusUnsupportedOptionException("Unsupported query operator: CREATOR");
 	}
 
 	protected Object processLikeExpression(Expression expr)
 	{
-		throw new NucleusException("Like expressions are not supported");
+		throw new NucleusUnsupportedOptionException("Unsupported query operator: LIKE");
 	}
 }

@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 import org.datanucleus.ClassLoaderResolver;
@@ -49,4 +50,21 @@ public class StorageUtils
 		return arrayOut.toByteArray();
 	}
 
+	public static final HTable getTableEntity(HBaseManagedConnection connection)
+	{
+		HTable table = connection.getHTable(StorageUtils.TABLE_ENTITIES);
+		return table;
+	}
+
+	public static final HTable getTableIndexByPropertyAsc(HBaseManagedConnection connection)
+	{
+		HTable table = connection.getHTable(StorageUtils.TABLE_INDEX_BY_PROPERTY_ASC);
+		return table;
+	}
+
+	public static final HTable getTableIndexByKind(HBaseManagedConnection connection)
+	{
+		HTable table = connection.getHTable(StorageUtils.TABLE_INDEX_BY_KIND);
+		return table;
+	}
 }

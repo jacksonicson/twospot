@@ -88,6 +88,13 @@ public class StorageImpl implements Storage
 		QueryEngine queryEngine = new QueryEngine(connectionFactory);
 		return queryEngine.run(query);
 	}
+	
+	@Override
+	public byte[] query(String appId, String kind, Key key)
+	{
+		QueryEngine queryEngine = new QueryEngine(connectionFactory);
+		return queryEngine.fetch(appId, kind, key);
+	}
 
 	@Override
 	public boolean deleteObject(String appId, String kind, Key key)

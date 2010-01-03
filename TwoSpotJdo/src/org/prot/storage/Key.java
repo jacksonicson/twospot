@@ -27,8 +27,7 @@ public class Key implements Serializable
 	{
 		if (!isCompact)
 		{
-			Base64 b64 = new Base64(true);
-			this.key = b64.decode(key);
+			this.key = Base64.decodeBase64(key);
 		} else
 		{
 			this.key = Base64.decodeBase64(key);
@@ -78,7 +77,7 @@ public class Key implements Serializable
 		if (key == null)
 			return "";
 
-		Base64 b64 = new Base64(true);
-		return b64.encodeToString(key);
+		// URL-Safe encoding
+		return new String(Base64.encodeBase64URLSafe(key));
 	}
 }

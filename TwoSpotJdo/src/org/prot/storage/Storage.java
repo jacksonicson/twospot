@@ -15,4 +15,6 @@ public interface Storage
 	public boolean deleteObject(String appId, String kind, Key key);
 
 	public List<byte[]> query(StorageQuery query);
+	
+	public byte[] query(String appId, String kind, Key key);
 }

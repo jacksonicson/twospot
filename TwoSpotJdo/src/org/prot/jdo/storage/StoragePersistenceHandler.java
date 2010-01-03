@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.datanucleus.ObjectManager;
 import org.datanucleus.StateManager;
 import org.datanucleus.exceptions.NucleusException;
+import org.datanucleus.exceptions.NucleusUnsupportedOptionException;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.store.StoreManager;
@@ -37,6 +38,7 @@ import org.prot.jdo.storage.messages.IndexMessage;
 import org.prot.jdo.storage.messages.types.StorageProperty;
 import org.prot.jdo.storage.messages.types.StorageType;
 import org.prot.storage.Key;
+import org.prot.storage.NotImplementedException;
 import org.prot.storage.Storage;
 
 import com.google.protobuf.CodedOutputStream;
@@ -93,16 +95,13 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 
 	public void fetchObject(StateManager sm, int[] fieldNumbers)
 	{
-		logger.debug("FETCH OBJECT - NOT IMPLEMENTED");
+		throw new NotImplementedException();
 	}
 
 	public Object findObject(ObjectManager om, Object id)
 	{
-		logger.debug("FIND OBJECT - NOT IMPLEMENTED");
-
-		// TODO: Create a new StateManger by using the ObjectManager
-
-		return null;
+		// Cannot find object without a type
+		throw new NucleusUnsupportedOptionException();
 	}
 
 	private List<IndexMessage> buildIndexMessages(AbstractClassMetaData acmd)
@@ -232,7 +231,7 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 
 		} catch (IOException e)
 		{
-			throw new NucleusException("Error while updating object", e); 
+			throw new NucleusException("Error while updating object", e);
 		} finally
 		{
 			mconn.release();

@@ -8,7 +8,16 @@ public class LimitCondition implements Serializable
 {
 	private static final long serialVersionUID = 1937473360608241627L;
 
-	private long resultCount = 0;
+	// Limits the number of index rows to fetch
+	public static final long MAX_FETCH_INDEX_ROWS = 300;
+
+	// Limits the number of entities to fetch
+	public static final long MAX_FETCH_ENTITIES = 300;
+
+	// Limits the number of fetch operations (every fetch is counted)
+	private static final long MAX_FETCH_OPERATIONS = 3000;
+
+	private long fetchOperationCounter = 0;
 
 	private boolean unique = false;
 
@@ -20,18 +29,18 @@ public class LimitCondition implements Serializable
 
 	public void increment()
 	{
-		resultCount++;
+		fetchOperationCounter++;
 	}
 
 	public boolean isInRange()
 	{
-		if (unique && resultCount > 0)
-			return false;
+		boolean inRange = true;
+		inRange &= fetchOperationCounter < MAX_FETCH_OPERATIONS;
 
-		if(count != null)
-			return resultCount < count;
-		
-		return true; 
+		if (unique && fetchOperationCounter > 0)
+			inRange &= false;
+
+		return inRange;
 	}
 
 	public void setCount(long count)

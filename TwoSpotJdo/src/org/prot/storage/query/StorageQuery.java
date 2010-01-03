@@ -29,14 +29,19 @@ public class StorageQuery implements Serializable
 
 	private static final Logger logger = Logger.getLogger(StorageQuery.class);
 
+	// AppId to query
 	private String appId;
 
-	private Key key;
-
+	// Kind of the entity to query
 	private String kind;
 
+	// Key of the entity to query
+	private Key key;
+
+	// The select condition (could be empty)
 	private SelectCondition condition = new SelectCondition();
 
+	// Limit condition which counts the number of fetch operations
 	private LimitCondition limit = new LimitCondition();
 
 	public StorageQuery(String appId, String kind)
@@ -58,12 +63,13 @@ public class StorageQuery implements Serializable
 
 	List<byte[]> run(HBaseManagedConnection connection) throws IOException, ClassNotFoundException
 	{
+		// List which contains all results
 		List<byte[]> result = new ArrayList<byte[]>();
 
 		if (key != null)
 		{
-			logger.debug("Fetching object by key: NOT IMPLEMENTED");
-			// result.add(fetchObject(key));
+			logger.debug("Fetching object by key");
+			fetchByKey(connection, result);
 			return result;
 		} else if (!condition.isEmpty())
 		{
@@ -79,11 +85,22 @@ public class StorageQuery implements Serializable
 		return result;
 	}
 
-	private void fetchByKind(HBaseManagedConnection connection, List<byte[]> result) throws IOException,
-			ClassNotFoundException
+	private void fetchByKey(HBaseManagedConnection connection, List<byte[]> result) throws IOException
 	{
-		HTable entityTable = getTableEntity(connection);
-		HTable indexByKindTable = getTableIndexByKind(connection);
+		HTable entityTable = StorageUtils.getTableEntity(connection);
+
+		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
+		Set<byte[]> keySet = new HashSet<byte[]>();
+		keySet.add(rowKey);
+
+		AtomarCondition condition = new AtomarCondition(null, null, null);
+		condition.materialize(entityTable, keySet, result);
+	}
+
+	private void fetchByKind(HBaseManagedConnection connection, List<byte[]> result) throws IOException
+	{
+		HTable entityTable = StorageUtils.getTableEntity(connection);
+		HTable indexByKindTable = StorageUtils.getTableIndexByKind(connection);
 
 		byte[] startKey = KeyHelper.createIndexByKindKey(appId, kind);
 
@@ -138,17 +155,5 @@ public class StorageQuery implements Serializable
 	public String getAppId()
 	{
 		return appId;
-	}
-
-	private HTable getTableEntity(HBaseManagedConnection connection)
-	{
-		HTable table = connection.getHTable(StorageUtils.TABLE_ENTITIES);
-		return table;
-	}
-
-	private HTable getTableIndexByKind(HBaseManagedConnection connection)
-	{
-		HTable table = connection.getHTable(StorageUtils.TABLE_INDEX_BY_KIND);
-		return table;
 	}
 }

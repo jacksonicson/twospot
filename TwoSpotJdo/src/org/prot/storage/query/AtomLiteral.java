@@ -2,8 +2,10 @@ package org.prot.storage.query;
 
 public class AtomLiteral
 {
+	// Byte[] of the literal value
 	private byte[] value;
-
+	
+	// True if value contains a stringified key
 	private boolean key;
 
 	public AtomLiteral(byte[] value)
