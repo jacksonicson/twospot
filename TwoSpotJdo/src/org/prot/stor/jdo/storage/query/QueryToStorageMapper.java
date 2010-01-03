@@ -210,7 +210,7 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 
 		else
 		{
-			logger.error("Unsupported literal type: " + value.getClass());
+			logger.error("Unsupported literal type: " + value);
 			return null;
 		}
 

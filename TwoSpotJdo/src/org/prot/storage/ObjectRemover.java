@@ -67,14 +67,14 @@ public class ObjectRemover
 		for (IndexMessage indexMsg : indexMsgs)
 		{
 			String propertyName = indexMsg.getFieldName();
-
 			IStorageProperty property = entityMsg.getProperty(propertyName);
-			byte[] bValue = property.getValueAsBytes();
-			if (bValue == null)
+			if (property == null || property.getValueAsBytes() == null)
 			{
 				logger.debug("Not adding null properties to index map");
 				continue;
 			}
+
+			byte[] bValue = property.getValueAsBytes();
 
 			logger.debug("Adding property to index map: " + propertyName);
 			index.put(propertyName, bValue);

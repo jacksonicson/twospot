@@ -12,6 +12,7 @@ import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 import org.prot.storage.Key;
 import org.prot.storage.KeyHelper;
@@ -84,10 +85,14 @@ public class StorageQuery implements Serializable
 		HTable entityTable = getTableEntity(connection);
 		HTable indexByKindTable = getTableIndexByKind(connection);
 
-		// TODO: Create a stop key
 		byte[] startKey = KeyHelper.createIndexByKindKey(appId, kind);
 
-		Scan scan = new Scan(startKey);
+		byte[] bAppId = Bytes.toBytes(appId);
+		byte[] bKind = Bytes.toBytes(kind);
+		bKind = KeyHelper.incrementByteArray(bKind);
+		byte[] stopKey = Bytes.add(bAppId, StorageUtils.bSlash, bKind);
+
+		Scan scan = new Scan(startKey, stopKey);
 		ResultScanner scanner = indexByKindTable.getScanner(scan);
 		Set<byte[]> keySet = new HashSet<byte[]>();
 		for (Iterator<Result> iterator = scanner.iterator(); iterator.hasNext();)
