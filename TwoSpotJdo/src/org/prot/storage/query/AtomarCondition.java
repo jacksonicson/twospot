@@ -159,7 +159,7 @@ public class AtomarCondition implements Serializable
 	}
 
 	void run(HBaseManagedConnection connection, StorageQuery query, List<byte[]> result, LimitCondition limit)
-			throws IOException, ClassNotFoundException
+			throws IOException
 	{
 		logger.debug("Running atomar condition of type: " + type);
 		logger.debug("Property is: " + property);

@@ -17,6 +17,7 @@ import com.google.protobuf.CodedInputStream;
 
 public class FetchFieldManager extends AbstractFieldManager
 {
+	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(FetchFieldManager.class);
 
 	private EntityMessage msg;

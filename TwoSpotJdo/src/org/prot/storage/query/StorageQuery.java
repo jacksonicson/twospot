@@ -61,7 +61,7 @@ public class StorageQuery implements Serializable
 		return this.condition;
 	}
 
-	List<byte[]> run(HBaseManagedConnection connection) throws IOException, ClassNotFoundException
+	List<byte[]> run(HBaseManagedConnection connection) throws IOException
 	{
 		// List which contains all results
 		List<byte[]> result = new ArrayList<byte[]>();
@@ -122,7 +122,6 @@ public class StorageQuery implements Serializable
 		}
 
 		// Materialize all entities
-		AtomarCondition condition = new AtomarCondition(null, null, null);
 		StorageUtils.materialize(entityTable, keySet, result);
 	}
 

@@ -46,10 +46,7 @@ public class QueryEngine
 			return query.run(connection);
 		} catch (IOException e)
 		{
-			logger.error("", e);
-		} catch (ClassNotFoundException e)
-		{
-			logger.error("", e);
+			logger.error("Error while running query", e);
 		}
 
 		return new ArrayList<byte[]>();

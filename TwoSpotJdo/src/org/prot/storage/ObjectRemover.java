@@ -39,9 +39,9 @@ public class ObjectRemover
 
 	public void removeObject(String appId, String kind, Key key) throws IOException
 	{
-		HTable tableEntities = getEntitiesTable();
-		HTable tableIndexByKind = getIndexByKindTable();
-		HTable tableIndexByPropertyAsc = getIndexByPropertyTableAsc();
+		HTable tableEntities = StorageUtils.getTableEntity(connection);
+		HTable tableIndexByKind = StorageUtils.getTableIndexByKind(connection);
+		HTable tableIndexByPropertyAsc = StorageUtils.getTableIndexByPropertyAsc(connection);
 
 		logger.debug("Retrieving the entity");
 		byte[] obj = retrieveObject(tableEntities, appId, kind, key);
@@ -152,23 +152,5 @@ public class ObjectRemover
 
 		Delete delete = new Delete(rowKey);
 		table.delete(delete);
-	}
-
-	private HTable getIndexByPropertyTableAsc()
-	{
-		HTable table = connection.getHTable(StorageUtils.TABLE_INDEX_BY_PROPERTY_ASC);
-		return table;
-	}
-
-	private HTable getIndexByKindTable()
-	{
-		HTable table = connection.getHTable(StorageUtils.TABLE_INDEX_BY_KIND);
-		return table;
-	}
-
-	private HTable getEntitiesTable()
-	{
-		HTable table = connection.getHTable(StorageUtils.TABLE_ENTITIES);
-		return table;
 	}
 }

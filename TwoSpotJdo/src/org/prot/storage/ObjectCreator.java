@@ -30,9 +30,9 @@ public class ObjectCreator
 
 	public void createObject(String appId, String kind, Key key, byte[] obj) throws IOException
 	{
-		HTable entitiesTable = getEntitiesTable();
-		HTable indexByKindTable = getIndexByKindTable();
-		HTable indexByPropertyAsc = getIndexByPropertyTableAsc();
+		HTable entitiesTable = StorageUtils.getTableEntity(connection);
+		HTable indexByKindTable = StorageUtils.getTableIndexByKind(connection);
+		HTable indexByPropertyAsc = StorageUtils.getTableIndexByPropertyAsc(connection);
 		HTable indexCustom = null;
 
 		try
@@ -60,7 +60,7 @@ public class ObjectCreator
 		}
 	}
 
-	byte[] writeEntity(HTable table, String appId, String kind, Key key, byte[] obj) throws IOException
+	public static final byte[] writeEntity(HTable table, String appId, String kind, Key key, byte[] obj) throws IOException
 	{
 		// Create a new put operation
 		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
@@ -73,7 +73,7 @@ public class ObjectCreator
 		// Return the key
 		return rowKey;
 	}
-
+	
 	private void writeIndexByKind(HTable table, byte[] rowKey, String appId, String kind) throws IOException
 	{
 		byte[] indexRowKey = KeyHelper.createIndexByKindRowKey(appId, kind, rowKey);
@@ -113,23 +113,5 @@ public class ObjectCreator
 	private void writeIndexCustom(HTable table, byte[] rowKey, String appId, String kind, byte[] obj)
 	{
 		// Not implemented
-	}
-
-	private HTable getIndexByPropertyTableAsc()
-	{
-		HTable table = connection.getHTable(StorageUtils.TABLE_INDEX_BY_PROPERTY_ASC);
-		return table;
-	}
-
-	private HTable getIndexByKindTable()
-	{
-		HTable table = connection.getHTable(StorageUtils.TABLE_INDEX_BY_KIND);
-		return table;
-	}
-
-	private HTable getEntitiesTable()
-	{
-		HTable table = connection.getHTable(StorageUtils.TABLE_ENTITIES);
-		return table;
 	}
 }

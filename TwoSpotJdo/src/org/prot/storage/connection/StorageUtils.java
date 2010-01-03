@@ -45,6 +45,12 @@ public class StorageUtils
 		return table;
 	}
 
+	public static final HTable getSequenceTable(HBaseManagedConnection connection)
+	{
+		String tableName = StorageUtils.TABLE_SEQUENCES;
+		return connection.getHTable(tableName);
+	}
+	
 	public static final void materialize(HTable entityTable, Set<byte[]> keys, List<byte[]> result)
 			throws IOException
 	{

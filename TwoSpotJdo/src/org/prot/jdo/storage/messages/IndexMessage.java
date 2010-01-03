@@ -14,6 +14,7 @@ import com.google.protobuf.WireFormat;
 
 public class IndexMessage extends AbstractMessageLite
 {
+	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(IndexMessage.class);
 
 	// Field number of the storage property in the message

@@ -3,13 +3,10 @@ package org.prot.storage;
 import java.io.Serializable;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
 
 public class Key implements Serializable
 {
 	private static final long serialVersionUID = -1077956197302875365L;
-
-	private static final Logger logger = Logger.getLogger(Key.class);
 
 	byte[] key = null;
 

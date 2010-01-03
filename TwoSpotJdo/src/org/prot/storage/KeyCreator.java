@@ -21,9 +21,6 @@ public class KeyCreator
 
 	private HBaseManagedConnection connection;
 
-	private final byte[] family = Bytes.toBytes("counter");
-	private final byte[] qualifier = Bytes.toBytes("counter");
-
 	public KeyCreator(ConnectionFactory connectionFactory)
 	{
 		this.connection = connectionFactory.createManagedConnection();
@@ -31,16 +28,14 @@ public class KeyCreator
 
 	private void createKeyEntry(HTable table, String appId) throws IOException
 	{
-		logger.debug("Creating key entry for " + appId);
-
 		Put put = new Put(Bytes.toBytes(appId));
-		put.add(family, qualifier, Bytes.toBytes(0l));
+		put.add(StorageUtils.bCounter, StorageUtils.bCounter, Bytes.toBytes(0l));
 		table.put(put);
 	}
 
 	public List<Key> fetchKey(String appId, long amount) throws IOException
 	{
-		HTable table = getSequenceTable();
+		HTable table = StorageUtils.getSequenceTable(connection);
 
 		// There is a counter for each application
 		Get get = new Get(Bytes.toBytes(appId));
@@ -58,7 +53,7 @@ public class KeyCreator
 			assert (result.size() > 0);
 
 			// Load the counters
-			Entry<Long, byte[]> data = result.getMap().get(family).get(qualifier).lastEntry();
+			Entry<Long, byte[]> data = result.getMap().get(StorageUtils.bCounter).get(StorageUtils.bCounter).lastEntry();
 			byte[] bValue = data.getValue();
 
 			// Counter variables
@@ -69,18 +64,17 @@ public class KeyCreator
 
 			// Put the new counter value
 			Put put = new Put(Bytes.toBytes(appId));
-			put.add(family, qualifier, Bytes.toBytes(incCounter));
+			put.add(StorageUtils.bCounter, StorageUtils.bCounter, Bytes.toBytes(incCounter));
 
 			// Check if the counter has changed since reading it
-			updateSuccess = table.checkAndPut(Bytes.toBytes(appId), family, qualifier,
+			updateSuccess = table.checkAndPut(Bytes.toBytes(appId), StorageUtils.bCounter, StorageUtils.bCounter,
 					Bytes.toBytes(counter), put);
 		}
 
 		if (!updateSuccess)
 		{
 			logger.warn("Could not update sequence counter for " + appId);
-			// TODO: Throw an exception
-			return null;
+			throw new StorageError("Could reservate key sequence");
 		}
 
 		// Create the keys
@@ -93,11 +87,5 @@ public class KeyCreator
 		}
 
 		return keys;
-	}
-
-	private HTable getSequenceTable()
-	{
-		String tableName = StorageUtils.TABLE_SEQUENCES;
-		return connection.getHTable(tableName);
 	}
 }

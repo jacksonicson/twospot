@@ -23,7 +23,6 @@ public class ObjectUpdater
 	{
 		this.connection = connectionFactory.createManagedConnection();
 
-		this.creator = new ObjectCreator(connection);
 		this.remover = new ObjectRemover(connection);
 	}
 
@@ -40,7 +39,7 @@ public class ObjectUpdater
 		remover.removeObjectFromIndexByProperty(tableIndexByPropertyAsc, appId, kind, key, index);
 
 		logger.debug("Updating entity in the Entities table");
-		byte[] rowKey = creator.writeEntity(tableEntities, appId, kind, key, obj);
+		byte[] rowKey = ObjectCreator.writeEntity(tableEntities, appId, kind, key, obj);
 
 		logger.debug("Creating index IndexByProperty");
 		creator.writeIndexByPropertyAsc(tableIndexByPropertyAsc, rowKey, appId, kind, index);

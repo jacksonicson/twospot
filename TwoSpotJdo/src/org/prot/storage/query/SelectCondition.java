@@ -32,7 +32,7 @@ public class SelectCondition implements Serializable
 	}
 
 	void run(HBaseManagedConnection connection, StorageQuery query, List<byte[]> result, LimitCondition limit)
-			throws IOException, ClassNotFoundException
+			throws IOException
 	{
 		// Cannot contain duplicates
 		Set<byte[]> intersection = new HashSet<byte[]>();
