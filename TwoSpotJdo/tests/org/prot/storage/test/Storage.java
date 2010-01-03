@@ -48,6 +48,98 @@ public class Storage
 	}
 
 	@Test
+	public void testQueryRange() throws Exception
+	{
+		Random r = new Random();
+
+		for (int i = 0; i < 50; i++)
+		{
+			Person person = new Person();
+			person.setUsername("Alex");
+			person.setMessage("Message from Alex");
+			person.setTime(System.currentTimeMillis());
+			person.setAsdf(i);
+			person.setType(r.nextDouble());
+
+			manager.currentTransaction().begin();
+			manager.makePersistent(person);
+			manager.currentTransaction().commit();
+		}
+
+		Query query = manager.newQuery(Person.class);
+		query.setFilter("asdf > 25");
+		List<Person> persons = (List<Person>) query.execute();
+		for (Person p : persons)
+			Assert.assertTrue(p.getAsdf() > 25);
+
+		query.setFilter("asdf < 25");
+		persons = (List<Person>) query.execute();
+		for (Person p : persons)
+			Assert.assertTrue(p.getAsdf() < 25);
+
+		query.setFilter("asdf == 25");
+		persons = (List<Person>) query.execute();
+		for (Person p : persons)
+			Assert.assertTrue(p.getAsdf() == 25);
+
+		query.setFilter("asdf >= 25");
+		persons = (List<Person>) query.execute();
+		boolean foundEquals = false;
+		for (Person p : persons)
+		{
+			Assert.assertTrue(p.getAsdf() >= 25);
+			foundEquals |= p.getAsdf() == 25;
+		}
+		Assert.assertTrue(foundEquals);
+
+		query.setFilter("asdf <= 25");
+		persons = (List<Person>) query.execute();
+		foundEquals = false;
+		for (Person p : persons)
+		{
+			Assert.assertTrue(p.getAsdf() <= 25);
+			foundEquals |= p.getAsdf() == 25;
+		}
+		Assert.assertTrue(foundEquals);
+	}
+
+	@Test
+	public void testQueryString() throws Exception
+	{
+		Random r = new Random();
+
+		Person person = new Person();
+		person.setUsername("Alex");
+		person.setMessage("Message from Alex");
+		person.setTime(System.currentTimeMillis());
+		person.setAsdf(r.nextInt());
+		person.setType(r.nextDouble());
+
+		try
+		{
+			manager.currentTransaction().begin();
+			manager.makePersistent(person);
+			manager.currentTransaction().commit();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			throw e;
+		}
+
+		Query query = manager.newQuery(Person.class);
+		query.setFilter("username == 'Bob'");
+		List<Person> persons = (List<Person>) query.execute();
+		Assert.assertTrue(persons.size() == 0);
+
+		query.setFilter("username == 'Alex'");
+		persons = (List<Person>) query.execute();
+		Assert.assertTrue(persons.size() > 0);
+
+		for (Person p : persons)
+			manager.deletePersistent(p);
+	}
+
+	@Test
 	public void testUpdate() throws Exception
 	{
 		Random r = new Random();
