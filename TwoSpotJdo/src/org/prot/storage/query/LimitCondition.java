@@ -2,11 +2,14 @@ package org.prot.storage.query;
 
 import java.io.Serializable;
 
+import org.apache.log4j.Logger;
 import org.prot.storage.Key;
 
 public class LimitCondition implements Serializable
 {
 	private static final long serialVersionUID = 1937473360608241627L;
+	
+	private static final Logger logger = Logger.getLogger(LimitCondition.class);
 
 	// Limits the number of index rows to fetch
 	public static final long MAX_FETCH_INDEX_ROWS = 300;
@@ -19,6 +22,10 @@ public class LimitCondition implements Serializable
 
 	private long fetchOperationCounter = 0;
 
+	private long resultCounter = 0;
+	
+	private long indexCounter = 0;
+	
 	private boolean unique = false;
 
 	private Long count;
@@ -27,20 +34,45 @@ public class LimitCondition implements Serializable
 
 	private Key keyOffset;
 
-	public void increment()
+	private final boolean incrementOperation()
 	{
 		fetchOperationCounter++;
-	}
-
-	public boolean isInRange()
-	{
+		
 		boolean inRange = true;
 		inRange &= fetchOperationCounter < MAX_FETCH_OPERATIONS;
 
-		if (unique && fetchOperationCounter > 0)
-			inRange &= false;
-
 		return inRange;
+	}
+	
+	public final boolean incrementIndex()
+	{
+		indexCounter++;
+		
+		boolean inRange = true;
+		inRange &= incrementOperation();
+		inRange &= indexCounter < MAX_FETCH_INDEX_ROWS;
+		
+		if(!inRange)
+			logger.warn("Too many indices fetched" + indexCounter);
+		
+		return inRange;
+	}
+	
+	public final boolean incrementResult()
+	{
+		resultCounter++;
+		
+		boolean inRange = true; 
+		if(unique && resultCounter > 0)
+			inRange &= false;
+		
+		inRange &= incrementOperation();
+		inRange &= resultCounter < MAX_FETCH_OPERATIONS;
+		
+		if(!inRange)
+			logger.warn("Too many results fetched: " + resultCounter);
+		
+		return true;
 	}
 
 	public void setCount(long count)

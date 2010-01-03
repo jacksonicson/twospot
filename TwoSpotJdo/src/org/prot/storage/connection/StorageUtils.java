@@ -9,6 +9,7 @@ import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
+import org.prot.storage.query.LimitCondition;
 
 public class StorageUtils
 {
@@ -50,15 +51,20 @@ public class StorageUtils
 		String tableName = StorageUtils.TABLE_SEQUENCES;
 		return connection.getHTable(tableName);
 	}
-	
-	public static final void materialize(HTable entityTable, Set<byte[]> keys, List<byte[]> result)
-			throws IOException
-	{
-		logger.trace("Materializing entities");
 
+	public static final void materialize(HTable entityTable, Set<byte[]> keys, List<byte[]> result,
+			LimitCondition limit) throws IOException
+	{
 		for (byte[] key : keys)
 		{
+			// Check limits
+			if(!limit.incrementResult())
+				return;
+
+			// Create a new get
 			Get get = new Get(key);
+
+			// Execute
 			Result entity = entityTable.get(get);
 			if (entity.getMap() == null)
 			{
@@ -66,6 +72,7 @@ public class StorageUtils
 				continue;
 			}
 
+			// Add result
 			byte[] data = entity.getMap().get(StorageUtils.bEntity).get(StorageUtils.bSerialized)
 					.firstEntry().getValue();
 

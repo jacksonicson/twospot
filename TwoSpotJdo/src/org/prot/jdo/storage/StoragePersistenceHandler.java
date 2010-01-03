@@ -184,7 +184,6 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 		{
 			// Serialize the message
 			byte[] serializedObject = createMessage(sm);
-			logger.debug("Serialized object: " + new String(serializedObject));
 
 			// Get the primary key of the entity
 			Key key = (Key) sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);

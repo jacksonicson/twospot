@@ -124,7 +124,7 @@ public class AtomarCondition implements Serializable
 		return null;
 	}
 
-	private Set<byte[]> findIn(StorageQuery query, HTable indexTable, LimitCondition limit)
+	private Set<byte[]> findByIndex(StorageQuery query, HTable indexTable, LimitCondition limit)
 			throws IOException
 	{
 		byte[] bAppId = Bytes.toBytes(query.getAppId());
@@ -140,14 +140,16 @@ public class AtomarCondition implements Serializable
 		Set<byte[]> entityKeys = new HashSet<byte[]>();
 
 		// Scan the table
-		for (Iterator<Result> it = resultScanner.iterator(); it.hasNext() && limit.isInRange();)
+		for (Iterator<Result> it = resultScanner.iterator(); it.hasNext();)
 		{
+			// Check limits
+			if(!limit.incrementIndex())
+				break;
+			
+			// Get the next result
 			Result result = it.next();
 			if (result.getMap() == null)
 				continue;
-
-			// Increment the limit counter
-			limit.increment();
 
 			// Extract the entity key
 			byte[] entityKey = result.getMap().get(StorageUtils.bKey).get(StorageUtils.bKey).lastEntry()
@@ -179,10 +181,10 @@ public class AtomarCondition implements Serializable
 		case LOWER_EQUALS:
 		case LOWER:
 			// Lookup in the index-table
-			entityKeys = findIn(query, tableIndex, limit);
+			entityKeys = findByIndex(query, tableIndex, limit);
 
 			// Materialize the results
-			StorageUtils.materialize(tableEntities, entityKeys, result);
+			StorageUtils.materialize(tableEntities, entityKeys, result, limit);
 			break;
 
 		default:

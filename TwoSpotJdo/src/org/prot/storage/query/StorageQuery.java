@@ -93,7 +93,7 @@ public class StorageQuery implements Serializable
 		Set<byte[]> keySet = new HashSet<byte[]>();
 		keySet.add(rowKey);
 
-		StorageUtils.materialize(entityTable, keySet, result);
+		StorageUtils.materialize(entityTable, keySet, result, limit);
 	}
 
 	private void fetchByKind(HBaseManagedConnection connection, List<byte[]> result) throws IOException
@@ -113,16 +113,22 @@ public class StorageQuery implements Serializable
 		Set<byte[]> keySet = new HashSet<byte[]>();
 		for (Iterator<Result> iterator = scanner.iterator(); iterator.hasNext();)
 		{
+			// Update limits
+			if (!limit.incrementIndex())
+				break;
+
+			// Fetch result
 			Result res = iterator.next();
 			if (res.getMap() == null)
 				continue;
 
+			// Update keyset
 			byte[] rowKey = res.getMap().get(StorageUtils.bKey).get(StorageUtils.bKey).lastEntry().getValue();
 			keySet.add(rowKey);
 		}
 
 		// Materialize all entities
-		StorageUtils.materialize(entityTable, keySet, result);
+		StorageUtils.materialize(entityTable, keySet, result, limit);
 	}
 
 	public LimitCondition getLimit()
