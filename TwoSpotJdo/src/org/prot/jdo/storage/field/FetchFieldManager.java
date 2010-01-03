@@ -64,7 +64,7 @@ public class FetchFieldManager extends AbstractFieldManager
 				String value = (String) property.getValue(StorageType.KEY);
 				if (value != null)
 				{
-					Key key = new Key(value);
+					Key key = new Key(value, true);
 					return key;
 				}
 			} else

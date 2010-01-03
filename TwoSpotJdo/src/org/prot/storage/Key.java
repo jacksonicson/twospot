@@ -2,7 +2,7 @@ package org.prot.storage;
 
 import java.io.Serializable;
 
-import org.apache.hadoop.hbase.util.Base64;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
 public class Key implements Serializable
@@ -10,18 +10,29 @@ public class Key implements Serializable
 	private static final long serialVersionUID = -1077956197302875365L;
 
 	private static final Logger logger = Logger.getLogger(Key.class);
-	
+
 	byte[] key = null;
 
 	public Key()
 	{
 		// Empty constructor is required
 	}
-	
-	public Key(String stringKey)
+
+	public Key(String key)
 	{
-		logger.debug("Restoring key from base64 string: " + stringKey);
-		this.key = Base64.decode(stringKey);
+		this(key, false);
+	}
+
+	public Key(String key, boolean isCompact)
+	{
+		if (!isCompact)
+		{
+			Base64 b64 = new Base64(true);
+			this.key = b64.decode(key);
+		} else
+		{
+			this.key = Base64.decodeBase64(key);
+		}
 	}
 
 	public byte[] getKey()
@@ -57,12 +68,17 @@ public class Key implements Serializable
 		return key.hashCode();
 	}
 
+	public String toCompactString()
+	{
+		return Base64.encodeBase64String(key);
+	}
+
 	public String toString()
 	{
 		if (key == null)
 			return "";
 
-		// Do a base64 encoding
-		return Base64.encodeBytes(key);
+		Base64 b64 = new Base64(true);
+		return b64.encodeToString(key);
 	}
 }

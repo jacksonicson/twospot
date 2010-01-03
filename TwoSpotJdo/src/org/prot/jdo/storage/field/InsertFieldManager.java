@@ -25,8 +25,8 @@ public class InsertFieldManager extends AbstractFieldManager
 		{
 			// Get an string encoded version of the key
 			Key key = (Key) value;
-			String skey = key.toString();
-			
+			String skey = key.toCompactString();
+
 			// Use the property type key
 			entity.addProperty(new StorageProperty(fieldNumber, StorageType.KEY, skey));
 		} else
