@@ -48,6 +48,36 @@ public class Storage
 	}
 
 	@Test
+	public void testQueryAnd() throws Exception
+	{
+		Random r = new Random();
+
+		for (int i = 0; i < 50; i++)
+		{
+			Person person = new Person();
+			person.setUsername("Alex");
+			person.setMessage("Message from Alex");
+			person.setTime(System.currentTimeMillis());
+			person.setAsdf(i);
+			person.setType(r.nextDouble());
+
+			manager.currentTransaction().begin();
+			manager.makePersistent(person);
+			manager.currentTransaction().commit();
+		}
+
+		Query query = manager.newQuery(Person.class);
+		query.setFilter("asdf > 25 && asdf < 30");
+		List<Person> persons = (List<Person>) query.execute();
+		Assert.assertTrue(persons.size() > 0);
+		for (Person p : persons)
+		{
+			System.out.println("p _ " + p.getAsdf());
+			Assert.assertTrue(p.getAsdf() > 25 && p.getAsdf() < 30);
+		}
+	}
+
+	@Test
 	public void testQueryRange() throws Exception
 	{
 		Random r = new Random();
