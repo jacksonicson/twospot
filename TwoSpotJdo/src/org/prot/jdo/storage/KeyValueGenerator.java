@@ -12,6 +12,8 @@ import org.prot.storage.Storage;
 public class KeyValueGenerator extends AbstractDatastoreGenerator
 {
 	private static final Logger logger = Logger.getLogger(KeyValueGenerator.class);
+	
+	private static final int MIN_KEY_BLOCK_SIZE = 10; 
 
 	public KeyValueGenerator(String name, Properties props)
 	{
@@ -21,7 +23,8 @@ public class KeyValueGenerator extends AbstractDatastoreGenerator
 	@Override
 	protected ValueGenerationBlock reserveBlock(long size)
 	{
-		logger.debug("Reserving keys: " + size);
+		if(size < MIN_KEY_BLOCK_SIZE)
+			size = MIN_KEY_BLOCK_SIZE;
 
 		// Get the connection
 		StorageManagedConnection connection = (StorageManagedConnection) connectionProvider
