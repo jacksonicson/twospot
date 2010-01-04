@@ -1,8 +1,8 @@
 package org.prot.storage.connection;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.HTable;
@@ -61,7 +61,7 @@ public class StorageUtils
 		return connection.getHTable(tableName);
 	}
 
-	public static final void materialize(HTable entityTable, Set<byte[]> keys, List<byte[]> result,
+	public static final void materialize(HTable entityTable, List<byte[]> keys, Collection<byte[]> result,
 			LimitCondition limit) throws IOException
 	{
 		for (byte[] key : keys)

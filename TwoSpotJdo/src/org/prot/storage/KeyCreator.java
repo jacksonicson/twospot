@@ -47,28 +47,29 @@ public class KeyCreator
 		boolean updateSuccess = false;
 		long counter = 0;
 		long incCounter = 0;
+
+		// Some retries to get a key range
 		for (int tries = 0; tries < 3 && !updateSuccess; tries++)
 		{
 			Result result = table.get(get);
 			assert (result.size() > 0);
 
 			// Load the counters
-			Entry<Long, byte[]> data = result.getMap().get(StorageUtils.bCounter).get(StorageUtils.bCounter).lastEntry();
+			Entry<Long, byte[]> data = result.getMap().get(StorageUtils.bCounter).get(StorageUtils.bCounter)
+					.lastEntry();
 			byte[] bValue = data.getValue();
 
 			// Counter variables
 			counter = Bytes.toLong(bValue);
 			incCounter = counter + amount;
 
-			logger.debug("Incremented sequence counter: " + incCounter);
-
 			// Put the new counter value
 			Put put = new Put(Bytes.toBytes(appId));
 			put.add(StorageUtils.bCounter, StorageUtils.bCounter, Bytes.toBytes(incCounter));
 
 			// Check if the counter has changed since reading it
-			updateSuccess = table.checkAndPut(Bytes.toBytes(appId), StorageUtils.bCounter, StorageUtils.bCounter,
-					Bytes.toBytes(counter), put);
+			updateSuccess = table.checkAndPut(Bytes.toBytes(appId), StorageUtils.bCounter,
+					StorageUtils.bCounter, Bytes.toBytes(counter), put);
 		}
 
 		if (!updateSuccess)
@@ -81,8 +82,12 @@ public class KeyCreator
 		List<Key> keys = new ArrayList<Key>();
 		for (; counter < incCounter; counter++)
 		{
+			// Encode the time in the key - newer entries are at the top of the hbase table 
+			long invTime = Long.MAX_VALUE - System.currentTimeMillis();
+			byte[] bKey = Bytes.add(Bytes.toBytes(invTime), Bytes.toBytes(counter));
+
 			Key key = new Key();
-			key.setKey(Bytes.toBytes(counter));
+			key.setKey(bKey);
 			keys.add(key);
 		}
 

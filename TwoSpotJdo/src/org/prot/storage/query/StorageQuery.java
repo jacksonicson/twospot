@@ -3,10 +3,8 @@ package org.prot.storage.query;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Result;
@@ -90,7 +88,7 @@ public class StorageQuery implements Serializable
 		HTable entityTable = StorageUtils.getTableEntity(connection);
 
 		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
-		Set<byte[]> keySet = new HashSet<byte[]>();
+		List<byte[]> keySet = new ArrayList<byte[]>();
 		keySet.add(rowKey);
 
 		StorageUtils.materialize(entityTable, keySet, result, limit);
@@ -110,7 +108,7 @@ public class StorageQuery implements Serializable
 
 		Scan scan = new Scan(startKey, stopKey);
 		ResultScanner scanner = indexByKindTable.getScanner(scan);
-		Set<byte[]> keySet = new HashSet<byte[]>();
+		List<byte[]> keySet = new ArrayList<byte[]>();
 		for (Iterator<Result> iterator = scanner.iterator(); iterator.hasNext();)
 		{
 			// Update limits

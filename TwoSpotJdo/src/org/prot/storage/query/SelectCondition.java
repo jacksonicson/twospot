@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -64,40 +65,44 @@ public class SelectCondition implements Serializable
 	{
 		logger.debug("Number of Atoms: " + atoms.size());
 
-		// Cannot contain duplicates
-		Set<ArrayWrapper> last = new HashSet<ArrayWrapper>();
+		List<ArrayWrapper> tmpResult = new ArrayList<ArrayWrapper>();
 		Set<ArrayWrapper> tmp = new HashSet<ArrayWrapper>();
-
+		
 		// Run each atom
 		boolean first = true;
 		for (AtomarCondition atom : atoms)
 		{
-			List<byte[]> partialResult = new ArrayList<byte[]>();
-			atom.run(connection, query, partialResult, limit);
-
 			if (first)
 			{
+				List<byte[]> partialResult = new ArrayList<byte[]>();
+				atom.run(connection, query, partialResult, limit);
+				
 				first = false;
-
 				for (byte[] entity : partialResult)
-					last.add(new ArrayWrapper(entity));
+				{
+					ArrayWrapper w = new ArrayWrapper(entity);
+					tmpResult.add(w);
+				}
 			} else
 			{
 				tmp.clear();
+				List<byte[]> partialResult = new ArrayList<byte[]>();
+				atom.run(connection, query, partialResult, limit);
+				
 				for (byte[] entity : partialResult)
+					tmp.add(new ArrayWrapper(entity));
+				
+				for(Iterator<ArrayWrapper> it = tmpResult.iterator(); it.hasNext();)
 				{
-					ArrayWrapper wrapper = new ArrayWrapper(entity);
-					if (last.contains(wrapper))
-						tmp.add(wrapper);
+					ArrayWrapper test = it.next();
+					if(!tmp.contains(test))
+						it.remove();
 				}
-
-				last.clear();
-				last.addAll(tmp);
 			}
 		}
 
 		// Add all results to the result list
-		for (ArrayWrapper entity : last)
+		for (ArrayWrapper entity : tmpResult)
 			result.add(entity.bytes);
 	}
 }

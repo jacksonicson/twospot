@@ -2,10 +2,10 @@ package org.prot.storage.query;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Result;
@@ -124,7 +124,7 @@ public class AtomarCondition implements Serializable
 		return null;
 	}
 
-	private Set<byte[]> findByIndex(StorageQuery query, HTable indexTable, LimitCondition limit)
+	private List<byte[]> findByIndex(StorageQuery query, HTable indexTable, LimitCondition limit)
 			throws IOException
 	{
 		byte[] bAppId = Bytes.toBytes(query.getAppId());
@@ -137,7 +137,7 @@ public class AtomarCondition implements Serializable
 		ResultScanner resultScanner = indexTable.getScanner(scan);
 
 		// Create a new set for the results
-		Set<byte[]> entityKeys = new HashSet<byte[]>();
+		List<byte[]> entityKeys = new ArrayList<byte[]>();
 
 		// Scan the table
 		for (Iterator<Result> it = resultScanner.iterator(); it.hasNext();)
@@ -160,7 +160,7 @@ public class AtomarCondition implements Serializable
 		return entityKeys;
 	}
 
-	void run(HBaseManagedConnection connection, StorageQuery query, List<byte[]> result, LimitCondition limit)
+	void run(HBaseManagedConnection connection, StorageQuery query, Collection<byte[]> result, LimitCondition limit)
 			throws IOException
 	{
 		logger.debug("Running atomar condition of type: " + type);
@@ -172,7 +172,7 @@ public class AtomarCondition implements Serializable
 		HTable tableIndex = StorageUtils.getTableIndexByPropertyAsc(connection);
 
 		// Find the entity keys using the index table
-		Set<byte[]> entityKeys = null;
+		List<byte[]> entityKeys = null;
 		switch (type)
 		{
 		case EQUALS:
