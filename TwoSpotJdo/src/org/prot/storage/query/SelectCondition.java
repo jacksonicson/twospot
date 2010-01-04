@@ -44,6 +44,17 @@ public class SelectCondition implements Serializable
 		}
 	}
 
+	class ArrayWrapperList extends ArrayList
+	{
+		@Override
+		public boolean add(Object o)
+		{
+			byte[] b = (byte[]) o;
+			ArrayWrapper w = new ArrayWrapper(b);
+			return super.add(w);
+		}
+	}
+
 	class ArrayWrapper
 	{
 		byte[] bytes;
@@ -76,7 +87,7 @@ public class SelectCondition implements Serializable
 	{
 		logger.debug("Number of Atoms: " + atoms.size());
 
-		List<ArrayWrapper> tmpResult = new ArrayList<ArrayWrapper>();
+		ArrayWrapperList tmpResult = new ArrayWrapperList();
 		ArrayWrapperSet tmp = new ArrayWrapperSet();
 
 		// Run each atom
@@ -85,15 +96,8 @@ public class SelectCondition implements Serializable
 		{
 			if (first)
 			{
-				List<byte[]> partialResult = new ArrayList<byte[]>();
-				atom.run(connection, query, partialResult, limit);
-
+				atom.run(connection, query, tmpResult, limit);
 				first = false;
-				for (byte[] entity : partialResult)
-				{
-					ArrayWrapper w = new ArrayWrapper(entity);
-					tmpResult.add(w);
-				}
 			} else
 			{
 				tmp.clear();
@@ -109,7 +113,7 @@ public class SelectCondition implements Serializable
 		}
 
 		// Add all results to the result list
-		for (ArrayWrapper entity : tmpResult)
-			result.add(entity.bytes);
+		for (Object entity : tmpResult)
+			result.add(((ArrayWrapper) entity).bytes);
 	}
 }
