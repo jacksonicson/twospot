@@ -38,19 +38,17 @@ public class ObjectCreator
 		try
 		{
 			// Write the entity
-			logger.debug("Writing entity");
 			byte[] rowKey = writeEntity(entitiesTable, appId, kind, key, obj);
 
-			// Update the index tables
-			logger.debug("Updating index by kind");
+			// Fill the index by kind table
 			writeIndexByKind(indexByKindTable, rowKey, appId, kind);
 
-			logger.debug("Updating index by property");
+			// Fill the index by property table
 			ObjectRemover remover = new ObjectRemover(connection);
 			Map<String, byte[]> index = remover.createIndexMap(obj);
 			writeIndexByPropertyAsc(indexByPropertyAsc, rowKey, appId, kind, index);
 
-			logger.debug("Updating custom index");
+			// Update the custom index table
 			writeIndexCustom(indexCustom, rowKey, appId, kind, obj);
 
 		} catch (IOException e)

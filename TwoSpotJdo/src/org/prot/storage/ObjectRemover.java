@@ -42,17 +42,17 @@ public class ObjectRemover
 		HTable tableIndexByKind = StorageUtils.getTableIndexByKind(connection);
 		HTable tableIndexByPropertyAsc = StorageUtils.getTableIndexByPropertyAsc(connection);
 
-		logger.debug("Retrieving the entity");
+		// Retrieve the entity
 		byte[] obj = retrieveObject(tableEntities, appId, kind, key);
 		Map<String, byte[]> indexMap = createIndexMap(obj);
 
-		logger.debug("Removing object from entities");
+		// Remove entity from the entites table
 		removeObjectFromEntities(tableEntities, appId, kind, key);
 
-		logger.debug("Removing object from IndexByKind");
+		// Remove entity from the index by kind table
 		removeObjectFromIndexByKind(tableIndexByKind, appId, kind, key);
 
-		logger.debug("Removing object from IndexByProperty");
+		// Remove entity from the indexByProperty table
 		removeObjectFromIndexByProperty(tableIndexByPropertyAsc, appId, kind, key, indexMap);
 	}
 
