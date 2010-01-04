@@ -37,14 +37,20 @@ public class Storage
 	@After
 	public void clean() throws Exception
 	{
-		if (manager.currentTransaction().isActive())
-			manager.currentTransaction().rollback();
+		try
+		{
+			if (manager.currentTransaction().isActive())
+				manager.currentTransaction().rollback();
 
-		Query query = manager.newQuery(Person.class);
-		List<Person> persons = (List<Person>) query.execute();
+			Query query = manager.newQuery(Person.class);
+			List<Person> persons = (List<Person>) query.execute();
 
-		for (Person p : persons)
-			manager.deletePersistent(p);
+			for (Person p : persons)
+				manager.deletePersistent(p);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Test

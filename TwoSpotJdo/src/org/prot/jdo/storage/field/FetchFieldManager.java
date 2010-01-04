@@ -24,16 +24,11 @@ public class FetchFieldManager extends AbstractFieldManager
 
 	private AbstractClassMetaData acmd;
 
-	public FetchFieldManager(CodedInputStream input, ObjectManager om, ClassLoaderResolver clr)
+	public FetchFieldManager(CodedInputStream input, ObjectManager om, ClassLoaderResolver clr, Class<?> cls)
 			throws IOException
 	{
 		parseFrom(input);
-		this.acmd = om.getMetaDataManager().getMetaDataForClass(getClassName(), clr);
-	}
-
-	public String getClassName()
-	{
-		return msg.getClassName();
+		this.acmd = om.getMetaDataManager().getMetaDataForClass(cls, clr);
 	}
 
 	private void parseFrom(CodedInputStream input) throws IOException

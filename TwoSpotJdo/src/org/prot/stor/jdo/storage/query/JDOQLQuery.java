@@ -138,20 +138,20 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 			// Create a new coded input stream to deserialize the entity data
 			CodedInputStream in = CodedInputStream.newInstance(entityData);
 
+			// Get the candidate class (NOT USING THE CLASSNAME FROM THE ENTITY
+			// MESSAGE HERE)
+			Class candidateClass = clr.classForName(acmd.getFullClassName());
+
 			// New fetch field manager to fill the entity instance
 			final FetchFieldManager manager;
 			try
 			{
-				manager = new FetchFieldManager(in, om, clr);
+				manager = new FetchFieldManager(in, om, clr, candidateClass);
 			} catch (IOException e)
 			{
 				logger.error("Could not fetch entity", e);
 				continue;
 			}
-
-			// Get the candidate class (NOT USING THE CLASSNAME FROM THE ENTITY
-			// MESSAGE HERE)
-			Class candidateClass = clr.classForName(acmd.getFullClassName());
 
 			// Create the candidate object (deserialize)
 			Object candidate = om.findObjectUsingAID(candidateClass, new FieldValues()
