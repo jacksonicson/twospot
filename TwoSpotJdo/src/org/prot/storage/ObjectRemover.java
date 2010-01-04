@@ -73,14 +73,9 @@ public class ObjectRemover
 			String propertyName = indexMsg.getFieldName();
 			IStorageProperty property = entityMsg.getProperty(propertyName);
 			if (property == null || property.getValueAsBytes() == null)
-			{
-				logger.debug("Not adding null properties to index map");
 				continue;
-			}
 
 			byte[] bValue = property.getValueAsBytes();
-
-			logger.debug("Adding property to index map: " + propertyName);
 			index.put(propertyName, bValue);
 		}
 

@@ -93,12 +93,7 @@ public class ObjectCreator
 		{
 			byte[] bValue = index.get(propertyName);
 			if (bValue == null)
-			{
-				logger.debug("Property is null: " + propertyName);
 				continue;
-			}
-
-			logger.debug("Adding property to index: " + propertyName);
 
 			byte[] propKey = KeyHelper.createIndexByPropertyKey(appId, kind, rowKey, propertyName, bValue);
 
