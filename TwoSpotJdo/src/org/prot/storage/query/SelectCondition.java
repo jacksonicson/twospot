@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.prot.storage.connection.HBaseManagedConnection;
@@ -31,6 +30,18 @@ public class SelectCondition implements Serializable
 	boolean isEmpty()
 	{
 		return atoms.isEmpty();
+	}
+
+	@SuppressWarnings("serial")
+	class ArrayWrapperSet extends HashSet
+	{
+		@Override
+		public boolean add(Object o)
+		{
+			byte[] b = (byte[]) o;
+			ArrayWrapper w = new ArrayWrapper(b);
+			return super.add(w);
+		}
 	}
 
 	class ArrayWrapper
@@ -66,8 +77,8 @@ public class SelectCondition implements Serializable
 		logger.debug("Number of Atoms: " + atoms.size());
 
 		List<ArrayWrapper> tmpResult = new ArrayList<ArrayWrapper>();
-		Set<ArrayWrapper> tmp = new HashSet<ArrayWrapper>();
-		
+		ArrayWrapperSet tmp = new ArrayWrapperSet();
+
 		// Run each atom
 		boolean first = true;
 		for (AtomarCondition atom : atoms)
@@ -76,7 +87,7 @@ public class SelectCondition implements Serializable
 			{
 				List<byte[]> partialResult = new ArrayList<byte[]>();
 				atom.run(connection, query, partialResult, limit);
-				
+
 				first = false;
 				for (byte[] entity : partialResult)
 				{
@@ -86,16 +97,12 @@ public class SelectCondition implements Serializable
 			} else
 			{
 				tmp.clear();
-				List<byte[]> partialResult = new ArrayList<byte[]>();
-				atom.run(connection, query, partialResult, limit);
-				
-				for (byte[] entity : partialResult)
-					tmp.add(new ArrayWrapper(entity));
-				
-				for(Iterator<ArrayWrapper> it = tmpResult.iterator(); it.hasNext();)
+				atom.run(connection, query, tmp, limit);
+
+				for (Iterator<ArrayWrapper> it = tmpResult.iterator(); it.hasNext();)
 				{
 					ArrayWrapper test = it.next();
-					if(!tmp.contains(test))
+					if (!tmp.contains(test))
 						it.remove();
 				}
 			}
