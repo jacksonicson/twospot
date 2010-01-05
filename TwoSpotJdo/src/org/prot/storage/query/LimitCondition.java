@@ -8,7 +8,7 @@ import org.prot.storage.Key;
 public class LimitCondition implements Serializable
 {
 	private static final long serialVersionUID = 1937473360608241627L;
-	
+
 	private static final Logger logger = Logger.getLogger(LimitCondition.class);
 
 	// Limits the number of index rows to fetch
@@ -23,9 +23,9 @@ public class LimitCondition implements Serializable
 	private long fetchOperationCounter = 0;
 
 	private long resultCounter = 0;
-	
+
 	private long indexCounter = 0;
-	
+
 	private boolean unique = false;
 
 	private Long count;
@@ -37,41 +37,41 @@ public class LimitCondition implements Serializable
 	private final boolean incrementOperation()
 	{
 		fetchOperationCounter++;
-		
+
 		boolean inRange = true;
 		inRange &= fetchOperationCounter < MAX_FETCH_OPERATIONS;
 
 		return inRange;
 	}
-	
+
 	public final boolean incrementIndex()
 	{
 		indexCounter++;
-		
+
 		boolean inRange = true;
 		inRange &= incrementOperation();
 		inRange &= indexCounter < MAX_FETCH_INDEX_ROWS;
-		
-		if(!inRange)
+
+		if (!inRange)
 			logger.warn("Too many indices fetched" + indexCounter);
-		
+
 		return inRange;
 	}
-	
+
 	public final boolean incrementResult()
 	{
 		resultCounter++;
-		
-		boolean inRange = true; 
-		if(unique && resultCounter > 0)
+
+		boolean inRange = true;
+		if (unique && resultCounter > 0)
 			inRange &= false;
-		
+
 		inRange &= incrementOperation();
 		inRange &= resultCounter < MAX_FETCH_OPERATIONS;
-		
-		if(!inRange)
+
+		if (!inRange)
 			logger.warn("Too many results fetched: " + resultCounter);
-		
+
 		return true;
 	}
 

@@ -154,7 +154,7 @@ public class MemTable
 	{
 		return tableData.values();
 	}
-	
+
 	public byte[] get(Key key)
 	{
 		return tableData.get(key);

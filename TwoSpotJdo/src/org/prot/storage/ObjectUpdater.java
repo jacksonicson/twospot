@@ -43,8 +43,9 @@ public class ObjectUpdater
 		// Remove the entity from the indey by property table
 		remover.removeObjectFromIndexByProperty(tableIndexByPropertyAsc, appId, kind, key, oldIndex);
 
-		// We don't have to delete the index by kind table because the key doesn't change!
-		
+		// We don't have to delete the index by kind table because the key
+		// doesn't change!
+
 		// Write the new entity to the entity table
 		byte[] rowKey = ObjectCreator.writeEntity(tableEntities, appId, kind, key, obj);
 

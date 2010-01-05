@@ -82,7 +82,8 @@ public class KeyCreator
 		List<Key> keys = new ArrayList<Key>();
 		for (; counter < incCounter; counter++)
 		{
-			// Encode the time in the key - newer entries are at the top of the hbase table 
+			// Encode the time in the key - newer entries are at the top of the
+			// hbase table
 			long invTime = Long.MAX_VALUE - System.currentTimeMillis();
 			byte[] bKey = Bytes.add(Bytes.toBytes(invTime), Bytes.toBytes(counter));
 

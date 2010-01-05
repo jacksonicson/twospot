@@ -10,11 +10,11 @@ public interface IStorageProperty
 	public StorageType getType();
 
 	public Object getValue();
-	
+
 	public Object getValue(StorageType requiredType);
-	
+
 	public byte[] getValueAsBytes();
-	
+
 	public void writeTo(CodedOutputStream out) throws IOException;
 
 	public void mergeFrom(CodedInputStream input) throws IOException;

@@ -491,7 +491,7 @@ public abstract class AbstractMessage extends AbstractMessageLite implements Mes
 
 			int typeId = 0;
 			ByteString rawBytes = null; // If we encounter "message" before
-										// "typeId"
+			// "typeId"
 			Message.Builder subBuilder = null;
 			FieldDescriptor field = null;
 

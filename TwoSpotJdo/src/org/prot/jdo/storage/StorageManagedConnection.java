@@ -56,7 +56,7 @@ public class StorageManagedConnection extends AbstractManagedConnection
 		if (storage == null)
 		{
 			logger.debug("Creating storage");
-			
+
 			// Create the storage
 			if (StorageHelper.isDevMode())
 			{

@@ -462,10 +462,10 @@ public final class TextFormat
 		// regex matcher has stack overflows on large inputs.
 		private static final Pattern WHITESPACE = Pattern.compile("(\\s|(#.*$))++", Pattern.MULTILINE);
 		private static final Pattern TOKEN = Pattern.compile("[a-zA-Z_][0-9a-zA-Z_+-]*+|" + // an
-																							// identifier
+				// identifier
 				"[0-9+-][0-9a-zA-Z_.+-]*+|" + // a number
 				"\"([^\"\n\\\\]|\\\\.)*+(\"|\\\\?$)|" + // a double-quoted
-														// string
+				// string
 				"\'([^\"\n\\\\]|\\\\.)*+(\'|\\\\?$)", // a single-quoted string
 				Pattern.MULTILINE);
 

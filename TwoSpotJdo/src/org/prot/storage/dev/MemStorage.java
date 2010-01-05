@@ -33,20 +33,20 @@ public class MemStorage
 	public List<Key> createKey(long count)
 	{
 		MemTable table = getTable("counter");
-		
+
 		Key key = new Key();
-		byte[] time = Bytes.toBytes((long)0);
-		byte[] index = Bytes.toBytes((long)0);
+		byte[] time = Bytes.toBytes((long) 0);
+		byte[] index = Bytes.toBytes((long) 0);
 		key.setKey(Bytes.add(time, index));
-		
+
 		byte[] data = table.get(key);
 
-		long counter = 0; 
-		if(data != null)
+		long counter = 0;
+		if (data != null)
 			counter = Bytes.toLong(data);
-		
+
 		counter += count;
-		data = Bytes.toBytes(counter); 
+		data = Bytes.toBytes(counter);
 		table.add(key, data);
 		table.write("counter.table");
 
@@ -56,7 +56,7 @@ public class MemStorage
 			byte[] bTime = Bytes.toBytes(System.currentTimeMillis());
 			byte[] bCounter = Bytes.toBytes(counter - count);
 			byte[] bKey = Bytes.add(bTime, bCounter);
-			
+
 			key = new Key();
 			key.setKey(bKey);
 
@@ -66,7 +66,7 @@ public class MemStorage
 		return keyList;
 
 	}
-	
+
 	public void addObj(String kind, Key key, byte[] obj)
 	{
 		MemTable table = getTable(kind);
