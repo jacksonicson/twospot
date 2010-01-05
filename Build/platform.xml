@@ -46,11 +46,16 @@
 		</copy>
 
 		<!-- copy the classpath -->
-		<copyfile src="../AppServer/classpath.txt" dest="${dest}/appserver_classpath.txt" />
-		<copyfile src="../Controller/classpath.txt" dest="${dest}/controller_classpath.txt" />
-		<copyfile src="../Master/classpath.txt" dest="${dest}/master_classpath.txt" />
-		<copyfile src="../Frontend/classpath.txt" dest="${dest}/frontend_classpath.txt" />
-		<copyfile src="../HttpFileServer/classpath.txt" dest="${dest}/httpserver_classpath.txt" />
+		<copyfile src="../AppServer/classpath.txt"
+		          dest="${dest}/appserver_classpath.txt" />
+		<copyfile src="../Controller/classpath.txt"
+		          dest="${dest}/controller_classpath.txt" />
+		<copyfile src="../Master/classpath.txt"
+		          dest="${dest}/master_classpath.txt" />
+		<copyfile src="../Frontend/classpath.txt"
+		          dest="${dest}/frontend_classpath.txt" />
+		<copyfile src="../HttpFileServer/classpath.txt"
+		          dest="${dest}/httpserver_classpath.txt" />
 
 		<!-- copy the python script with the bootstrap routines -->
 		<copy todir="${dest}">
@@ -71,16 +76,28 @@
 	<target name="mkcp">
 		<!-- The order of this items is important. For example the Controller
 			 requires the classpath from the AppServer -->
+		<ant antfile="../TwoSpotJdo/build.xml"
+		     dir="../TwoSpotJdo/"
+		     target="mkcp" />
 		<ant antfile="../Util/build.xml" dir="../Util/" target="mkcp" />
-		<ant antfile="../AppServer/build.xml" dir="../AppServer/" target="mkcp" />
-		<ant antfile="../Controller/build.xml" dir="../Controller/" target="mkcp" />
+		<ant antfile="../AppServer/build.xml"
+		     dir="../AppServer/"
+		     target="mkcp" />
+		<ant antfile="../Controller/build.xml"
+		     dir="../Controller/"
+		     target="mkcp" />
 		<ant antfile="../Master/build.xml" dir="../Master/" target="mkcp" />
 		<ant antfile="../Frontend/build.xml" dir="../Frontend/" target="mkcp" />
-		<ant antfile="../HttpFileServer/build.xml" dir="../HttpFileServer/" target="mkcp" />
-		<ant antfile="../DevServerMock/build.xml" dir="../HttpFileServer/" target="mkcp" />
+		<ant antfile="../HttpFileServer/build.xml"
+		     dir="../HttpFileServer/"
+		     target="mkcp" />
+		<ant antfile="../DevServerMock/build.xml"
+		     dir="../HttpFileServer/"
+		     target="mkcp" />
 	</target>
 
 	<target name="build">
+		<ant antfile="../TwoSpotJdo/build.xml" dir="../TwoSpotJdo" />
 		<ant antfile="../Util/build.xml" dir="../Util/" />
 		<ant antfile="../Controller/build.xml" dir="../Controller/" />
 		<ant antfile="../Master/build.xml" dir="../Master/" />
