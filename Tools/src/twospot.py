@@ -198,6 +198,19 @@ def deploy(directory):
     upload(zipFile , appId)
 
 
+def compileBuildfile(file, target, params):
+    file = open(file, mode='r')
+    ftarget = open(target, mode='w')
+    
+    lines = file.readlines()
+    for line in lines:
+        for key in params.keys():
+            line = line.replace("$$%s$$" % key, params[key])
+        ftarget.write(line)
+        
+    ftarget.close()
+    file.close()
+
 
 def createProject(directory, projectType, projectName):
     if not os.path.isdir(directory):
@@ -212,9 +225,31 @@ def createProject(directory, projectType, projectName):
     
     # Create the folder structure
     if projectType == "java":
+        # Folders
+        os.mkdir(directory + os.sep + "src")
+        os.mkdir(directory + os.sep + "lib")
         os.mkdir(directory + os.sep + "WEB-INF")
         os.mkdir(directory + os.sep + "/WEB-INF/lib")
         os.mkdir(directory + os.sep + "/WEB-INF/classes")
+        
+        # Tokens to replace
+        tokens = {"PROJ_NAME" : projectName}
+        
+        # Create the buildfile
+        buildfile = os.path.dirname(__file__) + os.sep + "java" + os.sep + "build.xml"
+        buildfileTarget = directory + os.sep + "build.xml"
+        compileBuildfile(buildfile, buildfileTarget, tokens)
+        
+        # Other scripts
+        buildfile = os.path.dirname(__file__) + os.sep + "java" + os.sep + "build.bat"
+        buildfileTarget = directory + os.sep + "build.bat"
+        compileBuildfile(buildfile, buildfileTarget, tokens)
+        
+        # Infos
+        buildfile = os.path.dirname(__file__) + os.sep + "java" + os.sep + "info.txt"
+        buildfileTarget = directory + os.sep + "lib" + os.sep + "info.txt"
+        compileBuildfile(buildfile, buildfileTarget, tokens)
+        
     elif projectType == "python":
         os.mkdir(directory + os.sep + "/WEB-INF")
         os.mkdir(directory + os.sep + "/WEB-INF/python")
