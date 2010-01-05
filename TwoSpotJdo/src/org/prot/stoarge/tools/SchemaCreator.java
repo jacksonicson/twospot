@@ -1,4 +1,4 @@
-package org.prot.storage.connection;
+package org.prot.stoarge.tools;
 
 import java.io.IOException;
 
@@ -8,17 +8,13 @@ import org.apache.hadoop.hbase.MasterNotRunningException;
 import org.apache.hadoop.hbase.TableNotFoundException;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.log4j.Logger;
+import org.prot.storage.connection.StorageUtils;
 
 public class SchemaCreator
 {
 	private static final Logger logger = Logger.getLogger(SchemaCreator.class);
 
 	private HBaseAdmin hBaseAdmin;
-
-	public SchemaCreator(ConnectionFactory connectionFactory) throws MasterNotRunningException
-	{
-		this.hBaseAdmin = new HBaseAdmin(connectionFactory.getHBaseConfiguration());
-	}
 
 	public SchemaCreator(HBaseAdmin admin)
 	{

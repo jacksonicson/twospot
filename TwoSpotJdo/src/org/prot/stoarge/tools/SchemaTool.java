@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.MasterNotRunningException;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
-import org.prot.storage.connection.SchemaCreator;
 
 public class SchemaTool
 {
