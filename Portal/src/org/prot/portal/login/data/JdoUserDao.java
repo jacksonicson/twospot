@@ -23,11 +23,7 @@ public class JdoUserDao implements UserDao
 
 		try
 		{
-			logger.warn("Class loader of the platfrom: " + this.getClass().getClassLoader().toString());
-
 			Object result = query.execute();
-			logger.warn("Result: " + result.getClass().getName());
-
 			return (PlatformUser) result;
 
 		} catch (Exception e)
