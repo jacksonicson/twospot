@@ -46,10 +46,8 @@ def runFileserver(args):
     params = []
     params.append('java')
     
-    params.append('-Xms')
-    params.append('30m')
-    params.append('-Xmx')
-    params.append('100m')
+    params.append('-Xms30m')
+    params.append('-Xmx100m')
     
     params.append('-classpath')
     params.append(classpath)
@@ -76,10 +74,8 @@ def runFrontend(args):
     params = []
     params.append('java')
     
-    params.append('-Xms')
-    params.append('30m')
-    params.append('-Xmx')
-    params.append('100m')
+    params.append('-Xms30m')
+    params.append('-Xmx100m')
     
     params.append('-classpath')
     params.append(classpath)
@@ -106,10 +102,8 @@ def runMaster(args):
     params = []
     params.append('java')
     
-    params.append('-Xms')
-    params.append('30m')
-    params.append('-Xmx')
-    params.append('100m')
+    params.append('-Xms30m')
+    params.append('-Xmx100m')
     
     params.append('-classpath')
     params.append(classpath)
@@ -136,10 +130,8 @@ def runController(args):
     params = []
     params.append('java')
     
-    params.append('-Xms')
-    params.append('30m')
-    params.append('-Xmx')
-    params.append('100m')
+    params.append('-Xms30m')
+    params.append('-Xmx100m')
     
     params.append('-classpath')
     params.append(classpath)
