@@ -13,29 +13,29 @@ public class SchemaCreator
 {
 	private static final Logger logger = Logger.getLogger(SchemaCreator.class);
 
-	private ConnectionFactory connectionFactory;
 	private HBaseAdmin hBaseAdmin;
 
 	public SchemaCreator(ConnectionFactory connectionFactory) throws MasterNotRunningException
 	{
-		this.connectionFactory = connectionFactory;
 		this.hBaseAdmin = new HBaseAdmin(connectionFactory.getHBaseConfiguration());
 	}
 
+	public SchemaCreator(HBaseAdmin admin)
+	{
+		this.hBaseAdmin = admin;
+	}
+	
 	public void checkAndCreate() throws IOException
 	{
-		HBaseManagedConnection connection = (HBaseManagedConnection) connectionFactory
-				.createManagedConnection();
-
-		checkSequences(connection);
-		checkEntities(connection);
-		checkIndexByKind(connection);
-		checkIndexByPropertyDesc(connection);
-		checkIndexByPropertyAsc(connection);
-		checkIndexCustom(connection);
+		checkSequences();
+		checkEntities();
+		checkIndexByKind();
+		checkIndexByPropertyDesc();
+		checkIndexByPropertyAsc();
+		checkIndexCustom();
 	}
 
-	private void checkSequences(HBaseManagedConnection connection) throws IOException
+	private void checkSequences() throws IOException
 	{
 		logger.debug("Checking for table: " + StorageUtils.TABLE_SEQUENCES);
 
@@ -45,7 +45,7 @@ public class SchemaCreator
 		checkTable(tableName, families);
 	}
 
-	private void checkEntities(HBaseManagedConnection connection) throws IOException
+	private void checkEntities() throws IOException
 	{
 		logger.debug("Checking for table: " + StorageUtils.TABLE_ENTITIES);
 
@@ -55,7 +55,7 @@ public class SchemaCreator
 		checkTable(tableName, families);
 	}
 
-	private void checkIndexByKind(HBaseManagedConnection connection) throws IOException
+	private void checkIndexByKind() throws IOException
 	{
 		logger.debug("Checking for table: " + StorageUtils.TABLE_INDEX_BY_KIND);
 
@@ -65,7 +65,7 @@ public class SchemaCreator
 		checkTable(tableName, families);
 	}
 
-	private void checkIndexByPropertyDesc(HBaseManagedConnection connection) throws IOException
+	private void checkIndexByPropertyDesc() throws IOException
 	{
 		logger.debug("Checking for table: " + StorageUtils.TABLE_INDEX_BY_PROPERTY_DESC);
 
@@ -75,7 +75,7 @@ public class SchemaCreator
 		checkTable(tableName, families);
 	}
 
-	private void checkIndexByPropertyAsc(HBaseManagedConnection connection) throws IOException
+	private void checkIndexByPropertyAsc() throws IOException
 	{
 		logger.debug("Checking for table: " + StorageUtils.TABLE_INDEX_BY_PROPERTY_ASC);
 
@@ -85,7 +85,7 @@ public class SchemaCreator
 		checkTable(tableName, families);
 	}
 
-	private void checkIndexCustom(HBaseManagedConnection connection) throws IOException
+	private void checkIndexCustom() throws IOException
 	{
 		logger.debug("Checking for table: " + StorageUtils.TABLE_INDEX_CUSTOM);
 
