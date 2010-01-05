@@ -37,11 +37,8 @@ public class Stats
 
 	public void balance()
 	{
-		logger.debug("Executing the balancing processors...");
-
 		for (BalancingProcessor processor : processors)
 		{
-			logger.debug("Executing: " + processor.getClass().getCanonicalName());
 			processor.run(registry.getAppInfos());
 		}
 	}
