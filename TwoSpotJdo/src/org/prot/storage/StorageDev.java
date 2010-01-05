@@ -3,7 +3,9 @@ package org.prot.storage;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.prot.storage.dev.DevQueryHandler;
 import org.prot.storage.dev.MemStorage;
+import org.prot.storage.query.QueryEngine;
 import org.prot.storage.query.StorageQuery;
 
 public class StorageDev implements Storage
@@ -44,6 +46,8 @@ public class StorageDev implements Storage
 	@Override
 	public List<byte[]> query(StorageQuery query)
 	{
-		return null;
+		DevQueryHandler handler = new DevQueryHandler(memStorage);
+		QueryEngine engine = new QueryEngine(handler);
+		return engine.run(query);
 	}
 }

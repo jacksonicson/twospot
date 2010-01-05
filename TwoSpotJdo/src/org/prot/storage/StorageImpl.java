@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import org.prot.storage.connection.ConnectionFactory;
 import org.prot.storage.connection.SchemaCreator;
 import org.prot.storage.connection.StorageUtils;
-import org.prot.storage.query.QueryEngine;
 import org.prot.storage.query.StorageQuery;
 
 public class StorageImpl implements Storage
@@ -59,7 +58,7 @@ public class StorageImpl implements Storage
 
 		// Assert field size
 		StorageUtils.assertFieldSize(obj.length);
-		
+
 		// Create the entity
 		logger.debug("Creating object of kind: " + kind);
 		ObjectCreator creator = new ObjectCreator(connectionFactory);
@@ -76,12 +75,12 @@ public class StorageImpl implements Storage
 	public void updateObject(String appId, String kind, Key key, byte[] obj)
 	{
 		// Asserts
-		assert(key != null);
-		
+		assert (key != null);
+
 		// Assert field size
 		StorageUtils.assertFieldSize(obj.length);
-		
-		// Update the entity; 
+
+		// Update the entity;
 		ObjectUpdater updater = new ObjectUpdater(connectionFactory);
 		try
 		{
@@ -98,15 +97,17 @@ public class StorageImpl implements Storage
 	@Override
 	public List<byte[]> query(StorageQuery query)
 	{
-		QueryEngine queryEngine = new QueryEngine(connectionFactory);
-		return queryEngine.run(query);
+		// QueryEngine queryEngine = new QueryEngine(connectionFactory);
+		// return queryEngine.run(query);
+		return null;
 	}
 
 	@Deprecated
 	public byte[] query(String appId, String kind, Key key)
 	{
-		QueryEngine queryEngine = new QueryEngine(connectionFactory);
-		return queryEngine.fetch(appId, kind, key);
+		// QueryEngine queryEngine = new QueryEngine(connectionFactory);
+		// return queryEngine.fetch(appId, kind, key);
+		return null;
 	}
 
 	@Override

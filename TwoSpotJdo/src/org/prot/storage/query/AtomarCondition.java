@@ -14,7 +14,6 @@ import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 import org.prot.storage.KeyHelper;
-import org.prot.storage.connection.HBaseManagedConnection;
 import org.prot.storage.connection.StorageUtils;
 
 public class AtomarCondition implements Serializable
@@ -160,36 +159,38 @@ public class AtomarCondition implements Serializable
 		return entityKeys;
 	}
 
-	void run(HBaseManagedConnection connection, StorageQuery query, Collection<byte[]> result, LimitCondition limit)
+	void run(QueryHandler handler, StorageQuery query, Collection<byte[]> result, LimitCondition limit)
 			throws IOException
 	{
-		logger.debug("Running atomar condition of type: " + type);
-		logger.debug("Property is: " + property);
-		logger.debug("Value is: " + new String(value.getValue()));
-
-		// Get the tables
-		HTable tableEntities = StorageUtils.getTableEntity(connection);
-		HTable tableIndex = StorageUtils.getTableIndexByPropertyAsc(connection);
-
-		// Find the entity keys using the index table
-		List<byte[]> entityKeys = null;
-		switch (type)
-		{
-		case EQUALS:
-		case GREATER:
-		case GREATER_EQUALS:
-		case LOWER_EQUALS:
-		case LOWER:
-			// Lookup in the index-table
-			entityKeys = findByIndex(query, tableIndex, limit);
-
-			// Materialize the results
-			StorageUtils.materialize(tableEntities, entityKeys, result, limit);
-			break;
-
-		default:
-			logger.warn("Unsupported condition operator");
-		}
+		handler.execute(result, query, this);
+		
+//		logger.debug("Running atomar condition of type: " + type);
+//		logger.debug("Property is: " + property);
+//		logger.debug("Value is: " + new String(value.getValue()));
+//
+//		// Get the tables
+//		HTable tableEntities = StorageUtils.getTableEntity(connection);
+//		HTable tableIndex = StorageUtils.getTableIndexByPropertyAsc(connection);
+//
+//		// Find the entity keys using the index table
+//		List<byte[]> entityKeys = null;
+//		switch (type)
+//		{
+//		case EQUALS:
+//		case GREATER:
+//		case GREATER_EQUALS:
+//		case LOWER_EQUALS:
+//		case LOWER:
+//			// Lookup in the index-table
+//			entityKeys = findByIndex(query, tableIndex, limit);
+//
+//			// Materialize the results
+//			StorageUtils.materialize(tableEntities, entityKeys, result, limit);
+//			break;
+//
+//		default:
+//			logger.warn("Unsupported condition operator");
+//		}
 	}
 
 	public ConditionType getType()

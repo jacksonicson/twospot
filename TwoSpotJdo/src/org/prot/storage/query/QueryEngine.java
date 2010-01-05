@@ -6,19 +6,19 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.prot.storage.Key;
-import org.prot.storage.connection.ConnectionFactory;
-import org.prot.storage.connection.HBaseManagedConnection;
 import org.prot.storage.query.error.QueryException;
 
 public class QueryEngine
 {
 	private static final Logger logger = Logger.getLogger(QueryEngine.class);
 
-	private HBaseManagedConnection connection;
+	// private HBaseManagedConnection connection;
+	private QueryHandler handler;
 
-	public QueryEngine(ConnectionFactory connectionFactory)
+	public QueryEngine(QueryHandler handler)
 	{
-		this.connection = connectionFactory.createManagedConnection();
+		this.handler = handler;
+		// this.connection = connectionFactory.createManagedConnection();
 	}
 
 	public byte[] fetch(String appId, String kind, Key key)
@@ -43,7 +43,7 @@ public class QueryEngine
 	{
 		try
 		{
-			return query.run(connection);
+			return query.run(handler);
 		} catch (IOException e)
 		{
 			logger.error("Error while running query", e);

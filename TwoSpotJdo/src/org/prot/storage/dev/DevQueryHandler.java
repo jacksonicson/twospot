@@ -1,6 +1,7 @@
 package org.prot.storage.dev;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.hadoop.hbase.util.Bytes;
@@ -25,7 +26,7 @@ public class DevQueryHandler implements QueryHandler
 	}
 
 	@Override
-	public void execute(List<byte[]> result, StorageQuery query) throws IOException
+	public void execute(Collection<byte[]> result, StorageQuery query) throws IOException
 	{
 
 		if (query.getKey() != null)
@@ -45,7 +46,7 @@ public class DevQueryHandler implements QueryHandler
 	}
 
 	@Override
-	public void execute(List<byte[]> result, StorageQuery query, AtomarCondition condition)
+	public void execute(Collection<byte[]> result, StorageQuery query, AtomarCondition condition)
 			throws IOException
 	{
 		// Find the entity keys using the index table

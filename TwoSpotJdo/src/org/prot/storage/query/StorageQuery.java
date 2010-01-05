@@ -59,28 +59,41 @@ public class StorageQuery implements Serializable
 		return this.condition;
 	}
 
-	List<byte[]> run(HBaseManagedConnection connection) throws IOException
+	List<byte[]> run(QueryHandler handler) throws IOException
 	{
 		// List which contains all results
 		List<byte[]> result = new ArrayList<byte[]>();
-
-		if (key != null)
-		{
-			logger.debug("Fetching object by key");
-			fetchByKey(connection, result);
-			return result;
-		} else if (!condition.isEmpty())
+		
+		handler.execute(result, this);
+		
+		if (!condition.isEmpty())
 		{
 			logger.debug("Fetching object by condition");
-			condition.run(connection, this, result, limit);
-		} else if (kind != null)
-		{
-			logger.debug("Fetching object by kind");
-			fetchByKind(connection, result);
+			condition.run(handler, this, result, limit);
 		}
 
-		logger.debug("Returning: " + result.size());
 		return result;
+		
+//		// List which contains all results
+//		List<byte[]> result = new ArrayList<byte[]>();
+//
+//		if (key != null)
+//		{
+//			logger.debug("Fetching object by key");
+//			fetchByKey(connection, result);
+//			return result;
+//		} else if (!condition.isEmpty())
+//		{
+//			logger.debug("Fetching object by condition");
+//			condition.run(connection, this, result, limit);
+//		} else if (kind != null)
+//		{
+//			logger.debug("Fetching object by kind");
+//			fetchByKind(connection, result);
+//		}
+//
+//		logger.debug("Returning: " + result.size());
+//		return result;
 	}
 
 	private void fetchByKey(HBaseManagedConnection connection, List<byte[]> result) throws IOException

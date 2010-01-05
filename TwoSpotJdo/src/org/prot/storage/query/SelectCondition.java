@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.prot.storage.connection.HBaseManagedConnection;
 
 public class SelectCondition implements Serializable
 {
@@ -82,7 +81,7 @@ public class SelectCondition implements Serializable
 		}
 	}
 
-	void run(HBaseManagedConnection connection, StorageQuery query, List<byte[]> result, LimitCondition limit)
+	void run(QueryHandler handler, StorageQuery query, List<byte[]> result, LimitCondition limit)
 			throws IOException
 	{
 		logger.debug("Number of Atoms: " + atoms.size());
@@ -96,12 +95,12 @@ public class SelectCondition implements Serializable
 		{
 			if (first)
 			{
-				atom.run(connection, query, tmpResult, limit);
+				atom.run(handler, query, tmpResult, limit);
 				first = false;
 			} else
 			{
 				tmp.clear();
-				atom.run(connection, query, tmp, limit);
+				atom.run(handler, query, tmp, limit);
 
 				for (Iterator<ArrayWrapper> it = tmpResult.iterator(); it.hasNext();)
 				{
