@@ -1,0 +1,1 @@
+java -classpath ./:./hbaseplugin.jar:../lib/datanucleus/deps/hbase-0.20.0.jar:../lib/datanucleus/deps/hadoop-core-0.20.1.jar:../lib/apache_commons/commons-logging-1.1.1.jar:../lib/zookeeper-3.2.1/zookeeper-3.2.1.jar:../lib/log4j-1.2.15/log4j-1.2.15.jar org.prot.stoarge.tools.SchemaTool
