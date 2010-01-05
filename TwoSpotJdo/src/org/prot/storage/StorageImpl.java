@@ -102,7 +102,7 @@ public class StorageImpl implements Storage
 		return queryEngine.run(query);
 	}
 
-	@Override
+	@Deprecated
 	public byte[] query(String appId, String kind, Key key)
 	{
 		QueryEngine queryEngine = new QueryEngine(connectionFactory);

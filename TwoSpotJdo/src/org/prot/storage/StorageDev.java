@@ -44,14 +44,6 @@ public class StorageDev implements Storage
 	@Override
 	public List<byte[]> query(StorageQuery query)
 	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public byte[] query(String appId, String kind, Key key)
-	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 }
