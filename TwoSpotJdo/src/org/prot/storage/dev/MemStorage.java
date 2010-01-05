@@ -53,7 +53,7 @@ public class MemStorage
 		List<Key> keyList = new ArrayList<Key>();
 		while (count-- > 0)
 		{
-			byte[] bTime = Bytes.toBytes(System.currentTimeMillis());
+			byte[] bTime = Bytes.toBytes(Long.MAX_VALUE - System.currentTimeMillis());
 			byte[] bCounter = Bytes.toBytes(counter - count);
 			byte[] bKey = Bytes.add(bTime, bCounter);
 
