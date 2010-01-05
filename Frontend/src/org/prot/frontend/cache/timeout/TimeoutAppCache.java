@@ -70,6 +70,7 @@ public class TimeoutAppCache implements AppCache
 		if (info == null)
 		{
 			updateControllers(appId);
+			entry = cache.get(appId);
 			info = entry.pickController();
 		}
 
