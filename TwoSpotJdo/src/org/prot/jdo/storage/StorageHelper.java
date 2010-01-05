@@ -20,8 +20,20 @@ package org.prot.jdo.storage;
 
 public class StorageHelper
 {
+	private static boolean devMode = false; 
+	
 	public static String APP_ID = "null";
 
+	public static void setDevMode(boolean devMode)
+	{
+		StorageHelper.devMode = devMode;
+	}
+	
+	public static boolean isDevMode()
+	{
+		return devMode;
+	}
+	
 	public static void setAppId(String appId)
 	{
 		APP_ID = appId;

@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.datanucleus.exceptions.NucleusDataStoreException;
 import org.datanucleus.store.connection.AbstractManagedConnection;
 import org.prot.storage.Storage;
+import org.prot.storage.StorageDev;
 import org.prot.storage.StorageImpl;
 
 /**
@@ -41,7 +42,10 @@ public class StorageManagedConnection extends AbstractManagedConnection
 	public StorageManagedConnection()
 	{
 		// Create the storage
-		this.storage = new StorageImpl();
+		if (StorageHelper.isDevMode())
+			this.storage = new StorageDev();
+		else
+			this.storage = new StorageImpl();
 	}
 
 	public Object getConnection()
