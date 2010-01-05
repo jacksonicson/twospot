@@ -63,7 +63,7 @@ public class StorageQuery implements Serializable
 	{
 		// List which contains all results
 		List<byte[]> result = new ArrayList<byte[]>();
-		
+
 		if (!condition.isEmpty())
 		{
 			logger.debug("Fetching object by condition");
@@ -74,73 +74,6 @@ public class StorageQuery implements Serializable
 		}
 
 		return result;
-		
-//		// List which contains all results
-//		List<byte[]> result = new ArrayList<byte[]>();
-//
-//		if (key != null)
-//		{
-//			logger.debug("Fetching object by key");
-//			fetchByKey(connection, result);
-//			return result;
-//		} else if (!condition.isEmpty())
-//		{
-//			logger.debug("Fetching object by condition");
-//			condition.run(connection, this, result, limit);
-//		} else if (kind != null)
-//		{
-//			logger.debug("Fetching object by kind");
-//			fetchByKind(connection, result);
-//		}
-//
-//		logger.debug("Returning: " + result.size());
-//		return result;
-	}
-
-	private void fetchByKey(HBaseManagedConnection connection, List<byte[]> result) throws IOException
-	{
-		HTable entityTable = StorageUtils.getTableEntity(connection);
-
-		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
-		List<byte[]> keySet = new ArrayList<byte[]>();
-		keySet.add(rowKey);
-
-		StorageUtils.materialize(entityTable, keySet, result, limit);
-	}
-
-	private void fetchByKind(HBaseManagedConnection connection, List<byte[]> result) throws IOException
-	{
-		HTable entityTable = StorageUtils.getTableEntity(connection);
-		HTable indexByKindTable = StorageUtils.getTableIndexByKind(connection);
-
-		byte[] startKey = KeyHelper.createIndexByKindKey(appId, kind);
-
-		byte[] bAppId = Bytes.toBytes(appId);
-		byte[] bKind = Bytes.toBytes(kind);
-		bKind = KeyHelper.incrementByteArray(bKind);
-		byte[] stopKey = Bytes.add(bAppId, StorageUtils.bSlash, bKind);
-
-		Scan scan = new Scan(startKey, stopKey);
-		ResultScanner scanner = indexByKindTable.getScanner(scan);
-		List<byte[]> keySet = new ArrayList<byte[]>();
-		for (Iterator<Result> iterator = scanner.iterator(); iterator.hasNext();)
-		{
-			// Update limits
-			if (!limit.incrementIndex())
-				break;
-
-			// Fetch result
-			Result res = iterator.next();
-			if (res.getMap() == null)
-				continue;
-
-			// Update keyset
-			byte[] rowKey = res.getMap().get(StorageUtils.bKey).get(StorageUtils.bKey).lastEntry().getValue();
-			keySet.add(rowKey);
-		}
-
-		// Materialize all entities
-		StorageUtils.materialize(entityTable, keySet, result, limit);
 	}
 
 	public LimitCondition getLimit()
