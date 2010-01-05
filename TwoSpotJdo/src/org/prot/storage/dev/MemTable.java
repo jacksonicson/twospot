@@ -62,7 +62,6 @@ public class MemTable
 
 		} catch (FileNotFoundException e)
 		{
-			logger.error("Coult not find table file: " + file, e);
 		} catch (IOException e)
 		{
 			logger.error("Coult not write table file", e);
@@ -113,8 +112,6 @@ public class MemTable
 				byte[] key = keys[i].getKey();
 				offsetCounter += key.length;
 
-				logger.debug("writing entity");
-
 				// Write key and entity
 				rfile.write(key);
 				rfile.write(entity);
@@ -150,6 +147,11 @@ public class MemTable
 					// Do nothing
 				}
 		}
+	}
+
+	public byte[] get(Key key)
+	{
+		return tableData.get(key);
 	}
 
 	public void add(Key key, byte[] value)

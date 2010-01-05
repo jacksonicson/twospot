@@ -1,9 +1,7 @@
 package org.prot.storage;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 import org.prot.storage.dev.MemStorage;
 import org.prot.storage.query.StorageQuery;
@@ -19,26 +17,10 @@ public class StorageDev implements Storage
 		this.memStorage = new MemStorage();
 	}
 
-	private long counter = 0;
-
 	@Override
 	public List<Key> createKey(String appId, long amount)
 	{
-		counter++;
-
-		List<Key> keyList = new ArrayList<Key>();
-		while (amount-- > 0)
-		{
-			byte[] bTime = Bytes.toBytes(System.currentTimeMillis());
-			byte[] bCounter = Bytes.toBytes(counter);
-			byte[] bKey = Bytes.add(bTime, bCounter);
-			Key key = new Key();
-			key.setKey(bKey);
-
-			keyList.add(key);
-		}
-
-		return keyList;
+		return memStorage.createKey(amount);
 	}
 
 	@Override
