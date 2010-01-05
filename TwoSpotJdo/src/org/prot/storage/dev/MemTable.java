@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.Collection;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -149,6 +150,11 @@ public class MemTable
 		}
 	}
 
+	public Collection<byte[]> getAll()
+	{
+		return tableData.values();
+	}
+	
 	public byte[] get(Key key)
 	{
 		return tableData.get(key);

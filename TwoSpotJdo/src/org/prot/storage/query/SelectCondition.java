@@ -27,7 +27,7 @@ public class SelectCondition implements Serializable
 		this.atoms.add(atom);
 	}
 
-	boolean isEmpty()
+	public boolean isEmpty()
 	{
 		return atoms.isEmpty();
 	}

@@ -12,7 +12,7 @@ public class MemStorage
 {
 	private HashMap<String, MemTable> tables = new HashMap<String, MemTable>();
 
-	private MemTable getTable(String tableName)
+	public MemTable getTable(String tableName)
 	{
 		if (!tables.containsKey(tableName))
 		{

@@ -191,4 +191,19 @@ public class AtomarCondition implements Serializable
 			logger.warn("Unsupported condition operator");
 		}
 	}
+
+	public ConditionType getType()
+	{
+		return type;
+	}
+
+	public AtomLiteral getProperty()
+	{
+		return property;
+	}
+
+	public AtomLiteral getValue()
+	{
+		return value;
+	}
 }
