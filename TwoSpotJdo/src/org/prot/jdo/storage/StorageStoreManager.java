@@ -40,7 +40,7 @@ public class StorageStoreManager extends AbstractStoreManager
 
 		// Check the configuration
 		PersistenceConfiguration conf = omfContext.getPersistenceConfiguration();
-		if (!conf.getBooleanProperty("twospot.devserver"))
+		if (!conf.hasProperty("twospot.devserver"))
 		{
 			logger.warn("Missing configuration property twospot.devserver");
 			StorageHelper.setDevMode(true);

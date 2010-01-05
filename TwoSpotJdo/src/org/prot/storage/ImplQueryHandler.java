@@ -12,6 +12,7 @@ import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
+import org.prot.storage.connection.ConnectionFactory;
 import org.prot.storage.connection.HBaseManagedConnection;
 import org.prot.storage.connection.StorageUtils;
 import org.prot.storage.query.AtomarCondition;
@@ -25,6 +26,11 @@ public class ImplQueryHandler implements QueryHandler
 
 	private HBaseManagedConnection connection;
 
+	public ImplQueryHandler(ConnectionFactory connectionFactory)
+	{
+		this.connection = (HBaseManagedConnection)connectionFactory.createManagedConnection();
+	}
+	
 	@Override
 	public void execute(Collection<byte[]> result, StorageQuery query) throws IOException
 	{

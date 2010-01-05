@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.prot.storage.connection.ConnectionFactory;
 import org.prot.storage.connection.SchemaCreator;
 import org.prot.storage.connection.StorageUtils;
+import org.prot.storage.query.QueryEngine;
 import org.prot.storage.query.StorageQuery;
 
 public class StorageImpl implements Storage
@@ -97,17 +98,17 @@ public class StorageImpl implements Storage
 	@Override
 	public List<byte[]> query(StorageQuery query)
 	{
-		// QueryEngine queryEngine = new QueryEngine(connectionFactory);
-		// return queryEngine.run(query);
-		return null;
+		ImplQueryHandler handler = new ImplQueryHandler(connectionFactory);
+		QueryEngine engine = new QueryEngine(handler);
+		return engine.run(query);
 	}
 
 	@Deprecated
 	public byte[] query(String appId, String kind, Key key)
 	{
-		// QueryEngine queryEngine = new QueryEngine(connectionFactory);
-		// return queryEngine.fetch(appId, kind, key);
-		return null;
+		ImplQueryHandler handler = new ImplQueryHandler(connectionFactory);
+		QueryEngine engine = new QueryEngine(handler);
+		return engine.fetch(appId, kind, key);
 	}
 
 	@Override
