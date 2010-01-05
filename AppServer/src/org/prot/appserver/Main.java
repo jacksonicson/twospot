@@ -18,8 +18,18 @@ public class Main
 {
 	public Main()
 	{
+		// Configure logger
+		DOMConfigurator.configure(Main.class.getResource("/etc/log4j.xml"));
+		final Logger logger = Logger.getLogger(Main.class);
+		logger.info("Starting AppServer...");
+
 		// Load basic configuration settings
 		Configuration.getInstance();
+		
+		// Start the IODirector
+		IODirector ioDirector = new IODirector();
+		if (Configuration.getInstance().isEnableStdOut())
+			ioDirector.enableStd();
 
 		// Start the security manager (only in server mode)
 		if (Configuration.getInstance().getServerMode() == ServerMode.SERVER)
@@ -29,15 +39,6 @@ public class Main
 			Policy.setPolicy(policy);
 			System.setSecurityManager(new SecurityManager());
 		}
-
-		// Start the IODirector
-		IODirector ioDirector = new IODirector();
-		if (Configuration.getInstance().isEnableStdOut())
-			ioDirector.enableStd();
-
-		// Configure logger
-		DOMConfigurator.configure(Main.class.getResource("/etc/log4j.xml"));
-		final Logger logger = Logger.getLogger(Main.class);
 
 		// Log all startup arguments
 		ArgumentParser.dump();

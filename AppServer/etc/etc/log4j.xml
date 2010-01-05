@@ -5,18 +5,10 @@
 
 	<appender name="SocketAppender" class="org.apache.log4j.net.SocketAppender">
 		<param name="Port" value="4445" />
-		<param name="RemoteHost" value="192.168.178.12" />
+		<param name="RemoteHost" value="localhost" />
 	</appender>
 
 	<appender name="ConsoleAppender" class="org.apache.log4j.ConsoleAppender">
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%p - %C{1}.%M(%L) | %m%n" />
-		</layout>
-	</appender>
-
-	<appender name="FileAppender" class="org.apache.log4j.FileAppender">
-		<param name="File" value="appserver.log" />
-		<param name="Threshold" value="DEBUG" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%p - %C{1}.%M(%L) | %m%n" />
 		</layout>
