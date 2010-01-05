@@ -3,8 +3,9 @@ package org.prot.storage;
 import java.io.Serializable;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.hadoop.hbase.util.Bytes;
 
-public class Key implements Serializable
+public class Key implements Serializable, Comparable<Key>
 {
 	private static final long serialVersionUID = -1077956197302875365L;
 
@@ -53,7 +54,7 @@ public class Key implements Serializable
 
 		// Compare the byte array
 		Key key = (Key) obj;
-		return key.equals(key.getKey());
+		return Bytes.equals(this.key, key.getKey());
 	}
 
 	public int hashCode()
@@ -76,5 +77,11 @@ public class Key implements Serializable
 
 		// URL-Safe encoding
 		return new String(Base64.encodeBase64(key, true));
+	}
+
+	@Override
+	public int compareTo(Key o)
+	{
+		return Bytes.compareTo(this.key, o.getKey());
 	}
 }

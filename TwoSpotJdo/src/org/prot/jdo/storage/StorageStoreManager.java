@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.OMFContext;
 import org.datanucleus.ObjectManager;
@@ -14,7 +15,9 @@ import org.datanucleus.store.NucleusConnection;
 
 public class StorageStoreManager extends AbstractStoreManager
 {
-	MetaDataListener metadataListener;
+	private static final Logger logger = Logger.getLogger(StorageStoreManager.class);
+
+	private MetaDataListener metadataListener;
 
 	/**
 	 * Constructor.
@@ -38,9 +41,13 @@ public class StorageStoreManager extends AbstractStoreManager
 		// Check the configuration
 		PersistenceConfiguration conf = omfContext.getPersistenceConfiguration();
 		if (!conf.getBooleanProperty("twospot.devserver"))
+		{
+			logger.warn("Missing configuration property twospot.devserver");
 			StorageHelper.setDevMode(true);
-		else
+		} else
+		{
 			StorageHelper.setDevMode(conf.getBooleanProperty("twospot.devserver"));
+		}
 
 		logConfiguration();
 	}

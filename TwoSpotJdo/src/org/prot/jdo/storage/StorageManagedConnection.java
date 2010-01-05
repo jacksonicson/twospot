@@ -34,18 +34,14 @@ public class StorageManagedConnection extends AbstractManagedConnection
 	private static final Logger logger = Logger.getLogger(StorageManagedConnection.class);
 
 	// Reference to the storage implementation
-	private final Storage storage;
+	private Storage storage;
 
 	// Counts the number of references to this connection
 	private int referenceCount = 0;
 
 	public StorageManagedConnection()
 	{
-		// Create the storage
-		if (StorageHelper.isDevMode())
-			this.storage = new StorageDev();
-		else
-			this.storage = new StorageImpl();
+		super();
 	}
 
 	public Object getConnection()
@@ -57,6 +53,21 @@ public class StorageManagedConnection extends AbstractManagedConnection
 
 	public Storage getStorage()
 	{
+		if (storage == null)
+		{
+			logger.debug("Creating storage");
+			
+			// Create the storage
+			if (StorageHelper.isDevMode())
+			{
+				logger.info("Storage is running in dev mode");
+				this.storage = new StorageDev();
+			} else
+			{
+				this.storage = new StorageImpl();
+			}
+		}
+
 		return this.storage;
 	}
 
