@@ -3,18 +3,17 @@ package org.prot.storage.query;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 
 public class SelectCondition implements Serializable
 {
 	private static final long serialVersionUID = -1163609480212762858L;
 
-	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(SelectCondition.class);
 
 	// List of all atomar condition. The intersection of all results is
@@ -65,7 +64,7 @@ public class SelectCondition implements Serializable
 
 		public int hashCode()
 		{
-			return Arrays.hashCode(bytes);
+			return Bytes.hashCode(bytes);
 		}
 
 		public boolean equals(Object o)
@@ -77,7 +76,7 @@ public class SelectCondition implements Serializable
 				return false;
 
 			ArrayWrapper comp = (ArrayWrapper) o;
-			return Arrays.equals(bytes, comp.bytes);
+			return Bytes.equals(bytes, comp.bytes);
 		}
 	}
 
@@ -95,8 +94,8 @@ public class SelectCondition implements Serializable
 		{
 			if (first)
 			{
-				atom.run(handler, query, tmpResult, limit);
 				first = false;
+				atom.run(handler, query, tmpResult, limit);
 			} else
 			{
 				tmp.clear();
@@ -106,7 +105,9 @@ public class SelectCondition implements Serializable
 				{
 					ArrayWrapper test = it.next();
 					if (!tmp.contains(test))
+					{
 						it.remove();
+					}
 				}
 			}
 		}

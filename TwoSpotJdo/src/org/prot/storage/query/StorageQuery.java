@@ -64,12 +64,13 @@ public class StorageQuery implements Serializable
 		// List which contains all results
 		List<byte[]> result = new ArrayList<byte[]>();
 		
-		handler.execute(result, this);
-		
 		if (!condition.isEmpty())
 		{
 			logger.debug("Fetching object by condition");
 			condition.run(handler, this, result, limit);
+		} else
+		{
+			handler.execute(result, this);
 		}
 
 		return result;

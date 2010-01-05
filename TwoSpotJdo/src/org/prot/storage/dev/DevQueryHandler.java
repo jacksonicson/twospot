@@ -28,7 +28,6 @@ public class DevQueryHandler implements QueryHandler
 	@Override
 	public void execute(Collection<byte[]> result, StorageQuery query) throws IOException
 	{
-
 		if (query.getKey() != null)
 		{
 			Key key = query.getKey();
@@ -69,47 +68,37 @@ public class DevQueryHandler implements QueryHandler
 				builder.mergeFrom(entity);
 				EntityMessage entityMsg = builder.build();
 
-				// Get all index messages
-				List<IndexMessage> indexMsgs = entityMsg.getIndexMessages();
+				IStorageProperty storageProperty = entityMsg.getProperty(new String(property));
 
-				// Index map
-				for (IndexMessage indexMsg : indexMsgs)
+				if (storageProperty == null || storageProperty.getValueAsBytes() == null)
+					continue;
+
+				byte[] compValue = storageProperty.getValueAsBytes();
+				switch (condition.getType())
 				{
-					String propertyName = indexMsg.getFieldName();
-					if (Bytes.equals(Bytes.toBytes(propertyName), property))
-					{
-						IStorageProperty storageProperty = entityMsg.getProperty(propertyName);
-						if (property == null || storageProperty.getValueAsBytes() == null)
-							continue;
+				case EQUALS:
+					if (Bytes.equals(compValue, value))
+						result.add(entity);
+					break;
+				case GREATER:
+					if (Bytes.compareTo(compValue, value) > 0)
+						result.add(entity);
+					break;
 
-						byte[] compValue = storageProperty.getValueAsBytes();
-						switch (condition.getType())
-						{
-						case EQUALS:
-							if (Bytes.equals(compValue, value))
-								result.add(entity);
-							break;
-						case GREATER:
-							if (Bytes.compareTo(compValue, value) > 0)
-								result.add(entity);
-							break;
+				case GREATER_EQUALS:
+					if (Bytes.compareTo(compValue, value) >= 0)
+						result.add(entity);
+					break;
 
-						case GREATER_EQUALS:
-							if (Bytes.compareTo(compValue, value) >= 0)
-								result.add(entity);
-							break;
+				case LOWER:
+					if (Bytes.compareTo(compValue, value) < 0)
+						result.add(entity);
+					break;
 
-						case LOWER:
-							if (Bytes.compareTo(compValue, value) < 0)
-								result.add(entity);
-							break;
-
-						case LOWER_EQUALS:
-							if (Bytes.compareTo(compValue, value) <= 0)
-								result.add(entity);
-							break;
-						}
-					}
+				case LOWER_EQUALS:
+					if (Bytes.compareTo(compValue, value) <= 0)
+						result.add(entity);
+					break;
 				}
 			}
 
