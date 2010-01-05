@@ -61,6 +61,7 @@
 <pathelement location="../Libs/lib/slf4j/slf4j-api-1.5.10-sources.jar" />
 <pathelement location="../Libs/lib/slf4j/slf4j-log4j12-1.5.10.jar" />
 <pathelement location="../Libs/lib/apache_commons/commons-codec-1.3.jar" />
+<pathelement location="../Libs/lib/apache_commons/commons-lang-2.4.jar" />
 </path><fileset dir='../' id='libfiles'><include name="Libs/lib/jetty-7.0.0/servlet-api-2.5.jar" />
 <include name="Libs/lib/apache_commons/commons-logging-1.1.1.jar" />
 <include name="Libs/lib/snakeyaml-1.5/snakeyaml-1.5.jar" />
@@ -124,4 +125,5 @@
 <include name="Libs/lib/slf4j/slf4j-api-1.5.10-sources.jar" />
 <include name="Libs/lib/slf4j/slf4j-log4j12-1.5.10.jar" />
 <include name="Libs/lib/apache_commons/commons-codec-1.3.jar" />
+<include name="Libs/lib/apache_commons/commons-lang-2.4.jar" />
 </fileset></project>

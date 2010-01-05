@@ -439,7 +439,7 @@ public class HardPolicy extends Policy
 		appPermissions.add(new RuntimePermission("getClassLoader"));
 
 		// PropertyPermissins
-		appPermissions.add(new PropertyPermission("*", "read"));
+		appPermissions.add(new PropertyPermission("*", "read,write"));
 
 		// ReflectionPermissions
 		appPermissions.add(new ReflectPermission("suppressAccessChecks"));
