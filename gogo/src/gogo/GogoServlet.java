@@ -39,12 +39,9 @@ public class GogoServlet extends HttpServlet
 	{
 		// DEMO: Using the LogService
 		LogService logService = LogServiceFactory.getLogService();
-		// for (int i = 0; i < 100; i++)
-		// {
-		// logService.debug("Debug log");
-		// logService.info("Info log");
-		// logService.error("Error log");
-		// }
+		logService.debug("Debug log");
+		logService.info("Info log");
+		logService.error("Error log");
 
 		// DEMO: Using the UserService
 		UserService userService = UserServiceFactory.getUserService();
@@ -71,8 +68,8 @@ public class GogoServlet extends HttpServlet
 			String url = request.getRequestURL().toString();
 
 			// Ask the UserService for the login url. The UserService should
-			// redirect to the current servlet after the login or if the login
-			// fails!
+			// redirect to the current servlet after the login or if the
+			// login fails!
 			String loginUrl = userService.getLoginUrl(url, url);
 
 			// Send the redirect
@@ -133,9 +130,6 @@ public class GogoServlet extends HttpServlet
 
 			// Tell the query the class
 			query.setClass(BlogEntry.class);
-
-			// Don't fetch more than 100 objects
-			query.setRange(0, 100);
 
 			// Execute the query
 			List<BlogEntry> result = (List<BlogEntry>) query.execute();
