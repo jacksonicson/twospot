@@ -7,6 +7,7 @@ import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.KeeperException.Code;
+import org.apache.zookeeper.data.Stat;
 import org.prot.util.ObjectSerializer;
 import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.ZNodes;
@@ -38,10 +39,19 @@ public class RegisterApp implements Job
 
 		try
 		{
-			// Persist the AppEntry
-			String createdPath = zk.create(appPath, entryData, zooHelper.getACL(), CreateMode.PERSISTENT);
-			logger.info("Application written to ZooKeeper: " + createdPath);
-			return true;
+			Stat stat = zk.exists(appPath, false);
+			if (stat == null)
+			{
+				// Persist the AppEntry
+				String createdPath = zk.create(appPath, entryData, zooHelper.getACL(), CreateMode.PERSISTENT);
+				logger.info("Application written to ZooKeeper: " + createdPath);
+				return true;
+			} else
+			{
+				// Update the AppEntry
+				zk.setData(appPath, entryData, -1);
+				return true;
+			}
 
 		} catch (KeeperException e)
 		{

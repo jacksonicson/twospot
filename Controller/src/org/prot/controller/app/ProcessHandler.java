@@ -183,10 +183,12 @@ class ProcessHandler
 	private boolean waitForAppServer(Process process) throws IOException
 	{
 		// create IO streams
-		BufferedReader stdInStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		BufferedReader stdInStream = null;
 
 		try
 		{
+			stdInStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
 			// Read the input stream until SERVER_ONLINE sequence is found
 			String line = "";
 			while ((line = stdInStream.readLine()) != null)
@@ -222,7 +224,8 @@ class ProcessHandler
 			try
 			{
 				// Close the input stream
-				stdInStream.close();
+				if (stdInStream != null)
+					stdInStream.close();
 			} catch (IOException e)
 			{
 				logger.trace(e);

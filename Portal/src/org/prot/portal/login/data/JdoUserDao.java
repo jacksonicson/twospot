@@ -24,6 +24,9 @@ public class JdoUserDao implements UserDao
 		try
 		{
 			Object result = query.execute();
+			if (result == null)
+				return null;
+
 			return (PlatformUser) result;
 
 		} catch (Exception e)

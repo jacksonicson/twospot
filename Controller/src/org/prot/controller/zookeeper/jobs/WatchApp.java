@@ -80,6 +80,7 @@ public class WatchApp implements Job, Watcher
 			// If there is no path - do nothing
 			if (path == null)
 				return;
+			logger.debug("App event on path: " + path);
 
 			// Extract the AppEntry object
 			Stat stat = new Stat();
@@ -94,13 +95,13 @@ public class WatchApp implements Job, Watcher
 
 		} catch (InterruptedException e)
 		{
-			logger.error(e);
+			logger.error("InterruptedException", e);
 		} catch (IOException e)
 		{
-			logger.error(e);
+			logger.error("IOException", e);
 		} catch (KeeperException e)
 		{
-			logger.error(e);
+			logger.error("KeeperError", e);
 		} finally
 		{
 			// Reschedule this task (install watchers)
@@ -112,7 +113,6 @@ public class WatchApp implements Job, Watcher
 	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
 		ZooKeeper zk = zooHelper.getZooKeeper();
-		final String appsPath = ZNodes.ZNODE_APPS;
 
 		try
 		{
@@ -120,7 +120,7 @@ public class WatchApp implements Job, Watcher
 			for (String watch : this.watching)
 			{
 				// Assumend path to the node
-				final String watchPath = appsPath + "/" + watch;
+				final String watchPath = ZNodes.ZNODE_APPS + "/" + watch;
 
 				// Check if a node for the AppId exists
 				Stat stat = zk.exists(watchPath, false);

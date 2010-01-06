@@ -49,6 +49,19 @@ class ProcessWorker implements Runnable
 		{
 			return type;
 		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if (o == this)
+				return true;
+
+			if (!(o instanceof ProcessJob))
+				return false;
+
+			ProcessJob test = (ProcessJob) o;
+			return test.getAppInfo().equals(this.getAppInfo());
+		}
 	}
 
 	public void init()
@@ -66,7 +79,9 @@ class ProcessWorker implements Runnable
 		synchronized (jobQueue)
 		{
 			for (AppInfo info : deadApps)
+			{
 				jobQueue.add(new ProcessJob(info, ProcessJob.STOP));
+			}
 			jobQueue.notifyAll();
 		}
 	}

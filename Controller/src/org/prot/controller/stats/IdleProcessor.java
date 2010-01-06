@@ -37,7 +37,7 @@ public class IdleProcessor implements BalancingProcessor
 			time = currentTime - time;
 			if (time > IDLE_THREASHOLD)
 			{
-				logger.debug("Killing idle AppServer: " + appInfo.getAppId());
+				logger.debug("Killing IDLE AppServer: " + appInfo.getAppId());
 				appInfo.setStatus(AppState.IDLE);
 			}
 		}

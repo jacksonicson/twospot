@@ -48,16 +48,16 @@ public class AppManager implements DeploymentListener
 		// Todo-Information
 		Todo todo = null;
 
-		// This call is not synchronized - most calls end here
+		// This call is not synchronized - most calls end here - fast path
 		if (appInfo.getStatus() == AppState.ONLINE)
-		{
-			// appInfo.dump();
 			return appInfo;
-		}
 
 		// Simple state machine for managing the AppServer lifecycle
 		synchronized (appInfo)
 		{
+			// TODO: If the appserver is in KILLED state the registry must create a new one
+			// State change from STARTING -> KILLED must be possible
+			
 			// Operations depends on app status
 			switch (appInfo.getStatus())
 			{

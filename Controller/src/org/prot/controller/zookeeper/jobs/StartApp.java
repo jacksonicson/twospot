@@ -34,7 +34,7 @@ public class StartApp implements Job
 		{
 			// Check if the path for the insatance node already exists
 			Stat stat = zk.exists(instancePath, false);
-			if (stat != null)
+			if (stat == null)
 			{
 				// The path does not exist - create it (empty node)
 				zk.create(instancePath, new byte[0], zooHelper.getACL(), CreateMode.EPHEMERAL);

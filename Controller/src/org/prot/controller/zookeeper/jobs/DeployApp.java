@@ -39,7 +39,7 @@ public class DeployApp implements Job
 				return false;
 			}
 
-			// Read the current ndoe data
+			// Read the current node data
 			byte[] data = zk.getData(appPath, false, stat);
 
 			// Update the data of the node
@@ -50,7 +50,7 @@ public class DeployApp implements Job
 
 		} catch (KeeperException e)
 		{
-			logger.error(e);
+			logger.error("KeeperError", e);
 
 			// Retry
 			return false;

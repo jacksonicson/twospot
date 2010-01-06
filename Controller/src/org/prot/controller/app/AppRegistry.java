@@ -131,7 +131,7 @@ public class AppRegistry implements TokenChecker
 						case FAILED:
 							info.setStatus(AppState.KILLED);
 						case KILLED:
-							blocked.put(info.getAppId(), System.currentTimeMillis());
+//							blocked.put(info.getAppId(), System.currentTimeMillis());
 							break;
 						case IDLE:
 							break;

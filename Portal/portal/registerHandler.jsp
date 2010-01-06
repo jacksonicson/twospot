@@ -18,32 +18,32 @@
     <form:form action="registerHandler.htm" method="POST"
      commandName="registerCommand">
         <table>
-            <form:errors>
+            <form:errors path="username">
             <tr>
                 <td colspan="2" class="error"><form:errors path="username" /></td>
             </tr>
             </form:errors>
-            <form:errors>
+            <form:errors path="password0">
             <tr>
                 <td colspan="2" class="error"><form:errors path="password0" /></td>
             </tr>
             </form:errors>
-            <form:errors>
+            <form:errors path="password1">
             <tr>
                 <td colspan="2" class="error"><form:errors path="password1" /></td>
             </tr>
             </form:errors>
-            <form:errors>
+            <form:errors path="email">
             <tr>
                 <td colspan="2" class="error"><form:errors path="email" /></td>
             </tr>
             </form:errors>
-             <form:errors>
+            <form:errors path="forename">
             <tr>
                 <td colspan="2" class="error"><form:errors path="forename" /></td>
             </tr>
             </form:errors>
-             <form:errors>
+            <form:errors path="surname">
             <tr>
                 <td colspan="2" class="error"><form:errors path="surname" /></td>
             </tr>
