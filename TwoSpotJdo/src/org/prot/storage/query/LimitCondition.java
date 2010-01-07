@@ -63,7 +63,7 @@ public class LimitCondition implements Serializable
 		resultCounter++;
 
 		boolean inRange = true;
-		if (unique && resultCounter > 0)
+		if (unique && resultCounter > 1)
 			inRange &= false;
 
 		inRange &= incrementOperation();
