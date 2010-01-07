@@ -23,7 +23,8 @@ public class UserServiceImpl implements UserService
 	@Override
 	public String getCurrentUser(String uid)
 	{
-		assert (uid != null);
+		if (uid == null)
+			return null;
 
 		// Query database
 		PersistenceManager persistenceManager = JdoConnection.getPersistenceManager();
@@ -34,17 +35,21 @@ public class UserServiceImpl implements UserService
 			query.setFilter("sessionId == '" + uid.trim() + "'");
 			query.setUnique(true);
 
-			UserSession session = (UserSession) query.execute();
+			Object object = query.execute();
 
-			if (session != null)
+			if (object != null)
 			{
+				UserSession session = (UserSession) object;
 				String user = session.getUsername();
 				return user;
 			} else
 			{
 				logger.debug("Could not find user: " + uid);
+				return null;
 			}
-
+		} catch (Exception e)
+		{
+			logger.error("Error while fetching user", e);
 			return null;
 		} finally
 		{
