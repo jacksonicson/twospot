@@ -29,18 +29,22 @@ public class Stats
 
 	public void handle(final String appId)
 	{
-		controllerStats.handle();
+		try
+		{
+			controllerStats.handle();
 
-		AppRequestStats stats = registry.getAppInfo(appId).getAppManagement().getAppRequestStats();
-		stats.handle();
+			AppRequestStats stats = registry.getAppInfo(appId).getAppManagement().getAppRequestStats();
+			stats.handle();
+		} catch (Exception e)
+		{
+			logger.error("Error while handling stas: " + e);
+		}
 	}
 
 	public void balance()
 	{
 		for (BalancingProcessor processor : processors)
-		{
 			processor.run(registry.getAppInfos());
-		}
 	}
 
 	public void setRegistry(AppRegistry registry)

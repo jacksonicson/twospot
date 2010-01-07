@@ -31,11 +31,10 @@ public class UserServiceImpl implements UserService
 		try
 		{
 			Query query = persistenceManager.newQuery(UserSession.class);
-			query.setFilter("sessionId == '" + uid + "'");
+			query.setFilter("sessionId == '" + uid.trim() + "'");
 			query.setUnique(true);
 
 			UserSession session = (UserSession) query.execute();
-			persistenceManager.flush();
 
 			if (session != null)
 			{

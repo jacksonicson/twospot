@@ -36,9 +36,6 @@ public class AccessFilter extends GenericFilterBean
 		String[] clean = { "docs", "index.htm", "login.htm", "start.htm", "loginHandler.htm",
 				"registerHandler.htm", "loadTest.htm", "etc" };
 
-		// Check if user is logged in
-		String user = service.getCurrentUser();
-
 		for (String test : clean)
 		{
 			// Special case here - if URI is empty its the start page which is
@@ -50,6 +47,8 @@ public class AccessFilter extends GenericFilterBean
 			}
 		}
 
+		// Check if user is logged in
+		String user = service.getCurrentUser();
 		if (user == null)
 		{
 			logger.debug("Restricted access to: " + uri);

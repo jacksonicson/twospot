@@ -27,8 +27,8 @@ public class RpsCounter
 				last = time;
 		}
 
-		long diff = (current - last) / 1000 + 1;
-		double rps = (double) timestamps.length / (double) (diff);
+		long diff = (current - last) / 1000;
+		double rps = (double) timestamps.length / (double) (diff + 1);
 		return rps;
 	}
 

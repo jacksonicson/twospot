@@ -34,8 +34,6 @@ public class RequestProcessor extends HttpProxyHelper<String>
 		{
 			logger.error("Exception in Proxy", e);
 
-			baseRequest.setHandled(true);
-
 			try
 			{
 				response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500, "ControllerProxy failed");
@@ -43,6 +41,8 @@ public class RequestProcessor extends HttpProxyHelper<String>
 			{
 				logger.trace(e1);
 			}
+
+			baseRequest.setHandled(true);
 		}
 	}
 

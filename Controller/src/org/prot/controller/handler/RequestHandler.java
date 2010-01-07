@@ -67,7 +67,7 @@ public class RequestHandler extends AbstractHandler
 		if (appManager.isBlocked(appId))
 		{
 			logger.debug("Recived request for blocked: " + appId);
-			response.sendError(HttpStatus.MOVED_TEMPORARILY_302);
+			response.sendError(HttpStatus.MOVED_TEMPORARILY_302, "Controller blocks requested application");
 			baseRequest.setHandled(true);
 			return;
 		}
@@ -82,7 +82,7 @@ public class RequestHandler extends AbstractHandler
 		// the appInfo than is *not* null
 		if (appInfo == null)
 		{
-			logger.debug("Wait until continuation resumes");
+			logger.debug("Could not aquire an AppInfo - Waiting until continuation resumes");
 			return;
 		}
 
@@ -104,10 +104,18 @@ public class RequestHandler extends AbstractHandler
 		}
 
 		// Create a destination URL to forward the request
-		HttpURI destination = getUrl(baseRequest, appInfo);
-
-		// Register the request in the RequestManager.
-		requestProcessor.process(appInfo.getAppId(), baseRequest, request, response, destination);
+		try
+		{
+			HttpURI destination = getUrl(baseRequest, appInfo);
+			// Register the request in the RequestManager.
+			requestProcessor.process(appInfo.getAppId(), baseRequest, request, response, destination);
+		} catch (Exception e)
+		{
+			logger.error("Could not process request", e);
+			response.sendError(HttpStatus.NOT_FOUND_404, "Could not start AppServer");
+			baseRequest.setHandled(true);
+			return;
+		}
 	}
 
 	public void setAppManager(AppManager appManager)
