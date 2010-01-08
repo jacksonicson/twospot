@@ -28,8 +28,11 @@ public final class AppInfo
 	// Timestamp which tells last usage
 	private long touch;
 
+	// Timestamp of the last state change
+	private long stateChange = System.currentTimeMillis();
+	 
 	// State of the appserver
-	private AppState status = AppState.OFFLINE;
+	private AppState state = AppState.NEW;
 
 	// Reference to the Process of this app
 	private final AppProcess appProcess = new AppProcess();
@@ -43,16 +46,17 @@ public final class AppInfo
 
 	AppInfo(String appId, int port)
 	{
+		// Set appId and port
 		this.appId = appId;
 		this.port = port;
 
-		// Generate a authentication token
+		// Generate a authentication token if this a privileged application
 		if (ReservedAppIds.isPrivilged(appId))
 		{
 			Random random = new Random();
 			random.setSeed(System.currentTimeMillis());
 			long token = Math.abs(random.nextLong() | System.currentTimeMillis());
-			processToken = "" + token;
+			processToken = "t" + token;
 		} else
 		{
 			processToken = null;
@@ -76,20 +80,16 @@ public final class AppInfo
 
 	public synchronized boolean addContinuation(Continuation continuation)
 	{
-		// Check if a continuation could be set
-		switch (status)
+		// Check state
+		switch (state)
 		{
-		case ONLINE:
-		case FAILED:
-		case STALE:
-		case KILLED:
-			return false;
+		case STARTING:
+			// Insert the continuation
+			continuations.add(continuation);
+			return true; 
 		}
-
-		// Insert the continuation
-		continuations.add(continuation);
-
-		return true;
+		
+		return false;
 	}
 
 	public synchronized void resumeContinuations()
@@ -112,48 +112,56 @@ public final class AppInfo
 
 	public AppState getStatus()
 	{
-		return status;
+		return state;
 	}
 
 	public synchronized void setStatus(AppState status)
 	{
 		// Check if this is a valid state change
-		boolean check = this.status == status;
-		switch (this.status)
+		boolean check = this.state == status;
+		switch (this.state)
 		{
-		case OFFLINE:
+		case NEW:
 			check |= status == AppState.STARTING;
+			check |= status == AppState.DEPLOYED;
 			break;
-		case STALE:
-			check |= status == AppState.STARTING;
-			check |= status == AppState.KILLED;
-			break;
+			
 		case STARTING:
 			check |= status == AppState.ONLINE;
 			check |= status == AppState.FAILED;
+			check |= status == AppState.DEPLOYED;
 			break;
+			
 		case FAILED:
-			check |= status == AppState.KILLED;
+			check |= status == AppState.STARTING;
+			check |= status == AppState.DEAD;
+			check |= status == AppState.DEPLOYED;
 			break;
+			
 		case ONLINE:
+			check |= status == AppState.BANNED;
 			check |= status == AppState.KILLED;
-			check |= status == AppState.IDLE;
-			check |= status == AppState.STALE;
+			check |= status == AppState.DEPLOYED;
 			break;
+			
+		case BANNED:
+			check |= status == AppState.DEAD;
+			break;
+			
 		case KILLED:
-			check |= status == AppState.OFFLINE;
+			check |= status == AppState.DEAD;
 			break;
-		case IDLE:
-			check |= status == AppState.OFFLINE;
+			
+		case DEPLOYED:
+			check |= status == AppState.DEAD;
 			break;
-		default:
-			logger.warn("Unknown AppServer state");
+			
 		}
 
 		if (check)
-			this.status = status;
+			this.state = status;
 		else
-			logger.warn("Invalid sate change from " + this.status + " to " + status);
+			logger.warn("Invalid sate change from " + this.state + " to " + status);
 	}
 
 	public boolean isPrivileged()

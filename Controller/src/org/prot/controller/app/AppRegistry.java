@@ -1,8 +1,7 @@
 package org.prot.controller.app;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -81,73 +80,59 @@ public class AppRegistry implements TokenChecker
 		return appInfo;
 	}
 
-	private void cleanup()
+	void updateStates()
 	{
-		List<AppInfo> copy = new ArrayList<AppInfo>();
-		synchronized (appInfos)
-		{
-			copy.addAll(appInfos.values());
-		}
-
-		Set<AppInfo> toDelete = new HashSet<AppInfo>();
-		for (AppInfo info : copy)
+		// Check for idle apps
+		for (AppInfo info : appInfos.values())
 		{
 			AppState state = info.getStatus();
 			switch (state)
 			{
-			case OFFLINE:
-				toDelete.add(info);
-				continue;
+			case FAILED:
+				// TODO - migrate to KILLED
+				break;
 			}
 		}
-
-		// The deleteApp method is multithreaded
-		for (AppInfo info : toDelete)
-			deleteApp(info.getAppId());
 	}
 
-	Set<AppInfo> findDeadApps()
+	void removeDead()
 	{
-		Set<AppInfo> idleApps = null;
+		for (Iterator<String> it = appInfos.keySet().iterator(); it.hasNext();)
+		{
+			String appId = it.next();
+			AppInfo info = appInfos.get(appId);
+
+			if (info == null)
+				continue;
+
+			if (info.getStatus() == AppState.DEAD)
+				it.remove();
+		}
+	}
+
+	Set<AppInfo> kill()
+	{
+		Set<AppInfo> killedApps = new HashSet<AppInfo>();
 
 		// Check for idle apps
 		for (AppInfo info : appInfos.values())
 		{
 			AppState state = info.getStatus();
-			if (state == AppState.FAILED || state == AppState.KILLED || state == AppState.IDLE)
+			switch (state)
 			{
-				if (idleApps == null)
-					idleApps = new HashSet<AppInfo>();
-
-				synchronized (info)
-				{
-					// Double check if the app is really dead
-					// Perhaps we don't get all dead apps here - but in the next
-					// run we will get all left apps.
-					if (info.getStatus().equals(state))
-					{
-						switch (info.getStatus())
-						{
-						case FAILED:
-							info.setStatus(AppState.KILLED);
-						case KILLED:
-//							blocked.put(info.getAppId(), System.currentTimeMillis());
-							break;
-						case IDLE:
-							break;
-						}
-
-						idleApps.add(info);
-					}
-				}
+			case BANNED:
+			case KILLED:
+			case DEPLOYED:
+				killedApps.add(info);
+				break;
 			}
 		}
 
-		// Remove everything
-		cleanup();
+		// Remove dead apps
+		removeDead();
 
-		// Return list of idle apps
-		return idleApps;
+		// Return list of killed apps
+		return killedApps;
 	}
 
 	@Override

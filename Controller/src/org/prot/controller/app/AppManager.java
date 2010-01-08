@@ -18,19 +18,20 @@ public class AppManager implements DeploymentListener
 
 	private ManagementService managementService;
 
-	public void init()
-	{
-		// Schedule the maintaince task
-		Scheduler.addTask(new CleanupTask());
-
-		// Register listeners
-		managementService.addDeploymentListener(this);
-	}
-
 	private enum Todo
 	{
 		START, WAIT
 	};
+
+	public void init()
+	{
+		// Schedule the cleanup task which removes unused objects from the
+		// registry
+		Scheduler.addTask(new CleanupTask());
+
+		// Listener is used to get deployment notifications
+		managementService.addDeploymentListener(this);
+	}
 
 	public boolean isBlocked(String appId)
 	{
@@ -48,33 +49,35 @@ public class AppManager implements DeploymentListener
 		// Todo-Information
 		Todo todo = null;
 
-		// This call is not synchronized - most calls end here - fast path
+		// Fast path
 		if (appInfo.getStatus() == AppState.ONLINE)
 			return appInfo;
 
 		// Simple state machine for managing the AppServer lifecycle
 		synchronized (appInfo)
 		{
-			// TODO: If the appserver is in KILLED state the registry must create a new one
-			// State change from STARTING -> KILLED must be possible
-			
 			// Operations depends on app status
-			switch (appInfo.getStatus())
+			AppState state = appInfo.getStatus();
+			switch (state)
 			{
 			case ONLINE:
-			case FAILED:
 				// Don't change the state
 				return appInfo;
+
 			case STARTING:
 				// Don't change the state but wait for the server
 				todo = Todo.WAIT;
 				break;
-			case OFFLINE:
-			case STALE:
+
+			case NEW:
+			case FAILED:
 				// Change the state to STARTING and start the server
 				appInfo.setStatus(AppState.STARTING);
 				todo = Todo.START;
 				break;
+
+			default:
+				logger.error("AppManager cannot process AppServer state: " + state);
 			}
 		}
 
@@ -85,27 +88,26 @@ public class AppManager implements DeploymentListener
 			// Start the application. Returns true if a continuation is used
 			if (startApp(appInfo))
 				return null;
-			break;
+
 		case WAIT:
 			// Waits until the application is ONLINE. Returns true if a
 			// continuation is used
 			if (processWorker.waitForApplication(appInfo))
 				return null;
-			break;
 		}
-
+		
 		return appInfo;
 	}
 
 	@Override
 	public void deployApp(String appId)
 	{
-		logger.info("App deployed - killing all AppServer instances of AppId: " + appId);
+		logger.info("App deployed - changing state for AppId: " + appId);
 
 		// Geht the AppInfo for this application
 		AppInfo appInfo = registry.getAppInfo(appId);
 		if (appInfo != null)
-			appInfo.setStatus(AppState.KILLED);
+			appInfo.setStatus(AppState.DEPLOYED);
 	}
 
 	public void staleApp(String appId)
@@ -117,7 +119,7 @@ public class AppManager implements DeploymentListener
 			return;
 
 		// Update the state
-		appInfo.setStatus(AppState.STALE);
+		appInfo.setStatus(AppState.KILLED);
 	}
 
 	private boolean startApp(AppInfo appInfo)
@@ -137,7 +139,7 @@ public class AppManager implements DeploymentListener
 	private void cleanup()
 	{
 		// Find and kill dead AppServers
-		Set<AppInfo> dead = registry.findDeadApps();
+		Set<AppInfo> dead = registry.kill();
 
 		// If no dead AppServers findDeadApps() returns null
 		if (dead != null)

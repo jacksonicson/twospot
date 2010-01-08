@@ -89,20 +89,6 @@ public class RequestHandler extends AbstractHandler
 		// Update stats
 		stats.handle(appId);
 
-		// Check the State of the AppInfo
-		switch (appInfo.getStatus())
-		{
-		case FAILED:
-			response.sendError(HttpStatus.NOT_FOUND_404, "Could not start AppServer");
-			baseRequest.setHandled(true);
-			return;
-		case STALE:
-			response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
-					"Could not communicate with the AppServer");
-			baseRequest.setHandled(true);
-			return;
-		}
-
 		// Create a destination URL to forward the request
 		try
 		{

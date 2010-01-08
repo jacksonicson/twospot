@@ -159,7 +159,7 @@ class ProcessWorker implements Runnable
 		processHandler.stop(appInfo.getAppProcess());
 
 		// Update state
-		appInfo.setStatus(AppState.OFFLINE);
+		appInfo.setStatus(AppState.DEAD);
 	}
 
 	private void startProcess(AppInfo appInfo)

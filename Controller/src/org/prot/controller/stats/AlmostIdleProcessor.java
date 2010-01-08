@@ -53,7 +53,7 @@ public class AlmostIdleProcessor implements BalancingProcessor
 
 					// Everythin is ok - this Controller is not the last one
 					// serving the AppServer
-					appInfo.setStatus(AppState.KILLED);
+					appInfo.setStatus(AppState.BANNED);
 				}
 			}
 		}
