@@ -22,22 +22,32 @@ public class Reconnect implements Job
 			case ASSOCIATING:
 			case CONNECTING:
 			case CONNECTED:
-				logger.debug("Already connected");
 				return true;
+
+			case AUTH_FAILED:
+				logger.error("Could not authenticate with ZooKeeper");
+				System.exit(1);
+				return true;
+
+			case CLOSED:
+				break;
 			}
 		}
 
-		logger.info("Reconnecting with ZooKeeper");
+		logger.info("Connecting with ZooKeeper...");
 		try
 		{
+			// Execute the connect method in the ZooHelper
 			zooHelper.connect();
+
+			// Check the ZooKeeper state
 			boolean state = zooHelper.getZooKeeper().getState() == States.CONNECTED;
-			logger.info("ZooKeeper connection state: " + state);
+
+			// If state is CONNECTED this job is done
 			return state;
 
 		} catch (IOException e)
 		{
-			logger.error("IOException", e);
 			return false;
 		}
 	}

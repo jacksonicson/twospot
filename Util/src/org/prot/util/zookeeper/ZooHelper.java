@@ -39,41 +39,51 @@ public class ZooHelper implements Watcher
 
 	public void setup()
 	{
+		// Prevent queue from accepting further connection jobs
+		queue.finishSetup();
+
+		// Process all connection jobs
 		queue.connectionProcess(null);
 	}
 
-	final public JobQueue getQueue()
+	public final JobQueue getQueue()
 	{
 		return queue;
 	}
 
-	final public void connect() throws InterruptedException, IOException
+	public final void connect() throws InterruptedException, IOException
 	{
+		// Check if there is already an instance of ZooKeeper
 		if (zooKeeper != null)
 		{
+			// Check the state of the ZooKeeper instance
 			if (zooKeeper.getState() == States.CONNECTED)
-				return;
-			else
 			{
+				// Everythin is ok
+				return;
+			} else
+			{
+				// We need to reconnect with ZooKeeper
 				zooKeeper.close();
 				zooKeeper = null;
 			}
 		}
 
+		// Create a new ZooKeeper instance
 		zooKeeper = new ZooKeeper(host + ":" + port, SESSION_TIMEOUT, this);
 
-		// Wait while ZooKeeper tries to connect
+		// Wait while ZooKeeper is CONNECTING
 		while (zooKeeper.getState() == States.CONNECTING)
 		{
-			logger.debug("Waiting for ZooKeeper");
-			Thread.sleep(500);
+			logger.debug("ZooKeeper is connecting...");
+			Thread.sleep(1000);
 		}
 
 		// Log the current connection state
 		logger.info("ZooKeeper connection state: " + zooKeeper.getState());
 	}
 
-	final public List<ACL> getACL()
+	public final List<ACL> getACL()
 	{
 		List<ACL> acl = new ArrayList<ACL>();
 
@@ -86,7 +96,7 @@ public class ZooHelper implements Watcher
 		return acl;
 	}
 
-	final public ZooKeeper getZooKeeper()
+	public final ZooKeeper getZooKeeper()
 	{
 		return zooKeeper;
 	}

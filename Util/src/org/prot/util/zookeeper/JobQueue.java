@@ -16,6 +16,8 @@ public class JobQueue
 
 	private final ZooHelper zooHelper;
 
+	private boolean setup = true;
+
 	private List<Job> connectionJobs = new ArrayList<Job>();
 
 	private List<Job> jobQueue = new ArrayList<Job>();
@@ -59,7 +61,13 @@ public class JobQueue
 	 */
 	public void insertConnectionJob(Job job)
 	{
+		assert (setup == false);
 		connectionJobs.add(job);
+	}
+
+	void finishSetup()
+	{
+		setup = false;
 	}
 
 	/**
