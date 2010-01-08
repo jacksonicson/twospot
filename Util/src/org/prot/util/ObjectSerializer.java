@@ -15,8 +15,11 @@ public class ObjectSerializer
 
 	public Object deserialize(byte[] input)
 	{
-		if (input == null)
+		if (input == null || input.length == 0)
+		{
+			logger.warn("Cannot deserialize - no data available");
 			return null;
+		}
 
 		ByteArrayInputStream byteIn = new ByteArrayInputStream(input);
 		try
@@ -26,10 +29,10 @@ public class ObjectSerializer
 			return object;
 		} catch (IOException e)
 		{
-			logger.error(e);
+			logger.error("IOException", e);
 		} catch (ClassNotFoundException e)
 		{
-			logger.error(e);
+			logger.error("ClassNotFoundException", e);
 		}
 
 		return null;
@@ -46,7 +49,7 @@ public class ObjectSerializer
 			return byteOut.toByteArray();
 		} catch (IOException e)
 		{
-			logger.error(e);
+			logger.error("IOException", e);
 		}
 
 		return null;

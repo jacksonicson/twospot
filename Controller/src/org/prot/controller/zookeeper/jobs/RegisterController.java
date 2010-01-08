@@ -7,6 +7,8 @@ import java.net.SocketException;
 import org.apache.log4j.Logger;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
 import org.prot.controller.config.Configuration;
 import org.prot.util.ObjectSerializer;
@@ -16,11 +18,15 @@ import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
 import org.prot.util.zookeeper.data.ControllerEntry;
 
-public class RegisterController implements Job
+public class RegisterController implements Job, Watcher
 {
 	private static final Logger logger = Logger.getLogger(RegisterController.class);
 
 	private String networkInterface;
+
+	private ZooHelper zooHelper;
+
+	private String controllerPath = null;
 
 	public RegisterController(String networkInterface)
 	{
@@ -43,10 +49,25 @@ public class RegisterController implements Job
 	}
 
 	@Override
+	public void process(WatchedEvent event)
+	{
+		switch (event.getType())
+		{
+		case NodeDeleted:
+		case None:
+			zooHelper.getQueue().insert(this);
+			return;
+		}
+	}
+
+	@Override
 	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
 		ZooKeeper zk = zooHelper.getZooKeeper();
-		String controllerPath = ZNodes.ZNODE_CONTROLLER + "/" + Configuration.getConfiguration().getUID();
+
+		// Create a controller path if necessary
+		if (controllerPath == null)
+			controllerPath = ZNodes.ZNODE_CONTROLLER + "/" + Configuration.getConfiguration().getUID();
 
 		// Create a new ControllerEntry object which serialized version is saved
 		// to the ZooKeeper
@@ -59,26 +80,29 @@ public class RegisterController implements Job
 		ObjectSerializer serializer = new ObjectSerializer();
 		byte[] entryData = serializer.serialize(entry);
 
-		// Check if the ZooKeeper-Node for the Controller already exists
-		if (zk.exists(controllerPath, false) != null)
-		{
-			logger.warn("Could not register within ZooKeeper - already exists: " + controllerPath);
-			return false;
-		}
-
+		// Try creating a new node
 		try
 		{
+			// Created node
 			String createdPath = zk.create(controllerPath, entryData, zooHelper.getACL(),
 					CreateMode.EPHEMERAL);
+
 			logger.info("Controller ZooKeeper-Path: " + createdPath);
-
-			return true;
-
 		} catch (KeeperException e)
 		{
-			logger.error("Could not register within ZooKeeper: " + controllerPath, e);
-			return false;
+			switch (e.code())
+			{
+			case NODEEXISTS:
+				break;
+			default:
+				logger.error("KeeperException", e);
+				return false;
+			}
 		}
+
+		// Watch the node for changes
+		zk.exists(controllerPath, this);
+		return true;
 	}
 
 	@Override

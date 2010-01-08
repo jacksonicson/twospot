@@ -13,11 +13,25 @@ public class ManagementService
 	// ZooKeeper helper
 	private ZooHelper zooHelper;
 
-	// list with ZooKeeper-Jobsd
+	// List of connection jobs
+	private List<Job> connectionJobs;
+
+	// List of jobs
 	private List<Job> jobs;
 
 	public void init()
 	{
+		// Connection jobs
+		for (Job job : connectionJobs)
+		{
+			logger.debug("Adding connection job: " + job.getClass());
+			zooHelper.getQueue().insertConnectionJob(job);
+		}
+
+		// Setup
+		zooHelper.setup();
+
+		// Other jobs
 		for (Job job : jobs)
 			zooHelper.getQueue().insert(job);
 	}
@@ -30,5 +44,10 @@ public class ManagementService
 	public void setJobs(List<Job> jobs)
 	{
 		this.jobs = jobs;
+	}
+
+	public void setConnectionJobs(List<Job> jobs)
+	{
+		this.connectionJobs = jobs;
 	}
 }

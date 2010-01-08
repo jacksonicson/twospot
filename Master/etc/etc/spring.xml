@@ -26,7 +26,7 @@
 		init-method="init">
 		<property name="zooHelper" ref="ZooHelper" />
 
-		<property name="jobs">
+		<property name="connectionJobs">
 			<list>
 				<bean class="org.prot.manager.zookeeper.jobs.RegisterMaster"
 					init-method="init">
@@ -34,6 +34,10 @@
 						value="${zk.master.networkInterface}" />
 					<constructor-arg index="1" value="${rmi.registry.port}" />
 				</bean>
+			</list>
+		</property>
+		<property name="jobs">
+			<list>
 				<ref bean="LookupControllers" />
 			</list>
 		</property>

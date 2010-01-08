@@ -6,32 +6,83 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.WatchedEvent;
 import org.prot.util.zookeeper.jobs.CreateZNodeStructure;
 import org.prot.util.zookeeper.jobs.Reconnect;
 
-public class JobQueue implements Runnable
+public class JobQueue
 {
 	private static final Logger logger = Logger.getLogger(JobQueue.class);
 
-	private ZooHelper zooHelper;
+	private final ZooHelper zooHelper;
+
+	private List<Job> connectionJobs = new ArrayList<Job>();
 
 	private List<Job> jobQueue = new ArrayList<Job>();
 
-	public JobQueue(ZooHelper zooHelper)
+	JobQueue(ZooHelper zooHelper)
 	{
+		// ZooHelper reference
 		this.zooHelper = zooHelper;
 
-		insert(new CreateZNodeStructure());
+		// Add default connections jobs
+		connectionJobs.add(new Reconnect());
+
+		// Add default jobs
+		jobQueue.add(new CreateZNodeStructure());
 	}
 
+	/**
+	 * Processes all connection jobs
+	 * 
+	 * @param event
+	 *            may be null
+	 */
+	void connectionProcess(WatchedEvent event)
+	{
+		synchronized (jobQueue)
+		{
+			// Add all connections jobs at the beginning of the job queue
+			for (int i = 0; i < connectionJobs.size(); i++)
+				jobQueue.add(i, connectionJobs.get(i));
+		}
+
+		// Run the job queue
+		run();
+	}
+
+	/**
+	 * Adds a new connection job. Each connection job is executed if the
+	 * ZooKeeper connection watcher is called.
+	 * 
+	 * @param job
+	 */
+	public void insertConnectionJob(Job job)
+	{
+		connectionJobs.add(job);
+	}
+
+	/**
+	 * Insert a new job and execute it. The method call blocks until the job ad
+	 * all required jobs have been processed
+	 * 
+	 * @param job
+	 * @return
+	 */
 	public boolean insertAndWait(Job job)
 	{
-		// Cannot retry blocking jobs
+		// Jobs must not be retryable
 		assert (job.isRetryable() == false);
 
+		// Execute a job without a queue
 		return execute(job, false);
 	}
 
+	/**
+	 * Insert a new job into the queue.
+	 * 
+	 * @param job
+	 */
 	public void insert(Job job)
 	{
 		synchronized (jobQueue)
@@ -40,6 +91,7 @@ public class JobQueue implements Runnable
 			jobQueue.notify();
 		}
 
+		// Run the job queue
 		run();
 	}
 
@@ -47,63 +99,63 @@ public class JobQueue implements Runnable
 	{
 		synchronized (jobQueue)
 		{
+			// Check inde of the job
 			int index = jobQueue.indexOf(target);
+
+			// Decrement the index
 			index--;
+
+			// Index must not be negative
 			if (index < 0)
 				index = 0;
 
+			// Insert the required job before the target job
 			jobQueue.add(index, toInsert);
 			jobQueue.notify();
 		}
 
+		// Run the job queue
 		run();
 	}
 
-	private void reconnect()
-	{
-		Reconnect reconnect = new Reconnect();
-		jobQueue.add(0, reconnect);
-	}
+	private Boolean isRunning = false;
 
 	public void run()
 	{
-		// while (true)
+		synchronized (isRunning)
 		{
+			isRunning = true;
 
-			Job todo = null;
-
-			synchronized (jobQueue)
+			while (!jobQueue.isEmpty())
 			{
-				// while (jobQueue.isEmpty())
-				// {
-				// try
-				// {
-				// jobQueue.wait();
-				// } catch (InterruptedException e)
-				// {
-				// logger.error("ZooKeeper JobQueue failed", e);
-				// System.exit(1);
-				// }
-				// }
-
-				todo = jobQueue.get(0);
-			}
-
-			boolean deleteJob = execute(todo, true);
-
-			if (deleteJob)
-			{
+				Job todo = null;
 				synchronized (jobQueue)
 				{
-					jobQueue.remove(todo);
+					if (jobQueue.isEmpty())
+						return;
+
+					todo = jobQueue.get(0);
 				}
+
+				boolean deleteJob = execute(todo, true);
+
+				if (deleteJob)
+				{
+					synchronized (jobQueue)
+					{
+						jobQueue.remove(todo);
+					}
+				}
+
 			}
+
+			isRunning = false;
 		}
 	}
 
-	private boolean execute(Job job, boolean queued)
+	private synchronized boolean execute(Job job, boolean queued)
 	{
-		logger.info("processing job");
+		logger.info("processing job: " + job.getClass().getName());
 
 		// Setup the job
 		job.init(zooHelper);
@@ -117,22 +169,17 @@ public class JobQueue implements Runnable
 
 		} catch (KeeperException e)
 		{
-			// Handle ZooKeeper errors
-			switch (e.code())
-			{
-			case CONNECTIONLOSS:
-			case SESSIONEXPIRED:
-			case SESSIONMOVED:
-				reconnect();
-				break;
-			}
-
+			logger.error("Keeper exception: ", e);
 		} catch (InterruptedException e)
 		{
-			e.printStackTrace();
+			logger.error("InterruptedException", e);
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			logger.error("IOException", e);
+		} catch (Exception e)
+		{
+			logger.error("Exception", e);
+			System.exit(1);
 		}
 
 		// If the job is executed without the queue
@@ -141,7 +188,10 @@ public class JobQueue implements Runnable
 
 		// Check if job is retryable
 		if (jobState == false && job.isRetryable() == false)
+		{
 			jobState = true;
+			logger.debug("ZooKeeper job failed and is not retryable: " + job.getClass().getName());
+		}
 
 		// Return the jobState
 		return jobState;

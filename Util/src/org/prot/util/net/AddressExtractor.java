@@ -19,7 +19,8 @@ public final class AddressExtractor
 		for (NetworkInterface networkInterface = interfaces.nextElement(); interfaces.hasMoreElements(); networkInterface = interfaces
 				.nextElement())
 		{
-			logger.info("Interface: " + networkInterface.getName() + " = " + networkInterface.getDisplayName());
+			logger.trace("Interface: " + networkInterface.getName() + " = "
+					+ networkInterface.getDisplayName());
 		}
 
 		NetworkInterface netInterface = NetworkInterface.getByName(ifName);
@@ -28,12 +29,13 @@ public final class AddressExtractor
 		for (InterfaceAddress address : addresses)
 		{
 			InetAddress inetAddress = address.getAddress();
-			
-			logger.debug("address: " + inetAddress.getHostAddress() + " length: " + inetAddress.getAddress().length);
-			
-			if(ipv6 && inetAddress.getAddress().length == 16)
+
+			logger.trace("address: " + inetAddress.getHostAddress() + " length: "
+					+ inetAddress.getAddress().length);
+
+			if (ipv6 && inetAddress.getAddress().length == 16)
 				return inetAddress;
-			else if(!ipv6 && inetAddress.getAddress().length == 4)
+			else if (!ipv6 && inetAddress.getAddress().length == 4)
 				return inetAddress;
 		}
 

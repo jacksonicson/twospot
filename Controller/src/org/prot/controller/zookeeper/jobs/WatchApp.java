@@ -64,23 +64,19 @@ public class WatchApp implements Job, Watcher
 	@Override
 	public void process(WatchedEvent event)
 	{
-		if (event.getType() == EventType.None)
-		{
-			zooHelper.getQueue().insert(this);
-			return;
-		}
-
 		try
 		{
-			ZooKeeper zk = zooHelper.getZooKeeper();
+			// Check the event type
+			if (event.getType() == EventType.None)
+				return;
 
-			// Geht the path to the node which data has changed
+			// Check the path
 			final String path = event.getPath();
-
-			// If there is no path - do nothing
 			if (path == null)
 				return;
-			logger.debug("App event on path: " + path);
+
+			// Connection to zookeeper
+			ZooKeeper zk = zooHelper.getZooKeeper();
 
 			// Extract the AppEntry object
 			Stat stat = new Stat();
@@ -96,9 +92,6 @@ public class WatchApp implements Job, Watcher
 		} catch (InterruptedException e)
 		{
 			logger.error("InterruptedException", e);
-		} catch (IOException e)
-		{
-			logger.error("IOException", e);
 		} catch (KeeperException e)
 		{
 			logger.error("KeeperError", e);
@@ -133,7 +126,7 @@ public class WatchApp implements Job, Watcher
 					return false;
 				}
 
-				// Check if we are watching this node
+				// We are watching this node
 				stat = zk.exists(watchPath, this);
 			}
 

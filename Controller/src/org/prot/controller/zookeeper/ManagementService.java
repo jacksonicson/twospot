@@ -20,7 +20,9 @@ public class ManagementService
 
 	public void init()
 	{
-		zooHelper.getQueue().insert(new RegisterController(networkInterface));
+		zooHelper.getQueue().insertConnectionJob(new RegisterController(networkInterface));
+		zooHelper.setup();
+
 		zooHelper.getQueue().insert(watchApp);
 	}
 

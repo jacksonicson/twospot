@@ -29,9 +29,9 @@ public class StopApp implements Job
 
 		String appNode = ZNodes.ZNODE_APPS + "/" + appId;
 		String instanceNode = appNode + "/" + Configuration.getConfiguration().getUID();
+
 		try
 		{
-			// Check if the instance node exists
 			Stat stat = zk.exists(instanceNode, false);
 			if (stat != null)
 			{
@@ -45,11 +45,17 @@ public class StopApp implements Job
 
 		} catch (KeeperException e)
 		{
-			logger.error(e);
-			
-			// Retry
-			return false;
+			switch (e.code())
+			{
+			case NONODE:
+				break;
+			default:
+				logger.error("KeeperException", e);
+				return false;
+			}
 		}
+		
+		return true;
 	}
 
 	@Override

@@ -56,9 +56,7 @@ public class ProxyHandler extends AbstractHandler
 			{
 				logger.error("Error while processing the request", e);
 
-				response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
 				response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500);
-
 				baseRequest.setHandled(true);
 				return;
 			}

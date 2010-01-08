@@ -30,6 +30,8 @@ public class DeployApp implements Job
 		{
 			// Check if a path for the AppId exists
 			Stat stat = zk.exists(appPath, false);
+
+			// Path does not exist
 			if (stat == null)
 			{
 				// First we need to register the ZooKeeper-Node for the AppId

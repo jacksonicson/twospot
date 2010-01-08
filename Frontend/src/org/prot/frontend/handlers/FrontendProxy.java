@@ -36,8 +36,8 @@ public class FrontendProxy extends HttpProxyHelper<RequestState> implements Runn
 
 	private void startWorker()
 	{
-		if (!running)
-			running = threadPool.dispatch(this);
+		// if (!running)
+		// running = threadPool.dispatch(this);
 	}
 
 	private void schedule(RequestState state)
@@ -152,7 +152,7 @@ public class FrontendProxy extends HttpProxyHelper<RequestState> implements Runn
 					"Connection with the Controller timed out");
 		} catch (IOException e)
 		{
-			// Do nothing
+			// Do nothing - happens if the client closed the connection
 		}
 	}
 
@@ -165,12 +165,14 @@ public class FrontendProxy extends HttpProxyHelper<RequestState> implements Runn
 			{
 				state.getResponse().sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
 						"Frontend could not communicate with the Controller");
+				return true;
 			} catch (IOException e1)
 			{
 				return false;
 			}
-
-			return true;
+		} else
+		{
+			logger.warn("Proxy error", e);
 		}
 
 		return false;

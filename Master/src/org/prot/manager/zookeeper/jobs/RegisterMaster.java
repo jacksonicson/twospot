@@ -7,6 +7,8 @@ import java.net.SocketException;
 import org.apache.log4j.Logger;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 import org.prot.util.net.AddressExtractor;
@@ -14,9 +16,11 @@ import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
 
-public class RegisterMaster implements Job
+public class RegisterMaster implements Job, Watcher
 {
 	private static final Logger logger = Logger.getLogger(RegisterMaster.class);
+
+	private ZooHelper zooHelper;
 
 	// Manager communication details
 	private String networkInterface;
@@ -43,6 +47,17 @@ public class RegisterMaster implements Job
 	}
 
 	@Override
+	public void process(WatchedEvent event)
+	{
+		switch (event.getType())
+		{
+		case NodeDeleted:
+		case None:
+			zooHelper.getQueue().insert(this);
+		}
+	}
+
+	@Override
 	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
 		logger.debug("Registering this master with the ZooKeeper");
@@ -60,12 +75,12 @@ public class RegisterMaster implements Job
 			return true;
 		} else
 		{
-			logger.error("ZooKeeper already contains a ZNode: " + ZNodes.ZNODE_MASTER
+			logger.warn("ZooKeeper already contains a ZNode: " + ZNodes.ZNODE_MASTER
 					+ ". Multimaster is not supported");
-			System.exit(1);
-		}
 
-		return false;
+			statMaster = zk.exists(ZNodes.ZNODE_MASTER, true);
+			return true;
+		}
 	}
 
 	@Override
@@ -77,5 +92,6 @@ public class RegisterMaster implements Job
 	@Override
 	public void init(ZooHelper zooHelper)
 	{
+		this.zooHelper = zooHelper;
 	}
 }

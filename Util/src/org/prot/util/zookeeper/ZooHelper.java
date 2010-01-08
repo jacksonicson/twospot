@@ -16,18 +16,16 @@ public class ZooHelper implements Watcher
 {
 	private static final Logger logger = Logger.getLogger(ZooHelper.class);
 
-	private static final int SESSION_TIMEOUT = 3000;
+	private static final int SESSION_TIMEOUT = 4000;
 
-	// ZooKeeper host
+	// ZooKeeper host and port
 	private String host;
-
-	// ZooKeeper port
 	private int port;
 
-	// Connection with the ZooKeeper
+	// ZooKeeper connection
 	private ZooKeeper zooKeeper;
 
-	// Job-Queue which is used to communicate with the ZoopKeeper
+	// Job queue which manages the execution of all ZooKeeper jobs
 	private JobQueue queue;
 
 	public ZooHelper(String host, int port)
@@ -35,7 +33,13 @@ public class ZooHelper implements Watcher
 		this.host = host;
 		this.port = port;
 
+		// Create a new job queue
 		queue = new JobQueue(this);
+	}
+
+	public void setup()
+	{
+		queue.connectionProcess(null);
 	}
 
 	final public JobQueue getQueue()
@@ -57,6 +61,16 @@ public class ZooHelper implements Watcher
 		}
 
 		zooKeeper = new ZooKeeper(host + ":" + port, SESSION_TIMEOUT, this);
+
+		// Wait while ZooKeeper tries to connect
+		while (zooKeeper.getState() == States.CONNECTING)
+		{
+			logger.debug("Waiting for ZooKeeper");
+			Thread.sleep(500);
+		}
+
+		// Log the current connection state
+		logger.info("ZooKeeper connection state: " + zooKeeper.getState());
 	}
 
 	final public List<ACL> getACL()
@@ -72,15 +86,15 @@ public class ZooHelper implements Watcher
 		return acl;
 	}
 
-	final public ZooKeeper getZooKeeper() throws InterruptedException, IOException
+	final public ZooKeeper getZooKeeper()
 	{
-		connect();
 		return zooKeeper;
 	}
 
 	@Override
 	public void process(WatchedEvent event)
 	{
-		// Do nothing
+		logger.debug("ZooKeeper connection event: " + event);
+		queue.connectionProcess(event);
 	}
 }

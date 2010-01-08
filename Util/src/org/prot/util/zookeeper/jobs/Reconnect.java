@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.ZooKeeper.States;
 import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.ZooHelper;
 
@@ -14,22 +15,37 @@ public class Reconnect implements Job
 	@Override
 	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException
 	{
-		try
+		if (zooHelper.getZooKeeper() != null)
 		{
-			logger.info("reconnecting with zookeeper");
-			zooHelper.connect();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
+			switch (zooHelper.getZooKeeper().getState())
+			{
+			case ASSOCIATING:
+			case CONNECTING:
+			case CONNECTED:
+				logger.debug("Already connected");
+				return true;
+			}
 		}
 
-		return true;
+		logger.info("Reconnecting with ZooKeeper");
+		try
+		{
+			zooHelper.connect();
+			boolean state = zooHelper.getZooKeeper().getState() == States.CONNECTED;
+			logger.info("ZooKeeper connection state: " + state);
+			return state;
+
+		} catch (IOException e)
+		{
+			logger.error("IOException", e);
+			return false;
+		}
 	}
 
 	@Override
 	public boolean isRetryable()
 	{
-		return false;
+		return true;
 	}
 
 	@Override

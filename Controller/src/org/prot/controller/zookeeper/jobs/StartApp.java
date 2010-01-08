@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
-import org.apache.zookeeper.data.Stat;
 import org.prot.controller.config.Configuration;
 import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.ZNodes;
@@ -32,35 +31,21 @@ public class StartApp implements Job
 
 		try
 		{
-			// Check if the path for the insatance node already exists
-			Stat stat = zk.exists(instancePath, false);
-			if (stat == null)
-			{
-				// The path does not exist - create it (empty node)
-				zk.create(instancePath, new byte[0], zooHelper.getACL(), CreateMode.EPHEMERAL);
-				return true;
-			}
-
-			logger.debug("Could not register instance in ZooKeeper");
-			return false;
-
+			// The path does not exist - create it (empty node)
+			zk.create(instancePath, new byte[0], zooHelper.getACL(), CreateMode.EPHEMERAL);
 		} catch (KeeperException e)
 		{
-			logger.debug(e);
-
 			switch (e.code())
 			{
-			case BADVERSION:
-				// Retry
-				return false;
-			case NONODE:
-				// Retry
+			case NODEEXISTS:
+				break;
+			default:
+				logger.error("KeeperException", e);
 				return false;
 			}
-
-			// Retry
-			return false;
 		}
+
+		return true;
 	}
 
 	@Override
@@ -72,6 +57,6 @@ public class StartApp implements Job
 	@Override
 	public boolean isRetryable()
 	{
-		return true;
+		return false;
 	}
 }

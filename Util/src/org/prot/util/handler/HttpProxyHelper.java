@@ -158,7 +158,10 @@ public class HttpProxyHelper<M>
 		{
 			byteCounter += b.length;
 			if (byteCounter > limit)
+			{
+				logger.warn("Limited input stream");
 				throw new IOException("Limited input stream");
+			}
 
 			return target.read(b, 0, b.length);
 		}
@@ -167,7 +170,10 @@ public class HttpProxyHelper<M>
 		{
 			byteCounter += len;
 			if (byteCounter > limit)
+			{
+				logger.warn("Limited input stream");
 				throw new IOException("Limited input stream");
+			}
 
 			return target.read(b, off, len);
 		}
@@ -177,7 +183,10 @@ public class HttpProxyHelper<M>
 		{
 			byteCounter++;
 			if (byteCounter > limit)
+			{
+				logger.warn("Limited input stream");
 				throw new IOException("Limited input stream");
+			}
 
 			return target.read();
 		}
@@ -348,7 +357,7 @@ public class HttpProxyHelper<M>
 		}
 
 		// Add additional proxy headers
-		exchange.setRequestHeader(HttpHeaders.VIA, "0.0 (prot)");
+		exchange.setRequestHeader(HttpHeaders.VIA, "0.0 (twospot)");
 		if (xForwardedFor == false)
 			exchange.addRequestHeader(HttpHeaders.X_FORWARDED_FOR, request.getRemoteAddr());
 
