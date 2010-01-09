@@ -54,6 +54,7 @@ public class RegisterMaster implements Job, Watcher
 		{
 		case NodeDeleted:
 		case None:
+			logger.debug("ZooKeeper master node has changed");
 			zooHelper.getQueue().insert(this);
 		}
 	}
@@ -69,15 +70,20 @@ public class RegisterMaster implements Job, Watcher
 		if (statMaster == null)
 		{
 			byte[] address = (this.address.getHostAddress() + ":" + port).getBytes();
-			zk.create(ZNodes.ZNODE_MASTER, address, zooHelper.getACL(), CreateMode.EPHEMERAL);
+			
+			// Create node
+			String path = zk.create(ZNodes.ZNODE_MASTER, address, zooHelper.getACL(), CreateMode.EPHEMERAL);
+			
+			// Watch it
 			statMaster = zk.exists(ZNodes.ZNODE_MASTER, this);
-
-			logger.info("Master registered in ZooKeeper");
+			
+			logger.info("Master registered in ZooKeeper: " + path);
 			return JobState.OK;
+			
 		} else
 		{
 			logger.warn("ZooKeeper already contains a ZNode: " + ZNodes.ZNODE_MASTER
-					+ ". Multimaster is not supported");
+					+ ". Multimaster is not supported - Acting as Backup");
 
 			statMaster = zk.exists(ZNodes.ZNODE_MASTER, this);
 			return JobState.OK;
