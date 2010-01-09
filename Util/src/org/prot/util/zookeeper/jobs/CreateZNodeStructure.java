@@ -10,6 +10,7 @@ import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.KeeperException.Code;
 import org.apache.zookeeper.data.ACL;
 import org.prot.util.zookeeper.Job;
+import org.prot.util.zookeeper.JobState;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
 
@@ -18,7 +19,7 @@ public class CreateZNodeStructure implements Job
 	private static final Logger logger = Logger.getLogger(CreateZNodeStructure.class);
 
 	@Override
-	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
+	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
 		ZooKeeper zooKeeper = zooHelper.getZooKeeper();
 		List<ACL> acl = zooHelper.getACL();
@@ -41,7 +42,7 @@ public class CreateZNodeStructure implements Job
 				logger.error("KeeperException", e);
 		}
 
-		return true;
+		return JobState.OK;
 	}
 
 	@Override

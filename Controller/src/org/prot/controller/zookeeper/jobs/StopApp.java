@@ -8,6 +8,7 @@ import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 import org.prot.controller.config.Configuration;
 import org.prot.util.zookeeper.Job;
+import org.prot.util.zookeeper.JobState;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
 
@@ -23,7 +24,7 @@ public class StopApp implements Job
 	}
 
 	@Override
-	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
+	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
 		ZooKeeper zk = zooHelper.getZooKeeper();
 
@@ -37,11 +38,11 @@ public class StopApp implements Job
 			{
 				// Delete the instance node
 				zk.delete(instanceNode, stat.getVersion());
-				return true;
+				return JobState.OK;
 			}
 
 			// Something went wrong - retry
-			return false;
+			return JobState.RETRY_LATER;
 
 		} catch (KeeperException e)
 		{
@@ -49,13 +50,13 @@ public class StopApp implements Job
 			{
 			case NONODE:
 				break;
+				
 			default:
-				logger.error("KeeperException", e);
-				return false;
+				throw e;
 			}
 		}
 		
-		return true;
+		return JobState.OK;
 	}
 
 	@Override

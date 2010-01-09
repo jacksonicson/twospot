@@ -8,7 +8,7 @@ public interface Job
 {
 	public void init(ZooHelper zooHelper);
 	
-	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException;
+	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException;
 	
 	public boolean isRetryable();
 }

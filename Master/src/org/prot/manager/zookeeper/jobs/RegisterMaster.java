@@ -13,6 +13,7 @@ import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 import org.prot.util.net.AddressExtractor;
 import org.prot.util.zookeeper.Job;
+import org.prot.util.zookeeper.JobState;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
 
@@ -58,7 +59,7 @@ public class RegisterMaster implements Job, Watcher
 	}
 
 	@Override
-	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
+	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
 		logger.debug("Registering this master with the ZooKeeper");
 
@@ -72,14 +73,14 @@ public class RegisterMaster implements Job, Watcher
 			statMaster = zk.exists(ZNodes.ZNODE_MASTER, true);
 
 			logger.info("Master registered in ZooKeeper");
-			return true;
+			return JobState.OK;
 		} else
 		{
 			logger.warn("ZooKeeper already contains a ZNode: " + ZNodes.ZNODE_MASTER
 					+ ". Multimaster is not supported");
 
 			statMaster = zk.exists(ZNodes.ZNODE_MASTER, true);
-			return true;
+			return JobState.OK;
 		}
 	}
 

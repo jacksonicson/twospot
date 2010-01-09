@@ -16,6 +16,7 @@ import org.apache.zookeeper.data.Stat;
 import org.prot.controller.zookeeper.DeploymentListener;
 import org.prot.util.ObjectSerializer;
 import org.prot.util.zookeeper.Job;
+import org.prot.util.zookeeper.JobState;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
 import org.prot.util.zookeeper.data.AppEntry;
@@ -109,7 +110,7 @@ public class WatchApp implements Job, Watcher
 			logger.error("InterruptedException", e);
 		} catch (KeeperException e)
 		{
-			logger.error("KeeperError", e);
+			logger.error("KeeperException", e);
 		} finally
 		{
 			// Reschedule this task (install watchers)
@@ -118,7 +119,7 @@ public class WatchApp implements Job, Watcher
 	}
 
 	@Override
-	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
+	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
 		ZooKeeper zk = zooHelper.getZooKeeper();
 
@@ -138,23 +139,22 @@ public class WatchApp implements Job, Watcher
 					zooHelper.getQueue().requires(this, new RegisterApp(watch));
 
 					// Retry
-					return false;
+					return JobState.RETRY;
 				}
 
 				// We are watching this node
 				stat = zk.exists(watchPath, this);
 			}
 
-			return true;
+			return JobState.OK;
 
 		} catch (KeeperException e)
 		{
-			logger.error(e);
-			return false;
+			throw e;
 		} catch (InterruptedException e)
 		{
 			logger.error(e);
-			return false;
+			return JobState.RETRY_LATER;
 		}
 	}
 

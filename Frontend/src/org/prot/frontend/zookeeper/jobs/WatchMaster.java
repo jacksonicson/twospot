@@ -10,6 +10,7 @@ import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 import org.prot.frontend.config.Configuration;
 import org.prot.util.zookeeper.Job;
+import org.prot.util.zookeeper.JobState;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
 
@@ -27,7 +28,7 @@ public class WatchMaster implements Watcher, Job
 	}
 
 	@Override
-	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
+	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
 		ZooKeeper zk = zooHelper.getZooKeeper();
 
@@ -50,7 +51,7 @@ public class WatchMaster implements Watcher, Job
 		// Install a watcher
 		zk.exists(ZNodes.ZNODE_MASTER, this);
 		
-		return true;
+		return JobState.OK;
 	}
 
 	@Override

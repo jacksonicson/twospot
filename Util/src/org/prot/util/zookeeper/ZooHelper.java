@@ -42,45 +42,83 @@ public class ZooHelper implements Watcher
 		// Prevent queue from accepting further connection jobs
 		queue.finishSetup();
 
-		// Process all connection jobs
-		queue.connectionProcess(null);
+		// Connect
+		reconnect();
 	}
 
-	public final JobQueue getQueue()
+	@Override
+	public void process(WatchedEvent event)
 	{
-		return queue;
-	}
-
-	public final void connect() throws InterruptedException, IOException
-	{
-		// Check if there is already an instance of ZooKeeper
-		if (zooKeeper != null)
+		logger.info("ZooKeeper event");
+		switch (event.getState())
 		{
-			// Check the state of the ZooKeeper instance
-			if (zooKeeper.getState() == States.CONNECTED)
+		case Expired:
+			logger.info("ZooKeeper session expired");
+			break;
+		case Disconnected:
+			logger.info("ZooKeeper disconnected");
+			break;
+		default:
+			logger.debug("Unhandled ZooKeeper event");
+			return;
+		}
+
+		reconnect();
+	}
+
+	final void reconnect()
+	{
+		zooKeeper = null;
+		connect();
+		queue.reconnected();
+		queue.proceed();
+	}
+
+	public boolean isConnected()
+	{
+		if(zooKeeper == null)
+			return false; 
+		
+		return zooKeeper.getState() == States.CONNECTED; 
+	}
+	
+	private final void connect()
+	{
+		try
+		{
+			while (zooKeeper == null)
 			{
-				// Everythin is ok
-				return;
-			} else
-			{
-				// We need to reconnect with ZooKeeper
-				zooKeeper.close();
-				zooKeeper = null;
+				logger.debug("ZooKeeper is connecting...");
+
+				// Create a new ZooKeeper instance
+				ZooKeeper connection = new ZooKeeper(host + ":" + port, SESSION_TIMEOUT, this);
+
+				// Wait while ZooKeeper is CONNECTING
+				while (connection.getState() == States.CONNECTING)
+				{
+					logger.debug("ZooKeeper is waiting for connection ...");
+					Thread.sleep(1000);
+				}
+
+				// Check if it is connected
+				if (connection.getState() == States.CONNECTED)
+				{
+					zooKeeper = connection;
+				} else
+				{
+					logger.warn("Could not connect with ZooKeeper...");
+					Thread.sleep(3000);
+				}
 			}
-		}
-
-		// Create a new ZooKeeper instance
-		zooKeeper = new ZooKeeper(host + ":" + port, SESSION_TIMEOUT, this);
-
-		// Wait while ZooKeeper is CONNECTING
-		while (zooKeeper.getState() == States.CONNECTING)
+		} catch (InterruptedException e)
 		{
-			logger.debug("ZooKeeper is connecting...");
-			Thread.sleep(1000);
+			logger.error("InterruptedException", e);
+			System.exit(1);
+		} catch (IOException e)
+		{
+			logger.error("IOException", e);
+			System.exit(1);
 		}
-
-		// Log the current connection state
-		logger.info("ZooKeeper connection state: " + zooKeeper.getState());
 	}
 
 	public final List<ACL> getACL()
@@ -96,15 +134,13 @@ public class ZooHelper implements Watcher
 		return acl;
 	}
 
+	public final JobQueue getQueue()
+	{
+		return queue;
+	}
+
 	public final ZooKeeper getZooKeeper()
 	{
 		return zooKeeper;
-	}
-
-	@Override
-	public void process(WatchedEvent event)
-	{
-		logger.debug("ZooKeeper connection event: " + event);
-		queue.connectionProcess(event);
 	}
 }

@@ -8,6 +8,7 @@ import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 import org.prot.controller.config.Configuration;
 import org.prot.util.zookeeper.Job;
+import org.prot.util.zookeeper.JobState;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
 
@@ -23,7 +24,7 @@ public class StartApp implements Job
 	}
 
 	@Override
-	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
+	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
 		ZooKeeper zk = zooHelper.getZooKeeper();
 		String instancePath = ZNodes.ZNODE_APPS + "/" + appId + "/"
@@ -40,12 +41,11 @@ public class StartApp implements Job
 			case NODEEXISTS:
 				break;
 			default:
-				logger.error("KeeperException", e);
-				return false;
+				throw e;
 			}
 		}
 
-		return true;
+		return JobState.OK;
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import org.prot.manager.stats.ControllerInfo;
 import org.prot.manager.stats.ControllerRegistry;
 import org.prot.util.ObjectSerializer;
 import org.prot.util.zookeeper.Job;
+import org.prot.util.zookeeper.JobState;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
 import org.prot.util.zookeeper.data.ControllerEntry;
@@ -34,10 +35,16 @@ public class LookupControllers implements Job, Watcher
 	}
 
 	@Override
-	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
+	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
 		// ZooKeeper connection
 		ZooKeeper zk = zooHelper.getZooKeeper();
+
+		if (zk == null || zk.getState() != ZooKeeper.States.CONNECTED)
+		{
+			registry.update(new ArrayList<ControllerInfo>());
+			return JobState.RETRY_LATER;
+		}
 
 		// List the controllers directory in ZooKeeper
 		logger.debug("Searching Controllers in: " + ZNodes.ZNODE_CONTROLLER);
@@ -55,7 +62,7 @@ public class LookupControllers implements Job, Watcher
 
 			ObjectSerializer serializer = new ObjectSerializer();
 			ControllerEntry controller = (ControllerEntry) serializer.deserialize(data);
-			
+
 			ControllerInfo info = new ControllerInfo();
 			info.setAddress(controller.address);
 			info.setServiceAddress(controller.serviceAddress);
@@ -66,7 +73,7 @@ public class LookupControllers implements Job, Watcher
 		logger.debug("Updating ControllerRegistry with " + infos.size() + " Controllers");
 		registry.update(infos);
 
-		return true;
+		return JobState.OK;
 	}
 
 	@Override

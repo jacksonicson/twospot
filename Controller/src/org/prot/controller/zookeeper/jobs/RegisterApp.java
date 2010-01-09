@@ -8,6 +8,7 @@ import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 import org.prot.util.ObjectSerializer;
 import org.prot.util.zookeeper.Job;
+import org.prot.util.zookeeper.JobState;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
 import org.prot.util.zookeeper.data.AppEntry;
@@ -24,13 +25,15 @@ public class RegisterApp implements Job
 	}
 
 	@Override
-	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
+	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
+		if (!zooHelper.isConnected())
+			return JobState.FAILED;
+
 		ZooKeeper zk = zooHelper.getZooKeeper();
 		String appPath = ZNodes.ZNODE_APPS + "/" + appId;
 
-		// Create a new AppEntry object which serialized version is saved to the
-		// ZooKeeper
+		// Create a new entry
 		AppEntry entry = new AppEntry(appId);
 		ObjectSerializer serializer = new ObjectSerializer();
 		byte[] entryData = serializer.serialize(entry);
@@ -38,23 +41,24 @@ public class RegisterApp implements Job
 		try
 		{
 			// Persist the AppEntry
-			String createdPath = zk.create(appPath, entryData, zooHelper.getACL(), CreateMode.PERSISTENT);
-			logger.info("Application written to ZooKeeper: " + createdPath);
-			return true;
+			zk.create(appPath, entryData, zooHelper.getACL(), CreateMode.PERSISTENT);
+			return JobState.OK;
+
 		} catch (KeeperException e)
 		{
 			switch (e.code())
 			{
 			case NODEEXISTS:
 				break;
+
 			default:
-				return false;
+				throw e;
 			}
 		}
-		
-		// Update the nodes data
+
+		// Update node data
 		zk.setData(appPath, entryData, -1);
-		return true;
+		return JobState.OK;
 	}
 
 	@Override

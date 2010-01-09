@@ -7,6 +7,7 @@ import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 import org.prot.util.zookeeper.Job;
+import org.prot.util.zookeeper.JobState;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
 
@@ -22,10 +23,14 @@ public class DeployApp implements Job
 	}
 
 	@Override
-	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
+	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
+		if (!zooHelper.isConnected())
+			return JobState.RETRY_LATER;
+
 		ZooKeeper zk = zooHelper.getZooKeeper();
 		String appPath = ZNodes.ZNODE_APPS + "/" + appId;
+
 		try
 		{
 			// Check if a path for the AppId exists
@@ -38,40 +43,33 @@ public class DeployApp implements Job
 				zooHelper.getQueue().requires(this, new RegisterApp(appId));
 
 				// We are not done with this task
-				return false;
+				return JobState.RETRY;
 			}
 
 			// Read the current node data
 			byte[] data = zk.getData(appPath, false, stat);
 
 			// Update the data of the node
-			zk.setData(appPath, data, stat.getVersion());
+			zk.setData(appPath, data, -1);
 
 			// Node data has been saved
-			return true;
+			return JobState.OK;
 
 		} catch (KeeperException e)
 		{
-			logger.error("KeeperError", e);
-
-			// Retry
-			return false;
-
+			throw e;
 		} catch (InterruptedException e)
 		{
 			logger.error(e);
-
-			// Retry
-			return false;
+			return JobState.FAILED;
 
 		} catch (IllegalArgumentException e)
 		{
 			logger.fatal(e);
 			logger.fatal("Shutting down...");
 			System.exit(1);
+			return JobState.FAILED;
 		}
-
-		return false;
 	}
 
 	@Override

@@ -7,18 +7,17 @@ import java.net.SocketException;
 import org.apache.log4j.Logger;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
-import org.apache.zookeeper.WatchedEvent;
-import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
 import org.prot.controller.config.Configuration;
 import org.prot.util.ObjectSerializer;
 import org.prot.util.net.AddressExtractor;
 import org.prot.util.zookeeper.Job;
+import org.prot.util.zookeeper.JobState;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
 import org.prot.util.zookeeper.data.ControllerEntry;
 
-public class RegisterController implements Job, Watcher
+public class RegisterController implements Job
 {
 	private static final Logger logger = Logger.getLogger(RegisterController.class);
 
@@ -49,19 +48,7 @@ public class RegisterController implements Job, Watcher
 	}
 
 	@Override
-	public void process(WatchedEvent event)
-	{
-		switch (event.getType())
-		{
-		case NodeDeleted:
-		case None:
-			zooHelper.getQueue().insert(this);
-			return;
-		}
-	}
-
-	@Override
-	public boolean execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
+	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
 		ZooKeeper zk = zooHelper.getZooKeeper();
 
@@ -88,6 +75,7 @@ public class RegisterController implements Job, Watcher
 					CreateMode.EPHEMERAL);
 
 			logger.info("Controller ZooKeeper-Path: " + createdPath);
+
 		} catch (KeeperException e)
 		{
 			switch (e.code())
@@ -95,20 +83,17 @@ public class RegisterController implements Job, Watcher
 			case NODEEXISTS:
 				break;
 			default:
-				logger.error("KeeperException", e);
-				return false;
+				throw e;
 			}
 		}
 
-		// Watch the node for changes
-		zk.exists(controllerPath, this);
-		return true;
+		return JobState.OK;
 	}
 
 	@Override
 	public void init(ZooHelper zooHelper)
 	{
-		// Do nothing
+		this.zooHelper = zooHelper;
 	}
 
 	@Override
