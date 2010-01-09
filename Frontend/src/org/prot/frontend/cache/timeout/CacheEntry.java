@@ -1,8 +1,8 @@
 package org.prot.frontend.cache.timeout;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,15 +22,13 @@ public class CacheEntry
 		this.appId = appId;
 	}
 
-	boolean hasControllers()
+	synchronized boolean hasControllers()
 	{
 		return controllers.size() > 0;
 	}
 
-	void updateControllers(Set<ControllerInfo> infos)
+	synchronized void updateControllers(Set<ControllerInfo> infos)
 	{
-		logger.debug("Updating controllers");
-
 		Set<String> addresses = new HashSet<String>();
 
 		// Add all new Controllers
@@ -48,46 +46,65 @@ public class CacheEntry
 		}
 
 		// Remove all old Controllers
-		for (String test : controllers.keySet().toArray(new String[0]))
+		for (Iterator<String> keyIt = controllers.keySet().iterator(); keyIt.hasNext();)
 		{
+			String test = keyIt.next();
 			if (!addresses.contains(test))
-			{
-				logger.debug("Removing controller");
-				controllers.remove(test);
-			}
+				keyIt.remove();
 		}
 
-		logger.debug("SIZE: " + controllers.keySet().size());
+		logger.debug("Known controllers: " + controllers.keySet().size());
 	}
 
-	void removeStale(String address)
+	synchronized void removeStale(String address)
 	{
-		if (controllers.containsKey(address))
-			controllers.remove(address);
+		controllers.remove(address);
 	}
 
-	void removeOlderThan(long threshold)
+	synchronized void removeOlderThan(long threshold)
 	{
 		long currentTime = System.currentTimeMillis();
-		for (CachedControllerInfo controller : controllers.values().toArray(new CachedControllerInfo[0]))
+		for (Iterator<String> keyIt = controllers.keySet().iterator(); keyIt.hasNext();)
 		{
-			if ((currentTime - controller.getTimestamp()) > threshold)
-				controllers.remove(controller.getAddress());
+			String address = keyIt.next();
+			CachedControllerInfo info = controllers.get(address);
+			if ((currentTime - info.getTimestamp()) > threshold)
+				keyIt.remove();
 		}
 	}
-
-	Random r = new Random();
-	int counter = 0;
 
 	ControllerInfo pickController()
 	{
-		if (controllers.isEmpty())
-			return null;
+		CachedControllerInfo[] infos = null;
+		synchronized (this)
+		{
+			if (controllers.isEmpty())
+				return null;
 
-		ControllerInfo[] infos = controllers.values().toArray(new ControllerInfo[0]);
-		int select = Math.abs(counter++) % infos.length;
+			infos = controllers.values().toArray(new CachedControllerInfo[0]);
+		}
 
+		// int select = Math.abs(counter++) % infos.length;
+		long min = Long.MAX_VALUE;
+		int select = -1;
+		for (int i = 0; i < infos.length; i++)
+		{
+			if (min > infos[i].queue())
+			{
+				min = infos[i].queue();
+				select = i;
+			}
+		}
+
+		infos[select].increment();
 		return infos[select];
+	}
+
+	synchronized void release(String address)
+	{
+		CachedControllerInfo controller = controllers.get(address);
+		if (controller != null)
+			controller.decrement();
 	}
 
 	String getAppId()

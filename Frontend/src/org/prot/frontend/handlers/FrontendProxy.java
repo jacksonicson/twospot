@@ -14,6 +14,7 @@ import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.util.thread.ThreadPool;
 import org.prot.frontend.cache.AppCache;
+import org.prot.frontend.cache.CacheResult;
 import org.prot.manager.stats.ControllerInfo;
 import org.prot.util.handler.HttpProxyHelper;
 
@@ -127,8 +128,8 @@ public class FrontendProxy extends HttpProxyHelper<RequestState> implements Runn
 			HttpServletResponse response) throws Exception
 	{
 		// Check if the cache holds a controller for this app
-		ControllerInfo info = appCache.getController(appId);
-		if (info == null)
+		CacheResult result = appCache.getController(appId);
+		if (result.getControllerInfo() == null)
 		{
 			response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
 					"Manager unreachable or did not return a Controller.");
@@ -137,10 +138,16 @@ public class FrontendProxy extends HttpProxyHelper<RequestState> implements Runn
 		}
 
 		RequestState state = new RequestState(appId, baseRequest, request, response);
-		state.useController(info.getAddress());
+		state.useController(result.getControllerInfo().getAddress());
+		state.setCached(result);
 
-		HttpURI uri = buildUrl(baseRequest, request, info, appId);
+		HttpURI uri = buildUrl(baseRequest, request, result.getControllerInfo(), appId);
 		this.forwardRequest(baseRequest, request, response, uri, state);
+	}
+
+	protected void requestFinished(RequestState state)
+	{
+		appCache.release(state.getCached());
 	}
 
 	@Override

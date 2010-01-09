@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import org.prot.frontend.ExceptionSafeFrontendProxy;
 import org.prot.frontend.cache.AppCache;
+import org.prot.frontend.cache.CacheResult;
 import org.prot.manager.services.FrontendService;
 import org.prot.manager.stats.ControllerInfo;
 import org.prot.util.scheduler.Scheduler;
@@ -45,6 +46,10 @@ public class TimeoutAppCache implements AppCache
 			}
 		}
 
+		// Synchronized to prevent multiple concurrent updates which are
+		// unnecessary. For example there could be 2 threads at this point
+		// and both would communicate with the frontendService. Both calls would
+		// mostly result in equals results and it doesnt have any benefit here!
 		synchronized (entry)
 		{
 			if (entry.hasControllers())
@@ -57,7 +62,7 @@ public class TimeoutAppCache implements AppCache
 	}
 
 	@Override
-	public ControllerInfo getController(String appId)
+	public CacheResult getController(String appId)
 	{
 		CacheEntry entry = cache.get(appId);
 		if (entry == null)
@@ -70,6 +75,8 @@ public class TimeoutAppCache implements AppCache
 		if (info == null)
 		{
 			updateControllers(appId);
+
+			// Maybe the old entry does not exist any more!
 			entry = cache.get(appId);
 			info = entry.pickController();
 		}
@@ -77,7 +84,15 @@ public class TimeoutAppCache implements AppCache
 		if (info == null)
 			logger.warn("Could not find a Controller for: " + appId);
 
-		return info;
+		return new CacheResult(info, appId);
+	}
+
+	@Override
+	public void release(CacheResult result)
+	{
+		CacheEntry entry = cache.get(result.getAppId());
+		if (entry != null)
+			entry.release(result.getControllerInfo().getAddress());
 	}
 
 	@Override

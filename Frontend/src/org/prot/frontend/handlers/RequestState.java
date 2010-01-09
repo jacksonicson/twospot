@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Request;
+import org.prot.frontend.cache.CacheResult;
 
 public class RequestState
 {
@@ -16,6 +17,8 @@ public class RequestState
 	private int index = 0;
 	private String[] controllers = new String[MAX_CONTROLLERS];
 
+	private CacheResult cached;
+
 	public RequestState(String appId, Request baseRequest, HttpServletRequest request,
 			HttpServletResponse response)
 	{
@@ -23,6 +26,16 @@ public class RequestState
 		this.baseRequest = baseRequest;
 		this.request = request;
 		this.response = response;
+	}
+
+	public void setCached(CacheResult cached)
+	{
+		this.cached = cached; 
+	}
+	
+	public CacheResult getCached()
+	{
+		return cached;
 	}
 
 	public void useController(String address)

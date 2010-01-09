@@ -1,10 +1,11 @@
 package org.prot.frontend.cache;
 
-import org.prot.manager.stats.ControllerInfo;
 
 public interface AppCache
 {
-	public ControllerInfo getController(String appId);
+	public CacheResult getController(String appId);
 
+	public void release(CacheResult result);
+	
 	public void staleController(String address);
 }
