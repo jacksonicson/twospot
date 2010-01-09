@@ -29,6 +29,10 @@ public class HighLoadProcessor implements BalancingProcessor
 			AppInfo worstApp = null;
 			double worstRps = Double.MIN_NORMAL;
 
+			// Check if its even possible to remove an AppServer
+			if(appInfos.size() <= 1)
+				return;
+			
 			for (AppInfo appInfo : appInfos)
 			{
 				double rps = appInfo.getAppManagement().getAppRequestStats().getRps();
