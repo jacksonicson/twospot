@@ -51,12 +51,30 @@ public class WarExtractor implements AppExtractor
 		File file = new File(folder);
 		if (file.exists())
 		{
-			if (deleteFolder(file))
+			boolean deleteFolder = false;
+			for (int retries = 3; retries > 0; retries--)
 			{
-				logger.debug("Existing app directory deleted");
-			} else
+				if (deleteFolder = deleteFolder(file))
+				{
+					logger.debug("Existing app directory deleted");
+					break;
+				} else
+				{
+					logger.warn("Could not delete existing app directory - retries: " + retries);
+					try
+					{
+						Thread.sleep(3000);
+					} catch (InterruptedException e)
+					{
+						logger.error("InterruptedException", e);
+						System.exit(1);
+					}
+				}
+			}
+
+			if (!deleteFolder)
 			{
-				logger.error("Could not delete existing app directory");
+				logger.error("Could not delete existing app directory - exiting");
 				System.exit(1);
 			}
 		}
