@@ -40,7 +40,7 @@ public class LookupControllers implements Job, Watcher
 		// ZooKeeper connection
 		ZooKeeper zk = zooHelper.getZooKeeper();
 
-		if (zk == null || zk.getState() != ZooKeeper.States.CONNECTED)
+		if (!zooHelper.isConnected())
 		{
 			registry.update(new ArrayList<ControllerInfo>());
 			return JobState.RETRY_LATER;
