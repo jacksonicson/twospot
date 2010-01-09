@@ -1,8 +1,8 @@
 package org.prot.controller.app;
 
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.continuation.Continuation;
@@ -24,7 +24,7 @@ class ProcessWorker implements Runnable
 	private final ProcessHandler processHandler = new ProcessHandler();
 
 	// Worker queue
-	private Queue<ProcessJob> jobQueue = new LinkedBlockingQueue<ProcessJob>();
+	private Queue<ProcessJob> jobQueue = new LinkedList<ProcessJob>();
 
 	class ProcessJob
 	{
@@ -89,8 +89,7 @@ class ProcessWorker implements Runnable
 	void scheduleStartProcess(AppInfo info)
 	{
 		init();
-		logger.debug("Scheduling a START-Job");
-
+		
 		synchronized (jobQueue)
 		{
 			jobQueue.add(new ProcessJob(info, ProcessJob.START));
@@ -172,7 +171,7 @@ class ProcessWorker implements Runnable
 		if (success)
 			appInfo.setStatus(AppState.ONLINE);
 		else
-			appInfo.setStatus(AppState.FAILED);
+			appInfo.setStatus(AppState.KILLED);
 
 		// Resume all continuations
 		logger.debug("Resuming all continuations");

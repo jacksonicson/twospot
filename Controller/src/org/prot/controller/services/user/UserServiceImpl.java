@@ -83,7 +83,10 @@ public class UserServiceImpl implements UserService
 	public synchronized void registerUser(String token, String session, String username)
 	{
 		if (tokenChecker.checkToken(token) == false)
+		{
+			logger.warn("Invalid AppServer token");
 			return;
+		}
 
 		// Create a new UserSession object
 		UserSession userSession = new UserSession();
@@ -131,7 +134,10 @@ public class UserServiceImpl implements UserService
 	public void unregisterUser(String uid)
 	{
 		if (uid == null)
+		{
+			logger.warn("Invalid AppServer token");
 			return;
+		}
 
 		logger.debug("Unregistering user: " + uid);
 

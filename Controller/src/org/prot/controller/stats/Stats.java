@@ -44,7 +44,7 @@ public class Stats
 	public void balance()
 	{
 		for (BalancingProcessor processor : processors)
-			processor.run(registry.getAppInfos());
+			processor.run(registry.getDuplicatedAppInfos());
 	}
 
 	public void setRegistry(AppRegistry registry)
@@ -60,7 +60,7 @@ public class Stats
 	public Map<String, Set<StatsValue>> getAppStats()
 	{
 		Map<String, Set<StatsValue>> stats = new HashMap<String, Set<StatsValue>>();
-		for (AppInfo appInfo : registry.getAppInfos())
+		for (AppInfo appInfo : registry.getDuplicatedAppInfos())
 			stats.put(appInfo.getAppId(), appInfo.getAppManagement().getData());
 
 		return stats;

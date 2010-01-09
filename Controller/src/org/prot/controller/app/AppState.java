@@ -6,8 +6,6 @@ public enum AppState
 
 	STARTING,
 
-	FAILED,
-
 	ONLINE,
 
 	BANNED,

@@ -2,9 +2,9 @@ package org.prot.controller.zookeeper.jobs;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.zookeeper.KeeperException;
@@ -26,7 +26,7 @@ public class WatchApp implements Job, Watcher
 
 	private ZooHelper zooHelper;
 
-	private Set<String> watching = new HashSet<String>();
+	private Map<String, Integer> watching = new HashMap<String, Integer>();
 
 	private List<DeploymentListener> listeners = new ArrayList<DeploymentListener>();
 
@@ -38,15 +38,30 @@ public class WatchApp implements Job, Watcher
 		}
 	}
 
-	public void watchApp(String appId)
+	public synchronized void watchApp(String appId)
 	{
-		watching.add(appId);
+		Integer value = null;
+		if (watching.containsKey(appId))
+			value = watching.get(appId);
+		else
+			value = 0;
+
+		value++;
+		watching.put(appId, value);
 		zooHelper.getQueue().insert(this);
 	}
 
-	public void removeWatch(String appId)
+	public synchronized void removeWatch(String appId)
 	{
-		watching.remove(appId);
+		if (watching.containsKey(appId))
+		{
+			Integer value = watching.get(appId);
+			value--;
+			if (value <= 0)
+				watching.remove(appId);
+			else
+				watching.put(appId, value);
+		}
 	}
 
 	private void appDeployed(String appId)
@@ -86,7 +101,7 @@ public class WatchApp implements Job, Watcher
 
 			// The ZooKeeper API cannot remove watches. We have to check here if
 			// the appId is still in the watchlist
-			if (watching.contains(entry.appId))
+			if (watching.containsKey(entry.appId))
 				appDeployed(entry.appId);
 
 		} catch (InterruptedException e)
@@ -110,7 +125,7 @@ public class WatchApp implements Job, Watcher
 		try
 		{
 			// Iterate over all watched apps
-			for (String watch : this.watching)
+			for (String watch : this.watching.keySet())
 			{
 				// Assumend path to the node
 				final String watchPath = ZNodes.ZNODE_APPS + "/" + watch;

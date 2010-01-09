@@ -46,12 +46,12 @@ public class AppManager implements DeploymentListener
 		// Update last access timestamp (Idle are killed)
 		appInfo.touch();
 
-		// Todo-Information
-		Todo todo = null;
-
 		// Fast path
 		if (appInfo.getStatus() == AppState.ONLINE)
 			return appInfo;
+
+		// Todo-Information
+		Todo todo = null;
 
 		// Simple state machine for managing the AppServer lifecycle
 		synchronized (appInfo)
@@ -70,14 +70,15 @@ public class AppManager implements DeploymentListener
 				break;
 
 			case NEW:
-			case FAILED:
 				// Change the state to STARTING and start the server
 				appInfo.setStatus(AppState.STARTING);
 				todo = Todo.START;
 				break;
 
 			default:
-				logger.error("AppManager cannot process AppServer state: " + state);
+				// Should result in a bad request - but we don't want to wait
+				// here until we get a good AppInfo
+				return appInfo;
 			}
 		}
 
@@ -95,7 +96,7 @@ public class AppManager implements DeploymentListener
 			if (processWorker.waitForApplication(appInfo))
 				return null;
 		}
-		
+
 		return appInfo;
 	}
 
@@ -108,18 +109,15 @@ public class AppManager implements DeploymentListener
 		AppInfo appInfo = registry.getAppInfo(appId);
 		if (appInfo != null)
 			appInfo.setStatus(AppState.DEPLOYED);
+		else
+			logger.warn("Could not change state");
 	}
 
 	public void staleApp(String appId)
 	{
 		AppInfo appInfo = registry.getAppInfo(appId);
-
-		// Cannot change the state for an unexisting application
-		if (appInfo == null)
-			return;
-
-		// Update the state
-		appInfo.setStatus(AppState.KILLED);
+		if (appInfo != null)
+			appInfo.setStatus(AppState.KILLED);
 	}
 
 	private boolean startApp(AppInfo appInfo)
@@ -138,23 +136,26 @@ public class AppManager implements DeploymentListener
 
 	private void cleanup()
 	{
+		// Update appserver stats
+		registry.updateStates();
+
 		// Find and kill dead AppServers
 		Set<AppInfo> dead = registry.kill();
 
-		// If no dead AppServers findDeadApps() returns null
-		if (dead != null)
-		{
-			// Don't listen on ZooKeeper events any more
-			for (AppInfo info : dead)
-			{
-				// Unregister AppServer from ZooKeeper
-				managementService.stop(info.getAppId());
-				managementService.removeWatch(info.getAppId());
-			}
+		// Remove all dead entries
+		registry.removeDead();
 
-			// Schedule kill-Tasks for each entry
-			processWorker.scheduleKillProcess(dead);
+		// Don't listen on ZooKeeper events any more
+		for (AppInfo info : dead)
+		{
+			// Unregister AppServer from ZooKeeper
+			managementService.stop(info.getAppId());
+			managementService.removeWatch(info.getAppId());
 		}
+
+		// Schedule kill-Tasks for each entry
+		if (!dead.isEmpty())
+			processWorker.scheduleKillProcess(dead);
 	}
 
 	class CleanupTask extends SchedulerTask

@@ -30,7 +30,7 @@ public final class AppInfo
 
 	// Timestamp of the last state change
 	private long stateChange = System.currentTimeMillis();
-	 
+
 	// State of the appserver
 	private AppState state = AppState.NEW;
 
@@ -78,7 +78,7 @@ public final class AppInfo
 		return this.creationTime;
 	}
 
-	public synchronized boolean addContinuation(Continuation continuation)
+	synchronized boolean addContinuation(Continuation continuation)
 	{
 		// Check state
 		switch (state)
@@ -86,13 +86,13 @@ public final class AppInfo
 		case STARTING:
 			// Insert the continuation
 			continuations.add(continuation);
-			return true; 
+			return true;
 		}
-		
+
 		return false;
 	}
 
-	public synchronized void resumeContinuations()
+	synchronized void resumeContinuations()
 	{
 		for (Continuation continuation : continuations)
 			continuation.resume();
@@ -125,43 +125,40 @@ public final class AppInfo
 			check |= status == AppState.STARTING;
 			check |= status == AppState.DEPLOYED;
 			break;
-			
+
 		case STARTING:
 			check |= status == AppState.ONLINE;
-			check |= status == AppState.FAILED;
 			check |= status == AppState.DEPLOYED;
+			check |= status == AppState.KILLED;
 			break;
-			
-		case FAILED:
-			check |= status == AppState.STARTING;
-			check |= status == AppState.DEAD;
-			check |= status == AppState.DEPLOYED;
-			break;
-			
+
 		case ONLINE:
 			check |= status == AppState.BANNED;
 			check |= status == AppState.KILLED;
 			check |= status == AppState.DEPLOYED;
 			break;
-			
+
 		case BANNED:
-			check |= status == AppState.DEAD;
+			check |= status == AppState.KILLED;
 			break;
-			
+
+		case DEPLOYED:
+			check |= status == AppState.KILLED;
+			break;
+
 		case KILLED:
 			check |= status == AppState.DEAD;
 			break;
-			
-		case DEPLOYED:
-			check |= status == AppState.DEAD;
-			break;
-			
 		}
 
 		if (check)
+		{
+			this.stateChange = System.currentTimeMillis();
 			this.state = status;
-		else
-			logger.warn("Invalid sate change from " + this.state + " to " + status);
+		} else
+		{
+			logger.warn("Invalid state change from " + this.state + " to " + status);
+		}
 	}
 
 	public boolean isPrivileged()
@@ -182,6 +179,11 @@ public final class AppInfo
 	public String getProcessToken()
 	{
 		return processToken;
+	}
+
+	public long getStateTime()
+	{
+		return System.currentTimeMillis() - stateChange;
 	}
 
 	public boolean equals(Object o)
