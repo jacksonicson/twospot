@@ -26,11 +26,18 @@ class ProcessHandler
 
 		try
 		{
-			process.getProcess().destroy();
-			process.setProcess(null);
-		} catch (Exception e)
+			process.getProcess().exitValue();
+		} catch (IllegalThreadStateException e)
 		{
-			logger.trace(e);
+			logger.debug("Process is still running");
+			try
+			{
+				process.getProcess().destroy();
+				process.setProcess(null);
+			} catch (Exception killerr)
+			{
+				logger.error("Could not stop process: ", killerr);
+			}
 		}
 	}
 

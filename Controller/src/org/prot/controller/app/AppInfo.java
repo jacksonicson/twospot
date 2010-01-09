@@ -127,6 +127,7 @@ public final class AppInfo
 	{
 		// Check if this is a valid state change
 		boolean check = this.state == status;
+		boolean finishContinuations = false;
 		switch (this.state)
 		{
 		case NEW:
@@ -148,16 +149,26 @@ public final class AppInfo
 
 		case BANNED:
 			check |= status == AppState.KILLED;
+			finishContinuations |= true;
 			break;
 
 		case DEPLOYED:
 			check |= status == AppState.KILLED;
+			finishContinuations |= true;
 			break;
 
 		case KILLED:
 			check |= status == AppState.DEAD;
+			finishContinuations |= true;
+			break;
+
+		case DEAD:
+			finishContinuations |= true;
 			break;
 		}
+
+		if (finishContinuations)
+			finishContinuations();
 
 		if (check)
 		{

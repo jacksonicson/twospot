@@ -1,6 +1,6 @@
 package org.prot.controller.app;
 
-import java.util.Set;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.prot.controller.zookeeper.DeploymentListener;
@@ -76,7 +76,8 @@ public class AppManager implements DeploymentListener
 				break;
 
 			default:
-				// TODO: A solution might be to call getOrRegisterApp(appId) in a loop
+				// TODO: A solution might be to call getOrRegisterApp(appId) in
+				// a loop
 				// until we get a working AppServer. This behavior might result
 				// in bad requests.
 				return appInfo;
@@ -128,7 +129,7 @@ public class AppManager implements DeploymentListener
 
 		// Watch for application ZooKeeper node for updates
 		managementService.watchApp(appInfo.getAppId());
-		
+
 		// Register the application instance within ZooKeeper
 		managementService.start(appInfo.getAppId());
 
@@ -142,7 +143,7 @@ public class AppManager implements DeploymentListener
 		registry.updateStates();
 
 		// Find and kill dead AppServers
-		Set<AppInfo> dead = registry.killDeadAppInfos();
+		List<AppInfo> dead = registry.killDeadAppInfos();
 
 		// Remove all dead entries
 		registry.removeDeadAppInfos();

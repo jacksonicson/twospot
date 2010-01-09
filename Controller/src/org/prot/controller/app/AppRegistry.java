@@ -29,7 +29,10 @@ public class AppRegistry implements TokenChecker
 
 	public AppInfo getAppInfo(String appId)
 	{
-		return appMapping.get(appId);
+		synchronized (appInfos)
+		{
+			return appMapping.get(appId);
+		}
 	}
 
 	public boolean isBlocked(String appId)
@@ -65,8 +68,23 @@ public class AppRegistry implements TokenChecker
 		synchronized (appInfos)
 		{
 			// Check again (synchronized)
-			if (appMapping.containsKey(appId) && appInfo.getStatus().getLife() == AppLife.FIRST)
-				return appMapping.get(appId);
+			appInfo = appMapping.get(appId);
+			if (appInfo != null && appInfo.getStatus().getLife() == AppLife.FIRST)
+				return appMapping.get(appInfo);
+
+			if (appInfo != null)
+				logger.debug("CREATING NEW APPINFO: " + appInfo.getStatus());
+			else
+			{
+				logger.debug("CREATING NEW APPINFO FOR NON EXISTING");
+
+				for (AppInfo test : appInfos)
+					if (test.getAppId().equals(appId))
+					{
+						logger.debug("ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRROR");
+						System.exit(1);
+					}
+			}
 
 			// Port for the new AppServer
 			int port = portPool.getPort();
@@ -127,6 +145,9 @@ public class AppRegistry implements TokenChecker
 				{
 					logger.debug("Removing: " + info.getAppId() + " sate: " + info.getStatus());
 
+					// Release the port
+					portPool.releasePort(info.getPort());
+
 					// Remove the AppInfo from the list
 					it.remove();
 
@@ -138,10 +159,10 @@ public class AppRegistry implements TokenChecker
 		}
 	}
 
-	Set<AppInfo> killDeadAppInfos()
+	List<AppInfo> killDeadAppInfos()
 	{
 		// List of all killed AppInfos
-		Set<AppInfo> killedApps = new HashSet<AppInfo>();
+		List<AppInfo> killedApps = new ArrayList<AppInfo>();
 
 		// Check for idle apps
 		for (AppInfo info : appInfos)

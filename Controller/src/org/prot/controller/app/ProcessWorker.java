@@ -1,8 +1,7 @@
 package org.prot.controller.app;
 
+import java.util.Collection;
 import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.continuation.Continuation;
@@ -24,7 +23,7 @@ class ProcessWorker implements Runnable
 	private final ProcessHandler processHandler = new ProcessHandler();
 
 	// Worker queue
-	private Queue<ProcessJob> jobQueue = new LinkedList<ProcessJob>();
+	private LinkedList<ProcessJob> jobQueue = new LinkedList<ProcessJob>();
 
 	class ProcessJob
 	{
@@ -72,7 +71,7 @@ class ProcessWorker implements Runnable
 		logger.debug("ProcessWorker thread running: " + running);
 	}
 
-	void scheduleKillProcess(Set<AppInfo> deadApps)
+	void scheduleKillProcess(Collection<AppInfo> deadApps)
 	{
 		logger.debug("Scheduling a STOP-Job");
 
@@ -80,20 +79,22 @@ class ProcessWorker implements Runnable
 		{
 			for (AppInfo info : deadApps)
 			{
-				jobQueue.add(new ProcessJob(info, ProcessJob.STOP));
+				jobQueue.addLast(new ProcessJob(info, ProcessJob.STOP));
 			}
-			jobQueue.notifyAll();
+			jobQueue.notify();
 		}
 	}
 
 	void scheduleStartProcess(AppInfo info)
 	{
+		logger.debug("Scheduling a START-Job");
+		
 		init();
 
 		synchronized (jobQueue)
 		{
-			jobQueue.add(new ProcessJob(info, ProcessJob.START));
-			jobQueue.notifyAll();
+			jobQueue.addLast(new ProcessJob(info, ProcessJob.START));
+			jobQueue.notify();
 		}
 	}
 
@@ -136,7 +137,8 @@ class ProcessWorker implements Runnable
 				}
 
 				// Get and remove the next job from the queue
-				job = jobQueue.poll();
+				job = jobQueue.getFirst();
+				jobQueue.removeFirst();
 			}
 
 			switch (job.getType())
