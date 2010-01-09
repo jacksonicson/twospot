@@ -2,6 +2,7 @@ package org.prot.frontend.cache.timeout;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,6 +17,8 @@ public class CacheEntry
 	private final String appId;
 
 	private Map<String, CachedControllerInfo> controllers = new ConcurrentHashMap<String, CachedControllerInfo>();
+
+	private Map<String, Long> requestCounter = new ConcurrentHashMap<String, Long>();
 
 	public CacheEntry(String appId)
 	{
@@ -75,36 +78,65 @@ public class CacheEntry
 
 	ControllerInfo pickController()
 	{
-		CachedControllerInfo[] infos = null;
+		LinkedList<CachedControllerInfo> controllers = new LinkedList<CachedControllerInfo>();
 		synchronized (this)
 		{
 			if (controllers.isEmpty())
 				return null;
 
-			infos = controllers.values().toArray(new CachedControllerInfo[0]);
+			controllers.addAll(this.controllers.values());
 		}
 
-		// int select = Math.abs(counter++) % infos.length;
 		long min = Long.MAX_VALUE;
-		int select = -1;
-		for (int i = 0; i < infos.length; i++)
+		CachedControllerInfo selected = null;
+
+		for (CachedControllerInfo info : controllers)
 		{
-			if (min > infos[i].queue())
+			Long count = requestCounter.get(info.getAddress());
+			if (count == null)
 			{
-				min = infos[i].queue();
-				select = i;
+				synchronized (requestCounter)
+				{
+					count = requestCounter.get(info.getAddress());
+					if (count == null)
+					{
+						requestCounter.put(info.getAddress(), 0l);
+					}
+				}
+
+				selected = info;
+				break;
+			} else
+			{
+				if (min > count)
+				{
+					min = count;
+					selected = info;
+				}
 			}
 		}
 
-		infos[select].increment();
-		return infos[select];
+		if (selected != null)
+		{
+			min++;
+			requestCounter.put(selected.getAddress(), min);
+			return selected;
+		}
+
+		return null;
 	}
 
-	synchronized void release(String address)
+	void release(String address)
 	{
-		CachedControllerInfo controller = controllers.get(address);
-		if (controller != null)
-			controller.decrement();
+		synchronized (requestCounter)
+		{
+			Long counter = requestCounter.get(address);
+			if (counter != null)
+			{
+				counter++;
+				requestCounter.put(address, counter);
+			}
+		}
 	}
 
 	String getAppId()

@@ -8,8 +8,6 @@ public class CachedControllerInfo extends ControllerInfo
 
 	private long timestamp;
 
-	private long queue;
-
 	public CachedControllerInfo(ControllerInfo info)
 	{
 		super(info);
@@ -23,21 +21,5 @@ public class CachedControllerInfo extends ControllerInfo
 	public void setTimestamp(long timestamp)
 	{
 		this.timestamp = timestamp;
-	}
-
-	public void increment()
-	{
-		this.queue++;
-	}
-
-	public synchronized void decrement()
-	{
-		this.queue--;
-		assert (queue >= 0);
-	}
-
-	public synchronized long queue()
-	{
-		return queue;
 	}
 }
