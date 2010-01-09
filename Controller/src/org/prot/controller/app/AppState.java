@@ -2,17 +2,29 @@ package org.prot.controller.app;
 
 public enum AppState
 {
-	NEW,
+	NEW(AppLife.FIRST),
 
-	STARTING,
+	STARTING(AppLife.FIRST),
 
-	ONLINE,
+	ONLINE(AppLife.FIRST),
 
-	BANNED,
+	BANNED(AppLife.SECOND),
 
-	KILLED,
+	KILLED(AppLife.SECOND),
 
-	DEPLOYED,
+	DEPLOYED(AppLife.SECOND),
 
-	DEAD
+	DEAD(AppLife.SECOND);
+
+	private final AppLife life;
+
+	private AppState(AppLife life)
+	{
+		this.life = life;
+	}
+
+	public AppLife getLife()
+	{
+		return this.life;
+	}
 }

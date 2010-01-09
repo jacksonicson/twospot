@@ -92,6 +92,14 @@ public final class AppInfo
 		return false;
 	}
 
+	synchronized void finishContinuations()
+	{
+		for (Continuation continuation : continuations)
+			continuation.complete();
+
+		continuations.clear();
+	}
+
 	synchronized void resumeContinuations()
 	{
 		for (Continuation continuation : continuations)
@@ -115,7 +123,7 @@ public final class AppInfo
 		return state;
 	}
 
-	public synchronized void setStatus(AppState status)
+	public synchronized void setState(AppState status)
 	{
 		// Check if this is a valid state change
 		boolean check = this.state == status;
@@ -157,7 +165,7 @@ public final class AppInfo
 			this.state = status;
 		} else
 		{
-			logger.warn("Invalid state change from " + this.state + " to " + status);
+			logger.debug("Invalid state change from " + this.state + " to " + status);
 		}
 	}
 

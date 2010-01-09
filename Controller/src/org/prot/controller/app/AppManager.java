@@ -56,28 +56,29 @@ public class AppManager implements DeploymentListener
 		// Simple state machine for managing the AppServer lifecycle
 		synchronized (appInfo)
 		{
-			// Operations depends on app status
+			// Status may have changed since getting the AppInfo
 			AppState state = appInfo.getStatus();
 			switch (state)
 			{
 			case ONLINE:
-				// Don't change the state
+				// Server is online
 				return appInfo;
 
 			case STARTING:
-				// Don't change the state but wait for the server
+				// Wait until the AppServer is online
 				todo = Todo.WAIT;
 				break;
 
 			case NEW:
-				// Change the state to STARTING and start the server
-				appInfo.setStatus(AppState.STARTING);
+				// Start the AppServer and wait until it is online
+				appInfo.setState(AppState.STARTING);
 				todo = Todo.START;
 				break;
 
 			default:
-				// Should result in a bad request - but we don't want to wait
-				// here until we get a good AppInfo
+				// TODO: A solution might be to call getOrRegisterApp(appId) in a loop
+				// until we get a working AppServer. This behavior might result
+				// in bad requests.
 				return appInfo;
 			}
 		}
@@ -108,7 +109,7 @@ public class AppManager implements DeploymentListener
 		// Geht the AppInfo for this application
 		AppInfo appInfo = registry.getAppInfo(appId);
 		if (appInfo != null)
-			appInfo.setStatus(AppState.DEPLOYED);
+			appInfo.setState(AppState.DEPLOYED);
 		else
 			logger.warn("Could not change state");
 	}
@@ -117,7 +118,7 @@ public class AppManager implements DeploymentListener
 	{
 		AppInfo appInfo = registry.getAppInfo(appId);
 		if (appInfo != null)
-			appInfo.setStatus(AppState.KILLED);
+			appInfo.setState(AppState.KILLED);
 	}
 
 	private boolean startApp(AppInfo appInfo)
@@ -125,12 +126,13 @@ public class AppManager implements DeploymentListener
 		// Enqueue the process start
 		processWorker.scheduleStartProcess(appInfo);
 
-		// Watch for application updates
+		// Watch for application ZooKeeper node for updates
 		managementService.watchApp(appInfo.getAppId());
+		
+		// Register the application instance within ZooKeeper
 		managementService.start(appInfo.getAppId());
 
-		// Register a Listener for the application. If the application is
-		// already running it returns true, if not it returns false
+		// Wait until the AppServer is online
 		return processWorker.waitForApplication(appInfo);
 	}
 
@@ -140,10 +142,10 @@ public class AppManager implements DeploymentListener
 		registry.updateStates();
 
 		// Find and kill dead AppServers
-		Set<AppInfo> dead = registry.kill();
+		Set<AppInfo> dead = registry.killDeadAppInfos();
 
 		// Remove all dead entries
-		registry.removeDead();
+		registry.removeDeadAppInfos();
 
 		// Don't listen on ZooKeeper events any more
 		for (AppInfo info : dead)

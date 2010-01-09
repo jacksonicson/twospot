@@ -47,7 +47,10 @@ public final class UserServiceImpl implements UserService
 	{
 		final String uid = searchUID();
 		if (uid == null)
+		{
+			logger.debug("UID is null");
 			return null;
+		}
 
 		String user = AccessController.doPrivileged(new PrivilegedAction<String>()
 		{

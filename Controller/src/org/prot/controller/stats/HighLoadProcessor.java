@@ -52,7 +52,7 @@ public class HighLoadProcessor implements BalancingProcessor
 				return;
 
 			logger.debug("Killing app because of high load");
-			bestApp.setStatus(AppState.KILLED);
+			bestApp.setState(AppState.KILLED);
 		}
 	}
 

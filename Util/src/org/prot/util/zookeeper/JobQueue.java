@@ -177,7 +177,8 @@ public class JobQueue
 
 		} catch (KeeperException e)
 		{
-			logger.error("Keeper exception: ", e);
+			logger.error("Keeper exception: " + e.code());
+			logger.trace("Keeper exception", e);
 		} catch (InterruptedException e)
 		{
 			logger.error("InterruptedException", e);

@@ -14,12 +14,17 @@ public class AppRegistry implements TokenChecker
 {
 	private static final Logger logger = Logger.getLogger(AppRegistry.class);
 
+	// Ports for new AppServers
 	private final PortPool portPool = new PortPool();
 
+	// List of all managed AppServers or applications
 	private List<AppInfo> appInfos = new ArrayList<AppInfo>();
 
+	// Mapping between the appId and AppServer. The Map always points to the
+	// current AppServer for an application
 	private Map<String, AppInfo> appMapping = new ConcurrentHashMap<String, AppInfo>();
 
+	// List of all blocked appId's and there timestamp of blocking
 	private Map<String, Long> blocked = new ConcurrentHashMap<String, Long>();
 
 	public AppInfo getAppInfo(String appId)
@@ -32,53 +37,44 @@ public class AppRegistry implements TokenChecker
 		if (!blocked.containsKey(appId))
 			return false;
 
-		Long time = blocked.get(appId);
-		if (time == null)
-			return false;
-
-		if (System.currentTimeMillis() - time > 50000)
+		synchronized (blocked)
 		{
-			blocked.remove(appId);
-			return false;
-		}
+			Long time = blocked.get(appId);
+			if (time == null)
+				return false;
 
-		return true;
-	}
+			if (System.currentTimeMillis() - time > 50000)
+			{
+				blocked.remove(appId);
+				return false;
+			}
 
-	private boolean isUsableState(AppState state)
-	{
-		switch (state)
-		{
-		case NEW:
-		case STARTING:
-		case ONLINE:
 			return true;
 		}
-
-		return false;
 	}
 
 	public AppInfo getOrRegisterApp(String appId)
 	{
-		// Fast path
+		// Fast path: Check if there is an AppInfo for the appId in the FIRST
+		// life
 		AppInfo appInfo = appMapping.get(appId);
-		if (appInfo != null && isUsableState(appInfo.getStatus()))
+		if (appInfo != null && appInfo.getStatus().getLife() == AppLife.FIRST)
 			return appInfo;
 
+		// Did not find an AppInfo object or an AppInfo object in a usable state
 		synchronized (appInfos)
 		{
-			// We need to recheck this to be sure no other thread has created
-			// one
-			if (appMapping.containsKey(appId) && isUsableState(appInfo.getStatus()))
+			// Check again (synchronized)
+			if (appMapping.containsKey(appId) && appInfo.getStatus().getLife() == AppLife.FIRST)
 				return appMapping.get(appId);
 
-			// Get a port
+			// Port for the new AppServer
 			int port = portPool.getPort();
 
-			// Create new AppInfo
+			// Create a new AppInfo object
 			appInfo = new AppInfo(appId, port);
 
-			// Add the new AppInfo
+			// Add the AppInfo to the list and map
 			appInfos.add(appInfo);
 			appMapping.put(appId, appInfo);
 		}
@@ -88,50 +84,53 @@ public class AppRegistry implements TokenChecker
 
 	void updateStates()
 	{
-		// Check for idle apps
-		synchronized (appInfos)
+		// Method is always executed within the same thread as
+		// removeDeadAppInfos(). There is not need for a synchronization on
+		// appInfos.
+
+		// Iterate over all AppInfo objects
+		for (AppInfo info : appInfos)
 		{
-			for (AppInfo info : appInfos)
+			logger.debug("Updating app " + info.getAppId() + " state " + info.getStatus());
+			synchronized (info)
 			{
-				logger.debug("Updating app " + info.getAppId() + " state " + info.getStatus());
-
-				synchronized (info)
+				// Do a state transition if necessary
+				AppState state = info.getStatus();
+				switch (state)
 				{
-					AppState state = info.getStatus();
-					switch (state)
-					{
-					case DEPLOYED:
-						info.setStatus(AppState.KILLED);
-						break;
+				case DEPLOYED:
+					info.setState(AppState.KILLED);
+					break;
 
-					case BANNED:
-						blocked.put(info.getAppId(), System.currentTimeMillis());
-						info.setStatus(AppState.KILLED);
-						break;
-					}
-
+				case BANNED:
+					// Add the appId to the block list
+					blocked.put(info.getAppId(), System.currentTimeMillis());
+					info.setState(AppState.KILLED);
+					break;
 				}
 			}
 		}
 	}
 
-	void removeDead()
+	void removeDeadAppInfos()
 	{
 		synchronized (appInfos)
 		{
+			// Iterate over all AppInfo objects
 			for (Iterator<AppInfo> it = appInfos.iterator(); it.hasNext();)
 			{
+				// Must not be null
 				AppInfo info = it.next();
 
-				if (info == null)
-					continue;
-
+				// Check if the AppInfo state is DEAD
 				if (info.getStatus() == AppState.DEAD)
 				{
 					logger.debug("Removing: " + info.getAppId() + " sate: " + info.getStatus());
+
+					// Remove the AppInfo from the list
 					it.remove();
 
-					// We clearly check object instances here!
+					// Check if the AppInfo is linked in the map
 					if (appMapping.get(info.getAppId()) == info)
 						appMapping.remove(info.getAppId());
 				}
@@ -139,27 +138,25 @@ public class AppRegistry implements TokenChecker
 		}
 	}
 
-	Set<AppInfo> kill()
+	Set<AppInfo> killDeadAppInfos()
 	{
+		// List of all killed AppInfos
 		Set<AppInfo> killedApps = new HashSet<AppInfo>();
 
 		// Check for idle apps
-		synchronized (appInfos)
+		for (AppInfo info : appInfos)
 		{
-			for (AppInfo info : appInfos)
+			synchronized (info)
 			{
-				synchronized (info)
+				AppState state = info.getStatus();
+				switch (state)
 				{
-					AppState state = info.getStatus();
-					switch (state)
-					{
-					case KILLED:
-						info.setStatus(AppState.DEAD);
-						killedApps.add(info);
-						break;
-					}
-
+				case KILLED:
+					info.setState(AppState.DEAD);
+					killedApps.add(info);
+					break;
 				}
+
 			}
 		}
 
@@ -174,21 +171,20 @@ public class AppRegistry implements TokenChecker
 		if (token == null)
 			return false;
 
-		// Iterate over all running applications
-		for (Iterator<AppInfo> it = appInfos.iterator(); it.hasNext();)
+		synchronized (appInfos)
 		{
-			// Get application infos and the token
-			AppInfo info = it.next();
-
-			// Concurrency - AppInfo could be deleted while scanning the AppId's
-			if (info == null)
-				continue;
-
-			// Compare stored token
-			if (token.equals(info.getProcessToken()))
+			// Iterate over all running applications
+			for (Iterator<AppInfo> it = appInfos.iterator(); it.hasNext();)
 			{
-				// If both tokens are equal - return true
-				return true;
+				// Get application infos and the token
+				AppInfo info = it.next();
+
+				// Compare stored token
+				if (token.equals(info.getProcessToken()))
+				{
+					// If both tokens are equal - return true
+					return true;
+				}
 			}
 		}
 

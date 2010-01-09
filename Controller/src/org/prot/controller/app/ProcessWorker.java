@@ -89,7 +89,7 @@ class ProcessWorker implements Runnable
 	void scheduleStartProcess(AppInfo info)
 	{
 		init();
-		
+
 		synchronized (jobQueue)
 		{
 			jobQueue.add(new ProcessJob(info, ProcessJob.START));
@@ -99,11 +99,11 @@ class ProcessWorker implements Runnable
 
 	boolean waitForApplication(AppInfo appInfo)
 	{
-		// Get the continuation
+		// Get a continuation for connection of the current thread
 		HttpConnection con = HttpConnection.getCurrentConnection();
 		Continuation continuation = ContinuationSupport.getContinuation(con.getRequest());
 
-		// Register the continuation
+		// Register the continuation and suspend it
 		if (appInfo.addContinuation(continuation))
 			continuation.suspend();
 
@@ -157,8 +157,11 @@ class ProcessWorker implements Runnable
 		logger.debug("Stopping AppServer...");
 		processHandler.stop(appInfo.getAppProcess());
 
+		// Finish all continuations waiting for the killed AppServer
+		appInfo.finishContinuations();
+
 		// Update state
-		appInfo.setStatus(AppState.DEAD);
+		appInfo.setState(AppState.DEAD);
 	}
 
 	private void startProcess(AppInfo appInfo)
@@ -169,12 +172,12 @@ class ProcessWorker implements Runnable
 
 		// Update state
 		if (success)
-			appInfo.setStatus(AppState.ONLINE);
+			appInfo.setState(AppState.ONLINE);
 		else
-			appInfo.setStatus(AppState.KILLED);
+			appInfo.setState(AppState.KILLED);
 
 		// Resume all continuations
-		logger.debug("Resuming all continuations");
+		logger.debug("Resuming all continuations waiting in the AppInfo");
 		appInfo.resumeContinuations();
 	}
 
