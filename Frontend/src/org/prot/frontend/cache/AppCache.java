@@ -7,5 +7,5 @@ public interface AppCache
 
 	public void release(CacheResult result);
 	
-	public void staleController(String address);
+	public void controllerBlocks(String appId, String address);
 }

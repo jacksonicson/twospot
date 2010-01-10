@@ -2,8 +2,6 @@ package org.prot.frontend.handlers;
 
 import java.io.IOException;
 import java.net.ConnectException;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,95 +10,20 @@ import org.apache.log4j.Logger;
 import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.util.thread.ThreadPool;
 import org.prot.frontend.cache.AppCache;
 import org.prot.frontend.cache.CacheResult;
 import org.prot.manager.stats.ControllerInfo;
 import org.prot.util.handler.HttpProxyHelper;
 
-public class FrontendProxy extends HttpProxyHelper<RequestState> implements Runnable
+public class FrontendProxy extends HttpProxyHelper<RequestState>
 {
 	private static final Logger logger = Logger.getLogger(FrontendProxy.class);
 
-	private ThreadPool threadPool;
-
 	private AppCache appCache;
-
-	private Queue<RequestState> scheduled = new LinkedList<RequestState>();
-
-	private boolean running = false;
 
 	public FrontendProxy()
 	{
 		super(false);
-	}
-
-	private void startWorker()
-	{
-		// if (!running)
-		// running = threadPool.dispatch(this);
-	}
-
-	private void schedule(RequestState state)
-	{
-		startWorker();
-
-		synchronized (scheduled)
-		{
-			scheduled.add(state);
-			scheduled.notifyAll();
-		}
-	}
-
-	public void run()
-	{
-		while (true)
-		{
-			synchronized (scheduled)
-			{
-				try
-				{
-					while (scheduled.isEmpty())
-					{
-						scheduled.wait();
-					}
-				} catch (InterruptedException e)
-				{
-					continue;
-				}
-
-				RequestState state = scheduled.poll();
-				try
-				{
-					reProcess(state);
-				} catch (Exception e)
-				{
-					logger.trace(e);
-				}
-			}
-		}
-	}
-
-	private void reProcess(RequestState state) throws Exception
-	{
-		if (state.isFull())
-		{
-			try
-			{
-				state.getResponse().sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
-						"Communication with Controller's failed");
-			} catch (IOException e)
-			{
-				// Do nothing
-				logger.trace(e);
-			} finally
-			{
-				state.getBaseRequest().setHandled(true);
-			}
-			return;
-		}
-
-		// TODO: Reprocess the request with another Controller
 	}
 
 	private final HttpURI buildUrl(Request baseRequest, HttpServletRequest request, ControllerInfo info,
@@ -138,7 +61,6 @@ public class FrontendProxy extends HttpProxyHelper<RequestState> implements Runn
 		}
 
 		RequestState state = new RequestState(appId, baseRequest, request, response);
-		state.useController(result.getControllerInfo().getAddress());
 		state.setCached(result);
 
 		HttpURI uri = buildUrl(baseRequest, request, result.getControllerInfo(), appId);
@@ -150,21 +72,24 @@ public class FrontendProxy extends HttpProxyHelper<RequestState> implements Runn
 		appCache.release(state.getCached());
 	}
 
-	@Override
 	protected void expired(RequestState state)
 	{
+		appCache.release(state.getCached());
+
 		try
 		{
 			state.getResponse().sendError(HttpStatus.REQUEST_TIMEOUT_408,
 					"Connection with the Controller timed out");
 		} catch (IOException e)
 		{
-			// Do nothing - happens if the client closed the connection
+			logger.trace("IOException", e);
 		}
 	}
 
 	protected boolean error(RequestState state, Throwable e)
 	{
+		appCache.release(state.getCached());
+
 		// Frontend could not connect with the Controller
 		if (e instanceof ConnectException)
 		{
@@ -177,17 +102,9 @@ public class FrontendProxy extends HttpProxyHelper<RequestState> implements Runn
 			{
 				return false;
 			}
-		} else
-		{
-			logger.warn("Proxy error", e);
 		}
 
 		return false;
-	}
-
-	public void setThreadPool(ThreadPool threadPool)
-	{
-		this.threadPool = threadPool;
 	}
 
 	public void setAppCache(AppCache appCache)

@@ -13,10 +13,6 @@ public class RequestState
 	private final HttpServletRequest request;
 	private final HttpServletResponse response;
 
-	private static final int MAX_CONTROLLERS = 3;
-	private int index = 0;
-	private String[] controllers = new String[MAX_CONTROLLERS];
-
 	private CacheResult cached;
 
 	public RequestState(String appId, Request baseRequest, HttpServletRequest request,
@@ -30,27 +26,12 @@ public class RequestState
 
 	public void setCached(CacheResult cached)
 	{
-		this.cached = cached; 
+		this.cached = cached;
 	}
-	
+
 	public CacheResult getCached()
 	{
 		return cached;
-	}
-
-	public void useController(String address)
-	{
-		controllers[index++] = address;
-	}
-
-	public boolean isFull()
-	{
-		return index >= MAX_CONTROLLERS;
-	}
-
-	public String[] getControllers()
-	{
-		return controllers;
 	}
 
 	public String getAppId()

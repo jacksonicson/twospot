@@ -96,7 +96,7 @@ public class TimeoutAppCache implements AppCache
 	}
 
 	@Override
-	public void staleController(String address)
+	public void controllerBlocks(String appId, String address)
 	{
 		for (CacheEntry entry : cache.values())
 			entry.removeStale(address);

@@ -65,7 +65,6 @@
 	<bean id="FrontendProxy" class="org.prot.frontend.handlers.FrontendProxy">
 		<property name="httpClient" ref="HttpClient" />
 		<property name="appCache" ref="AppCache" />
-		<property name="threadPool" ref="ThreadPool" />
 	</bean>
 
 
