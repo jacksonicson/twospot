@@ -19,13 +19,13 @@ public class SimpleLoadBalancer implements LoadBalancer
 
 	private Stats stats;
 
-	private ControllerInfo findBestController(String appId)
+	private ControllerInfo findBestController(String appId, Map<String, ControllerStats> controllers,
+			Map<String, ControllerInfo> controllerInfos)
 	{
 		// Used to find the best Controller (lowest load)
 		double bestRanking = Double.MAX_VALUE;
 		ControllerStats bestController = null;
 
-		Map<String, ControllerStats> controllers = stats.getControllers();
 		for (ControllerStats controller : controllers.values())
 		{
 			// Calculate a ranking for the controller
@@ -46,7 +46,7 @@ public class SimpleLoadBalancer implements LoadBalancer
 			}
 		}
 
-		ControllerInfo selected = registry.getController(bestController.getAddress());
+		ControllerInfo selected = controllerInfos.get(bestController.getAddress());
 		return selected;
 	}
 
@@ -54,11 +54,15 @@ public class SimpleLoadBalancer implements LoadBalancer
 	public Set<ControllerInfo> selectController(String appId)
 	{
 		// Check if the master knows Controllers
-		if (stats.getControllers().isEmpty())
+		if (stats.isEmpty())
 		{
 			logger.warn("Master has no Controllers");
 			return null;
 		}
+
+		// Fetch all Controllers (Threading-Problem)
+		Map<String, ControllerInfo> controllerInfos = registry.getControllers();
+		Map<String, ControllerStats> controllerStats = stats.getControllers();
 
 		// Set for the results
 		Set<ControllerInfo> result = new HashSet<ControllerInfo>();
@@ -66,24 +70,24 @@ public class SimpleLoadBalancer implements LoadBalancer
 		// Number of Controllers which report an overload
 		int overloaded = 0;
 
-		// Map with all known Controllers
-		Map<String, ControllerStats> controllers = stats.getControllers();
-		for (ControllerStats controller : controllers.values())
+		for (ControllerStats controller : controllerStats.values())
 		{
-			// Check if controller is running the application
+			// Check if the controller is running the application
 			InstanceStats instance = controller.getInstance(appId);
 			if (instance == null)
 				continue;
 
 			// Add the controller to the result set
 			ControllerInfo selected = registry.getController(controller.getAddress());
+			if (selected == null)
+				continue;
+
 			result.add(selected);
 
 			// Check if controller reports an overload
 			if (instance.getValues().overloaded || controller.getValues().cpu > 0.5
 					|| controller.getValues().cpu < 0)
 				overloaded++;
-
 		}
 
 		// Check if we have found Controllers which are running the application
@@ -103,15 +107,14 @@ public class SimpleLoadBalancer implements LoadBalancer
 
 		// The application requires another Controller - use the Controller with
 		// the lowest load
-		ControllerInfo bestControllerInfo = findBestController(appId);
+		ControllerInfo bestControllerInfo = findBestController(appId, controllerStats, controllerInfos);
+
+		// Add the best controller
 		result.add(bestControllerInfo);
 
 		// Update internal stat data about this assignment (Controller -
 		// Application)
 		stats.assignToController(appId, bestControllerInfo.getAddress());
-
-		// This should never happen
-		assert (result.isEmpty() == false);
 
 		// Return the results
 		logger.debug("Returning # controllers: " + result.size());

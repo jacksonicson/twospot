@@ -1,5 +1,6 @@
 package org.prot.manager.stats;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -13,33 +14,37 @@ public class Stats
 {
 	private static final Logger logger = Logger.getLogger(Stats.class);
 
-	private Map<String, ControllerStats> publicControllers = new ConcurrentHashMap<String, ControllerStats>();
+	private Map<String, ControllerStats> publicControllers = new HashMap<String, ControllerStats>();
 
 	private Map<String, ControllerStats> controllers = new ConcurrentHashMap<String, ControllerStats>();
 
-	public void startUpdate()
+	public synchronized void startUpdate()
 	{
 		// Do nothing
 	}
 
-	public void finalizeUpdate()
+	public synchronized void finalizeUpdate()
 	{
 		// Remove all old controllers
 		removeOld();
 
-		// Update public controllers
-		publicControllers.putAll(controllers);
-
-		// Remove all public controllers which are not in the controllers map
-		for (Iterator<String> it = publicControllers.keySet().iterator(); it.hasNext();)
+		synchronized (publicControllers)
 		{
-			String address = it.next();
-			if (!controllers.containsKey(address))
-				it.remove();
+			// Update public controllers
+			publicControllers.putAll(controllers);
+
+			// Remove all public controllers which are not in the controllers
+			// map
+			for (Iterator<String> it = publicControllers.keySet().iterator(); it.hasNext();)
+			{
+				String address = it.next();
+				if (!controllers.containsKey(address))
+					it.remove();
+			}
 		}
 	}
 
-	public void assignToController(String appId, String address)
+	public synchronized void assignToController(String appId, String address)
 	{
 		ControllerStats stats = controllers.get(address);
 		if (stats == null)
@@ -48,12 +53,12 @@ public class Stats
 		stats.assign(appId);
 	}
 
-	public void removeController(String address)
+	public synchronized void removeController(String address)
 	{
 		controllers.remove(address);
 	}
 
-	public void updateController(String address, Ping ping)
+	public synchronized void updateController(String address, Ping ping)
 	{
 		// Load management data
 		Set<StatsValue> stats = ping.ping();
@@ -91,9 +96,22 @@ public class Stats
 		}
 	}
 
+	public boolean isEmpty()
+	{
+		synchronized(publicControllers)
+		{
+			return publicControllers.isEmpty();
+		}
+	}
+	
 	public Map<String, ControllerStats> getControllers()
 	{
-		return publicControllers;
+		synchronized(publicControllers)
+		{
+			Map<String, ControllerStats> copy = new HashMap<String, ControllerStats>();
+			copy.putAll(publicControllers);
+			return copy; 
+		}
 	}
 
 	public void dump()

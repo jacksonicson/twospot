@@ -76,11 +76,6 @@ public class ControllerStats implements StatsUpdater
 		return System.currentTimeMillis() - lastUpdate > 60 * 1000;
 	}
 
-	Set<String> getRunningApps()
-	{
-		return instances.keySet();
-	}
-
 	synchronized void assign(String appId)
 	{
 		if (instances.containsKey(appId))

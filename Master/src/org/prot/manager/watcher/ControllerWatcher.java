@@ -40,6 +40,8 @@ public class ControllerWatcher
 
 	private void removeController(String address)
 	{
+		logger.debug("Removing controller: " + address);
+
 		JmxController connection = getJmxController(address);
 		connection.release();
 		connections.remove(address);
@@ -52,7 +54,7 @@ public class ControllerWatcher
 		stats.startUpdate();
 
 		// Iterate over all controllers
-		for (ControllerInfo info : registry.getControllers())
+		for (ControllerInfo info : registry.getControllers().values())
 		{
 			try
 			{
@@ -66,6 +68,7 @@ public class ControllerWatcher
 			} catch (Exception e)
 			{
 				removeController(info.getServiceAddress());
+				logger.trace("Exception", e);
 			}
 		}
 

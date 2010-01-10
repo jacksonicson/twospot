@@ -1,7 +1,8 @@
 package org.prot.manager.stats;
 
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,26 +39,25 @@ public class ControllerRegistry
 			}
 		}
 
-		// Search controllers to delete
-		Set<String> allControllers = new HashSet<String>();
-		allControllers.addAll(controllers.keySet());
-		for (String address : availableAddresses)
-			allControllers.remove(address);
-
-		// Delete all remaining controllers
-		for (String delete : allControllers)
+		// Remove all controllers which are not in the availableAddress list
+		for (Iterator<String> itController = controllers.keySet().iterator(); itController.hasNext();)
 		{
-			logger.info("Deleting Controller: " + delete);
-			controllers.remove(delete);
+			String testAddress = itController.next();
+			if (availableAddresses.contains(testAddress))
+				continue;
+
+			itController.remove();
 		}
 	}
 
-	public Collection<ControllerInfo> getControllers()
+	public synchronized Map<String, ControllerInfo> getControllers()
 	{
-		return controllers.values();
+		Map<String, ControllerInfo> copy = new HashMap<String, ControllerInfo>();
+		copy.putAll(controllers);
+		return copy;
 	}
 
-	public ControllerInfo getController(String address)
+	public synchronized ControllerInfo getController(String address)
 	{
 		return controllers.get(address);
 	}
