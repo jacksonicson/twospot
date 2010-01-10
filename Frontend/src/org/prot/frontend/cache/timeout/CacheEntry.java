@@ -81,7 +81,7 @@ public class CacheEntry
 		LinkedList<CachedControllerInfo> controllers = new LinkedList<CachedControllerInfo>();
 		synchronized (this)
 		{
-			if (controllers.isEmpty())
+			if (this.controllers.isEmpty())
 				return null;
 
 			controllers.addAll(this.controllers.values());
