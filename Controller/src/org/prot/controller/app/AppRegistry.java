@@ -73,18 +73,8 @@ public class AppRegistry implements TokenChecker
 				return appMapping.get(appInfo);
 
 			if (appInfo != null)
-				logger.debug("CREATING NEW APPINFO: " + appInfo.getStatus());
-			else
-			{
-				logger.debug("CREATING NEW APPINFO FOR NON EXISTING");
-
-				for (AppInfo test : appInfos)
-					if (test.getAppId().equals(appId))
-					{
-						logger.debug("ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRROR");
-						System.exit(1);
-					}
-			}
+				logger.debug("Creating new AppInfo object - current one has the state: "
+						+ appInfo.getStatus());
 
 			// Port for the new AppServer
 			int port = portPool.getPort();
@@ -117,6 +107,12 @@ public class AppRegistry implements TokenChecker
 				switch (state)
 				{
 				case DEPLOYED:
+					// TODO: Wait for all Requests to finish
+					info.setState(AppState.KILLED);
+					break;
+
+				case DROPPED:
+					// TODO: Wait for all Requests to finish
 					info.setState(AppState.KILLED);
 					break;
 

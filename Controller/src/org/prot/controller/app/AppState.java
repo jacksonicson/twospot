@@ -10,6 +10,8 @@ public enum AppState
 
 	BANNED(AppLife.SECOND),
 
+	DROPPED(AppLife.SECOND),
+
 	KILLED(AppLife.SECOND),
 
 	DEPLOYED(AppLife.SECOND),

@@ -137,14 +137,15 @@ public final class AppInfo
 
 		case STARTING:
 			check |= status == AppState.ONLINE;
-			check |= status == AppState.DEPLOYED;
-			check |= status == AppState.KILLED;
+			check |= status == AppState.DEPLOYED; // Always possible
+			check |= status == AppState.KILLED; // If ProcessWorker fails
 			break;
 
 		case ONLINE:
 			check |= status == AppState.BANNED;
-			check |= status == AppState.KILLED;
+			check |= status == AppState.DROPPED;
 			check |= status == AppState.DEPLOYED;
+			check |= status == AppState.KILLED; // Stale appserver
 			break;
 
 		case BANNED:
@@ -153,6 +154,11 @@ public final class AppInfo
 			break;
 
 		case DEPLOYED:
+			check |= status == AppState.KILLED;
+			finishContinuations |= true;
+			break;
+
+		case DROPPED:
 			check |= status == AppState.KILLED;
 			finishContinuations |= true;
 			break;
