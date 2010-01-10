@@ -94,7 +94,7 @@ public class RequestHandler extends AbstractHandler
 		{
 			HttpURI destination = getUrl(baseRequest, appInfo);
 			// Register the request in the RequestManager.
-			requestProcessor.process(appInfo.getAppId(), baseRequest, request, response, destination);
+			requestProcessor.process(appInfo, baseRequest, request, response, destination);
 		} catch (Exception e)
 		{
 			logger.error("Could not process request", e);

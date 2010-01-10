@@ -115,9 +115,8 @@ public class AppManager implements DeploymentListener
 			logger.warn("Could not change state");
 	}
 
-	public void staleApp(String appId)
+	public void staleApp(AppInfo appInfo)
 	{
-		AppInfo appInfo = registry.getAppInfo(appId);
 		if (appInfo != null)
 			appInfo.setState(AppState.KILLED);
 	}

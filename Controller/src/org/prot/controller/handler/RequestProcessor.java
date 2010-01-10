@@ -10,10 +10,11 @@ import org.apache.log4j.Logger;
 import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.server.Request;
+import org.prot.controller.app.AppInfo;
 import org.prot.controller.app.AppManager;
 import org.prot.util.handler.HttpProxyHelper;
 
-public class RequestProcessor extends HttpProxyHelper<String>
+public class RequestProcessor extends HttpProxyHelper<AppInfo>
 {
 	private static final Logger logger = Logger.getLogger(RequestProcessor.class);
 
@@ -24,12 +25,12 @@ public class RequestProcessor extends HttpProxyHelper<String>
 		super(true);
 	}
 
-	public void process(String appId, Request baseRequest, HttpServletRequest request,
+	public void process(AppInfo appInfo, Request baseRequest, HttpServletRequest request,
 			HttpServletResponse response, HttpURI dest)
 	{
 		try
 		{
-			forwardRequest(baseRequest, request, response, dest, appId);
+			forwardRequest(baseRequest, request, response, dest, appInfo);
 		} catch (Exception e)
 		{
 			logger.error("Exception in Proxy", e);
@@ -47,12 +48,11 @@ public class RequestProcessor extends HttpProxyHelper<String>
 	}
 
 	@Override
-	protected boolean error(String appId, Throwable t)
+	protected boolean error(AppInfo appInfo, Throwable t)
 	{
 		if (t instanceof ConnectException)
 		{
-			logger.debug("Reporting stale AppServer: " + appId);
-			appManager.staleApp(appId);
+			appManager.staleApp(appInfo);
 			return true;
 		} else if (t instanceof IOException)
 		{
