@@ -27,7 +27,7 @@
 	<!-- ThreadPool -->
 	<bean id="ThreadPool" class="org.eclipse.jetty.util.thread.QueuedThreadPool">
 		<property name="minThreads" value="7" />
-		<property name="maxThreads" value="10" />
+		<property name="maxThreads" value="20" />
 	</bean>
 
 	<!-- Connector -->
@@ -200,6 +200,7 @@
 					<bean class="org.prot.controller.management.ControllerPing">
 						<property name="appServerWatcher" ref="AppServerWatcher" />
 						<property name="stats" ref="Stats" />
+						<property name="threadPool" ref="ThreadPool" />
 					</bean>
 				</entry>
 			</map>

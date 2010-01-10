@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
+import org.eclipse.jetty.util.thread.ThreadPool;
 import org.prot.controller.stats.Stats;
 import org.prot.util.stats.AppStat;
 import org.prot.util.stats.DoubleStat;
@@ -13,7 +16,11 @@ import org.prot.util.stats.StatsValue;
 
 public class ControllerPing implements JmxPing
 {
+	private static final Logger logger = Logger.getLogger(ControllerPing.class);
+
 	private Stats stats;
+
+	private ThreadPool pool;
 
 	private AppServerWatcher appServerWatcher;
 
@@ -44,6 +51,14 @@ public class ControllerPing implements JmxPing
 			data.add(stat);
 		}
 
+//		if (pool instanceof QueuedThreadPool)
+//		{
+//			QueuedThreadPool p2 = (QueuedThreadPool) pool;
+//			logger.warn("IS LOW: " + p2.isLowOnThreads());
+//			logger.warn("WAITING: " + p2.getThreads());
+//			logger.warn("IDLE: " + pool.getIdleThreads());
+//		}
+
 		return data;
 	}
 
@@ -55,5 +70,10 @@ public class ControllerPing implements JmxPing
 	public void setStats(Stats stats)
 	{
 		this.stats = stats;
+	}
+
+	public void setThreadPool(ThreadPool pool)
+	{
+		this.pool = pool;
 	}
 }

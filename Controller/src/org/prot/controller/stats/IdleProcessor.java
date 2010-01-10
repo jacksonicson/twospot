@@ -33,6 +33,9 @@ public class IdleProcessor implements BalancingProcessor
 
 		for (AppInfo appInfo : appInfos)
 		{
+			if (appInfo.getStatus() != AppState.ONLINE)
+				continue;
+
 			long time = appInfo.getTouch();
 			time = currentTime - time;
 			if (time > IDLE_THREASHOLD)

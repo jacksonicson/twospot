@@ -37,6 +37,9 @@ public class AlmostIdleProcessor implements BalancingProcessor
 		long current = System.currentTimeMillis();
 		for (AppInfo appInfo : appInfos)
 		{
+			if (appInfo.getStatus() != AppState.ONLINE)
+				continue;
+
 			double rps = appInfo.getAppManagement().getAppRequestStats().getRps();
 			long time = current - appInfo.getCreationTime();
 			if (rps < LOW_RPS && time > MIN_RUNTIME)
