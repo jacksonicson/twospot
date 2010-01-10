@@ -28,6 +28,9 @@ public class SimpleLoadBalancer implements LoadBalancer
 
 		for (ControllerStats controller : controllers.values())
 		{
+			if (!controllerInfos.containsKey(controller.getAddress()))
+				continue;
+
 			// Calculate a ranking for the controller
 			double rank = 0;
 			// TODO: Overalod flag of the controller

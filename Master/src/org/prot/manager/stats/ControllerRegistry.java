@@ -46,6 +46,7 @@ public class ControllerRegistry
 			if (availableAddresses.contains(testAddress))
 				continue;
 
+			logger.debug("Removing Controller: " + testAddress);
 			itController.remove();
 		}
 	}

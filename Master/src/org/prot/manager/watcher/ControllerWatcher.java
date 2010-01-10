@@ -81,7 +81,13 @@ public class ControllerWatcher
 		@Override
 		public void run()
 		{
-			update();
+			try
+			{
+				update();
+			} catch (Exception e)
+			{
+				logger.fatal("Exception in WatchTask thread: ", e);
+			}
 		}
 
 		@Override
