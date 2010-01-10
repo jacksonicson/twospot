@@ -19,7 +19,7 @@ public final class AddressExtractor
 		for (NetworkInterface networkInterface = interfaces.nextElement(); interfaces.hasMoreElements(); networkInterface = interfaces
 				.nextElement())
 		{
-			logger.trace("Interface: " + networkInterface.getName() + " = "
+			logger.debug("Interface: " + networkInterface.getName() + " = "
 					+ networkInterface.getDisplayName());
 		}
 
@@ -30,7 +30,7 @@ public final class AddressExtractor
 		{
 			InetAddress inetAddress = address.getAddress();
 
-			logger.trace("address: " + inetAddress.getHostAddress() + " length: "
+			logger.debug("address: " + inetAddress.getHostAddress() + " length: "
 					+ inetAddress.getAddress().length);
 
 			if (ipv6 && inetAddress.getAddress().length == 16)

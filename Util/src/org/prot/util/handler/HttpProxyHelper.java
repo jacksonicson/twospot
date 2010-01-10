@@ -99,7 +99,17 @@ public class HttpProxyHelper<M>
 		// This is a template method
 		return false;
 	}
+	
+	protected boolean handleStatus(Buffer version, int status, Buffer reason) throws IOException
+	{
+		return false;
+	}
+	
 
+	/**
+	 * Implementation
+	 */
+	
 	private boolean isFilteredHeader(String header)
 	{
 		return invalidHeaders.contains(header);
@@ -239,7 +249,8 @@ public class HttpProxyHelper<M>
 			@Override
 			public void onResponseStatus(Buffer version, int status, Buffer reason) throws IOException
 			{
-				response.setStatus(status);
+				if (!handleStatus(version, status, reason))
+					response.setStatus(status);
 			}
 
 			@Override

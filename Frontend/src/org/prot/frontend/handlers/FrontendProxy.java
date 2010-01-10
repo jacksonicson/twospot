@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.http.HttpURI;
+import org.eclipse.jetty.io.Buffer;
 import org.eclipse.jetty.server.Request;
 import org.prot.frontend.cache.AppCache;
 import org.prot.frontend.cache.CacheResult;
@@ -65,6 +66,17 @@ public class FrontendProxy extends HttpProxyHelper<RequestState>
 
 		HttpURI uri = buildUrl(baseRequest, request, result.getControllerInfo(), appId);
 		this.forwardRequest(baseRequest, request, response, uri, state);
+	}
+
+	protected boolean handleStatus(Buffer version, int status, Buffer reason) throws IOException
+	{
+		if (status == HttpStatus.MOVED_TEMPORARILY_302)
+		{
+			logger.info("Moved 302");
+			return false;
+		}
+
+		return false;
 	}
 
 	protected void requestFinished(RequestState state)
