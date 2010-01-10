@@ -136,11 +136,11 @@ public class Configuration
 		workingDir.replace('\\', '/');
 
 		// Remove all trailing slahes
-		while(workingDir.endsWith("/"))
+		while (workingDir.endsWith("/"))
 			workingDir = workingDir.substring(0, workingDir.length() - 1);
 
 		// Set the app directory
-		config.setAppDirectory(workingDir + "/" + config.getAppId());
+		config.setAppDirectory(workingDir + "/" + config.getAppServerPort());
 		logger.info("Configured AppDirectory: " + config.getAppDirectory());
 	}
 
