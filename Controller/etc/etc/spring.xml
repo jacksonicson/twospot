@@ -170,42 +170,10 @@
 		<property name="registryPort" value="${rmi.controller.registry.port}" />
 	</bean>
 
-	<!-- JMX -->
-	<bean id="MbeanServer" class="org.springframework.jmx.support.MBeanServerFactoryBean" />
-
-	<bean id="ServerConnector"
-		class="org.springframework.jmx.support.ConnectorServerFactoryBean">
-		<property name="objectName" value="connector:name=rmi" />
-
-		<!-- Register the services in the local RMI registry -->
-		<property name="serviceUrl"
-			value="service:jmx:rmi:///jndi/rmi://localhost:${rmi.controller.registry.port}/controller" />
-
-		<property name="threaded" value="true" />
-		<property name="daemon" value="true" />
-
-		<property name="server">
-			<ref local="MbeanServer" />
-		</property>
+	<!-- Management -->
+	<bean id="UdpListener" class="org.prot.util.managment.UdpListener">
 	</bean>
 
-	<bean id="JmxExporter" class="org.springframework.jmx.export.MBeanExporter">
-		<property name="server" ref="MbeanServer" />
-
-		<property name="registrationBehaviorName" value="REGISTRATION_REPLACE_EXISTING" />
-
-		<property name="beans">
-			<map>
-				<entry key="bean:name=resources">
-					<bean class="org.prot.controller.management.ControllerPing">
-						<property name="appServerWatcher" ref="AppServerWatcher" />
-						<property name="stats" ref="Stats" />
-						<property name="threadPool" ref="ThreadPool" />
-					</bean>
-				</entry>
-			</map>
-		</property>
-	</bean>
 
 </beans>
 

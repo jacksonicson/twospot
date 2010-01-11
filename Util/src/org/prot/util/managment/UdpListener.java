@@ -1,4 +1,4 @@
-package org.prot.controller.management;
+package org.prot.util.managment;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -26,10 +26,16 @@ public class UdpListener implements Runnable
 		}
 	}
 
+	protected void handleDatagram(DatagramPacket packet)
+	{
+		logger.debug("Datagram received");
+	}
+	
 	public void run()
 	{
 		try
 		{
+			// TODO: PORT!!!
 			this.socket = new DatagramSocket(3232);
 		} catch (SocketException e)
 		{
@@ -39,21 +45,20 @@ public class UdpListener implements Runnable
 
 		while (true)
 		{
-			DatagramPacket packet = new DatagramPacket(new byte[1024], 1024);
+			DatagramPacket packet = new DatagramPacket(new byte[2048], 2048);
 			try
 			{
 				socket.receive(packet);
+				handleDatagram(packet);
 			} catch (IOException e)
 			{
 				logger.error("Could not recive datagram", e);
 				continue;
-			} catch(Exception e)
+			} catch (Exception e)
 			{
 				logger.error("Unhandled error", e);
 				continue;
 			}
-
-			// TODO: Handle the package
 		}
 	}
 }

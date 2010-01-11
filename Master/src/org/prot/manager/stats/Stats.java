@@ -3,12 +3,9 @@ package org.prot.manager.stats;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
-import org.prot.util.managment.Ping;
-import org.prot.util.stats.StatsValue;
 
 public class Stats
 {
@@ -58,31 +55,31 @@ public class Stats
 		controllers.remove(address);
 	}
 
-	public synchronized void updateController(String address, Ping ping)
+	public synchronized void updateController(String address)
 	{
-		// Load management data
-		Set<StatsValue> stats = ping.ping();
-
-		ControllerStats controller = controllers.get(address);
-
-		// Need to create a new ControllerStats-Object?
-		if (controller == null)
-		{
-			synchronized (controllers)
-			{
-				// Double check this
-				if (!controllers.containsKey(address))
-				{
-					// Create and register a new ControllerStats-Object
-					controller = new ControllerStats(address);
-					controllers.put(address, controller);
-				}
-
-			}
-		}
-
-		// Update the ControllerStas object
-		controller.updateStats(stats);
+		// // Load management data
+		// Set<StatsValue> stats = ping.ping();
+		//
+		// ControllerStats controller = controllers.get(address);
+		//
+		// // Need to create a new ControllerStats-Object?
+		// if (controller == null)
+		// {
+		// synchronized (controllers)
+		// {
+		// // Double check this
+		// if (!controllers.containsKey(address))
+		// {
+		// // Create and register a new ControllerStats-Object
+		// controller = new ControllerStats(address);
+		// controllers.put(address, controller);
+		// }
+		//
+		// }
+		// }
+		//
+		// // Update the ControllerStas object
+		// controller.updateStats(stats);
 	}
 
 	private void removeOld()
@@ -98,19 +95,19 @@ public class Stats
 
 	public boolean isEmpty()
 	{
-		synchronized(publicControllers)
+		synchronized (publicControllers)
 		{
 			return publicControllers.isEmpty();
 		}
 	}
-	
+
 	public Map<String, ControllerStats> getControllers()
 	{
-		synchronized(publicControllers)
+		synchronized (publicControllers)
 		{
 			Map<String, ControllerStats> copy = new HashMap<String, ControllerStats>();
 			copy.putAll(publicControllers);
-			return copy; 
+			return copy;
 		}
 	}
 

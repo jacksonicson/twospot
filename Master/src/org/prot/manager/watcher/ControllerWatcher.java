@@ -1,17 +1,13 @@
 package org.prot.manager.watcher;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.net.DatagramPacket;
 
 import org.apache.log4j.Logger;
-import org.prot.controller.management.JmxPing;
-import org.prot.manager.stats.ControllerInfo;
 import org.prot.manager.stats.ControllerRegistry;
 import org.prot.manager.stats.Stats;
-import org.prot.util.scheduler.Scheduler;
-import org.prot.util.scheduler.SchedulerTask;
+import org.prot.util.managment.UdpListener;
 
-public class ControllerWatcher
+public class ControllerWatcher extends UdpListener
 {
 	private static final Logger logger = Logger.getLogger(ControllerWatcher.class);
 
@@ -19,91 +15,32 @@ public class ControllerWatcher
 
 	private Stats stats;
 
-	private Map<String, JmxController> connections = new HashMap<String, JmxController>();
-
-	public void init()
+	protected void handleDatagram(DatagramPacket packet)
 	{
-		Scheduler.addTask(new WatchTask());
-	}
-
-	private JmxController getJmxController(String address)
-	{
-		JmxController connection = connections.get(address);
-		if (connection == null)
-		{
-			connection = new JmxController(address);
-			connections.put(address, connection);
-		}
-
-		return connection;
-	}
-
-	private void removeController(String address)
-	{
-		logger.debug("Removing controller: " + address);
-
-		JmxController connection = getJmxController(address);
-		connection.release();
-		connections.remove(address);
-
-		stats.removeController(address);
-	}
-
-	private void update()
-	{
-		stats.startUpdate();
-
-		// Iterate over all controllers
-		for (ControllerInfo info : registry.getControllers().values())
-		{
-			try
-			{
-				logger.debug("Querying Controller: " + info.getServiceAddress());
-
-				// Get JMX connection
-				JmxController connection = getJmxController(info.getServiceAddress());
-				JmxPing ping = connection.getJmxResources();
-				stats.updateController(info.getAddress(), ping);
-
-			} catch (Exception e)
-			{
-				removeController(info.getServiceAddress());
-				logger.trace("Exception", e);
-			}
-		}
-
-		stats.finalizeUpdate();
-		stats.dump();
-	}
-
-	class WatchTask extends SchedulerTask
-	{
-		@Override
-		public void run()
-		{
-			try
-			{
-				update();
-			} catch (Exception e)
-			{
-				logger.fatal("Exception in WatchTask thread: ", e);
-			}
-		}
-
-		@Override
-		public long getInterval()
-		{
-			return 5000;
-		}
-	}
-
-	public void setRegistry(ControllerRegistry registry)
-	{
-		this.registry = registry;
-	}
-
-	public void setStats(Stats stats)
-	{
-		this.stats = stats;
+		logger.debug("Datagram received");
+		// stats.startUpdate();
+		//
+		// // Iterate over all controllers
+		// for (ControllerInfo info : registry.getControllers().values())
+		// {
+		// try
+		// {
+		// logger.debug("Querying Controller: " + info.getServiceAddress());
+		//
+		// // Get JMX connection
+		// JmxController connection =
+		// getJmxController(info.getServiceAddress());
+		// JmxPing ping = connection.getJmxResources();
+		// stats.updateController(info.getAddress(), ping);
+		//
+		// } catch (Exception e)
+		// {
+		// removeController(info.getServiceAddress());
+		// logger.trace("Exception", e);
+		// }
+		// }
+		//
+		// stats.finalizeUpdate();
+		// stats.dump();
 	}
 }

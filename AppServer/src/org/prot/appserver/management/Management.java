@@ -1,10 +1,8 @@
 package org.prot.appserver.management;
 
-import java.util.Set;
-
-import org.prot.util.stats.StatsValue;
+import org.prot.util.managment.gen.ManagementData.AppServer;
 
 public interface Management
 {
-	public Set<StatsValue> ping();
+	public void fill(AppServer.Builder appServer);
 }
