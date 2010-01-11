@@ -281,9 +281,7 @@ public class HttpProxyHelper<M>
 				if (response.isCommitted() == false)
 					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
-				boolean handled = error(obj, ex);
-
-				if (!handled)
+				if (!error(obj, ex))
 					logger.error("Unhandled exception in the ProxyHelper: ", ex);
 
 				jetRequest.setHandled(true);

@@ -117,13 +117,19 @@ public class CacheEntry
 		}
 
 		if (selected != null)
-		{
-			min++;
-			requestCounter.put(selected.getAddress(), min);
-			return selected;
-		}
+			aquire(selected.getAddress());
 
-		return null;
+		return selected;
+	}
+
+	void aquire(String address)
+	{
+		synchronized (requestCounter)
+		{
+			Long min = requestCounter.get(address);
+			min++;
+			requestCounter.put(address, min);
+		}
 	}
 
 	void release(String address)
@@ -133,8 +139,11 @@ public class CacheEntry
 			Long counter = requestCounter.get(address);
 			if (counter != null)
 			{
-				counter++;
-				requestCounter.put(address, counter);
+				if (counter > 0)
+				{
+					counter--;
+					requestCounter.put(address, counter);
+				}
 			}
 		}
 	}

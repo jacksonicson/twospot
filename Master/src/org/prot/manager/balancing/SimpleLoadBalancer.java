@@ -88,8 +88,7 @@ public class SimpleLoadBalancer implements LoadBalancer
 			result.add(selected);
 
 			// Check if controller reports an overload
-			if (instance.getValues().overloaded || controller.getValues().cpu > 0.5
-					|| controller.getValues().cpu < 0)
+			if (instance.getValues().overloaded || controller.getValues().overloaded)
 				overloaded++;
 		}
 

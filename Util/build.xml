@@ -18,6 +18,14 @@
 		<delete dir="${build}" />
 	</target>
 
+	<target name="protoc">
+		<exec executable="protoc">
+			<arg value="-I=${src}" />
+			<arg value="--java_out=${src}" />
+			<arg value="${src}/test.proto" />
+		</exec>
+	</target>
+ 
 	<target name="build" depends="prepare">
 		<javac srcdir="${src}" destdir="${build}" debug="true">
 			<classpath refid="classpath" />

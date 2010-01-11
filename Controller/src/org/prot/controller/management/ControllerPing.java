@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.util.thread.ThreadPool;
 import org.prot.controller.stats.Stats;
+import org.prot.util.managment.gen.ManagementData;
 import org.prot.util.stats.AppStat;
 import org.prot.util.stats.DoubleStat;
 import org.prot.util.stats.LongStat;
@@ -51,13 +51,23 @@ public class ControllerPing implements JmxPing
 			data.add(stat);
 		}
 
-//		if (pool instanceof QueuedThreadPool)
-//		{
-//			QueuedThreadPool p2 = (QueuedThreadPool) pool;
-//			logger.warn("IS LOW: " + p2.isLowOnThreads());
-//			logger.warn("WAITING: " + p2.getThreads());
-//			logger.warn("IDLE: " + pool.getIdleThreads());
-//		}
+		// if (pool instanceof QueuedThreadPool)
+		// {
+		// QueuedThreadPool p2 = (QueuedThreadPool) pool;
+		// logger.warn("IS LOW: " + p2.isLowOnThreads());
+		// logger.warn("WAITING: " + p2.getThreads());
+		// logger.warn("IDLE: " + pool.getIdleThreads());
+		// }
+
+		// 
+		
+		ManagementData.Controller.Builder builder = ManagementData.Controller.newBuilder();
+		builder.setAddress("");
+		
+
+		ManagementData.Controller controller = builder.build();
+		byte[] dt = controller.toByteArray();
+		// TODO: UDP TO Manager
 
 		return data;
 	}

@@ -16,17 +16,15 @@
 		<property name="maxIdleTime" value="500" />
 	</bean>
 
+	<bean id="ThreadPool" class="org.eclipse.jetty.util.thread.QueuedThreadPool">
+		<property name="minThreads" value="5" />
+		<property name="maxThreads" value="7" />
+		<property name="maxStopTimeMs" value="100" />
+	</bean>
+
 	<!-- Server -->
 	<bean id="Server" class="org.eclipse.jetty.server.Server">
-		<property name="threadPool">
-		
-			<bean class="org.eclipse.jetty.util.thread.QueuedThreadPool">
-				<property name="minThreads" value="5" />
-				<property name="maxThreads" value="7" />
-				<property name="maxStopTimeMs" value="100" />
-			</bean>
-			
-		</property>
+		<property name="threadPool" ref="ThreadPool" />
 
 		<property name="connectors">
 			<list>
@@ -55,6 +53,7 @@
 	<bean id="JettyAppManagement" class="org.prot.appserver.runtime.java.JettyAppManagement">
 		<property name="countingRequestLog" ref="CountingRequestLog" />
 		<property name="connector" ref="Connector" />
+		<property name="threadPool" ref="ThreadPool" />
 	</bean>
 
 	<!-- Request handling -->

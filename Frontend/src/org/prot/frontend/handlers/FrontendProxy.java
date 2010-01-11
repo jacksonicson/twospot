@@ -114,6 +114,10 @@ public class FrontendProxy extends HttpProxyHelper<RequestState>
 			{
 				return false;
 			}
+		} else if (e instanceof IOException)
+		{
+			logger.trace("IOException", e);
+			return true;
 		}
 
 		return false;

@@ -39,6 +39,8 @@ public class ControllerStats implements StatsUpdater
 
 		public long freeMemory;
 		public long totalMemory;
+		
+		public boolean overloaded;
 
 		public void dump()
 		{

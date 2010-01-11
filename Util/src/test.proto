@@ -1,0 +1,23 @@
+package test; 
+
+option optimize_for = LITE_RUNTIME;
+
+option java_package = "org.prot.util.managment.gen";
+option java_outer_classname = "ManagementData";
+
+
+message Controller
+{
+	required string address = 1; 
+
+	optional float load = 10; 
+	optional uint32 runningApps = 11; 
+		
+	repeated AppServer appServers = 20;
+}
+
+message AppServer
+{
+	required string appId = 1; 
+	required float load = 2;
+}

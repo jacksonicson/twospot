@@ -42,6 +42,8 @@ public class AlmostIdleProcessor implements BalancingProcessor
 
 			double rps = appInfo.getAppManagement().getAppRequestStats().getRps();
 			long time = current - appInfo.getCreationTime();
+			
+			// TODO: < 50 % der Threads!
 			if (rps < LOW_RPS && time > MIN_RUNTIME)
 			{
 				// Check if this Controller is the last Controller serving the

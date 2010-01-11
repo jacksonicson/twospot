@@ -3,7 +3,10 @@ package org.prot.appserver.runtime.java;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
+import org.eclipse.jetty.util.thread.ThreadPool;
 import org.prot.appserver.management.Management;
 import org.prot.util.stats.BooleanStat;
 import org.prot.util.stats.DoubleStat;
@@ -14,9 +17,13 @@ import ort.prot.util.server.CountingRequestLog;
 
 public class JettyAppManagement implements Management
 {
+	private static final Logger logger = Logger.getLogger(JettyAppManagement.class);
+
 	private CountingRequestLog countingRequestLog;
 
 	private Connector connector;
+
+	private ThreadPool pool;
 
 	private long timestamp = System.currentTimeMillis();
 
@@ -45,6 +52,14 @@ public class JettyAppManagement implements Management
 		data.add(new BooleanStat(StatType.OVERLOADED, connector.isLowResources()));
 		data.add(new DoubleStat(StatType.REQUESTS_PER_SECOND, rps));
 
+		if(pool instanceof QueuedThreadPool)
+		{
+			QueuedThreadPool p2 = (QueuedThreadPool)pool;
+			logger.warn("IS LOW: " + p2.isLowOnThreads());
+			logger.warn("WAITING: " + p2.getThreads());
+			logger.warn("IDLE: " + pool.getIdleThreads());
+		}
+
 		return data;
 	}
 
@@ -56,5 +71,10 @@ public class JettyAppManagement implements Management
 	public void setConnector(Connector connector)
 	{
 		this.connector = connector;
+	}
+
+	public void setThreadPool(ThreadPool pool)
+	{
+		this.pool = pool;
 	}
 }
