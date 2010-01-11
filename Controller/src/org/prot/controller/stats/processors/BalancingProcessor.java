@@ -1,4 +1,4 @@
-package org.prot.controller.stats;
+package org.prot.controller.stats.processors;
 
 import java.util.Set;
 

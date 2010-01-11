@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.prot.controller.app.AppInfo;
 import org.prot.controller.app.AppRegistry;
 import org.prot.controller.config.Configuration;
+import org.prot.controller.stats.processors.BalancingProcessor;
 import org.prot.util.managment.gen.ManagementData;
 import org.prot.util.scheduler.Scheduler;
 import org.prot.util.scheduler.SchedulerTask;

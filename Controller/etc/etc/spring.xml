@@ -65,11 +65,11 @@
 		<property name="registry" ref="AppRegistry" />
 		<property name="processors">
 			<list>
-				<bean class="org.prot.controller.stats.IdleProcessor" />
-				<bean class="org.prot.controller.stats.HighLoadProcessor">
+				<bean class="org.prot.controller.stats.processors.IdleProcessor" />
+				<bean class="org.prot.controller.stats.processors.HighLoadProcessor">
 					<property name="connector" ref="OutsideConnector" />
 				</bean>
-				<bean class="org.prot.controller.stats.AlmostIdleProcessor">
+				<bean class="org.prot.controller.stats.processors.AlmostIdleProcessor">
 					<property name="management" ref="ManagementService" />
 				</bean>
 			</list>
