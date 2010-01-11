@@ -45,24 +45,14 @@ public class ControllerStatsCollector
 			processor.run(registry.getDuplicatedAppInfos());
 	}
 
-	public void setRegistry(AppRegistry registry)
-	{
-		this.registry = registry;
-	}
-
-	public void setProcessors(List<BalancingProcessor> processors)
-	{
-		this.processors = processors;
-	}
-
-	public void update(ManagementData.AppServer appServer)
+	void update(ManagementData.AppServer appServer)
 	{
 		AppInfo appInfo = registry.getAppInfo(appServer.getAppId());
 		if (appInfo != null)
 			appInfo.getAppManagement().update(appServer);
 	}
 
-	public void fill(ManagementData.Controller.Builder controller)
+	void fill(ManagementData.Controller.Builder controller)
 	{
 		controller.setAddress(Configuration.getConfiguration().getAddress());
 
@@ -82,7 +72,7 @@ public class ControllerStatsCollector
 		@Override
 		public long getInterval()
 		{
-			return 5000;
+			return 3000;
 		}
 
 		@Override
@@ -97,5 +87,15 @@ public class ControllerStatsCollector
 				System.exit(1);
 			}
 		}
+	}
+
+	public void setRegistry(AppRegistry registry)
+	{
+		this.registry = registry;
+	}
+
+	public void setProcessors(List<BalancingProcessor> processors)
+	{
+		this.processors = processors;
 	}
 }

@@ -187,7 +187,7 @@ class ProcessHandler
 		return classpath;
 	}
 
-	private boolean waitForAppServer(Process process) throws IOException
+	private void waitForAppServer(Process process) throws IOException
 	{
 		// create IO streams
 		BufferedReader stdInStream = null;
@@ -205,7 +205,7 @@ class ProcessHandler
 				if (line.equalsIgnoreCase(SERVER_ONLINE))
 				{
 					logger.info("AppServer is ONLINE");
-					return true;
+					return;
 				} else if (line.equalsIgnoreCase(SERVER_FAILED))
 				{
 					logger.info("AppServer FAILED");

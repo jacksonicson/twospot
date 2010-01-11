@@ -174,13 +174,21 @@ class ProcessWorker implements Runnable
 
 		// Update state
 		if (success)
+		{
 			appInfo.setState(AppState.ONLINE);
+			
+			// Resume all continuations
+			logger.debug("Resuming all continuations waiting in the AppInfo");
+			appInfo.resumeContinuations();
+		}
 		else
+		{
 			appInfo.setState(AppState.KILLED);
-
-		// Resume all continuations
-		logger.debug("Resuming all continuations waiting in the AppInfo");
-		appInfo.resumeContinuations();
+			
+			// Resume all continuations
+			logger.debug("Could not start AppServer - finishing all continuations");
+			appInfo.finishContinuations();
+		}
 	}
 
 	public void setThreadPool(ThreadPool threadPool)
