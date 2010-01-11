@@ -14,13 +14,11 @@ public class ManagementService
 	// ZooKeeper helper
 	private ZooHelper zooHelper;
 
-	private String networkInterface;
-
 	private WatchApp watchApp = new WatchApp();
 
 	public void init()
 	{
-		zooHelper.getQueue().insertConnectionJob(new RegisterController(networkInterface));
+		zooHelper.getQueue().insertConnectionJob(new RegisterController());
 		zooHelper.setup();
 
 		zooHelper.getQueue().insert(watchApp);
@@ -69,10 +67,5 @@ public class ManagementService
 	public void setZooHelper(ZooHelper zooHelper)
 	{
 		this.zooHelper = zooHelper;
-	}
-
-	public void setNetworkInterface(String networkInterface)
-	{
-		this.networkInterface = networkInterface;
 	}
 }

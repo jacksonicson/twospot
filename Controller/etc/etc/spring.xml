@@ -55,12 +55,12 @@
 	<bean id="RequestHandler" class="org.prot.controller.handler.RequestHandler">
 		<property name="appManager" ref="AppManager" />
 		<property name="requestProcessor" ref="RequestProcessor" />
-		<property name="stats" ref="Stats" />
+		<property name="stats" ref="ControllerStatsCollector" />
 	</bean>
 
 
 	<!-- Application beans -->
-	<bean id="Stats" class="org.prot.controller.stats.Stats"
+	<bean id="ControllerStatsCollector" class="org.prot.controller.stats.ControllerStatsCollector"
 		init-method="init">
 		<property name="registry" ref="AppRegistry" />
 		<property name="processors">
@@ -79,7 +79,6 @@
 	<bean id="ManagementService" class="org.prot.controller.zookeeper.ManagementService"
 		init-method="init">
 		<property name="zooHelper" ref="ZooHelper" />
-		<property name="networkInterface" value="${zk.controller.networkInterface}" />
 	</bean>
 
 	<bean id="AppRegistry" class="org.prot.controller.app.AppRegistry">
@@ -171,7 +170,8 @@
 	</bean>
 
 	<!-- Management -->
-	<bean id="UdpListener" class="org.prot.util.managment.UdpListener">
+	<bean id="UdpListener" class="org.prot.controller.stats.ControllerManagement" init-method="init">
+		<property name="controllerStatsCollector" ref="ControllerStatsCollector" />
 	</bean>
 
 

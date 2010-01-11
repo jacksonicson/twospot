@@ -42,6 +42,41 @@ public final class ManagementData {
     public boolean hasRunningApps() { return hasRunningApps; }
     public int getRunningApps() { return runningApps_; }
     
+    // optional float cpu = 12 [default = -1];
+    public static final int CPU_FIELD_NUMBER = 12;
+    private boolean hasCpu;
+    private float cpu_ = -1F;
+    public boolean hasCpu() { return hasCpu; }
+    public float getCpu() { return cpu_; }
+    
+    // optional float rps = 13 [default = 0];
+    public static final int RPS_FIELD_NUMBER = 13;
+    private boolean hasRps;
+    private float rps_ = 0F;
+    public boolean hasRps() { return hasRps; }
+    public float getRps() { return rps_; }
+    
+    // optional int64 freeMem = 14 [default = -1];
+    public static final int FREEMEM_FIELD_NUMBER = 14;
+    private boolean hasFreeMem;
+    private long freeMem_ = -1L;
+    public boolean hasFreeMem() { return hasFreeMem; }
+    public long getFreeMem() { return freeMem_; }
+    
+    // optional int64 totalMem = 15 [default = -1];
+    public static final int TOTALMEM_FIELD_NUMBER = 15;
+    private boolean hasTotalMem;
+    private long totalMem_ = -1L;
+    public boolean hasTotalMem() { return hasTotalMem; }
+    public long getTotalMem() { return totalMem_; }
+    
+    // optional bool overloaded = 16 [default = false];
+    public static final int OVERLOADED_FIELD_NUMBER = 16;
+    private boolean hasOverloaded;
+    private boolean overloaded_ = false;
+    public boolean hasOverloaded() { return hasOverloaded; }
+    public boolean getOverloaded() { return overloaded_; }
+    
     // repeated .test.AppServer appServers = 20;
     public static final int APPSERVERS_FIELD_NUMBER = 20;
     private java.util.List<org.prot.util.managment.gen.ManagementData.AppServer> appServers_ =
@@ -73,6 +108,21 @@ public final class ManagementData {
       if (hasRunningApps()) {
         output.writeUInt32(11, getRunningApps());
       }
+      if (hasCpu()) {
+        output.writeFloat(12, getCpu());
+      }
+      if (hasRps()) {
+        output.writeFloat(13, getRps());
+      }
+      if (hasFreeMem()) {
+        output.writeInt64(14, getFreeMem());
+      }
+      if (hasTotalMem()) {
+        output.writeInt64(15, getTotalMem());
+      }
+      if (hasOverloaded()) {
+        output.writeBool(16, getOverloaded());
+      }
       for (org.prot.util.managment.gen.ManagementData.AppServer element : getAppServersList()) {
         output.writeMessage(20, element);
       }
@@ -95,6 +145,26 @@ public final class ManagementData {
       if (hasRunningApps()) {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt32Size(11, getRunningApps());
+      }
+      if (hasCpu()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(12, getCpu());
+      }
+      if (hasRps()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(13, getRps());
+      }
+      if (hasFreeMem()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(14, getFreeMem());
+      }
+      if (hasTotalMem()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(15, getTotalMem());
+      }
+      if (hasOverloaded()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(16, getOverloaded());
       }
       for (org.prot.util.managment.gen.ManagementData.AppServer element : getAppServersList()) {
         size += com.google.protobuf.CodedOutputStream
@@ -248,6 +318,21 @@ public final class ManagementData {
         if (other.hasRunningApps()) {
           setRunningApps(other.getRunningApps());
         }
+        if (other.hasCpu()) {
+          setCpu(other.getCpu());
+        }
+        if (other.hasRps()) {
+          setRps(other.getRps());
+        }
+        if (other.hasFreeMem()) {
+          setFreeMem(other.getFreeMem());
+        }
+        if (other.hasTotalMem()) {
+          setTotalMem(other.getTotalMem());
+        }
+        if (other.hasOverloaded()) {
+          setOverloaded(other.getOverloaded());
+        }
         if (!other.appServers_.isEmpty()) {
           if (result.appServers_.isEmpty()) {
             result.appServers_ = new java.util.ArrayList<org.prot.util.managment.gen.ManagementData.AppServer>();
@@ -282,6 +367,26 @@ public final class ManagementData {
             }
             case 88: {
               setRunningApps(input.readUInt32());
+              break;
+            }
+            case 101: {
+              setCpu(input.readFloat());
+              break;
+            }
+            case 109: {
+              setRps(input.readFloat());
+              break;
+            }
+            case 112: {
+              setFreeMem(input.readInt64());
+              break;
+            }
+            case 120: {
+              setTotalMem(input.readInt64());
+              break;
+            }
+            case 128: {
+              setOverloaded(input.readBool());
               break;
             }
             case 162: {
@@ -349,6 +454,96 @@ public final class ManagementData {
       public Builder clearRunningApps() {
         result.hasRunningApps = false;
         result.runningApps_ = 0;
+        return this;
+      }
+      
+      // optional float cpu = 12 [default = -1];
+      public boolean hasCpu() {
+        return result.hasCpu();
+      }
+      public float getCpu() {
+        return result.getCpu();
+      }
+      public Builder setCpu(float value) {
+        result.hasCpu = true;
+        result.cpu_ = value;
+        return this;
+      }
+      public Builder clearCpu() {
+        result.hasCpu = false;
+        result.cpu_ = -1F;
+        return this;
+      }
+      
+      // optional float rps = 13 [default = 0];
+      public boolean hasRps() {
+        return result.hasRps();
+      }
+      public float getRps() {
+        return result.getRps();
+      }
+      public Builder setRps(float value) {
+        result.hasRps = true;
+        result.rps_ = value;
+        return this;
+      }
+      public Builder clearRps() {
+        result.hasRps = false;
+        result.rps_ = 0F;
+        return this;
+      }
+      
+      // optional int64 freeMem = 14 [default = -1];
+      public boolean hasFreeMem() {
+        return result.hasFreeMem();
+      }
+      public long getFreeMem() {
+        return result.getFreeMem();
+      }
+      public Builder setFreeMem(long value) {
+        result.hasFreeMem = true;
+        result.freeMem_ = value;
+        return this;
+      }
+      public Builder clearFreeMem() {
+        result.hasFreeMem = false;
+        result.freeMem_ = -1L;
+        return this;
+      }
+      
+      // optional int64 totalMem = 15 [default = -1];
+      public boolean hasTotalMem() {
+        return result.hasTotalMem();
+      }
+      public long getTotalMem() {
+        return result.getTotalMem();
+      }
+      public Builder setTotalMem(long value) {
+        result.hasTotalMem = true;
+        result.totalMem_ = value;
+        return this;
+      }
+      public Builder clearTotalMem() {
+        result.hasTotalMem = false;
+        result.totalMem_ = -1L;
+        return this;
+      }
+      
+      // optional bool overloaded = 16 [default = false];
+      public boolean hasOverloaded() {
+        return result.hasOverloaded();
+      }
+      public boolean getOverloaded() {
+        return result.getOverloaded();
+      }
+      public Builder setOverloaded(boolean value) {
+        result.hasOverloaded = true;
+        result.overloaded_ = value;
+        return this;
+      }
+      public Builder clearOverloaded() {
+        result.hasOverloaded = false;
+        result.overloaded_ = false;
         return this;
       }
       
@@ -437,6 +632,20 @@ public final class ManagementData {
     public boolean hasLoad() { return hasLoad; }
     public float getLoad() { return load_; }
     
+    // optional float rps = 10;
+    public static final int RPS_FIELD_NUMBER = 10;
+    private boolean hasRps;
+    private float rps_ = 0F;
+    public boolean hasRps() { return hasRps; }
+    public float getRps() { return rps_; }
+    
+    // optional bool overloaded = 11 [default = false];
+    public static final int OVERLOADED_FIELD_NUMBER = 11;
+    private boolean hasOverloaded;
+    private boolean overloaded_ = false;
+    public boolean hasOverloaded() { return hasOverloaded; }
+    public boolean getOverloaded() { return overloaded_; }
+    
     public final boolean isInitialized() {
       if (!hasAppId) return false;
       if (!hasLoad) return false;
@@ -450,6 +659,12 @@ public final class ManagementData {
       }
       if (hasLoad()) {
         output.writeFloat(2, getLoad());
+      }
+      if (hasRps()) {
+        output.writeFloat(10, getRps());
+      }
+      if (hasOverloaded()) {
+        output.writeBool(11, getOverloaded());
       }
     }
     
@@ -466,6 +681,14 @@ public final class ManagementData {
       if (hasLoad()) {
         size += com.google.protobuf.CodedOutputStream
           .computeFloatSize(2, getLoad());
+      }
+      if (hasRps()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(10, getRps());
+      }
+      if (hasOverloaded()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(11, getOverloaded());
       }
       memoizedSerializedSize = size;
       return size;
@@ -608,6 +831,12 @@ public final class ManagementData {
         if (other.hasLoad()) {
           setLoad(other.getLoad());
         }
+        if (other.hasRps()) {
+          setRps(other.getRps());
+        }
+        if (other.hasOverloaded()) {
+          setOverloaded(other.getOverloaded());
+        }
         return this;
       }
       
@@ -632,6 +861,14 @@ public final class ManagementData {
             }
             case 21: {
               setLoad(input.readFloat());
+              break;
+            }
+            case 85: {
+              setRps(input.readFloat());
+              break;
+            }
+            case 88: {
+              setOverloaded(input.readBool());
               break;
             }
           }
@@ -675,6 +912,42 @@ public final class ManagementData {
       public Builder clearLoad() {
         result.hasLoad = false;
         result.load_ = 0F;
+        return this;
+      }
+      
+      // optional float rps = 10;
+      public boolean hasRps() {
+        return result.hasRps();
+      }
+      public float getRps() {
+        return result.getRps();
+      }
+      public Builder setRps(float value) {
+        result.hasRps = true;
+        result.rps_ = value;
+        return this;
+      }
+      public Builder clearRps() {
+        result.hasRps = false;
+        result.rps_ = 0F;
+        return this;
+      }
+      
+      // optional bool overloaded = 11 [default = false];
+      public boolean hasOverloaded() {
+        return result.hasOverloaded();
+      }
+      public boolean getOverloaded() {
+        return result.getOverloaded();
+      }
+      public Builder setOverloaded(boolean value) {
+        result.hasOverloaded = true;
+        result.overloaded_ = value;
+        return this;
+      }
+      public Builder clearOverloaded() {
+        result.hasOverloaded = false;
+        result.overloaded_ = false;
         return this;
       }
     }

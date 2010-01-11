@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
+import org.prot.util.managment.gen.ManagementData;
 
 public class Stats
 {
@@ -55,31 +56,23 @@ public class Stats
 		controllers.remove(address);
 	}
 
-	public synchronized void updateController(String address)
+	public synchronized void updateController(ManagementData.Controller managementController)
 	{
-		// // Load management data
-		// Set<StatsValue> stats = ping.ping();
-		//
-		// ControllerStats controller = controllers.get(address);
-		//
-		// // Need to create a new ControllerStats-Object?
-		// if (controller == null)
-		// {
-		// synchronized (controllers)
-		// {
-		// // Double check this
-		// if (!controllers.containsKey(address))
-		// {
-		// // Create and register a new ControllerStats-Object
-		// controller = new ControllerStats(address);
-		// controllers.put(address, controller);
-		// }
-		//
-		// }
-		// }
-		//
-		// // Update the ControllerStas object
-		// controller.updateStats(stats);
+		String address = managementController.getAddress();
+		ControllerStats controller = controllers.get(address);
+		if (controller == null)
+		{
+			synchronized (controllers)
+			{
+				if (!controllers.containsKey(address))
+				{
+					controller = new ControllerStats(address);
+					controllers.put(address, controller);
+				}
+			}
+		}
+
+		controller.updateStats(managementController);
 	}
 
 	private void removeOld()

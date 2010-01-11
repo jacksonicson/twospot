@@ -7,16 +7,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
-import org.prot.util.stats.AppStat;
-import org.prot.util.stats.BooleanStat;
-import org.prot.util.stats.DoubleStat;
-import org.prot.util.stats.IntegerStat;
-import org.prot.util.stats.LongStat;
-import org.prot.util.stats.StatType;
-import org.prot.util.stats.StatsUpdater;
-import org.prot.util.stats.StatsValue;
+import org.prot.util.managment.gen.ManagementData;
+import org.prot.util.managment.gen.ManagementData.AppServer;
 
-public class ControllerStats implements StatsUpdater
+public class ControllerStats
 {
 	private static final Logger logger = Logger.getLogger(ControllerStats.class);
 
@@ -39,7 +33,7 @@ public class ControllerStats implements StatsUpdater
 
 		public long freeMemory;
 		public long totalMemory;
-		
+
 		public boolean overloaded;
 
 		public void dump()
@@ -86,26 +80,42 @@ public class ControllerStats implements StatsUpdater
 		instances.put(appId, new InstanceStats(appId, true));
 	}
 
-	synchronized void updateStats(Set<StatsValue> update)
+	synchronized void updateStats(ManagementData.Controller controller)
 	{
 		lastUpdate = System.currentTimeMillis();
 
-		runningApps.clear();
-
-		for (StatsValue value : update)
-			value.update(this);
-
-		for (Iterator<String> it = instances.keySet().iterator(); it.hasNext();)
+		// Update Controller stats
+		this.stats.cpu = controller.getCpu(); 
+		this.stats.freeMemory = controller.getFreeMem(); 
+		this.stats.overloaded = controller.getOverloaded(); 
+		this.stats.rps = controller.getRps(); 
+		this.stats.totalMemory = controller.getTotalMem();
+		
+		Set<String> tmpApps = new HashSet<String>();
+		for (AppServer appServer : controller.getAppServersList())
 		{
-			// Remove everything which is not running or old
-			String appId = it.next();
+			String appId = appServer.getAppId();
+			tmpApps.add(appId);
 			if (!runningApps.contains(appId))
 			{
-				logger.debug("Removing: " + appId);
-				it.remove();
-			} else if (instances.get(appId).isOld())
+				runningApps.add(appId);
+				instances.put(appId, new InstanceStats(appId));
+			}
+
+			// Update instace stats
+			InstanceStats instanceStats = instances.get(appId);
+			instanceStats.lastUpdate = lastUpdate;
+			instanceStats.getValues().overloaded = appServer.getOverloaded();
+			instanceStats.getValues().rps = appServer.getRps();
+			instanceStats.getValues().load = appServer.getLoad();
+		}
+
+		for (Iterator<String> it = runningApps.iterator(); it.hasNext();)
+		{
+			String runningAppId = it.next();
+			if (!tmpApps.contains(runningAppId))
 			{
-				logger.debug("Old instance");
+				instances.remove(runningAppId);
 				it.remove();
 			}
 		}
@@ -118,64 +128,7 @@ public class ControllerStats implements StatsUpdater
 
 	public String getAddress()
 	{
-		return this.address;
-	}
-
-	public void update(StatType key, IntegerStat value)
-	{
-		// Empty
-	}
-
-	@Override
-	public void update(StatType key, DoubleStat value)
-	{
-		switch (key)
-		{
-		case CPU_USAGE:
-			stats.cpu = value.get();
-			break;
-		case REQUESTS_PER_SECOND:
-			stats.rps = value.get();
-			break;
-		}
-	}
-
-	@Override
-	public void update(StatType key, BooleanStat value)
-	{
-		// Empty
-	}
-
-	@Override
-	public void update(StatType key, LongStat value)
-	{
-		switch (key)
-		{
-		case FREE_MEMORY:
-			stats.freeMemory = value.get();
-			break;
-		case TOTAL_MEMORY:
-			stats.totalMemory = value.get();
-			break;
-		}
-	}
-
-	@Override
-	public void update(StatType key, AppStat value)
-	{
-		switch (key)
-		{
-		case APPLICATION:
-			final String appId = value.get();
-			runningApps.add(appId);
-
-			if (!instances.containsKey(appId))
-				instances.put(appId, new InstanceStats(appId));
-
-			InstanceStats instance = instances.get(appId);
-			instance.update(value.composite());
-			break;
-		}
+		return address;
 	}
 
 	public void dump()

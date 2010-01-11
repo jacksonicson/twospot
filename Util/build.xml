@@ -48,6 +48,6 @@
 		</exec>
 	</target>
 
-	<target name="all" depends="package,cleanup" />
+	<target name="all" depends="protoc,package,cleanup" />
 
 </project>

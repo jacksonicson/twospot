@@ -1,8 +1,6 @@
 package org.prot.controller.zookeeper.jobs;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.SocketException;
 
 import org.apache.log4j.Logger;
 import org.apache.zookeeper.CreateMode;
@@ -10,7 +8,6 @@ import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 import org.prot.controller.config.Configuration;
 import org.prot.util.ObjectSerializer;
-import org.prot.util.net.AddressExtractor;
 import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.JobState;
 import org.prot.util.zookeeper.ZNodes;
@@ -21,31 +18,9 @@ public class RegisterController implements Job
 {
 	private static final Logger logger = Logger.getLogger(RegisterController.class);
 
-	private String networkInterface;
-
 	private ZooHelper zooHelper;
 
 	private String controllerPath = null;
-
-	public RegisterController(String networkInterface)
-	{
-		this.networkInterface = networkInterface;
-	}
-
-	private final InetAddress getAddress(String networkInterface)
-	{
-		try
-		{
-			return AddressExtractor.getInetAddress(networkInterface, false);
-		} catch (SocketException e)
-		{
-			logger.fatal("Could not get IP address for network interface " + networkInterface, e);
-			logger.fatal("Shutting down...");
-			System.exit(1);
-		}
-
-		return null;
-	}
 
 	@Override
 	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
@@ -59,8 +34,8 @@ public class RegisterController implements Job
 		// Create a new ControllerEntry object which serialized version is saved
 		// to the ZooKeeper
 		ControllerEntry entry = new ControllerEntry();
-		entry.serviceAddress = getAddress(networkInterface).getHostAddress();
-		entry.address = getAddress(networkInterface).getHostAddress();
+		entry.serviceAddress = Configuration.getConfiguration().getAddress();
+		entry.address = Configuration.getConfiguration().getAddress();
 		entry.port = Configuration.getConfiguration().getControllerPort();
 
 		// Serialize the ControllerEntry object

@@ -46,6 +46,7 @@ public class AppManager
 
 		// Create the message
 		AppServer.Builder builder = AppServer.newBuilder();
+		builder.setAppId("test"); 
 		managedApp.fill(builder);
 
 		// Send the message to the controller

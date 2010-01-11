@@ -13,7 +13,7 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.prot.controller.app.AppInfo;
 import org.prot.controller.app.AppManager;
-import org.prot.controller.stats.Stats;
+import org.prot.controller.stats.ControllerStatsCollector;
 import org.prot.util.AppIdExtractor;
 
 public class RequestHandler extends AbstractHandler
@@ -26,7 +26,7 @@ public class RequestHandler extends AbstractHandler
 
 	private RequestProcessor requestProcessor;
 
-	private Stats stats;
+	private ControllerStatsCollector stats;
 
 	private final HttpURI getUrl(final Request request, final AppInfo appInfo)
 	{
@@ -87,7 +87,7 @@ public class RequestHandler extends AbstractHandler
 		}
 
 		// Update stats
-		stats.handle(appId);
+		stats.handle(appInfo);
 
 		// Create a destination URL to forward the request
 		try
@@ -114,7 +114,7 @@ public class RequestHandler extends AbstractHandler
 		this.requestProcessor = requestProcessor;
 	}
 
-	public void setStats(Stats stats)
+	public void setStats(ControllerStatsCollector stats)
 	{
 		this.stats = stats;
 	}

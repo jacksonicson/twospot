@@ -2,9 +2,12 @@ package org.prot.controller.config;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.SocketException;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.prot.util.net.AddressExtractor;
 
 public class Configuration
 {
@@ -15,6 +18,9 @@ public class Configuration
 
 	// UID of this controller
 	private final String UID;
+
+	// Address
+	private String address;
 
 	// Configuration
 	private Properties properties = new Properties();
@@ -47,6 +53,11 @@ public class Configuration
 		return configuration;
 	}
 
+	private final InetAddress getInetAddress(String networkInterface) throws SocketException
+	{
+		return AddressExtractor.getInetAddress(networkInterface, false);
+	}
+
 	public Configuration()
 	{
 		// UID
@@ -72,11 +83,22 @@ public class Configuration
 
 			this.vmOptions = properties.getProperty("appserver.vm.options");
 
+			this.address = getInetAddress(properties.getProperty("zk.controller.networkInterface"))
+					.getHostAddress();
+
+		} catch (SocketException e)
+		{
+			logger.error("Could not parse the configuration", e);
+			System.exit(1);
 		} catch (IOException e)
 		{
 			logger.error("Could not load configuration", e);
 			System.exit(1);
 		} catch (NumberFormatException e)
+		{
+			logger.error("Could not parse the configuration", e);
+			System.exit(1);
+		} catch (NullPointerException e)
 		{
 			logger.error("Could not parse the configuration", e);
 			System.exit(1);
@@ -87,7 +109,7 @@ public class Configuration
 	{
 		return properties;
 	}
-	
+
 	public String getProperty(String key)
 	{
 		return properties.getProperty(key);
@@ -127,6 +149,10 @@ public class Configuration
 	{
 		return UID;
 	}
-	
-	
+
+	public String getAddress()
+	{
+		return address;
+	}
+
 }

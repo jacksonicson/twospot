@@ -16,7 +16,7 @@
 
 	<bean id="Stats" class="org.prot.manager.stats.Stats" />
 
-	<bean id="ControllerWatcher" class="org.prot.manager.watcher.ControllerWatcher"
+	<bean id="ControllerWatcher" class="org.prot.manager.stats.MasterManagement"
 		init-method="init">
 		<property name="registry" ref="ControllerRegistry" />
 		<property name="stats" ref="Stats" />

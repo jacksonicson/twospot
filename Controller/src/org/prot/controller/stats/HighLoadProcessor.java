@@ -35,7 +35,7 @@ public class HighLoadProcessor implements BalancingProcessor
 			
 			for (AppInfo appInfo : appInfos)
 			{
-				double rps = appInfo.getAppManagement().getAppRequestStats().getRps();
+				double rps = appInfo.getAppManagement().getAppServer().getRps();
 				if (bestRps > rps)
 				{
 					bestRps = rps;

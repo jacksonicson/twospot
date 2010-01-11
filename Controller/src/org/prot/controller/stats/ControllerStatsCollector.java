@@ -1,24 +1,24 @@
 package org.prot.controller.stats;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.prot.controller.app.AppInfo;
 import org.prot.controller.app.AppRegistry;
+import org.prot.controller.config.Configuration;
+import org.prot.util.managment.gen.ManagementData;
 import org.prot.util.scheduler.Scheduler;
 import org.prot.util.scheduler.SchedulerTask;
-import org.prot.util.stats.StatsValue;
 
-public class Stats
+public class ControllerStatsCollector
 {
-	private static final Logger logger = Logger.getLogger(Stats.class);
+	private static final Logger logger = Logger.getLogger(ControllerStatsCollector.class);
 
 	private AppRegistry registry;
 
-	private final ControllerStats controllerStats = new ControllerStats();
+	private final SystemStats systemStats = new SystemStats();
+
+	private final RpsCounter rpsCounter = new RpsCounter();
 
 	private List<BalancingProcessor> processors;
 
@@ -27,14 +27,12 @@ public class Stats
 		Scheduler.addTask(new StatsTask());
 	}
 
-	public void handle(final String appId)
+	public void handle(final AppInfo appInfo)
 	{
 		try
 		{
-			controllerStats.handle();
-
-			AppRequestStats stats = registry.getAppInfo(appId).getAppManagement().getAppRequestStats();
-			stats.handle();
+			appInfo.getAppManagement().getStats();
+			rpsCounter.count();
 		} catch (Exception e)
 		{
 			logger.error("Error while handling stas: " + e);
@@ -57,18 +55,23 @@ public class Stats
 		this.processors = processors;
 	}
 
-	public Map<String, Set<StatsValue>> getAppStats()
+	public void update(ManagementData.AppServer appServer)
 	{
-		Map<String, Set<StatsValue>> stats = new HashMap<String, Set<StatsValue>>();
-		for (AppInfo appInfo : registry.getDuplicatedAppInfos())
-			stats.put(appInfo.getAppId(), appInfo.getAppManagement().getData());
-
-		return stats;
+		AppInfo appInfo = registry.getAppInfo(appServer.getAppId());
+		if (appInfo != null)
+			appInfo.getAppManagement().update(appServer);
 	}
 
-	public ControllerStats getControllerStats()
+	public void fill(ManagementData.Controller.Builder controller)
 	{
-		return controllerStats;
+		controller.setAddress(Configuration.getConfiguration().getAddress());
+
+		controller.setCpu((float) systemStats.getSystemLoadAverage());
+		controller.setFreeMem(systemStats.getFrePhysicalMemorySize());
+		controller.setTotalMem(systemStats.getTotalPhysicalMemorySize());
+
+		for (AppInfo info : registry.getDuplicatedAppInfos())
+			controller.addAppServers(info.getAppManagement().getAppServer());
 	}
 
 	class StatsTask extends SchedulerTask

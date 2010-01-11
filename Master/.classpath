@@ -16,5 +16,6 @@
 	<classpathentry kind="lib" path="/Libs/gen/twospot-controller.jar"/>
 	<classpathentry kind="lib" path="/Libs/gen/twospot-util.jar"/>
 	<classpathentry kind="lib" path="/Util/etc"/>
+	<classpathentry kind="lib" path="/Libs/gen/google-protobuf.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

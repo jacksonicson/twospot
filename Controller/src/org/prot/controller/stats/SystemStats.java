@@ -4,20 +4,13 @@ import sun.management.ManagementFactory;
 
 import com.sun.management.OperatingSystemMXBean;
 
-public class ControllerStats
+public class SystemStats
 {
 	private OperatingSystemMXBean operatingSystem;
 
-	private RpsCounter rpsCounter = new RpsCounter();
-
-	public ControllerStats()
+	public SystemStats()
 	{
 		operatingSystem = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
-	}
-
-	public void handle()
-	{
-		rpsCounter.count();
 	}
 
 	public double getSystemLoadAverage()
@@ -33,10 +26,5 @@ public class ControllerStats
 	public long getTotalPhysicalMemorySize()
 	{
 		return operatingSystem.getTotalPhysicalMemorySize();
-	}
-
-	public double getRps()
-	{
-		return rpsCounter.getRps();
 	}
 }

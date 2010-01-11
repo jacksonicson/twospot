@@ -13,12 +13,12 @@ public class UdpListener implements Runnable
 
 	private DatagramSocket socket;
 
-	public UdpListener()
+	public void init()
 	{
 		try
 		{
 			Thread thread = new Thread(this);
-			thread.run();
+			thread.start();
 		} catch (Exception e)
 		{
 			logger.fatal("Error while starting UDP thread", e);
@@ -26,17 +26,22 @@ public class UdpListener implements Runnable
 		}
 	}
 
-	protected void handleDatagram(DatagramPacket packet)
+	protected int getPort()
+	{
+		return 3232;
+	}
+
+	protected void handleDatagram(DatagramPacket packet) throws IOException
 	{
 		logger.debug("Datagram received");
 	}
-	
+
 	public void run()
 	{
 		try
 		{
 			// TODO: PORT!!!
-			this.socket = new DatagramSocket(3232);
+			this.socket = new DatagramSocket(getPort());
 		} catch (SocketException e)
 		{
 			logger.fatal("Could not create UDP socket", e);

@@ -35,9 +35,8 @@ public class Main
 		factory.getBean("DbServiceExporter");
 		factory.getBean("LogServiceExporter");
 
-		// Start JMX
-		factory.getBean("ServerConnector");
-		factory.getBean("JmxExporter");
+		// Start Management
+		factory.getBean("UdpListener");
 
 		Controller controller = (Controller) factory.getBean("Controller");
 		controller.start();
