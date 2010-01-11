@@ -11,18 +11,14 @@
 
 
 	<!-- Application beans -->
-	<bean id="ControllerRegistry" class="org.prot.manager.stats.ControllerRegistry">
-	</bean>
-
-	<bean id="Stats" class="org.prot.manager.stats.Stats" />
+	<bean id="ControllerRegistry" class="org.prot.manager.stats.ControllerRegistry" />
 
 	<bean id="ControllerWatcher" class="org.prot.manager.stats.MasterManagement"
 		init-method="init">
 		<property name="registry" ref="ControllerRegistry" />
-		<property name="stats" ref="Stats" />
 	</bean>
 
-	<bean id="ManagementService" class="org.prot.manager.zookeeper.ManagementService"
+	<bean id="ManagementService" class="org.prot.manager.zookeeper.SynchronizationService"
 		init-method="init">
 		<property name="zooHelper" ref="ZooHelper" />
 
@@ -48,7 +44,6 @@
 
 	<bean id="LoadBalancer" class="org.prot.manager.balancing.SimpleLoadBalancer">
 		<property name="registry" ref="ControllerRegistry" />
-		<property name="stats" ref="Stats" />
 	</bean>
 
 	<!-- Services -->

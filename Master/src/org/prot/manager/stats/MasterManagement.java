@@ -15,8 +15,6 @@ public class MasterManagement extends UdpListener
 
 	private ControllerRegistry registry;
 
-	private Stats stats;
-
 	public void init()
 	{
 		super.init();
@@ -32,27 +30,21 @@ public class MasterManagement extends UdpListener
 		logger.debug("Datagram received: " + packet.getLength());
 		ByteArrayInputStream in = new ByteArrayInputStream(packet.getData(), 0, packet.getLength());
 		Controller controller = Controller.parseFrom(in);
-		logger.debug("Address is: " + controller.getAddress());
 
-		if (registry.getController(controller.getAddress()) == null)
+		if (registry.getControllerInfo(controller.getAddress()) == null)
 		{
-			logger.error("Registry does not contain controller with address: " + controller.getAddress());
+			logger.warn("Registry doesn't have a Controller for the Datagram: " + controller.getAddress());
 			return;
 		}
 
-		stats.startUpdate();
-		stats.updateController(controller);
-		stats.finalizeUpdate();
-		stats.dump();
+		registry.startUpdate();
+		registry.updateController(controller);
+		registry.finalizeUpdate();
+		registry.dump();
 	}
 
-	public void setRegistry(ControllerRegistry registry)
+	public void setRegistry(ControllerRegistry stats)
 	{
-		this.registry = registry;
-	}
 
-	public void setStats(Stats stats)
-	{
-		this.stats = stats;
 	}
 }

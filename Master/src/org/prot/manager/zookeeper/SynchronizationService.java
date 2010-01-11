@@ -6,9 +6,9 @@ import org.apache.log4j.Logger;
 import org.prot.util.zookeeper.Job;
 import org.prot.util.zookeeper.ZooHelper;
 
-public class ManagementService
+public class SynchronizationService
 {
-	private static final Logger logger = Logger.getLogger(ManagementService.class);
+	private static final Logger logger = Logger.getLogger(SynchronizationService.class);
 
 	// ZooKeeper helper
 	private ZooHelper zooHelper;

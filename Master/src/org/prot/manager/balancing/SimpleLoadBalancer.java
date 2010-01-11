@@ -6,18 +6,15 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.prot.manager.stats.ControllerInfo;
-import org.prot.manager.stats.ControllerRegistry;
 import org.prot.manager.stats.ControllerStats;
 import org.prot.manager.stats.InstanceStats;
-import org.prot.manager.stats.Stats;
+import org.prot.manager.stats.ControllerRegistry;
 
 public class SimpleLoadBalancer implements LoadBalancer
 {
 	private static final Logger logger = Logger.getLogger(SimpleLoadBalancer.class);
 
 	private ControllerRegistry registry;
-
-	private Stats stats;
 
 	private ControllerInfo findBestController(String appId, Map<String, ControllerStats> controllers,
 			Map<String, ControllerInfo> controllerInfos)
@@ -60,15 +57,15 @@ public class SimpleLoadBalancer implements LoadBalancer
 	public Set<ControllerInfo> selectController(String appId)
 	{
 		// Check if the master knows Controllers
-		if (stats.isEmpty())
+		if (registry.isEmpty())
 		{
 			logger.warn("Master has no Controllers");
 			return null;
 		}
 
 		// Fetch all Controllers (Threading-Problem)
-		Map<String, ControllerInfo> controllerInfos = registry.getControllers();
-		Map<String, ControllerStats> controllerStats = stats.getControllers();
+		Map<String, ControllerInfo> controllerInfos = registry.getControllerInfos();
+		Map<String, ControllerStats> controllerStats = registry.getControllers();
 
 		// Set for the results
 		Set<ControllerInfo> result = new HashSet<ControllerInfo>();
@@ -84,7 +81,7 @@ public class SimpleLoadBalancer implements LoadBalancer
 				continue;
 
 			// Add the controller to the result set
-			ControllerInfo selected = registry.getController(controller.getAddress());
+			ControllerInfo selected = registry.getControllerInfo(controller.getAddress());
 			if (selected == null)
 				continue;
 
@@ -119,16 +116,11 @@ public class SimpleLoadBalancer implements LoadBalancer
 
 		// Update internal stat data about this assignment (Controller -
 		// Application)
-		stats.assignToController(appId, bestControllerInfo.getAddress());
+		registry.assignToController(appId, bestControllerInfo.getAddress());
 
 		// Return the results
 		logger.debug("Returning # controllers: " + result.size());
 		return result;
-	}
-
-	public void setStats(Stats stats)
-	{
-		this.stats = stats;
 	}
 
 	public void setRegistry(ControllerRegistry registry)
