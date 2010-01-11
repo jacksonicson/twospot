@@ -2,12 +2,12 @@ package org.prot.appserver.runtime.java;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.Connector;
-import org.prot.appserver.management.Management;
+import org.prot.appserver.management.RuntimeManagement;
 import org.prot.util.managment.gen.ManagementData.AppServer;
 
 import ort.prot.util.server.CountingRequestLog;
 
-public class JettyAppManagement implements Management
+public class JettyAppManagement implements RuntimeManagement
 {
 	private static final Logger logger = Logger.getLogger(JettyAppManagement.class);
 

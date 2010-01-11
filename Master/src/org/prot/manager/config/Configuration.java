@@ -1,7 +1,6 @@
 package org.prot.manager.config;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -17,6 +16,9 @@ public class Configuration
 	// Port under which the RMI registry of the Controller runs
 	private int rmiControllerPort = -1;
 
+	// Port under which the UDP server for management data is listening
+	private int masterDatagramPort = -1;
+
 	public static Configuration getConfiguration()
 	{
 		if (configuration == null)
@@ -27,12 +29,13 @@ public class Configuration
 
 	Configuration()
 	{
-		InputStream in = this.getClass().getResourceAsStream("/etc/config.properties");
 		try
 		{
-			properties.load(in);
+			properties.load(this.getClass().getResourceAsStream("/etc/config.properties"));
 
-			rmiControllerPort = Integer.parseInt(properties.getProperty("rmi.controller.registry.port"));
+			this.rmiControllerPort = Integer.parseInt(properties.getProperty("rmi.controller.registry.port"));
+
+			this.masterDatagramPort = Integer.parseInt(properties.getProperty("master.datagramPort"));
 
 		} catch (IOException e)
 		{
@@ -53,5 +56,10 @@ public class Configuration
 	public int getRmiControllerPort()
 	{
 		return rmiControllerPort;
+	}
+
+	public int getMasterDatagramPort()
+	{
+		return masterDatagramPort;
 	}
 }

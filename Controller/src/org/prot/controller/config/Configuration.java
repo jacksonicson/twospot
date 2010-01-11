@@ -25,6 +25,16 @@ public class Configuration
 	// Configuration
 	private Properties properties = new Properties();
 
+	// UDP port under which the management datagram server is running
+	private int controllerDatagramPort = -1;
+
+	// UDP port under whic hthe management datagram server of the Master is
+	// running
+	private int masterDatagramPort = -1;
+
+	// Address of the Master
+	private String masterAddress = null;
+
 	// Domain plus port under which the platform is running
 	private String platformDomain;
 
@@ -85,6 +95,10 @@ public class Configuration
 
 			this.address = getInetAddress(properties.getProperty("zk.controller.networkInterface"))
 					.getHostAddress();
+
+			this.controllerDatagramPort = Integer.parseInt(properties.getProperty("controller.datagramPort"));
+
+			this.masterDatagramPort = Integer.parseInt(properties.getProperty("master.datagramPort"));
 
 		} catch (SocketException e)
 		{
@@ -155,4 +169,23 @@ public class Configuration
 		return address;
 	}
 
+	public int getControllerDatagramPort()
+	{
+		return controllerDatagramPort;
+	}
+
+	public int getMasterDatagramPort()
+	{
+		return masterDatagramPort;
+	}
+
+	public String getMasterAddress()
+	{
+		return masterAddress;
+	}
+
+	public void setMasterAddress(String masterAddress)
+	{
+		this.masterAddress = masterAddress;
+	}
 }

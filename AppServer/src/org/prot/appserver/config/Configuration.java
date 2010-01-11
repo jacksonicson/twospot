@@ -22,6 +22,9 @@ public class Configuration
 	// Port under wich the local RMI registry is running
 	private int controllerRmiRegistryPort = -1;
 
+	// Port under which the UDP server of the Controller is nunning
+	private int controllerDatagramPort = -1;
+
 	// Enable stdout
 	private boolean enableStdOut = false;
 
@@ -98,6 +101,9 @@ public class Configuration
 					.getProperty("appServer.security.DOSPrevention.time"));
 
 			configuration.workingDirectory = properties.getProperty("appserver.workDir");
+
+			configuration.controllerDatagramPort = Integer.parseInt(properties
+					.getProperty("controller.datagramPort"));
 
 			switch (configuration.serverMode)
 			{
@@ -288,5 +294,10 @@ public class Configuration
 	public static Properties getProperties()
 	{
 		return properties;
+	}
+
+	public int getControllerDatagramPort()
+	{
+		return controllerDatagramPort;
 	}
 }

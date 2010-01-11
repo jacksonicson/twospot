@@ -1,0 +1,68 @@
+package org.prot.controller.zookeeper.jobs;
+
+import java.io.IOException;
+
+import org.apache.log4j.Logger;
+import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
+import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.data.Stat;
+import org.prot.controller.config.Configuration;
+import org.prot.util.zookeeper.Job;
+import org.prot.util.zookeeper.JobState;
+import org.prot.util.zookeeper.ZNodes;
+import org.prot.util.zookeeper.ZooHelper;
+
+public class WatchMaster implements Watcher, Job
+{
+	private static final Logger logger = Logger.getLogger(WatchMaster.class);
+
+	private ZooHelper zooHelper;
+
+	@Override
+	public void process(WatchedEvent event)
+	{
+		logger.info("Processing Watcher: " + event.getPath());
+		zooHelper.getQueue().insert(this);
+	}
+
+	@Override
+	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
+	{
+		ZooKeeper zk = zooHelper.getZooKeeper();
+
+		Stat statMaster = zk.exists(ZNodes.ZNODE_MASTER, false);
+		if (statMaster == null)
+		{
+			logger.info("Could not find " + ZNodes.ZNODE_MASTER + " in the ZooKeeper. Waiting for the ZNode");
+
+			// Update the configuration
+			Configuration.getConfiguration().setMasterAddress(null);
+		} else
+		{
+			logger.info("Updating configuration with the Manager");
+
+			// Update the configuration
+			byte[] data = zk.getData(ZNodes.ZNODE_MASTER, this, statMaster);
+			Configuration.getConfiguration().setMasterAddress(new String(data));
+		}
+
+		// Install a watcher
+		zk.exists(ZNodes.ZNODE_MASTER, this);
+
+		return JobState.OK;
+	}
+
+	@Override
+	public boolean isRetryable()
+	{
+		return true;
+	}
+
+	@Override
+	public void init(ZooHelper zooHelper)
+	{
+		this.zooHelper = zooHelper;
+	}
+}

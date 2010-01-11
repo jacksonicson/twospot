@@ -26,12 +26,10 @@ public class RegisterMaster implements Job, Watcher
 	// Manager communication details
 	private String networkInterface;
 	private InetAddress address;
-	private int port;
 
-	public RegisterMaster(String networkInterface, int port)
+	public RegisterMaster(String networkInterface)
 	{
 		this.networkInterface = networkInterface;
-		this.port = port;
 	}
 
 	public void init()
@@ -69,17 +67,17 @@ public class RegisterMaster implements Job, Watcher
 		Stat statMaster = zk.exists(ZNodes.ZNODE_MASTER, false);
 		if (statMaster == null)
 		{
-			byte[] address = (this.address.getHostAddress() + ":" + port).getBytes();
-			
+			byte[] address = this.address.getHostAddress().getBytes();
+
 			// Create node
 			String path = zk.create(ZNodes.ZNODE_MASTER, address, zooHelper.getACL(), CreateMode.EPHEMERAL);
-			
+
 			// Watch it
 			statMaster = zk.exists(ZNodes.ZNODE_MASTER, this);
-			
+
 			logger.info("Master registered in ZooKeeper: " + path);
 			return JobState.OK;
-			
+
 		} else
 		{
 			logger.warn("ZooKeeper already contains a ZNode: " + ZNodes.ZNODE_MASTER

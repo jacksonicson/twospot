@@ -7,6 +7,7 @@ import org.prot.controller.zookeeper.jobs.StartApp;
 import org.prot.controller.zookeeper.jobs.StopApp;
 import org.prot.controller.zookeeper.jobs.TryStopApp;
 import org.prot.controller.zookeeper.jobs.WatchApp;
+import org.prot.controller.zookeeper.jobs.WatchMaster;
 import org.prot.util.zookeeper.ZooHelper;
 
 public class ManagementService
@@ -19,6 +20,7 @@ public class ManagementService
 	public void init()
 	{
 		zooHelper.getQueue().insertConnectionJob(new RegisterController());
+		zooHelper.getQueue().insertConnectionJob(new WatchMaster());
 		zooHelper.setup();
 
 		zooHelper.getQueue().insert(watchApp);

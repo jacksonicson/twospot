@@ -9,6 +9,8 @@ import java.net.URL;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.http.HttpMethods;
+import org.prot.util.scheduler.Scheduler;
+import org.prot.util.scheduler.SchedulerTask;
 
 /**
  * TODO: Use RMI to communicate with the Controller
@@ -16,11 +18,11 @@ import org.eclipse.jetty.http.HttpMethods;
  * @author Andreas Wolke
  * 
  */
-public class Monitor extends Thread
+public class Monitor extends SchedulerTask
 {
 	private static final Logger logger = Logger.getLogger(Monitor.class);
 
-	private final int sleepTime = 3000;
+	private final int SLEEP_TIME = 3000;
 
 	private final String CONTROLLER_HOST = "127.0.0.1";
 
@@ -28,64 +30,52 @@ public class Monitor extends Thread
 
 	public Monitor()
 	{
-		try
-		{
-			this.start();
-		} catch (Exception e)
-		{
-			logger.error("", e);
-			System.exit(1);
-		}
+		Scheduler.addTask(this);
 	}
 
+	@Override
+	public long getInterval()
+	{
+		return SLEEP_TIME;
+	}
+
+	@Override
 	public void run()
 	{
-		while (true)
+		URL url;
+		try
 		{
-			URL url;
-			try
-			{
-				url = new URL("http://" + CONTROLLER_HOST + ":" + CONTROLLER_PORT);
+			url = new URL("http://" + CONTROLLER_HOST + ":" + CONTROLLER_PORT);
 
-				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-				connection.setRequestMethod(HttpMethods.GET);
-				connection.setUseCaches(false);
+			connection.setRequestMethod(HttpMethods.GET);
+			connection.setUseCaches(false);
 
-				connection.connect();
+			connection.connect();
 
-				if (connection.getResponseCode() != HttpURLConnection.HTTP_NOT_FOUND)
-				{
-					logger.error("AppServer could not connect with the controller");
-					System.exit(1);
-				}
-
-			} catch (MalformedURLException e)
+			if (connection.getResponseCode() != HttpURLConnection.HTTP_NOT_FOUND)
 			{
-				logger.error("MaleformedURLException", e);
-				System.exit(1);
-			} catch (ProtocolException e)
-			{
-				logger.error("Protocol exception", e);
-				System.exit(1);
-			} catch (ConnectException e)
-			{
-				logger.error("Could not connect to the controller");
-				System.exit(1);
-			} catch (IOException e)
-			{
-				logger.error("IOException", e);
+				logger.error("AppServer could not connect with the controller");
 				System.exit(1);
 			}
 
-			try
-			{
-				sleep(sleepTime);
-			} catch (InterruptedException e)
-			{
-				logger.error("", e);
-				System.exit(1);
-			}
+		} catch (MalformedURLException e)
+		{
+			logger.error("MaleformedURLException", e);
+			System.exit(1);
+		} catch (ProtocolException e)
+		{
+			logger.error("Protocol exception", e);
+			System.exit(1);
+		} catch (ConnectException e)
+		{
+			logger.error("Could not connect with the controller");
+			System.exit(1);
+		} catch (IOException e)
+		{
+			logger.error("IOException", e);
+			System.exit(1);
 		}
 	}
 }

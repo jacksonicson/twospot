@@ -3,7 +3,7 @@ package org.prot.appserver.runtime;
 import java.util.Map;
 
 import org.prot.appserver.app.AppInfo;
-import org.prot.appserver.management.Management;
+import org.prot.appserver.management.RuntimeManagement;
 
 public interface AppRuntime
 {
@@ -13,5 +13,5 @@ public interface AppRuntime
 
 	public void launch(AppInfo appInfo) throws Exception;
 
-	public Management getManagement();
+	public RuntimeManagement getManagement();
 }

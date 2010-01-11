@@ -8,7 +8,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.prot.appserver.app.AppInfo;
 import org.prot.appserver.config.Configuration;
-import org.prot.appserver.management.Management;
+import org.prot.appserver.management.RuntimeManagement;
 import org.prot.appserver.runtime.AppRuntime;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -75,7 +75,7 @@ public class PythonRuntime implements AppRuntime
 	}
 
 	@Override
-	public Management getManagement()
+	public RuntimeManagement getManagement()
 	{
 		return null;
 	}

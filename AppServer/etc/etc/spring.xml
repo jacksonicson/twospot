@@ -31,7 +31,7 @@
 		</property>
 	</bean>
 
-	<bean id="AppManager" class="org.prot.appserver.management.AppManager">
+	<bean id="AppManager" class="org.prot.appserver.management.AppServerManager">
 	</bean>
 
 	<!-- Runtimes -->

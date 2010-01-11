@@ -12,18 +12,20 @@ import org.prot.util.managment.gen.ManagementData.AppServer;
 import org.prot.util.scheduler.Scheduler;
 import org.prot.util.scheduler.SchedulerTask;
 
-public class AppManager
+public class AppServerManager
 {
-	private static final Logger logger = Logger.getLogger(AppManager.class);
+	private static final Logger logger = Logger.getLogger(AppServerManager.class);
 
 	DatagramSocket socket = null;
 
-	private Management managedApp = null;
+	private RuntimeManagement managedApp = null;
 
-	public AppManager()
+	public AppServerManager()
 	{
 		try
 		{
+			// Create a new socket which is used to send datagrams to the
+			// Controller
 			socket = new DatagramSocket();
 			socket.setSoTimeout(3000);
 		} catch (SocketException e)
@@ -32,12 +34,8 @@ public class AppManager
 			System.exit(1);
 		}
 
+		// Task which regularely sends datagrams
 		Scheduler.addTask(new Task());
-	}
-
-	public void manage(Management managedApp)
-	{
-		this.managedApp = managedApp;
 	}
 
 	public void update() throws IOException
@@ -47,14 +45,15 @@ public class AppManager
 
 		// Create the message
 		AppServer.Builder builder = AppServer.newBuilder();
-		builder.setAppId(Configuration.getInstance().getAppId()); 
+		builder.setAppId(Configuration.getInstance().getAppId());
 		managedApp.fill(builder);
 
-		// Send the message to the controller
+		// Create the datagram
 		byte[] data = builder.build().toByteArray();
-		DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 3234);
+		DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getLocalHost(),
+				Configuration.getInstance().getControllerDatagramPort());
 
-		logger.debug("Sending management datagram to the Controller");
+		// Send the datagram to the Controlelr
 		socket.send(packet);
 	}
 
@@ -63,7 +62,7 @@ public class AppManager
 		@Override
 		public long getInterval()
 		{
-			return 5000;
+			return 3000;
 		}
 
 		@Override
@@ -80,5 +79,10 @@ public class AppManager
 				logger.fatal("Unhandled exceptino", e);
 			}
 		}
+	}
+
+	public void manage(RuntimeManagement managedApp)
+	{
+		this.managedApp = managedApp;
 	}
 }

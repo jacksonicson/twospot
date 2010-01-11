@@ -1,7 +1,6 @@
 package org.prot.frontend.config;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -16,6 +15,8 @@ public class Configuration
 
 	private String managerAddress = null;
 
+	private int masterRmiPort = -1;
+
 	public static Configuration getConfiguration()
 	{
 		if (configuration == null)
@@ -26,10 +27,11 @@ public class Configuration
 
 	Configuration()
 	{
-		InputStream in = this.getClass().getResourceAsStream("/etc/config.properties");
 		try
 		{
-			properties.load(in);
+			properties.load(this.getClass().getResourceAsStream("/etc/config.properties"));
+
+			this.masterRmiPort = Integer.parseInt(properties.getProperty("rmi.registry.port"));
 
 		} catch (IOException e)
 		{
@@ -55,5 +57,10 @@ public class Configuration
 	public void setManagerAddress(String managerAddress)
 	{
 		this.managerAddress = managerAddress;
+	}
+
+	public int getMasterRmiPort()
+	{
+		return masterRmiPort;
 	}
 }

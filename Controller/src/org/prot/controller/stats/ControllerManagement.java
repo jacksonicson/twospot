@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 
 import org.apache.log4j.Logger;
+import org.prot.controller.config.Configuration;
 import org.prot.util.managment.UdpListener;
 import org.prot.util.managment.gen.ManagementData;
 import org.prot.util.managment.gen.ManagementData.AppServer;
@@ -27,11 +28,11 @@ public class ControllerManagement extends UdpListener
 	{
 		// Do nothing
 	}
-	
+
 	public void init()
 	{
 		super.init();
-		
+
 		try
 		{
 			socket = new DatagramSocket();
@@ -47,9 +48,9 @@ public class ControllerManagement extends UdpListener
 
 	protected int getPort()
 	{
-		return 3234;
+		return Configuration.getConfiguration().getControllerDatagramPort();
 	}
-	
+
 	protected void handleDatagram(DatagramPacket packet) throws IOException
 	{
 		ByteArrayInputStream in = new ByteArrayInputStream(packet.getData(), 0, packet.getLength());
@@ -59,15 +60,22 @@ public class ControllerManagement extends UdpListener
 
 	private void update() throws IOException
 	{
-		ManagementData.Controller.Builder builder = ManagementData.Controller.newBuilder();
-		controllerStatsCollector.fill(builder); 
+		// Check if the master is running (ZooKeeper)
+		String masterAddr = Configuration.getConfiguration().getMasterAddress();
+		if (masterAddr == null)
+			return;
 
-		// Send the message to the controller
+		// Create the message
+		ManagementData.Controller.Builder builder = ManagementData.Controller.newBuilder();
+		controllerStatsCollector.fill(builder);
+
+		// Create a new datagram
 		Controller controller = builder.build();
 		byte[] data = controller.toByteArray();
-		DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 3233);
+		DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getByName(masterAddr),
+				Configuration.getConfiguration().getMasterDatagramPort());
 
-		logger.debug("Sending management datagram to the Controller: " + data.length);
+		// Send the datagram to the Master
 		socket.send(packet);
 	}
 

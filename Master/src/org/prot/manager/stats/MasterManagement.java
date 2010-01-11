@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 
 import org.apache.log4j.Logger;
+import org.prot.manager.config.Configuration;
 import org.prot.util.managment.UdpListener;
 import org.prot.util.managment.gen.ManagementData.Controller;
 
@@ -23,7 +24,7 @@ public class MasterManagement extends UdpListener
 
 	protected int getPort()
 	{
-		return 3233;
+		return Configuration.getConfiguration().getMasterDatagramPort();
 	}
 
 	protected void handleDatagram(DatagramPacket packet) throws IOException
@@ -35,7 +36,7 @@ public class MasterManagement extends UdpListener
 
 		if (registry.getController(controller.getAddress()) == null)
 		{
-			logger.error("Registry does not contain UDP controller");
+			logger.error("Registry does not contain controller with address: " + controller.getAddress());
 			return;
 		}
 

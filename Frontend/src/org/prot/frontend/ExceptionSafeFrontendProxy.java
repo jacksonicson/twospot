@@ -49,7 +49,7 @@ public class ExceptionSafeFrontendProxy implements InvocationHandler
 
 				proxyFactory.setServiceInterface(clazz);
 				proxyFactory.setServiceUrl("rmi://" + Configuration.getConfiguration().getManagerAddress()
-						+ "/frontendService");
+						+ ":" + Configuration.getConfiguration().getMasterRmiPort() + "/frontendService");
 
 				proxyFactory.afterPropertiesSet();
 

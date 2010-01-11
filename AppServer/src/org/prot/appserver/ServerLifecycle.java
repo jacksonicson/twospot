@@ -9,8 +9,8 @@ import org.prot.appserver.config.AppConfigurer;
 import org.prot.appserver.config.Configuration;
 import org.prot.appserver.config.ConfigurationException;
 import org.prot.appserver.extract.AppExtractor;
-import org.prot.appserver.management.Management;
-import org.prot.appserver.management.AppManager;
+import org.prot.appserver.management.RuntimeManagement;
+import org.prot.appserver.management.AppServerManager;
 import org.prot.appserver.runtime.AppRuntime;
 import org.prot.appserver.runtime.NoSuchRuntimeException;
 import org.prot.appserver.runtime.RuntimeRegistry;
@@ -28,7 +28,7 @@ public class ServerLifecycle
 	private AppExtractor appExtractor;
 	private AppConfigurer appConfigurer;
 	private RuntimeRegistry runtimeRegistry;
-	private AppManager appManager;
+	private AppServerManager appManager;
 
 	private AppInfo appInfo = null;
 
@@ -115,7 +115,7 @@ public class ServerLifecycle
 			logger.debug("Registering runtime in the AppManager");
 
 			AppRuntime runtime = runtimeRegistry.getRuntime(appInfo.getRuntime());
-			Management management = runtime.getManagement();
+			RuntimeManagement management = runtime.getManagement();
 			appManager.manage(management);
 
 		} catch (NoSuchRuntimeException e)
@@ -181,7 +181,7 @@ public class ServerLifecycle
 		this.appConfigurer = appConfigurer;
 	}
 
-	public void setAppManager(AppManager appManager)
+	public void setAppManager(AppServerManager appManager)
 	{
 		this.appManager = appManager;
 	}
