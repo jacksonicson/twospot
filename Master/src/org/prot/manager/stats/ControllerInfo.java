@@ -12,14 +12,10 @@ public class ControllerInfo implements Serializable
 
 	private String serviceAddress;
 
-	private int servicePort;
-
-	private String serviceName;
-
 	public ControllerInfo()
 	{
 	}
-	
+
 	public ControllerInfo(ControllerInfo info)
 	{
 		update(info);
@@ -50,26 +46,6 @@ public class ControllerInfo implements Serializable
 	public void setPort(int port)
 	{
 		this.port = port;
-	}
-
-	public int getServicePort()
-	{
-		return servicePort;
-	}
-
-	public void setServicePort(int servicePort)
-	{
-		this.servicePort = servicePort;
-	}
-
-	public String getServiceName()
-	{
-		return serviceName;
-	}
-
-	public void setServiceName(String serviceName)
-	{
-		this.serviceName = serviceName;
 	}
 
 	public String getServiceAddress()

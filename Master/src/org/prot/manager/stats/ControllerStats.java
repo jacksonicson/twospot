@@ -20,10 +20,10 @@ public class ControllerStats
 	// Last update
 	private long lastUpdate;
 
-	// AppId's which are managed by the Controller
+	// Applications which are currently managed by the Controller
 	private Set<String> runningApps = new HashSet<String>();
 
-	// All
+	// Stores all isntance data for each application
 	private Map<String, InstanceStats> instances = new ConcurrentHashMap<String, InstanceStats>();
 
 	public class StatValues
@@ -47,14 +47,9 @@ public class ControllerStats
 
 	private final StatValues stats = new StatValues();
 
-	public ControllerStats(String address)
+	ControllerStats(String address)
 	{
 		this.address = address;
-	}
-
-	public int countStartedApps()
-	{
-		return instances.size();
 	}
 
 	public int size()
@@ -67,7 +62,7 @@ public class ControllerStats
 		return instances.get(appId);
 	}
 
-	boolean isOld()
+	synchronized boolean isOld()
 	{
 		return System.currentTimeMillis() - lastUpdate > 60 * 1000;
 	}
@@ -82,15 +77,16 @@ public class ControllerStats
 
 	synchronized void updateStats(ManagementData.Controller controller)
 	{
+		// Update the timestamp
 		lastUpdate = System.currentTimeMillis();
 
 		// Update Controller stats
-		this.stats.cpu = controller.getCpu(); 
-		this.stats.freeMemory = controller.getFreeMem(); 
-		this.stats.overloaded = controller.getOverloaded(); 
-		this.stats.rps = controller.getRps(); 
+		this.stats.cpu = controller.getCpu();
+		this.stats.freeMemory = controller.getFreeMem();
+		this.stats.overloaded = controller.getOverloaded();
+		this.stats.rps = controller.getRps();
 		this.stats.totalMemory = controller.getTotalMem();
-		
+
 		Set<String> tmpApps = new HashSet<String>();
 		for (AppServer appServer : controller.getAppServersList())
 		{
@@ -104,12 +100,10 @@ public class ControllerStats
 
 			// Update instace stats
 			InstanceStats instanceStats = instances.get(appId);
-			instanceStats.lastUpdate = lastUpdate;
-			instanceStats.getValues().overloaded = appServer.getOverloaded();
-			instanceStats.getValues().rps = appServer.getRps();
-			instanceStats.getValues().load = appServer.getLoad();
+			instanceStats.update(appServer); 
 		}
 
+		// Remove all old applications
 		for (Iterator<String> it = runningApps.iterator(); it.hasNext();)
 		{
 			String runningAppId = it.next();
@@ -133,9 +127,9 @@ public class ControllerStats
 
 	public void dump()
 	{
-		logger.debug("RunningApps: " + runningApps.size());
+		logger.debug("Controller: " + this.address);
 		stats.dump();
-		logger.debug("Instances: " + instances.size());
+		logger.debug("Instances (count): " + instances.size());
 		for (InstanceStats instance : instances.values())
 			instance.dump();
 	}

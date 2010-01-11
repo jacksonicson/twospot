@@ -31,13 +31,12 @@ public class MasterManagement extends UdpListener
 		ByteArrayInputStream in = new ByteArrayInputStream(packet.getData(), 0, packet.getLength());
 		Controller controller = Controller.parseFrom(in);
 
-		if (registry.getControllerInfo(controller.getAddress()) == null)
+		if (!registry.containsControllerInfo(controller.getAddress()))
 		{
 			logger.warn("Registry doesn't have a Controller for the Datagram: " + controller.getAddress());
 			return;
 		}
 
-		registry.startUpdate();
 		registry.updateController(controller);
 		registry.finalizeUpdate();
 		registry.dump();

@@ -9,10 +9,9 @@ public class InstanceStats
 
 	private final String appId;
 
-	long lastUpdate;
+	private long lastUpdate;
 
-	boolean assigned = false;
-	long assignmentTimestamp;
+	private Long assignmentTimestamp = null;
 
 	public class StatValues
 	{
@@ -25,20 +24,22 @@ public class InstanceStats
 		{
 			logger.debug("   RPS: " + rps);
 			logger.debug("   Overloaded: " + overloaded);
+			logger.debug("   Overloaded hold: " + overloadedHold);
+			logger.debug("   Load: " + load);
 		}
 	}
 
 	final private StatValues stat = new StatValues();
 
-	public InstanceStats(String appId)
+	InstanceStats(String appId)
 	{
 		this.appId = appId;
 	}
 
-	public InstanceStats(String appId, boolean assigned)
+	InstanceStats(String appId, boolean assigned)
 	{
 		this(appId);
-		this.assigned = true;
+		this.assignmentTimestamp = System.currentTimeMillis();
 	}
 
 	public StatValues getValues()
@@ -51,17 +52,22 @@ public class InstanceStats
 		return appId;
 	}
 
-	public void update(ManagementData.AppServer appServer)
+	void update(ManagementData.AppServer appServer)
 	{
-		assigned = false;
+		assignmentTimestamp = null;
 		lastUpdate = System.currentTimeMillis();
+
+		this.stat.overloaded = appServer.getOverloaded();
+		this.stat.rps = appServer.getRps();
+		this.stat.load = appServer.getLoad();
 	}
 
 	public boolean isOld()
 	{
 		boolean old = false;
 		old |= System.currentTimeMillis() - lastUpdate > 60 * 1000;
-		old |= assigned && (System.currentTimeMillis() - assignmentTimestamp > 60 * 1000);
+		old |= (assignmentTimestamp != null)
+				&& (System.currentTimeMillis() - assignmentTimestamp > 60 * 1000);
 		return old;
 	}
 

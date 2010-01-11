@@ -81,7 +81,7 @@ public class SimpleLoadBalancer implements LoadBalancer
 				continue;
 
 			// Add the controller to the result set
-			ControllerInfo selected = registry.getControllerInfo(controller.getAddress());
+			ControllerInfo selected = controllerInfos.get(controller.getAddress());
 			if (selected == null)
 				continue;
 
