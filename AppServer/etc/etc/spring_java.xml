@@ -53,7 +53,6 @@
 	<bean id="JettyAppManagement" class="org.prot.appserver.runtime.java.JettyAppManagement">
 		<property name="countingRequestLog" ref="CountingRequestLog" />
 		<property name="connector" ref="Connector" />
-		<property name="threadPool" ref="ThreadPool" />
 	</bean>
 
 	<!-- Request handling -->

@@ -49,6 +49,9 @@ public class SimpleLoadBalancer implements LoadBalancer
 			}
 		}
 
+		if (bestController == null)
+			return null;
+
 		ControllerInfo selected = controllerInfos.get(bestController.getAddress());
 		return selected;
 	}

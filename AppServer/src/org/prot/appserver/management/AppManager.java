@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 
 import org.apache.log4j.Logger;
+import org.prot.appserver.config.Configuration;
 import org.prot.util.managment.gen.ManagementData.AppServer;
 import org.prot.util.scheduler.Scheduler;
 import org.prot.util.scheduler.SchedulerTask;
@@ -46,12 +47,12 @@ public class AppManager
 
 		// Create the message
 		AppServer.Builder builder = AppServer.newBuilder();
-		builder.setAppId("test"); 
+		builder.setAppId(Configuration.getInstance().getAppId()); 
 		managedApp.fill(builder);
 
 		// Send the message to the controller
 		byte[] data = builder.build().toByteArray();
-		DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 3232);
+		DatagramPacket packet = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 3234);
 
 		logger.debug("Sending management datagram to the Controller");
 		socket.send(packet);

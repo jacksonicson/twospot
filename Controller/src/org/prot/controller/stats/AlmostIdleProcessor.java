@@ -39,10 +39,12 @@ public class AlmostIdleProcessor implements BalancingProcessor
 		{
 			if (appInfo.getStatus() != AppState.ONLINE)
 				continue;
+			if (appInfo.getAppManagement().getAppServer() == null)
+				continue;
 
 			double rps = appInfo.getAppManagement().getAppServer().getRps();
 			long time = current - appInfo.getCreationTime();
-			
+
 			// TODO: < 50 % der Threads!
 			if (rps < LOW_RPS && time > MIN_RUNTIME)
 			{

@@ -2,7 +2,6 @@ package org.prot.appserver.runtime.java;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.util.thread.ThreadPool;
 import org.prot.appserver.management.Management;
 import org.prot.util.managment.gen.ManagementData.AppServer;
 
@@ -15,8 +14,6 @@ public class JettyAppManagement implements Management
 	private CountingRequestLog countingRequestLog;
 
 	private Connector connector;
-
-	private ThreadPool pool;
 
 	private long timestamp = System.currentTimeMillis();
 
@@ -39,12 +36,9 @@ public class JettyAppManagement implements Management
 	{
 		long time = update();
 
-		// Update
-//		double rps = countingRequestLog.getCounter() / (time / 1000 + 1);
-//
-//		Set<StatsValue> data = new HashSet<StatsValue>();
-//		data.add(new BooleanStat(StatType.OVERLOADED, connector.isLowResources()));
-//		data.add(new DoubleStat(StatType.REQUESTS_PER_SECOND, rps));
+		appServer.setLoad(0f);
+		appServer.setRps(countingRequestLog.getCounter() / (time / 1000 + 1));
+		appServer.setOverloaded(connector.isLowResources());
 	}
 
 	public void setCountingRequestLog(CountingRequestLog countingRequestLog)
@@ -55,10 +49,5 @@ public class JettyAppManagement implements Management
 	public void setConnector(Connector connector)
 	{
 		this.connector = connector;
-	}
-
-	public void setThreadPool(ThreadPool pool)
-	{
-		this.pool = pool;
 	}
 }

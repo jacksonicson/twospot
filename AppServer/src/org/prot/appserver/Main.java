@@ -74,7 +74,6 @@ public class Main
 		configurer.postProcessBeanFactory(factory);
 
 		// Get the beans
-		factory.getBean("ManagementExporter");
 		factory.getBean("Lifecycle");
 
 		// If the AppServer is running in Development mode - do some more

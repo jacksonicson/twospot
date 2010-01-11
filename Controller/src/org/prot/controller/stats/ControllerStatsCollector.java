@@ -71,7 +71,10 @@ public class ControllerStatsCollector
 		controller.setTotalMem(systemStats.getTotalPhysicalMemorySize());
 
 		for (AppInfo info : registry.getDuplicatedAppInfos())
-			controller.addAppServers(info.getAppManagement().getAppServer());
+		{
+			if (info.getAppManagement().getAppServer() != null)
+				controller.addAppServers(info.getAppManagement().getAppServer());
+		}
 	}
 
 	class StatsTask extends SchedulerTask
