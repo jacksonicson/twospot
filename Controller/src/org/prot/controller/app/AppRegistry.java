@@ -96,31 +96,34 @@ public class AppRegistry implements TokenChecker
 		// removeDeadAppInfos(). There is not need for a synchronization on
 		// appInfos.
 
-		// Iterate over all AppInfo objects
-		for (AppInfo info : appInfos)
+		synchronized (appInfos)
 		{
-			logger.debug("Updating app " + info.getAppId() + " state " + info.getStatus());
-			synchronized (info)
+			// Iterate over all AppInfo objects
+			for (AppInfo info : appInfos)
 			{
-				// Do a state transition if necessary
-				AppState state = info.getStatus();
-				switch (state)
+				logger.debug("Updating app " + info.getAppId() + " state " + info.getStatus());
+				synchronized (info)
 				{
-				case DEPLOYED:
-					// TODO: Wait for all Requests to finish
-					info.setState(AppState.KILLED);
-					break;
+					// Do a state transition if necessary
+					AppState state = info.getStatus();
+					switch (state)
+					{
+					case DEPLOYED:
+						// TODO: Wait for all Requests to finish
+						info.setState(AppState.KILLED);
+						break;
 
-				case DROPPED:
-					// TODO: Wait for all Requests to finish
-					info.setState(AppState.KILLED);
-					break;
+					case DROPPED:
+						// TODO: Wait for all Requests to finish
+						info.setState(AppState.KILLED);
+						break;
 
-				case BANNED:
-					// Add the appId to the block list
-					blocked.put(info.getAppId(), System.currentTimeMillis());
-					info.setState(AppState.KILLED);
-					break;
+					case BANNED:
+						// Add the appId to the block list
+						blocked.put(info.getAppId(), System.currentTimeMillis());
+						info.setState(AppState.KILLED);
+						break;
+					}
 				}
 			}
 		}
@@ -157,28 +160,31 @@ public class AppRegistry implements TokenChecker
 
 	List<AppInfo> killDeadAppInfos()
 	{
-		// List of all killed AppInfos
-		List<AppInfo> killedApps = new ArrayList<AppInfo>();
-
-		// Check for idle apps
-		for (AppInfo info : appInfos)
+		synchronized (appInfos)
 		{
-			synchronized (info)
+			// List of all killed AppInfos
+			List<AppInfo> killedApps = new ArrayList<AppInfo>();
+
+			// Check for idle apps
+			for (AppInfo info : appInfos)
 			{
-				AppState state = info.getStatus();
-				switch (state)
+				synchronized (info)
 				{
-				case KILLED:
-					info.setState(AppState.DEAD);
-					killedApps.add(info);
-					break;
+					AppState state = info.getStatus();
+					switch (state)
+					{
+					case KILLED:
+						info.setState(AppState.DEAD);
+						killedApps.add(info);
+						break;
+					}
+
 				}
-
 			}
-		}
 
-		// Return list of killed apps
-		return killedApps;
+			// Return list of killed apps
+			return killedApps;
+		}
 	}
 
 	@Override
@@ -216,15 +222,21 @@ public class AppRegistry implements TokenChecker
 
 	public Set<AppInfo> getDuplicatedAppInfos()
 	{
-		Set<AppInfo> appInfos = new HashSet<AppInfo>();
-		appInfos.addAll(appMapping.values());
-		return appInfos;
+		synchronized (appInfos)
+		{
+			Set<AppInfo> appInfos = new HashSet<AppInfo>();
+			appInfos.addAll(appMapping.values());
+			return appInfos;
+		}
 	}
 
 	public Set<String> getDuplicatedAppIds()
 	{
-		Set<String> duplicate = new HashSet<String>();
-		duplicate.addAll(appMapping.keySet());
-		return duplicate;
+		synchronized (appInfos)
+		{
+			Set<String> duplicate = new HashSet<String>();
+			duplicate.addAll(appMapping.keySet());
+			return duplicate;
+		}
 	}
 }
