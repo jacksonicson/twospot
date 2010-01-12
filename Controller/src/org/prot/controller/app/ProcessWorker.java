@@ -187,7 +187,7 @@ class ProcessWorker implements Runnable
 			
 			// Resume all continuations
 			logger.debug("Could not start AppServer - finishing all continuations");
-			appInfo.finishContinuations();
+			appInfo.resumeContinuations();
 		}
 	}
 

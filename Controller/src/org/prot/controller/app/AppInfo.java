@@ -12,6 +12,9 @@ public final class AppInfo
 {
 	private static final Logger logger = Logger.getLogger(AppInfo.class);
 
+	// Constants
+	public static final String CONTINUATION_ATTRIBUTE_APPINFO = "AppInfo";
+
 	// AppId
 	private final String appId;
 
@@ -84,6 +87,9 @@ public final class AppInfo
 		switch (state)
 		{
 		case STARTING:
+			// Add this to the continuation
+			continuation.setAttribute(CONTINUATION_ATTRIBUTE_APPINFO, this);
+
 			// Insert the continuation
 			continuations.add(continuation);
 			return true;

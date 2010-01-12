@@ -7,11 +7,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.continuation.Continuation;
+import org.eclipse.jetty.continuation.ContinuationSupport;
 import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.http.HttpURI;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.prot.controller.app.AppInfo;
+import org.prot.controller.app.AppLife;
 import org.prot.controller.app.AppManager;
 import org.prot.controller.stats.ControllerStatsCollector;
 import org.prot.util.AppIdExtractor;
@@ -70,6 +73,20 @@ public class RequestHandler extends AbstractHandler
 			response.sendError(HttpStatus.MOVED_TEMPORARILY_302, "Controller blocks requested application");
 			baseRequest.setHandled(true);
 			return;
+		}
+
+		// Check if this a continuation
+		Continuation continuation = ContinuationSupport.getContinuation(request);
+		if (continuation.isResumed())
+		{
+			AppInfo appInfo = (AppInfo) continuation.getAttribute(AppInfo.CONTINUATION_ATTRIBUTE_APPINFO);
+			if (appInfo.getStatus().getLife() == AppLife.SECOND)
+			{
+				logger.debug("Continuation resumed, AppInfo life is SECOND" + appId);
+				response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500, "Could not start the AppServer");
+				baseRequest.setHandled(true);
+				return;
+			}
 		}
 
 		// Inform the AppManager
