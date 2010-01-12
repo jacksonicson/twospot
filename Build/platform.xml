@@ -76,6 +76,7 @@
 	<target name="mkcp">
 		<!-- The order of this items is important. For example the Controller
 			 requires the classpath from the AppServer -->
+		<ant antfile="../ProtoBuf/build.xml" dir="../ProtoBuf/" target="mkcp" />
 		<ant antfile="../TwoSpotJdo/build.xml"
 		     dir="../TwoSpotJdo/"
 		     target="mkcp" />
@@ -97,6 +98,7 @@
 	</target>
 
 	<target name="build">
+		<ant antfile="../ProtoBuf/build.xml" dir="../ProtoBuf" />
 		<ant antfile="../TwoSpotJdo/build.xml" dir="../TwoSpotJdo" />
 		<ant antfile="../Util/build.xml" dir="../Util/" />
 		<ant antfile="../Controller/build.xml" dir="../Controller/" />
