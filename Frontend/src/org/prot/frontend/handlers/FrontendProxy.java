@@ -68,12 +68,14 @@ public class FrontendProxy extends HttpProxyHelper<RequestState>
 		this.forwardRequest(baseRequest, request, response, uri, state);
 	}
 
-	protected boolean handleStatus(Buffer version, int status, Buffer reason) throws IOException
+	protected boolean handleStatus(RequestState state, Buffer version, int status, Buffer reason)
+			throws IOException
 	{
 		if (status == HttpStatus.MOVED_TEMPORARILY_302)
 		{
-			logger.info("Moved 302");
-			return false;
+			appCache.controllerBlocks(state.getAppId(), state.getCached().getControllerInfo().getAddress());
+			state.getResponse().sendRedirect(state.getRequest().getRequestURL().toString());
+			return true;
 		}
 
 		return false;
