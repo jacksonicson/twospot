@@ -26,6 +26,9 @@ public class StartApp implements Job
 	@Override
 	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
+		if (!zooHelper.isConnected())
+			return JobState.RETRY_LATER;
+
 		ZooKeeper zk = zooHelper.getZooKeeper();
 		String instancePath = ZNodes.ZNODE_APPS + "/" + appId + "/"
 				+ Configuration.getConfiguration().getUID();
@@ -34,6 +37,7 @@ public class StartApp implements Job
 		{
 			// The path does not exist - create it (empty node)
 			zk.create(instancePath, new byte[0], zooHelper.getACL(), CreateMode.EPHEMERAL);
+
 		} catch (KeeperException e)
 		{
 			switch (e.code())
