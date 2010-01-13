@@ -1,4 +1,11 @@
 <project><path id='classpath'><pathelement location="../Libs/gen/twospot-appserver.jar" />
-<pathelement location="../Libs/lib/jetty-7.0.0/jsp-api-2.1-7.0.0pre2.jar" />
-<pathelement location="../Libs/lib/jetty-7.0.0/servlet-api-2.5.jar" />
-</path></project>
+<pathelement location="../Libs/lib/jetty-7.0.1/jetty-servlet-7.0.1.v20091125.jar" />
+<pathelement location="../Libs/lib/jetty-7.0.1/servlet-api-2.5.jar" />
+<pathelement location="../Libs/lib/jetty-7.0.1/jetty-server-7.0.1.v20091125.jar" />
+<pathelement location="../Libs/lib/jetty-7.0.1/jetty-servlets-7.0.1.v20091125.jar" />
+</path><fileset dir='../' id='libfiles'><include name="Libs/gen/twospot-appserver.jar" />
+<include name="Libs/lib/jetty-7.0.1/jetty-servlet-7.0.1.v20091125.jar" />
+<include name="Libs/lib/jetty-7.0.1/servlet-api-2.5.jar" />
+<include name="Libs/lib/jetty-7.0.1/jetty-server-7.0.1.v20091125.jar" />
+<include name="Libs/lib/jetty-7.0.1/jetty-servlets-7.0.1.v20091125.jar" />
+</fileset></project>
