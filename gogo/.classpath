@@ -7,8 +7,9 @@
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/jdo2-api-2.3-eb.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-core-2.0.0-m3.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/jsp-api-2.1-7.0.0pre2.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.0/servlet-api-2.5.jar"/>
 	<classpathentry kind="lib" path="/Libs/gen/hbaseplugin.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-servlet-7.0.1.v20091125.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-webapp-7.0.1.v20091125.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/servlet-api-2.5.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>
