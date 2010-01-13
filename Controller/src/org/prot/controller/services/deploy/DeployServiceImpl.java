@@ -12,7 +12,7 @@ import java.net.URLConnection;
 import org.apache.log4j.Logger;
 import org.prot.controller.app.TokenChecker;
 import org.prot.controller.config.Configuration;
-import org.prot.controller.zookeeper.ManagementService;
+import org.prot.controller.zookeeper.SynchronizationService;
 
 public class DeployServiceImpl implements DeployService
 {
@@ -20,7 +20,7 @@ public class DeployServiceImpl implements DeployService
 
 	private TokenChecker tokenChecker;
 
-	private ManagementService managementService;
+	private SynchronizationService managementService;
 
 	@Override
 	public boolean register(String token, String appId, String version)
@@ -86,7 +86,7 @@ public class DeployServiceImpl implements DeployService
 		this.tokenChecker = tokenChecker;
 	}
 
-	public void setManagementService(ManagementService managementService)
+	public void setManagementService(SynchronizationService managementService)
 	{
 		this.managementService = managementService;
 	}

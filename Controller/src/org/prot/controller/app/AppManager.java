@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.prot.controller.zookeeper.DeploymentListener;
-import org.prot.controller.zookeeper.ManagementService;
+import org.prot.controller.zookeeper.SynchronizationService;
 import org.prot.util.scheduler.Scheduler;
 import org.prot.util.scheduler.SchedulerTask;
+import org.prot.util.zookeeper.SynchronizationListener;
+import org.prot.util.zookeeper.ZooHelper;
 
-public class AppManager implements DeploymentListener
+public class AppManager implements DeploymentListener, SynchronizationListener
 {
 	private static final Logger logger = Logger.getLogger(AppManager.class);
 
@@ -16,7 +18,7 @@ public class AppManager implements DeploymentListener
 
 	private ProcessWorker processWorker;
 
-	private ManagementService managementService;
+	private SynchronizationService managementService;
 
 	private enum Todo
 	{
@@ -31,6 +33,7 @@ public class AppManager implements DeploymentListener
 
 		// Listener is used to get deployment notifications
 		managementService.addDeploymentListener(this);
+		managementService.addListener(this);
 	}
 
 	public boolean isBlocked(String appId)
@@ -115,6 +118,21 @@ public class AppManager implements DeploymentListener
 			logger.warn("Could not change state");
 	}
 
+	@Override
+	public synchronized void reconnected(ZooHelper zooHelper)
+	{
+		logger.info("Reconnecting");
+
+		for (AppInfo appInfo : registry.getDuplicatedAppInfos())
+		{
+			if (appInfo.getStatus().getLife() == AppLife.SECOND)
+			{
+				managementService.watchApp(appInfo.getAppId());
+				managementService.start(appInfo.getAppId());
+			}
+		}
+	}
+
 	public void staleApp(AppInfo appInfo)
 	{
 		if (appInfo != null)
@@ -136,7 +154,7 @@ public class AppManager implements DeploymentListener
 		return processWorker.waitForApplication(appInfo);
 	}
 
-	private void cleanup()
+	private synchronized void cleanup()
 	{
 		// Update appserver stats
 		registry.updateStates();
@@ -187,7 +205,7 @@ public class AppManager implements DeploymentListener
 		this.registry = registry;
 	}
 
-	public void setManagementService(ManagementService managementService)
+	public void setManagementService(SynchronizationService managementService)
 	{
 		this.managementService = managementService;
 	}

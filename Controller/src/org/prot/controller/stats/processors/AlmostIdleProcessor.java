@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 import org.prot.controller.app.AppInfo;
 import org.prot.controller.app.AppState;
 import org.prot.controller.config.Configuration;
-import org.prot.controller.zookeeper.ManagementService;
+import org.prot.controller.zookeeper.SynchronizationService;
 
 public class AlmostIdleProcessor implements BalancingProcessor
 {
@@ -15,7 +15,7 @@ public class AlmostIdleProcessor implements BalancingProcessor
 	private int MIN_RUNTIME = Integer.MAX_VALUE;
 	private double LOW_RPS = Double.MAX_VALUE;
 
-	private ManagementService management;
+	private SynchronizationService management;
 
 	public AlmostIdleProcessor()
 	{
@@ -66,7 +66,7 @@ public class AlmostIdleProcessor implements BalancingProcessor
 		}
 	}
 
-	public void setManagement(ManagementService management)
+	public void setManagement(SynchronizationService management)
 	{
 		this.management = management;
 	}

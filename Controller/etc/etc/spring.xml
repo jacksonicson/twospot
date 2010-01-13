@@ -70,13 +70,13 @@
 					<property name="connector" ref="OutsideConnector" />
 				</bean>
 				<bean class="org.prot.controller.stats.processors.AlmostIdleProcessor">
-					<property name="management" ref="ManagementService" />
+					<property name="management" ref="SynchronizationService" />
 				</bean>
 			</list>
 		</property>
 	</bean>
 
-	<bean id="ManagementService" class="org.prot.controller.zookeeper.ManagementService"
+	<bean id="SynchronizationService" class="org.prot.controller.zookeeper.SynchronizationService"
 		init-method="init">
 		<property name="zooHelper" ref="ZooHelper" />
 	</bean>
@@ -92,7 +92,7 @@
 		init-method="init">
 		<property name="registry" ref="AppRegistry" />
 		<property name="processWorker" ref="ProcessWorker" />
-		<property name="managementService" ref="ManagementService" />
+		<property name="managementService" ref="SynchronizationService" />
 	</bean>
 
 	<bean id="RequestProcessor" class="org.prot.controller.handler.RequestProcessor">
@@ -122,7 +122,7 @@
 		<property name="service">
 			<bean class="org.prot.controller.services.deploy.DeployServiceImpl">
 				<property name="tokenChecker" ref="AppRegistry" />
-				<property name="managementService" ref="ManagementService" />
+				<property name="managementService" ref="SynchronizationService" />
 			</bean>
 		</property>
 

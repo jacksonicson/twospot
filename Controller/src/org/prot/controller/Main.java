@@ -27,7 +27,7 @@ public class Main
 		conf.postProcessBeanFactory(factory);
 
 		// ZooKeeper
-		factory.getBean("ManagementService");
+		factory.getBean("SynchronizationService");
 
 		// Start the RMI-Services
 		factory.getBean("DeployServiceExporter");

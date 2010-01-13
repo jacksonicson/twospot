@@ -28,6 +28,9 @@ public class ZooHelper implements Watcher
 	// Job queue which manages the execution of all ZooKeeper jobs
 	private JobQueue queue;
 
+	// Listeners
+	private List<SynchronizationListener> listeners = new ArrayList<SynchronizationListener>();
+
 	public ZooHelper(String host, int port)
 	{
 		this.host = host;
@@ -44,6 +47,26 @@ public class ZooHelper implements Watcher
 
 		// Connect
 		reconnect();
+	}
+
+	public void addListener(SynchronizationListener listener)
+	{
+		synchronized (listeners)
+		{
+			listeners.add(listener);
+		}
+	}
+	
+	private void listenerReconnect()
+	{
+		ArrayList<SynchronizationListener> copy = new ArrayList<SynchronizationListener>();
+		synchronized(listeners)
+		{
+			copy.addAll(listeners); 
+		}
+		
+		for(SynchronizationListener listener : copy)
+			listener.reconnected(this);
 	}
 
 	@Override
@@ -70,18 +93,19 @@ public class ZooHelper implements Watcher
 	{
 		zooKeeper = null;
 		connect();
+		listenerReconnect();
 		queue.reconnected();
 		queue.proceed();
 	}
 
 	public boolean isConnected()
 	{
-		if(zooKeeper == null)
-			return false; 
-		
-		return zooKeeper.getState() == States.CONNECTED; 
+		if (zooKeeper == null)
+			return false;
+
+		return zooKeeper.getState() == States.CONNECTED;
 	}
-	
+
 	private final void connect()
 	{
 		try

@@ -8,13 +8,15 @@ import org.prot.controller.zookeeper.jobs.StopApp;
 import org.prot.controller.zookeeper.jobs.TryStopApp;
 import org.prot.controller.zookeeper.jobs.WatchApp;
 import org.prot.controller.zookeeper.jobs.WatchMaster;
+import org.prot.util.zookeeper.SynchronizationListener;
 import org.prot.util.zookeeper.ZooHelper;
 
-public class ManagementService
+public class SynchronizationService
 {
 	// ZooKeeper helper
 	private ZooHelper zooHelper;
 
+	// Job definitions
 	private WatchApp watchApp = new WatchApp();
 
 	public void init()
@@ -24,6 +26,11 @@ public class ManagementService
 		zooHelper.setup();
 
 		zooHelper.getQueue().insert(watchApp);
+	}
+
+	public void addListener(SynchronizationListener listener)
+	{
+		zooHelper.addListener(listener);
 	}
 
 	public boolean registerApp(String appId)
