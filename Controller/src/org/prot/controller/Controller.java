@@ -5,6 +5,8 @@ import org.eclipse.jetty.server.Server;
 
 public class Controller
 {
+	public static final boolean DEBUG = true;
+	
 	private static final Logger logger = Logger.getLogger(Controller.class);
 
 	private Server server;

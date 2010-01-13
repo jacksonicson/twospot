@@ -18,6 +18,7 @@ import org.prot.controller.app.AppLife;
 import org.prot.controller.app.AppManager;
 import org.prot.controller.stats.ControllerStatsCollector;
 import org.prot.util.AppIdExtractor;
+import org.prot.util.ReservedAppIds;
 
 public class RequestHandler extends AbstractHandler
 {
@@ -61,7 +62,16 @@ public class RequestHandler extends AbstractHandler
 		// Check the AppId and send an error
 		if (appId == null)
 		{
-			response.sendError(HttpStatus.SERVICE_UNAVAILABLE_503, "Invalid AppId (scheme://domain/AppId/...)");
+			response.sendError(HttpStatus.SERVICE_UNAVAILABLE_503,
+					"Invalid AppId (scheme://domain/AppId/...)");
+			baseRequest.setHandled(true);
+			return;
+		}
+
+		// Check if it is a ping request from an AppServer
+		if (appId.equals(ReservedAppIds.APP_PING))
+		{
+			response.getWriter().print("ok");
 			baseRequest.setHandled(true);
 			return;
 		}

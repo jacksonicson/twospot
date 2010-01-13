@@ -9,6 +9,7 @@ import java.net.URL;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.http.HttpMethods;
+import org.prot.util.ReservedAppIds;
 import org.prot.util.scheduler.Scheduler;
 import org.prot.util.scheduler.SchedulerTask;
 
@@ -45,7 +46,9 @@ public class Monitor extends SchedulerTask
 		URL url;
 		try
 		{
-			url = new URL("http://" + CONTROLLER_HOST + ":" + CONTROLLER_PORT);
+			String sUrl = "http://" + CONTROLLER_HOST + ":" + CONTROLLER_PORT + "/" + ReservedAppIds.APP_PING
+					+ "/";
+			url = new URL(sUrl);
 
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -54,9 +57,9 @@ public class Monitor extends SchedulerTask
 
 			connection.connect();
 
-			if (connection.getResponseCode() != HttpURLConnection.HTTP_NOT_FOUND)
+			if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)
 			{
-				logger.error("AppServer could not connect with the controller");
+				logger.error("AppServer could not connect with the controller: " + sUrl);
 				System.exit(1);
 			}
 

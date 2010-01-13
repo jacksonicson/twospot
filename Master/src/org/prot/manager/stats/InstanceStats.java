@@ -11,7 +11,7 @@ public class InstanceStats
 
 	private long lastUpdate;
 
-	private Long assignmentTimestamp = null;
+	private long assignmentCounter = 0;
 
 	public class StatValues
 	{
@@ -39,7 +39,7 @@ public class InstanceStats
 	InstanceStats(String appId, boolean assigned)
 	{
 		this(appId);
-		this.assignmentTimestamp = System.currentTimeMillis();
+		this.assignmentCounter = 3;
 	}
 
 	public StatValues getValues()
@@ -54,21 +54,21 @@ public class InstanceStats
 
 	void update(ManagementData.AppServer appServer)
 	{
-		assignmentTimestamp = null;
-		lastUpdate = System.currentTimeMillis();
+		this.assignmentCounter = 0;
+		this.lastUpdate = System.currentTimeMillis();
 
 		this.stat.overloaded = appServer.getOverloaded();
 		this.stat.rps = appServer.getRps();
 		this.stat.load = appServer.getLoad();
 	}
 
-	public boolean isOld()
+	public boolean decrementAssignmentCounter()
 	{
-		boolean old = false;
-		old |= System.currentTimeMillis() - lastUpdate > 60 * 1000;
-		old |= (assignmentTimestamp != null)
-				&& (System.currentTimeMillis() - assignmentTimestamp > 60 * 1000);
-		return old;
+		boolean assigned = assignmentCounter > 0; 
+		if (assignmentCounter > 0)
+			assignmentCounter--;
+
+		return assigned;
 	}
 
 	public void dump()

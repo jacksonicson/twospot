@@ -72,6 +72,7 @@ public class ControllerStats
 		if (instances.containsKey(appId))
 			return;
 
+		runningApps.add(appId);
 		instances.put(appId, new InstanceStats(appId, true));
 	}
 
@@ -100,7 +101,7 @@ public class ControllerStats
 
 			// Update instace stats
 			InstanceStats instanceStats = instances.get(appId);
-			instanceStats.update(appServer); 
+			instanceStats.update(appServer);
 		}
 
 		// Remove all old applications
@@ -109,8 +110,12 @@ public class ControllerStats
 			String runningAppId = it.next();
 			if (!tmpApps.contains(runningAppId))
 			{
-				instances.remove(runningAppId);
-				it.remove();
+				if (instances.get(runningAppId).decrementAssignmentCounter() == false)
+				{
+					logger.debug("Removing from Controller: " + runningAppId);
+					instances.remove(runningAppId);
+					it.remove();
+				}
 			}
 		}
 	}

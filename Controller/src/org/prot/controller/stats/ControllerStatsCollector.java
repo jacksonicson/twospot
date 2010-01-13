@@ -64,7 +64,10 @@ public class ControllerStatsCollector
 		for (AppInfo info : registry.getDuplicatedAppInfos())
 		{
 			if (info.getAppManagement().getAppServer() != null)
+			{
+				logger.debug("Controller is adding an Management AppInfo");
 				controller.addAppServers(info.getAppManagement().getAppServer());
+			}
 		}
 	}
 

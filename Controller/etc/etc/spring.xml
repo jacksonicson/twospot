@@ -100,7 +100,6 @@
 		<property name="httpClient" ref="HttpClient" />
 	</bean>
 
-
 	<!-- Services for AppServers -->
 	<bean id="UserServiceExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
 		<property name="serviceName" value="appserver/UserService" />

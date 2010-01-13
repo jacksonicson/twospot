@@ -7,6 +7,8 @@ public final class ReservedAppIds
 {
 	public final static String APP_PORTAL = "portal";
 
+	public final static String APP_PING = "ping";
+
 	public final static String FRONTEND_DEPLOY = "deploy";
 
 	public final static int MIN_LENGTH = 3;
@@ -17,6 +19,7 @@ public final class ReservedAppIds
 	static
 	{
 		reservedAppIds.add(APP_PORTAL);
+		reservedAppIds.add(APP_PING);
 		reservedAppIds.add(FRONTEND_DEPLOY);
 	}
 
