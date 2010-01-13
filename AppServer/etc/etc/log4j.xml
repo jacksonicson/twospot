@@ -9,9 +9,12 @@
 	</appender>
 
 	<appender name="ConsoleAppender" class="org.apache.log4j.ConsoleAppender">
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%p - %C{1}.%M(%L) | %m%n" />
-		</layout>
+		<appender-ref ref="Rolling" />
+		<!--
+			<layout class="org.apache.log4j.PatternLayout"> <param
+			name="ConversionPattern" value="%p - %C{1}.%M(%L) | %m%n" />
+			</layout>
+		-->
 	</appender>
 
 	<appender name="Rolling" class="org.apache.log4j.RollingFileAppender">
@@ -25,7 +28,7 @@
 
 	<logger name="org.prot.app.services.log.LogServiceMock"
 		additivity="false">
-		<level value="ALL" />
+		<level value="DEBUG" />
 		<appender-ref ref="ConsoleAppender" />
 	</logger>
 
