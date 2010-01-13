@@ -8,9 +8,21 @@ public class CachedControllerInfo extends ControllerInfo
 
 	private long timestamp;
 
+	private boolean blocked;
+
 	public CachedControllerInfo(ControllerInfo info)
 	{
 		super(info);
+	}
+
+	public void setBlocked(boolean blocked)
+	{
+		this.blocked = blocked;
+	}
+
+	public boolean isBlocked()
+	{
+		return blocked;
 	}
 
 	public long getTimestamp()

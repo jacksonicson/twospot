@@ -76,6 +76,16 @@ public class CacheEntry
 		}
 	}
 
+	synchronized void block(String address)
+	{
+		CachedControllerInfo info = controllers.get(address);
+		if (info != null)
+		{
+			logger.debug("Blocking Controller " + address);
+			info.setBlocked(true);
+		}
+	}
+
 	ControllerInfo pickController()
 	{
 		LinkedList<CachedControllerInfo> controllers = new LinkedList<CachedControllerInfo>();
@@ -92,6 +102,9 @@ public class CacheEntry
 
 		for (CachedControllerInfo info : controllers)
 		{
+			if (info.isBlocked())
+				continue;
+
 			Long count = requestCounter.get(info.getAddress());
 			if (count == null)
 			{

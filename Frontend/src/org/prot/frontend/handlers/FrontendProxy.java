@@ -73,6 +73,9 @@ public class FrontendProxy extends HttpProxyHelper<RequestState>
 	{
 		if (status == HttpStatus.SERVICE_UNAVAILABLE_503)
 		{
+			logger.debug("Controller blocks: " + state.getAppId());
+			logger.debug("Redirecting client to: " + state.getRequest().getRequestURL().toString());
+			
 			appCache.controllerBlocks(state.getAppId(), state.getCached().getControllerInfo().getAddress());
 			state.getResponse().sendRedirect(state.getRequest().getRequestURL().toString());
 			return true;

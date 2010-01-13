@@ -99,7 +99,7 @@ public class TimeoutAppCache implements AppCache
 	public void controllerBlocks(String appId, String address)
 	{
 		for (CacheEntry entry : cache.values())
-			entry.removeStale(address);
+			entry.block(address);
 	}
 
 	public void updateCache()
