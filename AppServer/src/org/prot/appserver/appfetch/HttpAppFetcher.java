@@ -66,7 +66,9 @@ public class HttpAppFetcher implements AppFetcher
 		};
 
 		exchange.setMethod("GET");
-		exchange.setURL(url + appId);
+		String completeUrl = url + appId;
+		exchange.setURL(completeUrl);
+		logger.info("Loading application from: " + completeUrl);
 
 		try
 		{

@@ -10,6 +10,7 @@
 <pathelement location="../Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-tx.jar" />
 <pathelement location="../Libs/gen/twospot-controller.jar" />
 <pathelement location="../Libs/gen/twospot-util.jar" />
+<pathelement location="../Libs/gen/google-protobuf.jar" />
 </path><fileset dir='../' id='libfiles'><include name="Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-beans.jar" />
 <include name="Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-context-support.jar" />
 <include name="Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-context.jar" />
@@ -22,4 +23,5 @@
 <include name="Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-tx.jar" />
 <include name="Libs/gen/twospot-controller.jar" />
 <include name="Libs/gen/twospot-util.jar" />
+<include name="Libs/gen/google-protobuf.jar" />
 </fileset></project>

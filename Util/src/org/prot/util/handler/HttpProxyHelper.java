@@ -100,7 +100,7 @@ public class HttpProxyHelper<M>
 		return false;
 	}
 	
-	protected boolean handleStatus(Buffer version, int status, Buffer reason) throws IOException
+	protected boolean handleStatus(M management, Buffer version, int status, Buffer reason) throws IOException
 	{
 		return false;
 	}
@@ -249,7 +249,7 @@ public class HttpProxyHelper<M>
 			@Override
 			public void onResponseStatus(Buffer version, int status, Buffer reason) throws IOException
 			{
-				if (!handleStatus(version, status, reason))
+				if (!handleStatus(obj, version, status, reason))
 					response.setStatus(status);
 			}
 

@@ -71,7 +71,7 @@ public class FrontendProxy extends HttpProxyHelper<RequestState>
 	protected boolean handleStatus(RequestState state, Buffer version, int status, Buffer reason)
 			throws IOException
 	{
-		if (status == HttpStatus.MOVED_TEMPORARILY_302)
+		if (status == HttpStatus.SERVICE_UNAVAILABLE_503)
 		{
 			appCache.controllerBlocks(state.getAppId(), state.getCached().getControllerInfo().getAddress());
 			state.getResponse().sendRedirect(state.getRequest().getRequestURL().toString());

@@ -100,11 +100,6 @@
 		<property name="httpClient" ref="HttpClient" />
 	</bean>
 
-	<bean id="AppServerWatcher" class="org.prot.controller.management.AppServerWatcher">
-		<property name="registry" ref="AppRegistry" />
-	</bean>
-
-
 
 	<!-- Services for AppServers -->
 	<bean id="UserServiceExporter" class="org.springframework.remoting.rmi.RmiServiceExporter">
@@ -170,7 +165,8 @@
 	</bean>
 
 	<!-- Management -->
-	<bean id="UdpListener" class="org.prot.controller.stats.ControllerManagement" init-method="init">
+	<bean id="UdpListener" class="org.prot.controller.stats.ControllerManagement"
+		init-method="init">
 		<property name="controllerStatsCollector" ref="ControllerStatsCollector" />
 	</bean>
 

@@ -42,8 +42,8 @@ public class MasterManagement extends UdpListener
 		registry.dump();
 	}
 
-	public void setRegistry(ControllerRegistry stats)
+	public void setRegistry(ControllerRegistry registry)
 	{
-
+		this.registry = registry;
 	}
 }

@@ -11,3 +11,4 @@
 ./Libs/lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar
 ./Libs/lib/zookeeper-3.2.1/zookeeper-3.2.1.jar
 ./Libs/lib/apache_commons/commons-codec-1.3.jar
+./Libs/gen/google-protobuf.jar

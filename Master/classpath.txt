@@ -10,3 +10,4 @@
 ./Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-tx.jar
 ./Libs/gen/twospot-controller.jar
 ./Libs/gen/twospot-util.jar
+./Libs/gen/google-protobuf.jar

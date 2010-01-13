@@ -48,3 +48,4 @@
 ./Libs/gen/hbaseplugin.jar
 ./Libs/gen/twospot-util.jar
 ./Libs/lib/apache_commons/commons-codec-1.3.jar
+./Libs/gen/google-protobuf.jar

@@ -58,7 +58,7 @@ public class ServerLifecycle
 
 		if (appInfo == null)
 		{
-			logger.error("Error while fetching app archive");
+			logger.error("Error while fetching app archive: " + appId);
 
 			// Use the original stdio to tell the controller
 			IODirector.getInstance().forcedStdOutPrintln(SERVER_FAILED);

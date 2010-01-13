@@ -83,6 +83,10 @@ public final class AppInfo
 
 	synchronized boolean addContinuation(Continuation continuation)
 	{
+		// Check continuation (debug)
+		if (!continuation.isInitial())
+			logger.warn("Not using an initial continuation");
+
 		// Check state
 		switch (state)
 		{
