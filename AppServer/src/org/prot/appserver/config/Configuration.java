@@ -145,8 +145,17 @@ public class Configuration
 		while (workingDir.endsWith("/"))
 			workingDir = workingDir.substring(0, workingDir.length() - 1);
 
-		// Set the app directory
-		config.setAppDirectory(workingDir + "/" + config.getAppServerPort());
+		switch (configuration.serverMode)
+		{
+		case SERVER:
+			config.setAppDirectory(workingDir + "/" + config.getAppServerPort());
+			break;
+
+		case DEVELOPMENT:
+			config.setAppDirectory(workingDir + "/" + config.getAppId());
+			break;
+		}
+
 		logger.info("Configured AppDirectory: " + config.getAppDirectory());
 	}
 
