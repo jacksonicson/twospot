@@ -48,7 +48,7 @@
 	<classpathentry kind="lib" path="/Libs/gen/google-protobuf.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-ajp-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-annotations-7.0.1.v20091125.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-client-7.0.1.v20091125.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-client-7.0.1.v20091125.jar" sourcepath="D:/work/jetty7src/jetty/jetty-client/src/main/java"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-continuation-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-deploy-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-http-7.0.1.v20091125.jar"/>

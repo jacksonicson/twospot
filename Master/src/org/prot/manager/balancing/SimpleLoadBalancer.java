@@ -6,9 +6,9 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.prot.manager.stats.ControllerInfo;
+import org.prot.manager.stats.ControllerRegistry;
 import org.prot.manager.stats.ControllerStats;
 import org.prot.manager.stats.InstanceStats;
-import org.prot.manager.stats.ControllerRegistry;
 
 public class SimpleLoadBalancer implements LoadBalancer
 {
@@ -32,7 +32,7 @@ public class SimpleLoadBalancer implements LoadBalancer
 			double rank = 0;
 			// TODO: Overalod flag of the controller
 			rank += 0.3 * ((controller.getValues().cpu < 0) ? 0 : controller.getValues().cpu);
-			rank += 2.0 * controller.getValues().freeMemory / controller.getValues().totalMemory;
+			rank += 2.0 * (controller.getValues().freeMemory / controller.getValues().totalMemory);
 			rank += 0.5 * controller.size();
 			rank += 0.003 * controller.getValues().rps;
 			logger.debug("Ranking: " + rank);

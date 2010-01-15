@@ -25,6 +25,9 @@ public class RegisterController implements Job
 	@Override
 	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
+		if (!zooHelper.isConnected())
+			return JobState.RETRY_LATER;
+
 		ZooKeeper zk = zooHelper.getZooKeeper();
 
 		// Create a controller path if necessary

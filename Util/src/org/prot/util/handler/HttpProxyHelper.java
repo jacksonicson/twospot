@@ -99,17 +99,17 @@ public class HttpProxyHelper<M>
 		// This is a template method
 		return false;
 	}
-	
-	protected boolean handleStatus(M management, Buffer version, int status, Buffer reason) throws IOException
+
+	protected boolean handleStatus(M management, Buffer version, int status, Buffer reason)
+			throws IOException
 	{
 		return false;
 	}
-	
 
 	/**
 	 * Implementation
 	 */
-	
+
 	private boolean isFilteredHeader(String header)
 	{
 		return invalidHeaders.contains(header);
@@ -226,7 +226,13 @@ public class HttpProxyHelper<M>
 		final OutputStream out = response.getOutputStream();
 
 		// Get a continuation for this request
-		final Continuation continuation = ContinuationSupport.getContinuation(request);
+		final Continuation continuation = ContinuationSupport.getContinuation(jetRequest);
+		if (!continuation.isInitial())
+		{
+			response.sendError(HttpServletResponse.SC_GATEWAY_TIMEOUT);
+			jetRequest.setHandled(true);
+			return;
+		}
 
 		// Handling the response
 		HttpExchange exchange = new HttpExchange()
@@ -234,8 +240,8 @@ public class HttpProxyHelper<M>
 			@Override
 			public void onResponseComplete() throws IOException
 			{
-				jetRequest.setHandled(true);
 				continuation.complete();
+				jetRequest.setHandled(true);
 
 				requestFinished(obj);
 			}
@@ -275,8 +281,8 @@ public class HttpProxyHelper<M>
 			@Override
 			public void onException(Throwable ex)
 			{
-				if (ex instanceof EOFException)
-					return;
+//				if (ex instanceof EOFException)
+//					return;
 
 				if (response.isCommitted() == false)
 					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -284,20 +290,20 @@ public class HttpProxyHelper<M>
 				if (!error(obj, ex))
 					logger.error("Unhandled exception in the ProxyHelper: ", ex);
 
-				jetRequest.setHandled(true);
 				continuation.complete();
+				jetRequest.setHandled(true);
 			}
 
 			@Override
 			public void onExpire()
 			{
 				if (response.isCommitted() == false)
-					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+					response.setStatus(HttpServletResponse.SC_REQUEST_TIMEOUT);
 
 				expired(obj);
 
-				jetRequest.setHandled(true);
 				continuation.complete();
+				jetRequest.setHandled(true);
 			}
 
 			@Override
@@ -306,8 +312,8 @@ public class HttpProxyHelper<M>
 				if (response.isCommitted() == false)
 					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
-				jetRequest.setHandled(true);
 				continuation.complete();
+				jetRequest.setHandled(true);
 			}
 		};
 
@@ -375,7 +381,8 @@ public class HttpProxyHelper<M>
 			exchange.setRequestContentSource(in);
 
 		// Use a continuation to free this thread
-		continuation.suspend();
+		continuation.setTimeout(httpClient.getTimeout() * 2);
+		continuation.suspend(response);
 
 		// Send the request
 		httpClient.send(exchange);

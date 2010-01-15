@@ -16,7 +16,7 @@
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-servlet-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-servlets-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-webapp-7.0.1.v20091125.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-continuation-7.0.1.v20091125.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-continuation-7.0.1.v20091125.jar" sourcepath="D:/work/jetty7src/jetty/jetty-continuation/src/main/java"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-server-7.0.1.v20091125.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

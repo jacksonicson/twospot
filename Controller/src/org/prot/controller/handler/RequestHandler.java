@@ -92,7 +92,7 @@ public class RequestHandler extends AbstractHandler
 			AppInfo appInfo = (AppInfo) continuation.getAttribute(AppInfo.CONTINUATION_ATTRIBUTE_APPINFO);
 			if (appInfo.getStatus().getLife() == AppLife.SECOND)
 			{
-				logger.debug("Continuation resumed, AppInfo life is SECOND" + appId);
+				logger.debug("Continuation resumed, AppInfo life is SECOND " + appId);
 				response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500, "Could not start the AppServer");
 				baseRequest.setHandled(true);
 				return;

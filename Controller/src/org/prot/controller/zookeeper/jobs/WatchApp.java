@@ -121,6 +121,9 @@ public class WatchApp implements Job, Watcher
 	@Override
 	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
+		if(!zooHelper.isConnected())
+			return JobState.RETRY_LATER;
+		
 		ZooKeeper zk = zooHelper.getZooKeeper();
 
 		try
