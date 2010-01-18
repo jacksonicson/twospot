@@ -1,6 +1,5 @@
 package org.prot.util.handler;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -28,6 +27,8 @@ import org.eclipse.jetty.util.TypeUtil;
 public class HttpProxyHelper<M>
 {
 	private static final Logger logger = Logger.getLogger(HttpProxyHelper.class);
+
+	private static final String CONTINUATION_FLAG = "PROXY";
 
 	private HttpClient httpClient;
 
@@ -229,9 +230,14 @@ public class HttpProxyHelper<M>
 		final Continuation continuation = ContinuationSupport.getContinuation(jetRequest);
 		if (!continuation.isInitial())
 		{
-			response.sendError(HttpServletResponse.SC_GATEWAY_TIMEOUT);
-			jetRequest.setHandled(true);
-			return;
+			// Check if the proxy flag has been set
+			if (continuation.getAttribute(CONTINUATION_FLAG) != null)
+			{
+				// Request timed out!
+				response.sendError(HttpServletResponse.SC_GATEWAY_TIMEOUT);
+				jetRequest.setHandled(true);
+				return;
+			}
 		}
 
 		// Handling the response
@@ -281,8 +287,8 @@ public class HttpProxyHelper<M>
 			@Override
 			public void onException(Throwable ex)
 			{
-//				if (ex instanceof EOFException)
-//					return;
+				// if (ex instanceof EOFException)
+				// return;
 
 				if (response.isCommitted() == false)
 					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -381,6 +387,7 @@ public class HttpProxyHelper<M>
 			exchange.setRequestContentSource(in);
 
 		// Use a continuation to free this thread
+		continuation.setAttribute(CONTINUATION_FLAG, new Boolean(true));
 		continuation.setTimeout(httpClient.getTimeout() * 2);
 		continuation.suspend(response);
 

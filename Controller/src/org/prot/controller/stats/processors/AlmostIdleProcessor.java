@@ -34,19 +34,18 @@ public class AlmostIdleProcessor implements BalancingProcessor
 	@Override
 	public void run(Set<AppInfo> appInfos)
 	{
-		long current = System.currentTimeMillis();
 		for (AppInfo appInfo : appInfos)
 		{
+			// Check the state
 			if (appInfo.getStatus() != AppState.ONLINE)
 				continue;
+			
+			// Check if management data is available
 			if (appInfo.getAppManagement().getAppServer() == null)
 				continue;
 
-			double rps = appInfo.getAppManagement().getAppServer().getRps();
-			long time = current - appInfo.getCreationTime();
-
-			// TODO: < 50 % der Threads!
-			if (rps < LOW_RPS && time > MIN_RUNTIME)
+			// Check the AppServer load
+			if (appInfo.getAppManagement().getAppServer().getLoad() < 0.1)
 			{
 				// Check if this Controller is the last Controller serving the
 				// AppServer
@@ -56,11 +55,8 @@ public class AlmostIdleProcessor implements BalancingProcessor
 				// If a shutdown is possible
 				if (check)
 				{
-					logger.debug("Shutting down: " + appInfo.getAppId());
-
-					// Everythin is ok - this Controller is not the last one
-					// serving the AppServer
-//					appInfo.setState(AppState.BANNED);
+					logger.debug("Dropping : " + appInfo.getAppId());
+					appInfo.setState(AppState.DROPPED);
 				}
 			}
 		}

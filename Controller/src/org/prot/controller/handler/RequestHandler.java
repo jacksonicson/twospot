@@ -62,8 +62,8 @@ public class RequestHandler extends AbstractHandler
 		// Check the AppId and send an error
 		if (appId == null)
 		{
-			response.sendError(HttpStatus.SERVICE_UNAVAILABLE_503,
-					"Invalid AppId (scheme://domain/AppId/...)");
+			response.sendError(HttpStatus.NOT_FOUND_404,
+					"Invalid or missing AppId (scheme://domain/AppId/...)");
 			baseRequest.setHandled(true);
 			return;
 		}
@@ -71,6 +71,7 @@ public class RequestHandler extends AbstractHandler
 		// Check if it is a ping request from an AppServer
 		if (appId.equals(ReservedAppIds.APP_PING))
 		{
+			// Simply response this request with ok
 			response.getWriter().print("ok");
 			baseRequest.setHandled(true);
 			return;
@@ -79,6 +80,7 @@ public class RequestHandler extends AbstractHandler
 		// Check if the application is blocked
 		if (appManager.isBlocked(appId))
 		{
+			// Currently this Controller blocks all requests for the application
 			logger.debug("Recived request for blocked: " + appId);
 			response.sendError(HttpStatus.MOVED_TEMPORARILY_302, "Controller blocks requested application");
 			baseRequest.setHandled(true);

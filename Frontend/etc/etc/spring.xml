@@ -82,7 +82,6 @@
 		<property name="threadPool" ref="ThreadPool" />
 		<property name="timeout" value="30000" />
 		<property name="maxRetries" value="0" />
-		<property name="connectorType" value="2" />
 	</bean>
 
 </beans>

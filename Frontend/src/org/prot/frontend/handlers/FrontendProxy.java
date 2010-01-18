@@ -75,10 +75,11 @@ public class FrontendProxy extends HttpProxyHelper<RequestState>
 		{
 			logger.debug("Controller blocks: " + state.getAppId());
 			logger.debug("Redirecting client to: " + state.getRequest().getRequestURL().toString());
-			
-			appCache.controllerBlocks(state.getAppId(), state.getCached().getControllerInfo().getAddress());
-			state.getResponse().sendRedirect(state.getRequest().getRequestURL().toString());
-			return true;
+
+			// appCache.controllerBlocks(state.getAppId(),
+			// state.getCached().getControllerInfo().getAddress());
+			// state.getResponse().sendRedirect(state.getRequest().getRequestURL().toString());
+			// return true;
 		}
 
 		return false;
@@ -93,14 +94,14 @@ public class FrontendProxy extends HttpProxyHelper<RequestState>
 	{
 		appCache.release(state.getCached());
 
-		try
-		{
-			state.getResponse().sendError(HttpStatus.REQUEST_TIMEOUT_408,
-					"Connection with the Controller timed out");
-		} catch (IOException e)
-		{
-			logger.trace("IOException", e);
-		}
+		// try
+		// {
+		// state.getResponse().sendError(HttpStatus.REQUEST_TIMEOUT_408,
+		// "Connection with the Controller timed out");
+		// } catch (IOException e)
+		// {
+		// logger.trace("IOException", e);
+		// }
 	}
 
 	protected boolean error(RequestState state, Throwable e)
@@ -117,7 +118,7 @@ public class FrontendProxy extends HttpProxyHelper<RequestState>
 				return true;
 			} catch (IOException e1)
 			{
-				return false;
+				return true;
 			}
 		} else if (e instanceof IOException)
 		{

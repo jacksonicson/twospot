@@ -12,25 +12,16 @@
 	<classpathentry kind="lib" path="/Libs/gen/twospot-util.jar"/>
 	<classpathentry kind="lib" path="/Libs/gen/twospot-master.jar"/>
 	<classpathentry kind="lib" path="/Util/etc"/>
-	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-ajp-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-annotations-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-client-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-continuation-7.0.1.v20091125.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-deploy-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-http-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-io-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-jmx-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-jndi-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-plus-7.0.1.v20091125.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-policy-7.0.1.v20091125.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-rewrite-7.0.1.v20091125.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-security-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-server-7.0.1.v20091125.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-servlet-7.0.1.v20091125.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-servlets-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-util-7.0.1.v20091125.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-webapp-7.0.1.v20091125.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-websocket-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-xml-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/servlet-api-2.5.jar"/>
 	<classpathentry kind="output" path="bin"/>

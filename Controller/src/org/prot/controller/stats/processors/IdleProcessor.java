@@ -31,19 +31,25 @@ public class IdleProcessor implements BalancingProcessor
 	{
 		long currentTime = System.currentTimeMillis();
 
+		// Iterate over all AppServers
 		for (AppInfo appInfo : appInfos)
 		{
+			// Check if the AppServer is online
 			if (appInfo.getStatus() != AppState.ONLINE)
 				continue;
-			if(appInfo.getAppManagement().getAppServer() == null)
+
+			// Check if there are management data for the AppServer
+			if (appInfo.getAppManagement().getAppServer() == null)
 				continue;
 
+			// Check when the AppServr has been used the last time
 			long time = appInfo.getTouch();
 			time = currentTime - time;
+
 			if (time > IDLE_THREASHOLD)
 			{
 				logger.debug("Killing IDLE AppServer: " + appInfo.getAppId());
-				appInfo.setState(AppState.KILLED);
+//				appInfo.setState(AppState.KILLED);
 			}
 		}
 	}
