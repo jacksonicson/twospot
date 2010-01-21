@@ -2,11 +2,10 @@ package org.prot.controller.services.user;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Collection;
+import java.util.ArrayList;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
-import javax.jdo.Transaction;
 
 import org.apache.log4j.Logger;
 import org.prot.controller.app.TokenChecker;
@@ -92,36 +91,35 @@ public class UserServiceImpl implements UserService
 		UserSession userSession = new UserSession();
 		userSession.setSessionId(session);
 		userSession.setUsername(username);
+		userSession.setTimestamp(System.currentTimeMillis());
 
 		PersistenceManager persistenceManager = JdoConnection.getPersistenceManager();
 		try
 		{
-			Transaction tx = persistenceManager.currentTransaction();
 			try
 			{
 				// Delete everything from previous sessions
-				tx.begin();
 				Query query = persistenceManager.newQuery(UserSession.class);
 				query.setFilter("username == '" + username + "'");
-				Collection<UserSession> oldSessions = (Collection<UserSession>) query.execute();
-				for (UserSession delete : oldSessions)
-					persistenceManager.deletePersistent(delete);
-				tx.commit();
+				ArrayList<UserSession> oldSessions = (ArrayList<UserSession>) query.execute();
+				for (UserSession oldSession : oldSessions)
+				{
+					long timestamp = oldSession.getTimestamp();
+					timestamp = System.currentTimeMillis() - timestamp;
+					if (timestamp < 0 || timestamp > 24 * 60 * 60 * 1000)
+					{
+						logger.debug("Removing old session");
+						persistenceManager.deletePersistent(oldSession);
+					}
+				}
 
 				// Create a new entry for this session
-				tx.begin();
 				persistenceManager.makePersistent(userSession);
 				logger.debug("User session is persistent");
-				tx.commit();
 
 			} catch (Exception e)
 			{
 				logger.error("Could not persistate user session", e);
-				tx.rollback();
-			} finally
-			{
-				if (tx.isActive())
-					tx.rollback();
 			}
 
 		} finally
@@ -135,11 +133,9 @@ public class UserServiceImpl implements UserService
 	{
 		if (uid == null)
 		{
-			logger.warn("Invalid AppServer token");
+			logger.warn("Invalid user identifier token");
 			return;
 		}
-
-		logger.debug("Unregistering user: " + uid);
 
 		PersistenceManager persistenceManager = JdoConnection.getPersistenceManager();
 		try
@@ -152,13 +148,12 @@ public class UserServiceImpl implements UserService
 			UserSession session = (UserSession) query.execute();
 			if (session != null)
 			{
-				logger.debug("Removing session");
 				persistenceManager.currentTransaction().begin();
 				persistenceManager.deletePersistent(session);
 				persistenceManager.currentTransaction().commit();
 			} else
 			{
-				logger.warn("Could not find user session: " + uid);
+				logger.warn("Could not find and delete user session: " + uid);
 			}
 
 		} catch (Exception e)

@@ -12,7 +12,7 @@ import zipfile
 # Properties (TODO: This is the portal app)
 ###########################################
 
-DEV_MODE = True
+DEV_MODE = False
 
 # Development
 SERVER_PORTAL = 'portal.twospot.local'

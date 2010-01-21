@@ -45,9 +45,6 @@ public class ConnectionFactoryImpl extends AbstractConnectionFactory
 	@Override
 	public ManagedConnection createManagedConnection(ObjectManager om, Map options)
 	{
-		// Increment the reference counter on this connection
-		this.connection.incrementReferenceCount();
-
 		// Return the reference to the storage service
 		return this.connection;
 	}

@@ -15,19 +15,6 @@ public class StorageImpl implements Storage
 
 	private ConnectionFactory connectionFactory;
 
-	private long timer = 0;
-
-	private final void startTimer()
-	{
-		timer = System.currentTimeMillis();
-	}
-
-	private final void logTime()
-	{
-		timer = System.currentTimeMillis() - timer;
-		logger.debug("Storage API call took (ms): " + timer);
-	}
-
 	public StorageImpl()
 	{
 		this.connectionFactory = new ConnectionFactory();
@@ -36,9 +23,6 @@ public class StorageImpl implements Storage
 	@Override
 	public List<Key> createKey(String appId, long amount)
 	{
-		logger.debug("Creating keys " + amount);
-		startTimer();
-
 		KeyCreator keyCreator = new KeyCreator(connectionFactory);
 		try
 		{
@@ -49,15 +33,12 @@ public class StorageImpl implements Storage
 			return null;
 		} finally
 		{
-			logTime();
 		}
 	}
 
 	@Override
 	public void createObject(String appId, String kind, Key key, byte[] obj)
 	{
-		startTimer();
-
 		// Asserts
 		assert (key != null);
 
@@ -65,7 +46,6 @@ public class StorageImpl implements Storage
 		StorageUtils.assertFieldSize(obj.length);
 
 		// Create the entity
-		logger.debug("Creating object of kind: " + kind);
 		ObjectCreator creator = new ObjectCreator(connectionFactory);
 		try
 		{
@@ -75,15 +55,12 @@ public class StorageImpl implements Storage
 			logger.error("", e);
 		} finally
 		{
-			logTime();
 		}
 	}
 
 	@Override
 	public void updateObject(String appId, String kind, Key key, byte[] obj)
 	{
-		startTimer();
-
 		// Asserts
 		assert (key != null);
 
@@ -103,15 +80,12 @@ public class StorageImpl implements Storage
 			logger.error(e);
 		} finally
 		{
-			logTime();
 		}
 	}
 
 	@Override
 	public List<byte[]> query(StorageQuery query)
 	{
-		startTimer();
-
 		ImplQueryHandler handler = new ImplQueryHandler(connectionFactory);
 		QueryEngine engine = new QueryEngine(handler);
 
@@ -120,7 +94,6 @@ public class StorageImpl implements Storage
 			return engine.run(query);
 		} finally
 		{
-			logTime();
 		}
 	}
 
@@ -135,8 +108,6 @@ public class StorageImpl implements Storage
 	@Override
 	public boolean deleteObject(String appId, String kind, Key key)
 	{
-		startTimer();
-
 		try
 		{
 			ObjectRemover remover = new ObjectRemover(connectionFactory);
@@ -148,7 +119,6 @@ public class StorageImpl implements Storage
 			return false;
 		} finally
 		{
-			logTime();
 		}
 	}
 }

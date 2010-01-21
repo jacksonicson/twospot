@@ -12,12 +12,9 @@ public class ErrorHandler extends org.eclipse.jetty.server.handler.ErrorHandler
 {
 	private void printStackTrace()
 	{
-		StringBuilder sb = new StringBuilder();
-
 		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
 
 		ArrayList<String> list = new ArrayList<String>();
-		String[] array = new String[1];
 
 		for (int i = 0; i < stackTraceElements.length; i++)
 		{
@@ -27,15 +24,6 @@ public class ErrorHandler extends org.eclipse.jetty.server.handler.ErrorHandler
 			int lineNumber = element.getLineNumber();
 			list.add(classname + "." + methodName + ":" + lineNumber);
 		}
-
-		array = list.toArray(array);
-
-		for (int i = 0; i < array.length; i++)
-		{
-			sb.append(array[i] + "\n");
-		}
-
-		System.out.println("Stack: " + sb);
 	}
 
 	public void handle(String target, Request baseRequest, HttpServletRequest request,

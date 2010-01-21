@@ -5,6 +5,8 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
 import org.prot.controller.config.Configuration;
 import org.prot.util.ObjectSerializer;
@@ -14,7 +16,7 @@ import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
 import org.prot.util.zookeeper.data.ControllerEntry;
 
-public class RegisterController implements Job
+public class RegisterController implements Job, Watcher
 {
 	private static final Logger logger = Logger.getLogger(RegisterController.class);
 
@@ -23,17 +25,18 @@ public class RegisterController implements Job
 	private String controllerPath = null;
 
 	@Override
-	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
+	public void process(WatchedEvent event)
 	{
-		if (!zooHelper.isConnected())
-			return JobState.RETRY_LATER;
+		switch (event.getType())
+		{
+		case NodeDeleted:
+		case NodeDataChanged:
+			zooHelper.getQueue().insert(this);
+		}
+	}
 
-		ZooKeeper zk = zooHelper.getZooKeeper();
-
-		// Create a controller path if necessary
-		if (controllerPath == null)
-			controllerPath = ZNodes.ZNODE_CONTROLLER + "/" + Configuration.getConfiguration().getUID();
-
+	private byte[] getControllerEntry()
+	{
 		// Create a new ControllerEntry object which serialized version is saved
 		// to the ZooKeeper
 		ControllerEntry entry = new ControllerEntry();
@@ -45,15 +48,30 @@ public class RegisterController implements Job
 		ObjectSerializer serializer = new ObjectSerializer();
 		byte[] entryData = serializer.serialize(entry);
 
+		return entryData;
+	}
+
+	@Override
+	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
+	{
+		if (!zooHelper.checkConnection())
+			return JobState.RETRY_LATER;
+
+		ZooKeeper zk = zooHelper.getZooKeeper();
+
+		// Create a controller path if necessary
+		if (controllerPath == null)
+			controllerPath = ZNodes.ZNODE_CONTROLLER + "/" + Configuration.getConfiguration().getUID();
+
+		// Create a new controller entry
+		byte[] entryData = getControllerEntry();
+
 		// Try creating a new node
 		try
 		{
 			// Created node
 			String createdPath = zk.create(controllerPath, entryData, zooHelper.getACL(),
 					CreateMode.EPHEMERAL);
-
-			logger.info("Controller ZooKeeper-Path: " + createdPath);
-
 		} catch (KeeperException e)
 		{
 			switch (e.code())

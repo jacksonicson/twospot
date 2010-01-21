@@ -27,7 +27,7 @@ public class RegisterApp implements Job
 	@Override
 	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
-		if (!zooHelper.isConnected())
+		if (!zooHelper.checkConnection())
 			return JobState.FAILED;
 
 		ZooKeeper zk = zooHelper.getZooKeeper();

@@ -98,6 +98,8 @@ public class TimeoutAppCache implements AppCache
 	@Override
 	public void controllerBlocks(String appId, String address)
 	{
+		logger.info("Controller blocks: " + address);
+
 		for (CacheEntry entry : cache.values())
 			entry.block(address);
 	}

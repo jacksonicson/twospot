@@ -197,11 +197,8 @@ public class AppRegistry implements TokenChecker
 		synchronized (appInfos)
 		{
 			// Iterate over all running applications
-			for (Iterator<AppInfo> it = appInfos.iterator(); it.hasNext();)
+			for (AppInfo info : appInfos)
 			{
-				// Get application infos and the token
-				AppInfo info = it.next();
-
 				// Compare stored token
 				if (token.equals(info.getProcessToken()))
 				{
@@ -215,11 +212,6 @@ public class AppRegistry implements TokenChecker
 		return false;
 	}
 
-	public Set<String> getAppIds()
-	{
-		return appMapping.keySet();
-	}
-
 	public Set<AppInfo> getDuplicatedAppInfos()
 	{
 		synchronized (appInfos)
@@ -227,16 +219,6 @@ public class AppRegistry implements TokenChecker
 			Set<AppInfo> appInfos = new HashSet<AppInfo>();
 			appInfos.addAll(appMapping.values());
 			return appInfos;
-		}
-	}
-
-	public Set<String> getDuplicatedAppIds()
-	{
-		synchronized (appInfos)
-		{
-			Set<String> duplicate = new HashSet<String>();
-			duplicate.addAll(appMapping.keySet());
-			return duplicate;
 		}
 	}
 }

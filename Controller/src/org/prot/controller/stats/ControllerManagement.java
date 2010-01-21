@@ -98,7 +98,7 @@ public class ControllerManagement extends UdpListener
 				logger.error("IOException", e);
 			} catch (Exception e)
 			{
-				logger.fatal("Unhandled exceptino", e);
+				logger.fatal("Unhandled exception", e);
 			}
 		}
 	}

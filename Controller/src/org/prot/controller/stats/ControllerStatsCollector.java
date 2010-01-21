@@ -36,7 +36,7 @@ public class ControllerStatsCollector
 			rpsCounter.count();
 		} catch (Exception e)
 		{
-			logger.error("Error while handling stas: " + e);
+			logger.error("Error while handling stats: " + e);
 		}
 	}
 

@@ -135,6 +135,8 @@ public class AppManager implements DeploymentListener, SynchronizationListener
 
 	public void staleApp(AppInfo appInfo)
 	{
+		logger.debug("Reporting stale AppServer");
+		
 		if (appInfo != null)
 			appInfo.setState(AppState.KILLED);
 	}

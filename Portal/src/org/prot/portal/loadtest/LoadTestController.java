@@ -12,19 +12,7 @@ public class LoadTestController implements Controller
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
 			throws Exception
 	{
-		// Random r = new Random(System.currentTimeMillis());
-		// for (int v = 0; v < 2; v++)
-		// {
-		// long i = Math.abs((r.nextInt())) % 9999999;
-		// for (int t = 2; t < i / 2; t++)
-		// {
-		// if (i % t == 0)
-		// break;
-		// }
-		// }
-		// Should block the thread!
-		Thread.sleep(2000);
-
+		Thread.sleep(500);
 		return null;
 	}
 

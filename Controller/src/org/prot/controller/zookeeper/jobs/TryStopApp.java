@@ -25,6 +25,9 @@ public class TryStopApp implements Job
 	@Override
 	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
+		if (!zooHelper.checkConnection())
+			return JobState.FAILED;
+
 		ZooKeeper zk = zooHelper.getZooKeeper();
 
 		String appNode = ZNodes.ZNODE_APPS + "/" + appId;
@@ -38,17 +41,17 @@ public class TryStopApp implements Job
 
 			// Only shutdown the instance if there are more than one instances
 			// running
-			if(childCount > 1)
+			if (childCount > 1)
 				return JobState.OK;
 
 		} catch (KeeperException e)
 		{
 			logger.error(e);
-			
+
 			// Cannot stop the instance
 			return JobState.FAILED;
 		}
-		
+
 		return JobState.FAILED;
 	}
 

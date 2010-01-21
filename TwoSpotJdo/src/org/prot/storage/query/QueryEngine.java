@@ -23,7 +23,6 @@ public class QueryEngine
 
 	public byte[] fetch(String appId, String kind, Key key)
 	{
-		logger.debug("Querying for a single object");
 		StorageQuery query = new StorageQuery(appId, kind);
 		List<byte[]> result = run(query);
 		if (result.size() == 1)

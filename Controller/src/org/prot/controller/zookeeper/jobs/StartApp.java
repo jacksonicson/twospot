@@ -26,8 +26,11 @@ public class StartApp implements Job
 	@Override
 	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
-		if (!zooHelper.isConnected())
+		if (!zooHelper.checkConnection())
+		{
+			logger.warn("No connection with ZooKeeper - RETRY_LATER");
 			return JobState.RETRY_LATER;
+		}
 
 		ZooKeeper zk = zooHelper.getZooKeeper();
 		String instancePath = ZNodes.ZNODE_APPS + "/" + appId + "/"
@@ -35,9 +38,7 @@ public class StartApp implements Job
 
 		try
 		{
-			// The path does not exist - create it (empty node)
 			zk.create(instancePath, new byte[0], zooHelper.getACL(), CreateMode.EPHEMERAL);
-
 		} catch (KeeperException e)
 		{
 			switch (e.code())

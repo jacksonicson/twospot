@@ -56,16 +56,16 @@ public class ZooHelper implements Watcher
 			listeners.add(listener);
 		}
 	}
-	
+
 	private void listenerReconnect()
 	{
 		ArrayList<SynchronizationListener> copy = new ArrayList<SynchronizationListener>();
-		synchronized(listeners)
+		synchronized (listeners)
 		{
-			copy.addAll(listeners); 
+			copy.addAll(listeners);
 		}
-		
-		for(SynchronizationListener listener : copy)
+
+		for (SynchronizationListener listener : copy)
 			listener.reconnected(this);
 	}
 
@@ -89,8 +89,11 @@ public class ZooHelper implements Watcher
 		reconnect();
 	}
 
-	final void reconnect()
+	final synchronized void reconnect()
 	{
+		if (isConnected())
+			return;
+
 		zooKeeper = null;
 		connect();
 		listenerReconnect();
@@ -98,7 +101,7 @@ public class ZooHelper implements Watcher
 		queue.proceed();
 	}
 
-	public boolean isConnected()
+	private synchronized boolean isConnected()
 	{
 		if (zooKeeper == null)
 			return false;
@@ -106,13 +109,23 @@ public class ZooHelper implements Watcher
 		return zooKeeper.getState() == States.CONNECTED;
 	}
 
-	private final void connect()
+	public boolean checkConnection()
+	{
+		boolean connected = isConnected();
+
+		if (!connected)
+			reconnect();
+
+		return connected;
+	}
+
+	private synchronized final void connect()
 	{
 		try
 		{
 			while (zooKeeper == null)
 			{
-				logger.debug("ZooKeeper is connecting...");
+				logger.info("ZooKeeper is connecting...");
 
 				// Create a new ZooKeeper instance
 				ZooKeeper connection = new ZooKeeper(host + ":" + port, SESSION_TIMEOUT, this);
@@ -127,6 +140,7 @@ public class ZooHelper implements Watcher
 				// Check if it is connected
 				if (connection.getState() == States.CONNECTED)
 				{
+					logger.info("Connected with ZooKeeper");
 					zooKeeper = connection;
 				} else
 				{

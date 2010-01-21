@@ -25,7 +25,7 @@ public class DeployApp implements Job
 	@Override
 	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
-		if (!zooHelper.isConnected())
+		if (!zooHelper.checkConnection())
 			return JobState.RETRY_LATER;
 
 		ZooKeeper zk = zooHelper.getZooKeeper();

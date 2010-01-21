@@ -57,6 +57,12 @@ public class CacheEntry
 		}
 
 		logger.debug("Known controllers: " + controllers.keySet().size());
+
+		synchronized (requestCounter)
+		{
+			for (Long counter : requestCounter.values())
+				logger.debug("Counter: " + counter);
+		}
 	}
 
 	synchronized void removeStale(String address)
@@ -112,9 +118,7 @@ public class CacheEntry
 				{
 					count = requestCounter.get(info.getAddress());
 					if (count == null)
-					{
 						requestCounter.put(info.getAddress(), 0l);
-					}
 				}
 
 				selected = info;
@@ -139,7 +143,7 @@ public class CacheEntry
 	{
 		synchronized (requestCounter)
 		{
-			Long min = requestCounter.get(address);
+			long min = requestCounter.get(address);
 			min++;
 			requestCounter.put(address, min);
 		}

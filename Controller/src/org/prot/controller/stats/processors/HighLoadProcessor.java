@@ -67,8 +67,9 @@ public class HighLoadProcessor implements BalancingProcessor
 			if (worstApp == bestApp)
 				return;
 
-			logger.debug("Banning application: " + bestApp.getAppId());
-			bestApp.setState(AppState.BANNED);
+			// Only works if there are enough controller machines available!
+//			logger.debug("Banning application: " + bestApp.getAppId());
+//			bestApp.setState(AppState.BANNED);
 		}
 	}
 

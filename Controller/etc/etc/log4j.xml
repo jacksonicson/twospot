@@ -10,12 +10,13 @@
 	</appender>
 
 	<appender name="FileAppender" class="org.apache.log4j.FileAppender">
-		<param name="File" value="controller.log" />
-
-		<param name="Threshold" value="ERROR" />
-		<layout class="org.apache.log4j.PatternLayout">
+		<appender-ref ref="Rolling" />
+		<!--
+			<param name="File" value="controller.log" /> <param name="Threshold"
+			value="ERROR" /> <layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%p - %C{1}.%M(%L) | %m%n" />
-		</layout>
+			</layout>
+		-->
 	</appender>
 
 	<appender name="Rolling" class="org.apache.log4j.RollingFileAppender">

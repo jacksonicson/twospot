@@ -13,7 +13,6 @@ public class AlmostIdleProcessor implements BalancingProcessor
 	private static final Logger logger = Logger.getLogger(AlmostIdleProcessor.class);
 
 	private int MIN_RUNTIME = Integer.MAX_VALUE;
-	private double LOW_RPS = Double.MAX_VALUE;
 
 	private SynchronizationService management;
 
@@ -23,7 +22,6 @@ public class AlmostIdleProcessor implements BalancingProcessor
 		try
 		{
 			MIN_RUNTIME = Integer.parseInt(config.getProperty("balance.almostIdleProcessor.minRunime"));
-			LOW_RPS = Double.parseDouble(config.getProperty("balance.almostIdleProcessor.lowRps"));
 		} catch (NumberFormatException e)
 		{
 			logger.fatal("Configuration failed", e);
@@ -39,13 +37,18 @@ public class AlmostIdleProcessor implements BalancingProcessor
 			// Check the state
 			if (appInfo.getStatus() != AppState.ONLINE)
 				continue;
-			
+
 			// Check if management data is available
 			if (appInfo.getAppManagement().getAppServer() == null)
 				continue;
 
+			// Check if the minimum runtime
+			long runtime = System.currentTimeMillis() - appInfo.getCreationTime();
+			if (runtime < MIN_RUNTIME)
+				continue;
+
 			// Check the AppServer load
-			if (appInfo.getAppManagement().getAppServer().getLoad() < 0.1)
+			if (appInfo.getAppManagement().getAppServer().getLoad() < 0.05)
 			{
 				// Check if this Controller is the last Controller serving the
 				// AppServer

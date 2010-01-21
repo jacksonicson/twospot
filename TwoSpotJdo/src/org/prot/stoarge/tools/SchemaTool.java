@@ -16,7 +16,7 @@ public class SchemaTool
 			HBaseAdmin admin = new HBaseAdmin(config);
 			SchemaCreator creator = new SchemaCreator(admin);
 			creator.checkAndCreate();
-			
+
 		} catch (MasterNotRunningException e)
 		{
 			e.printStackTrace();

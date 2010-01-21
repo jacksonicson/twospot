@@ -19,11 +19,14 @@ public class UserSession implements Serializable
 	private Key key;
 
 	@Persistent
+	@Unique
+	private String username;
+
+	@Persistent
 	private String sessionId;
 
 	@Persistent
-	@Unique
-	private String username;
+	private long timestamp;
 
 	public Key getKey()
 	{
@@ -53,5 +56,15 @@ public class UserSession implements Serializable
 	public void setUsername(String username)
 	{
 		this.username = username;
+	}
+
+	public long getTimestamp()
+	{
+		return timestamp;
+	}
+
+	public void setTimestamp(long timestamp)
+	{
+		this.timestamp = timestamp;
 	}
 }

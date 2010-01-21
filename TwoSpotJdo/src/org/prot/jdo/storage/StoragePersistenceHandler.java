@@ -79,10 +79,10 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 
 			// Get the primary key
 			Object pKeyObj = sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
-			assert (pKeyObj instanceof Key);
 			Key key = (Key) pKeyObj;
+			if (key == null)
+				return;
 
-			// Delete the object
 			Storage storage = mconn.getStorage();
 			storage.deleteObject(appId, kind, key);
 

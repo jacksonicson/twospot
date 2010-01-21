@@ -36,9 +36,6 @@ public class StorageManagedConnection extends AbstractManagedConnection
 	// Reference to the storage implementation
 	private Storage storage;
 
-	// Counts the number of references to this connection
-	private int referenceCount = 0;
-
 	public StorageManagedConnection()
 	{
 		super();
@@ -80,18 +77,5 @@ public class StorageManagedConnection extends AbstractManagedConnection
 	public void close()
 	{
 		// Do nothing
-	}
-
-	void incrementReferenceCount()
-	{
-		referenceCount++;
-	}
-
-	public void release()
-	{
-		referenceCount--;
-
-		if (referenceCount < 0)
-			logger.warn("Too many calls to release()");
 	}
 }

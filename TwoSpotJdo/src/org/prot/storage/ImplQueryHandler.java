@@ -28,20 +28,18 @@ public class ImplQueryHandler implements QueryHandler
 
 	public ImplQueryHandler(ConnectionFactory connectionFactory)
 	{
-		this.connection = (HBaseManagedConnection)connectionFactory.createManagedConnection();
+		this.connection = (HBaseManagedConnection) connectionFactory.createManagedConnection();
 	}
-	
+
 	@Override
 	public void execute(Collection<byte[]> result, StorageQuery query) throws IOException
 	{
 		if (query.getKey() != null)
 		{
-			logger.debug("Fetching object by key");
 			fetchByKey(query, result);
 
 		} else if (query.getKind() != null)
 		{
-			logger.debug("Fetching object by kind");
 			fetchByKind(query, result);
 		}
 	}
@@ -96,10 +94,6 @@ public class ImplQueryHandler implements QueryHandler
 	public void execute(Collection<byte[]> result, StorageQuery query, AtomarCondition condition)
 			throws IOException
 	{
-		logger.debug("Running atomar condition of type: " + condition.getType());
-		logger.debug("Property is: " + condition.getProperty());
-		logger.debug("Value is: " + new String(condition.getValue().getValue()));
-
 		// Get the tables
 		HTable tableEntities = StorageUtils.getTableEntity(connection);
 		HTable tableIndex = StorageUtils.getTableIndexByPropertyAsc(connection);
