@@ -83,11 +83,19 @@ public class AppDeployer extends AbstractLifeCycle
 		JavaConfiguration runtimeConfig = (JavaConfiguration) appInfo.getRuntimeConfiguration();
 		Configuration configuration = Configuration.getInstance();
 
+		
 		// Create a new Context for the web application
 		webAppContext = new WebAppContext();
+		
+		webAppContext.setServer(contexts.getServer());
+		webAppContext.setCompactPath(true);
+		webAppContext.setCopyWebDir(true);
+		webAppContext.setAliases(false);
+		
+		
 		webAppContext.setWar(configuration.getAppDirectory());
 		webAppContext.setContextPath("/");
-
+		
 		// Configure the system classes (application can see this classes)
 		String[] ownSystemClasses = { "org.prot.app." };
 		webAppContext.setSystemClasses(ownSystemClasses);
@@ -105,7 +113,7 @@ public class AppDeployer extends AbstractLifeCycle
 		}
 
 		// Custom error handling
-		webAppContext.setErrorHandler(new ErrorHandler());
+//		webAppContext.setErrorHandler(new ErrorHandler());
 
 		// Set the scratch directory for this web application
 		webAppContext.setTempDirectory(new File(configuration.getAppScratchDir()));
@@ -114,11 +122,12 @@ public class AppDeployer extends AbstractLifeCycle
 		webAppContext.setExtractWAR(false);
 
 		// Used by the web archiver (don't use that)
-		webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
-				".*/jsp-api-[^/]*\\.jar$|.*/jsp-[^/]*\\.jar$");
+//		webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
+//				".*/jsp-api-[^/]*\\.jar$|.*/jsp-[^/]*\\.jar$");
 
 		// All classes from the parent class loader are visible
 		webAppContext.setParentLoaderPriority(false);
+		
 
 		// Default web application configuration descriptor
 		webAppContext.setDefaultsDescriptor("/etc/webdefault.xml");
@@ -126,8 +135,10 @@ public class AppDeployer extends AbstractLifeCycle
 		// Register and start the context
 		logger.debug("Adding and starting handler");
 		contexts.addHandler(webAppContext);
-		if (contexts.isStarted())
-			contexts.start();
+		
+		if (contexts.isStarting() || contexts.isStarted())
+			webAppContext.start();
+		
 		logger.debug("Application handler started");
 	}
 

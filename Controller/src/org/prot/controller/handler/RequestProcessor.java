@@ -33,6 +33,8 @@ public class RequestProcessor extends HttpProxyHelper<AppInfo>
 			forwardRequest(baseRequest, request, response, dest, appInfo);
 		} catch (Exception e)
 		{
+			logger.error("RequestProcessor could not process the request", e);
+			
 			try
 			{
 				response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500, "ControllerProxy failed");
@@ -50,11 +52,12 @@ public class RequestProcessor extends HttpProxyHelper<AppInfo>
 	{
 		if (t instanceof ConnectException)
 		{
+			logger.debug("ConnectException");
 			appManager.staleApp(appInfo);
 			return true;
 		} else if (t instanceof IOException)
 		{
-			logger.debug("IOException in Controller");
+			logger.debug("IOException in Controller", t);
 			return true;
 		}
 

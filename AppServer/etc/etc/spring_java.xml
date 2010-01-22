@@ -12,14 +12,12 @@
 		<property name="acceptors" value="1" />
 		<property name="statsOn" value="true" />
 
-
-		<property name="maxIdleTime" value="500" />
+		<property name="maxIdleTime" value="5000" />
 	</bean>
 
 	<bean id="ThreadPool" class="org.eclipse.jetty.util.thread.QueuedThreadPool">
 		<property name="minThreads" value="7" />
 		<property name="maxThreads" value="20" />
-		<property name="maxStopTimeMs" value="100" />
 	</bean>
 
 	<!-- Server -->

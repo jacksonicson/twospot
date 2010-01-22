@@ -16,9 +16,9 @@
 	<bean id="OutsideConnector" class="org.eclipse.jetty.server.nio.SelectChannelConnector">
 		<property name="host" value="${http.frontend.interface}" />
 		<property name="port" value="${http.frontend.port}" />
-		<property name="acceptors" value="2" />
-		<property name="acceptQueueSize" value="5000" />
-		<property name="statsOn" value="false" />
+		<property name="acceptors" value="1" />
+		<!--<property name="acceptQueueSize" value="5000" />
+		--><property name="statsOn" value="false" />
 	</bean>
 
 
@@ -28,7 +28,6 @@
 		<property name="minThreads" value="20" />
 		<property name="maxThreads" value="50" />
 	</bean>
-
 
 
 	<!-- Server -->
@@ -81,7 +80,9 @@
 		init-method="start">
 		<property name="threadPool" ref="ThreadPool" />
 		<property name="timeout" value="30000" />
-		<property name="maxRetries" value="0" />
+		<property name="idleTimeout" value="30000" />
+		<property name="maxRetries" value="1" />
+		<property name="maxConnectionsPerAddress" value="1000" />
 	</bean>
 
 </beans>

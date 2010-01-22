@@ -391,6 +391,7 @@ public class HttpProxyHelper<M>
 		// Send the request
 		httpClient.send(exchange);
 		requestSent(obj, exchange);
+		jetRequest.setHandled(true);
 	}
 
 	public void setHttpClient(HttpClient httpClient)

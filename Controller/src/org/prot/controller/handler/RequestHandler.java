@@ -38,7 +38,7 @@ public class RequestHandler extends AbstractHandler
 		String scheme = request.getScheme();
 		int port = appInfo.getPort();
 		String uri = request.getUri().toString();
-		
+
 		// Build the complete URL (In this case string concation seems to be
 		// inefficient)
 		StringBuilder builder = new StringBuilder(scheme.length() + 4 + uri.length() + 10);
@@ -56,55 +56,67 @@ public class RequestHandler extends AbstractHandler
 	public void handle(String target, Request baseRequest, HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException
 	{
-		// Extract the AppId
-		String appId = AppIdExtractor.fromUri(baseRequest.getUri().toString());
-
-		// Check the AppId and send an error
-		if (appId == null)
-		{
-			logger.debug("Unknown AppId in: " + baseRequest.getUri().toString());
-			
-			response.sendError(HttpStatus.NOT_FOUND_404,
-					"Invalid or missing AppId (scheme://domain/AppId/...)");
-			baseRequest.setHandled(true);
-			return;
-		}
-
-		// Check if it is a ping request from an AppServer
-		if (appId.equals(ReservedAppIds.APP_PING))
-		{
-			// Simply response this request with ok
-			response.getWriter().print("ok");
-			baseRequest.setHandled(true);
-			return;
-		}
-
-		// Check if the application is blocked
-		if (appManager.isBlocked(appId))
-		{
-			// Currently this Controller blocks all requests for the application
-			logger.debug("Recived request for blocked: " + appId);
-			response.sendError(HttpStatus.MOVED_TEMPORARILY_302, "Controller blocks requested application");
-			baseRequest.setHandled(true);
-			return;
-		}
+		AppInfo appInfo = null;
 
 		// Check if this a continuation
 		Continuation continuation = ContinuationSupport.getContinuation(request);
 		if (continuation.isResumed())
 		{
-			AppInfo appInfo = (AppInfo) continuation.getAttribute(AppInfo.CONTINUATION_ATTRIBUTE_APPINFO);
+			appInfo = (AppInfo) continuation.getAttribute(AppInfo.CONTINUATION_ATTRIBUTE_APPINFO);
 			if (appInfo.getStatus().getLife() == AppLife.SECOND)
 			{
-				logger.debug("Continuation resumed, AppInfo life is SECOND " + appId);
+				logger.debug("Continuation resumed, AppInfo life is SECOND " + appInfo.getAppId());
 				response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500, "Could not start the AppServer");
 				baseRequest.setHandled(true);
 				return;
 			}
 		}
 
-		// Inform the AppManager
-		AppInfo appInfo = appManager.requireApp(appId);
+		if (appInfo == null)
+		{
+			// Extract the AppId
+			String appId = AppIdExtractor.fromUri(baseRequest.getUri().toString());
+
+			// Check the AppId and send an error
+			if (appId == null)
+			{
+				logger.debug("Unknown AppId in: " + baseRequest.getUri().toString());
+
+				response.sendError(HttpStatus.BAD_REQUEST_400,
+						"Invalid or missing AppId (scheme://domain/AppId/...)");
+				
+				baseRequest.setHandled(true);
+				return;
+			}
+
+			// Check if it is a ping request from an AppServer
+			if (appId.equals(ReservedAppIds.APP_PING))
+			{
+				logger.debug("ping from AppServer"); 
+				
+				// Simply response this request with ok
+				response.getWriter().print("ok");
+				baseRequest.setHandled(true);
+				return;
+			}
+
+			// Check if the application is blocked
+			if (appManager.isBlocked(appId))
+			{
+				// Currently this Controller blocks all requests for the
+				// application
+				logger.debug("Recived request for blocked: " + appId);
+				
+				response.sendError(HttpStatus.MOVED_TEMPORARILY_302,
+						"Controller blocks requested application");
+				
+				baseRequest.setHandled(true);
+				return;
+			}
+
+			// Inform the AppManager
+			appInfo = appManager.requireApp(appId);
+		}
 
 		// The AppServer is not avialable - a continuation is used to restart
 		// this request when the AppServer is online. If a continuation is used
@@ -124,13 +136,13 @@ public class RequestHandler extends AbstractHandler
 		try
 		{
 			HttpURI destination = getUrl(baseRequest, appInfo);
-			
+
 			// Register the request in the RequestManager.
 			requestProcessor.process(appInfo, baseRequest, request, response, destination);
 		} catch (Exception e)
 		{
 			logger.error("Could not process request", e);
-			response.sendError(HttpStatus.NOT_FOUND_404, "Could not start AppServer");
+			response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500, "Could not start AppServer");
 			baseRequest.setHandled(true);
 			return;
 		}
