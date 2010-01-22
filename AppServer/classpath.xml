@@ -19,9 +19,6 @@
 <pathelement location="../Libs/lib/datanucleus/datanucleus-management-1.0.2.jar" />
 <pathelement location="../Libs/lib/datanucleus/deps/hbase-0.20.0.jar" />
 <pathelement location="../Libs/lib/jasper/el-api.jar" />
-<pathelement location="../Libs/lib/jasper/jasper-el.jar" />
-<pathelement location="../Libs/lib/jasper/jasper-jdt.jar" />
-<pathelement location="../Libs/lib/jasper/jasper.jar" />
 <pathelement location="../Libs/lib/jasper/jsp-api.jar" />
 <pathelement location="../Libs/lib/jasper/tomcat-juli.jar" />
 <pathelement location="../Libs/lib/apache_commons/commons-el.jar" />
@@ -63,6 +60,9 @@
 <pathelement location="../Libs/lib/jetty-7.0.1/jetty-websocket-7.0.1.v20091125.jar" />
 <pathelement location="../Libs/lib/jetty-7.0.1/jetty-xml-7.0.1.v20091125.jar" />
 <pathelement location="../Libs/lib/jetty-7.0.1/servlet-api-2.5.jar" />
+<pathelement location="../Libs/lib/jasper/jasper-el.jar" />
+<pathelement location="../Libs/lib/jasper/jasper-jdt.jar" />
+<pathelement location="../Libs/lib/jasper/jasper.jar" />
 </path><fileset dir='../' id='libfiles'><include name="Libs/lib/apache_commons/commons-logging-1.1.1.jar" />
 <include name="Libs/lib/snakeyaml-1.5/snakeyaml-1.5.jar" />
 <include name="Libs/lib/snakeyaml-1.5/snakeyaml-1.5-sources.jar" />
@@ -84,9 +84,6 @@
 <include name="Libs/lib/datanucleus/datanucleus-management-1.0.2.jar" />
 <include name="Libs/lib/datanucleus/deps/hbase-0.20.0.jar" />
 <include name="Libs/lib/jasper/el-api.jar" />
-<include name="Libs/lib/jasper/jasper-el.jar" />
-<include name="Libs/lib/jasper/jasper-jdt.jar" />
-<include name="Libs/lib/jasper/jasper.jar" />
 <include name="Libs/lib/jasper/jsp-api.jar" />
 <include name="Libs/lib/jasper/tomcat-juli.jar" />
 <include name="Libs/lib/apache_commons/commons-el.jar" />
@@ -128,4 +125,7 @@
 <include name="Libs/lib/jetty-7.0.1/jetty-websocket-7.0.1.v20091125.jar" />
 <include name="Libs/lib/jetty-7.0.1/jetty-xml-7.0.1.v20091125.jar" />
 <include name="Libs/lib/jetty-7.0.1/servlet-api-2.5.jar" />
+<include name="Libs/lib/jasper/jasper-el.jar" />
+<include name="Libs/lib/jasper/jasper-jdt.jar" />
+<include name="Libs/lib/jasper/jasper.jar" />
 </fileset></project>

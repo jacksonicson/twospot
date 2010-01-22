@@ -117,6 +117,9 @@ public class StorageImpl implements Storage
 		{
 			logger.error(e);
 			return false;
+		} catch (NullPointerException e)
+		{
+			return false;
 		} finally
 		{
 		}

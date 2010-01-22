@@ -35,7 +35,8 @@ public class FrontendProxy extends HttpProxyHelper<RequestState>
 		String uri = baseRequest.getUri().toString();
 		StringBuilder builder = new StringBuilder(5 + 3 + address.length() + 1 + 4 + 1 + 10 + uri.length()
 				+ 10);
-		builder.append(request.getScheme());
+		
+		builder.append(baseRequest.getScheme());
 		builder.append("://");
 		builder.append(address);
 		builder.append(":");

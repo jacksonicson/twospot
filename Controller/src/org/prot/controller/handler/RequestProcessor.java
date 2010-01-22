@@ -33,8 +33,6 @@ public class RequestProcessor extends HttpProxyHelper<AppInfo>
 			forwardRequest(baseRequest, request, response, dest, appInfo);
 		} catch (Exception e)
 		{
-			logger.error("Exception in Proxy", e);
-
 			try
 			{
 				response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500, "ControllerProxy failed");
@@ -56,7 +54,7 @@ public class RequestProcessor extends HttpProxyHelper<AppInfo>
 			return true;
 		} else if (t instanceof IOException)
 		{
-			logger.trace("IOException in Controller");
+			logger.debug("IOException in Controller");
 			return true;
 		}
 

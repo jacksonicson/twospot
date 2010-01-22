@@ -20,8 +20,8 @@
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-jmx-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-jndi-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-plus-7.0.1.v20091125.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-server-7.0.1.v20091125.jar"/>
-	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-util-7.0.1.v20091125.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-server-7.0.1.v20091125.jar" sourcepath="D:/work/jetty7src/jetty/jetty-server/src/main/java"/>
+	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-util-7.0.1.v20091125.jar" sourcepath="D:/work/jetty7src/jetty/jetty-util/src/main/java"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-xml-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/servlet-api-2.5.jar"/>
 	<classpathentry kind="output" path="bin"/>

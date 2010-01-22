@@ -9,7 +9,7 @@ responseTimes = [[] for x in range(0, 100)]
 currentTime = 0
 currentCounter = 0
 
-file = open("C:/temp/performance_org.csv")
+file = open("C:/temp/performance.csv")
 
 for line in file.readlines():
     # Split the CSV line
@@ -35,22 +35,23 @@ for line in file.readlines():
     
 file.close()
 
-file = open("C:/temp/performance.csv", "w")
+file = open("C:/temp/performanceResponse.csv", "a")
 for tx in transactions:
-    file.write("%i\n" % tx)
+    file.write("%i," % tx)
+file.write("\n")
 file.close()
 
-file = open("C:/temp/performanceDelay.csv", "w")
+file = open("C:/temp/performanceDelay.csv", "a")
 for times in responseTimes:
     if len(times) != 0:
         sum = 0
         for x in times:
             sum += x
         sum = sum / len(times)
-        file.write("%f\n" % sum)
+        file.write("%f," % sum)
     else:
-        file.write("%f\n" % 1000)
-        
+        file.write("%f," % 1000)
+file.write('\n')
 file.close()
 
 # os.remove("C:/temp/performance_org.csv")

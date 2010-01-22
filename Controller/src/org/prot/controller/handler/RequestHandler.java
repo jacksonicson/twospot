@@ -38,7 +38,7 @@ public class RequestHandler extends AbstractHandler
 		String scheme = request.getScheme();
 		int port = appInfo.getPort();
 		String uri = request.getUri().toString();
-
+		
 		// Build the complete URL (In this case string concation seems to be
 		// inefficient)
 		StringBuilder builder = new StringBuilder(scheme.length() + 4 + uri.length() + 10);
@@ -62,6 +62,8 @@ public class RequestHandler extends AbstractHandler
 		// Check the AppId and send an error
 		if (appId == null)
 		{
+			logger.debug("Unknown AppId in: " + baseRequest.getUri().toString());
+			
 			response.sendError(HttpStatus.NOT_FOUND_404,
 					"Invalid or missing AppId (scheme://domain/AppId/...)");
 			baseRequest.setHandled(true);
@@ -122,6 +124,7 @@ public class RequestHandler extends AbstractHandler
 		try
 		{
 			HttpURI destination = getUrl(baseRequest, appInfo);
+			
 			// Register the request in the RequestManager.
 			requestProcessor.process(appInfo, baseRequest, request, response, destination);
 		} catch (Exception e)

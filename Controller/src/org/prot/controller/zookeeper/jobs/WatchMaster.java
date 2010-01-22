@@ -30,6 +30,9 @@ public class WatchMaster implements Watcher, Job
 	@Override
 	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
 	{
+		if (!zooHelper.checkConnection())
+			return JobState.RETRY_LATER;
+
 		ZooKeeper zk = zooHelper.getZooKeeper();
 
 		Stat statMaster = zk.exists(ZNodes.ZNODE_MASTER, false);

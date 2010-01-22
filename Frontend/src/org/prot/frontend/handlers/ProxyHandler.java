@@ -56,7 +56,7 @@ public class ProxyHandler extends AbstractHandler
 			{
 				logger.error("Error while processing the request", e);
 
-				response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500);
+				response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500, "Frontend could not process the request");
 				baseRequest.setHandled(true);
 				return;
 			}
@@ -89,7 +89,7 @@ public class ProxyHandler extends AbstractHandler
 			{
 				logger.warn("Upload exceeds maximum file size - stopping transfer");
 				baseRequest.setHandled(true);
-				response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
+				response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500, "Upload exceeds maximum file size");
 				return;
 			}
 		}
@@ -111,14 +111,14 @@ public class ProxyHandler extends AbstractHandler
 
 		if (ok)
 		{
-			logger.info("Fileserver did not return Ok");
+			logger.info("Fileserver did return Ok");
 			baseRequest.setHandled(true);
 			response.setStatus(HttpStatus.OK_200);
 			return;
 		}
 
 		baseRequest.setHandled(true);
-		response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
+		response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500, "FileServer did not accept the file");
 		return;
 	}
 

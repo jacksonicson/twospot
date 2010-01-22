@@ -287,9 +287,6 @@ public class HttpProxyHelper<M>
 			@Override
 			public void onException(Throwable ex)
 			{
-				// if (ex instanceof EOFException)
-				// return;
-
 				if (response.isCommitted() == false)
 					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
