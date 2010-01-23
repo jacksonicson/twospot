@@ -3,6 +3,7 @@ package org.prot.storage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Map.Entry;
 
 import org.apache.hadoop.hbase.client.Get;
@@ -19,10 +20,13 @@ public class KeyCreator
 {
 	private static final Logger logger = Logger.getLogger(KeyCreator.class);
 
+	private static Random random;
+
 	private HBaseManagedConnection connection;
 
 	public KeyCreator(ConnectionFactory connectionFactory)
 	{
+		random = new Random(System.currentTimeMillis());
 		this.connection = connectionFactory.createManagedConnection();
 	}
 
@@ -82,10 +86,15 @@ public class KeyCreator
 		List<Key> keys = new ArrayList<Key>();
 		for (; counter < incCounter; counter++)
 		{
-			// Encode the time in the key - newer entries are at the top of the
-			// hbase table
+			// Encode a timestamp in the key
 			long invTime = Long.MAX_VALUE - System.currentTimeMillis();
+
+			// Encode a random value which distributes the entities
+			long random = KeyCreator.random.nextLong();
+
+			// Key has the form: RANDOM | INV_TIME | COUNTER
 			byte[] bKey = Bytes.add(Bytes.toBytes(invTime), Bytes.toBytes(counter));
+			bKey = Bytes.add(Bytes.toBytes(random), bKey);
 
 			Key key = new Key();
 			key.setKey(bKey);
