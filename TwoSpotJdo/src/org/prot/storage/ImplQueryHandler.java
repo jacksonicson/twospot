@@ -1,9 +1,9 @@
 package org.prot.storage;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.hadoop.hbase.client.HTable;
@@ -49,7 +49,7 @@ public class ImplQueryHandler implements QueryHandler
 		HTable entityTable = StorageUtils.getTableEntity(connection);
 
 		byte[] rowKey = KeyHelper.createRowKey(query.getAppId(), query.getKind(), query.getKey());
-		List<byte[]> keySet = new ArrayList<byte[]>();
+		List<byte[]> keySet = new LinkedList<byte[]>();
 		keySet.add(rowKey);
 
 		StorageUtils.materialize(entityTable, keySet, result, query.getLimit());
@@ -69,7 +69,7 @@ public class ImplQueryHandler implements QueryHandler
 
 		Scan scan = new Scan(startKey, stopKey);
 		ResultScanner scanner = indexByKindTable.getScanner(scan);
-		List<byte[]> keySet = new ArrayList<byte[]>();
+		List<byte[]> keySet = new LinkedList<byte[]>();
 		for (Iterator<Result> iterator = scanner.iterator(); iterator.hasNext();)
 		{
 			// Update limits
@@ -219,7 +219,7 @@ public class ImplQueryHandler implements QueryHandler
 		ResultScanner resultScanner = indexTable.getScanner(scan);
 
 		// Create a new set for the results
-		List<byte[]> entityKeys = new ArrayList<byte[]>();
+		List<byte[]> entityKeys = new LinkedList<byte[]>();
 
 		// Scan the table
 		for (Iterator<Result> it = resultScanner.iterator(); it.hasNext();)

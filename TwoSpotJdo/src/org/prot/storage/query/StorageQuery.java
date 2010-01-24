@@ -3,19 +3,10 @@ package org.prot.storage.query;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import org.apache.hadoop.hbase.client.HTable;
-import org.apache.hadoop.hbase.client.Result;
-import org.apache.hadoop.hbase.client.ResultScanner;
-import org.apache.hadoop.hbase.client.Scan;
-import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 import org.prot.storage.Key;
-import org.prot.storage.KeyHelper;
-import org.prot.storage.connection.HBaseManagedConnection;
-import org.prot.storage.connection.StorageUtils;
 
 /**
  * Query-Syntax (from google appengine: http://code.google.com/appengine/docs
@@ -66,7 +57,6 @@ public class StorageQuery implements Serializable
 
 		if (!condition.isEmpty())
 		{
-			logger.debug("Fetching object by condition");
 			condition.run(handler, this, result, limit);
 		} else
 		{

@@ -83,8 +83,6 @@ public class SelectCondition implements Serializable
 	void run(QueryHandler handler, StorageQuery query, List<byte[]> result, LimitCondition limit)
 			throws IOException
 	{
-		logger.debug("Number of Atoms: " + atoms.size());
-
 		ArrayWrapperList tmpResult = new ArrayWrapperList();
 		ArrayWrapperSet tmp = new ArrayWrapperSet();
 
@@ -93,8 +91,8 @@ public class SelectCondition implements Serializable
 		for (AtomarCondition atom : atoms)
 		{
 			// Rest index counter
-			limit.resetIndexCounter(); 
-			
+			limit.resetIndexCounter();
+
 			// Execute the atom
 			if (first)
 			{
