@@ -3,6 +3,8 @@ package org.prot.stor.jdo.storage.query;
 import java.util.Map;
 import java.util.Stack;
 
+import javax.jdo.Query;
+
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 import org.datanucleus.ClassLoaderResolver;

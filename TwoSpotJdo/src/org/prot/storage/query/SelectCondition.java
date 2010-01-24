@@ -92,6 +92,10 @@ public class SelectCondition implements Serializable
 		boolean first = true;
 		for (AtomarCondition atom : atoms)
 		{
+			// Rest index counter
+			limit.resetIndexCounter(); 
+			
+			// Execute the atom
 			if (first)
 			{
 				first = false;

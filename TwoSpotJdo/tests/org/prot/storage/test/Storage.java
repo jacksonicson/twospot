@@ -191,6 +191,75 @@ public class Storage
 	}
 
 	@Test
+	public void testQueryLimit() throws Exception
+	{
+		try
+		{
+			Random r = new Random();
+
+			for (int i = 0; i < 20; i++)
+			{
+				Person person = new Person();
+				person.setUsername("Alex");
+				person.setMessage("Message from Alex");
+				person.setTime(System.currentTimeMillis());
+				person.setAsdf(i);
+				person.setType(r.nextDouble());
+
+				manager.currentTransaction().begin();
+				manager.makePersistent(person);
+				manager.currentTransaction().commit();
+			}
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			throw e;
+		}
+
+		Query query = manager.newQuery(Person.class);
+		query.setRange(0, 10);
+		
+		List<Person> persons = (List<Person>) query.execute();
+		Assert.assertTrue(persons.size() == 10);
+
+		for (Person p : persons)
+			manager.deletePersistent(p);
+	}
+	
+	@Test
+	public void testQueryUnique() throws Exception
+	{
+		try
+		{
+			Random r = new Random();
+
+			for (int i = 0; i < 3; i++)
+			{
+				Person person = new Person();
+				person.setUsername("Alex");
+				person.setMessage("Message from Alex");
+				person.setTime(System.currentTimeMillis());
+				person.setAsdf(i);
+				person.setType(r.nextDouble());
+
+				manager.currentTransaction().begin();
+				manager.makePersistent(person);
+				manager.currentTransaction().commit();
+			}
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			throw e;
+		}
+
+		Query query = manager.newQuery(Person.class);
+		query.setUnique(true); 
+		
+		Person person = (Person)query.execute();
+		Assert.assertTrue(person != null);
+	}
+
+	@Test
 	public void testUpdate() throws Exception
 	{
 		Random r = new Random();

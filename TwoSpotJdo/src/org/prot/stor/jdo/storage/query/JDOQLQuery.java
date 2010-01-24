@@ -100,6 +100,12 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 		// Create a new storage query
 		StorageQuery storageQuery = new StorageQuery(StorageHelper.APP_ID, candidateClass.getSimpleName());
 
+		if (this.getRange() != null)
+		{
+			storageQuery.getLimit().setOffset(this.getRangeFromIncl());
+			storageQuery.getLimit().setCount(this.getRangeToExcl());
+		}
+
 		// Create a new storage mapper
 		QueryToStorageMapper mapper = new QueryToStorageMapper(storageQuery, compilation, parameters, acmd,
 				getFetchPlan(), om);

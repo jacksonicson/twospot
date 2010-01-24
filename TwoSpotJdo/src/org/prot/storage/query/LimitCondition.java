@@ -18,7 +18,7 @@ public class LimitCondition implements Serializable
 	public static final long MAX_FETCH_ENTITIES = 300;
 
 	// Limits the number of fetch operations (every fetch is counted)
-	private static final long MAX_FETCH_OPERATIONS = 3000;
+	private static final long MAX_FETCH_OPERATIONS = 300000;
 
 	private long fetchOperationCounter = 0;
 
@@ -44,6 +44,11 @@ public class LimitCondition implements Serializable
 		return inRange;
 	}
 
+	public final void resetIndexCounter()
+	{
+		indexCounter = 0; 
+	}
+	
 	public final boolean incrementIndex()
 	{
 		indexCounter++;
@@ -66,13 +71,16 @@ public class LimitCondition implements Serializable
 		if (unique && resultCounter > 1)
 			inRange &= false;
 
+		if (count != null && resultCounter > count)
+			inRange &= false;
+
 		inRange &= incrementOperation();
 		inRange &= resultCounter < MAX_FETCH_OPERATIONS;
 
 		if (!inRange)
 			logger.warn("Too many results fetched: " + resultCounter);
 
-		return true;
+		return inRange;
 	}
 
 	public void setCount(long count)
