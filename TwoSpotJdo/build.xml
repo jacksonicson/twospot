@@ -9,7 +9,7 @@
 	<property name="src" value="./src" />
 	<property name="build" value="./build" />
 
-	<target name="prepare">
+	<target name="prepare" depends="cleanup">
 		<mkdir dir="${build}" />
 	</target>
 

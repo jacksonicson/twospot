@@ -82,7 +82,7 @@ public class QueryToStorageMapper extends AbstractExpressionEvaluator
 
 		if (compilation.getExprOrdering() != null)
 		{
-			throw new NucleusException("ORDERING expressions are not supported");
+			// throw new NucleusException("ORDERING expressions are not supported");
 		}
 
 		if (compilation.getExprHaving() != null)

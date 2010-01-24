@@ -13,7 +13,7 @@ public class KeyValueGenerator extends AbstractDatastoreGenerator
 {
 	private static final Logger logger = Logger.getLogger(KeyValueGenerator.class);
 
-	private static final int MIN_KEY_BLOCK_SIZE = 10;
+	private static final int MIN_KEY_BLOCK_SIZE = 50;
 
 	public KeyValueGenerator(String name, Properties props)
 	{

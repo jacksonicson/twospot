@@ -24,30 +24,46 @@ public class KeyCreator
 
 	private HBaseManagedConnection connection;
 
+	private static final int SHARDS = 20;
+
+	private static final long SHARD_SIZE = Long.MAX_VALUE / SHARDS;
+
 	public KeyCreator(ConnectionFactory connectionFactory)
 	{
 		random = new Random(System.currentTimeMillis());
 		this.connection = connectionFactory.createManagedConnection();
 	}
 
-	private void createKeyEntry(HTable table, String appId) throws IOException
+	private void createCounterShard(HTable table, String appId) throws IOException
 	{
-		Put put = new Put(Bytes.toBytes(appId));
-		put.add(StorageUtils.bCounter, StorageUtils.bCounter, Bytes.toBytes(0l));
-		table.put(put);
+		// Counter shardening
+		List<Put> shard = new ArrayList<Put>();
+		for (long i = 0; i < SHARDS; i++)
+		{
+			Put put = new Put(Bytes.add(Bytes.toBytes(appId), Bytes.toBytes(i)));
+			put.add(StorageUtils.bCounter, StorageUtils.bCounter, Bytes.toBytes(0l));
+			shard.add(put);
+		}
+
+		table.put(shard);
 	}
 
 	public List<Key> fetchKey(String appId, long amount) throws IOException
 	{
 		HTable table = StorageUtils.getSequenceTable(connection);
 
+		// Select a shard
+		long shard = 0;
+		byte[] shardName = Bytes.add(Bytes.toBytes(appId), Bytes.toBytes(shard)); 
+
 		// There is a counter for each application
-		Get get = new Get(Bytes.toBytes(appId));
+		Get get = new Get(shardName);
 
 		// Check if the counter row already exists
 		if (!table.exists(get))
-			createKeyEntry(table, appId);
+			createCounterShard(table, appId);
 
+		// Status
 		boolean updateSuccess = false;
 		long counter = 0;
 		long incCounter = 0;
@@ -55,8 +71,17 @@ public class KeyCreator
 		// Some retries to get a key range
 		for (int tries = 0; tries < 3 && !updateSuccess; tries++)
 		{
+			// Select a shart
+			shard = random.nextInt(SHARDS);
+			shardName = Bytes.add(Bytes.toBytes(appId), Bytes.toBytes(shard));
+
+			// Use the current shard
+			get = new Get(shardName);
+
+			// Current sharded counter value
 			Result result = table.get(get);
-			assert (result.size() > 0);
+			if(result.size() <= 0)
+				throw new NullPointerException("no reuslsts");
 
 			// Load the counters
 			Entry<Long, byte[]> data = result.getMap().get(StorageUtils.bCounter).get(StorageUtils.bCounter)
@@ -68,11 +93,11 @@ public class KeyCreator
 			incCounter = counter + amount;
 
 			// Put the new counter value
-			Put put = new Put(Bytes.toBytes(appId));
+			Put put = new Put(shardName);
 			put.add(StorageUtils.bCounter, StorageUtils.bCounter, Bytes.toBytes(incCounter));
 
 			// Check if the counter has changed since reading it
-			updateSuccess = table.checkAndPut(Bytes.toBytes(appId), StorageUtils.bCounter,
+			updateSuccess = table.checkAndPut(shardName, StorageUtils.bCounter,
 					StorageUtils.bCounter, Bytes.toBytes(counter), put);
 		}
 
@@ -92,8 +117,11 @@ public class KeyCreator
 			// Encode a random value which distributes the entities
 			long random = KeyCreator.random.nextLong();
 
+			// Calculate the shard offset
+			long shardedIndex = shard * SHARD_SIZE + counter;
+
 			// Key has the form: RANDOM | INV_TIME | COUNTER
-			byte[] bKey = Bytes.add(Bytes.toBytes(invTime), Bytes.toBytes(counter));
+			byte[] bKey = Bytes.add(Bytes.toBytes(invTime), Bytes.toBytes(shardedIndex));
 			bKey = Bytes.add(Bytes.toBytes(random), bKey);
 
 			Key key = new Key();
