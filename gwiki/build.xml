@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="all" name="GoGo">
+
+	<property name="src" value="./src" />
+	<property name="dest" value="./WEB-INF/classes" />
+	<property name="libdir" value="./lib" />
+
+	<path id="classpath">
+		<fileset dir="${libdir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<target name="enhance">
+		<path id="enhancer.classpath">
+			<path refid="classpath" />
+			<pathelement location="${dest}" />
+		</path>
+
+		<taskdef name="enhance"
+		         classpathref="enhancer.classpath"
+		         classname="org.datanucleus.enhancer.tools.EnhancerTask" />
+
+		<enhance classpathref="enhancer.classpath"
+		         failonerror="true"
+		         verbose="false">
+
+			<jvmarg line="-Dlog4j.configuration=${log4j.config.file}" />
+
+			<fileset dir="${dest}">
+				<include name="**/*.class" />
+			</fileset>
+
+		</enhance>
+	</target>
+
+	<target name="build">
+		<delete dir="${dest}" />
+		<mkdir dir="${dest}" />
+		<javac srcdir="${src}" destdir="${dest}">
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+
+	<target name="all" depends="build,enhance" />
+
+</project>
