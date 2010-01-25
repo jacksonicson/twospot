@@ -52,12 +52,11 @@ public class RequestProcessor extends HttpProxyHelper<AppInfo>
 	{
 		if (t instanceof ConnectException)
 		{
-			logger.debug("ConnectException");
 			appManager.staleApp(appInfo);
 			return true;
 		} else if (t instanceof IOException)
 		{
-			logger.debug("IOException in Controller", t);
+			logger.trace("IOException in Controller", t);
 			return true;
 		}
 
