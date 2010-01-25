@@ -376,6 +376,40 @@ public class Storage
 	}
 
 	@Test
+	public void testUnique() throws Exception
+	{
+		Random r = new Random();
+
+		try
+		{
+			manager.currentTransaction().begin();
+			for (int i = 0; i < 100; i++)
+			{
+				Person person = new Person();
+				person.setUsername("Alex");
+				person.setMessage("Message from Alex");
+				person.setTime(System.currentTimeMillis());
+				person.setAsdf(i);
+				person.setType(r.nextDouble());
+
+				person = manager.makePersistent(person);
+			}
+			manager.currentTransaction().commit();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			throw e;
+		}
+
+		Query query = manager.newQuery(Person.class);
+		query.setUnique(true);
+		query.setFilter("asdf == " + 50);
+		Person person = (Person) query.execute();
+
+		Assert.assertNotNull(person);
+	}
+
+	@Test
 	public void testDelete() throws Exception
 	{
 		Random r = new Random();

@@ -71,10 +71,6 @@ public class DevQueryHandler implements QueryHandler
 			MemTable table = storage.getTable(query.getKind());
 			for (byte[] entity : table.getAll())
 			{
-				// Check limits
-				if (!query.getLimit().incrementResult())
-					return;
-
 				// Deserialize the message (get the index)
 				EntityMessage.Builder builder = EntityMessage.newBuilder();
 				builder.mergeFrom(entity);
@@ -86,31 +82,41 @@ public class DevQueryHandler implements QueryHandler
 					continue;
 
 				byte[] compValue = storageProperty.getValueAsBytes();
+				boolean addEntity = false;
 				switch (condition.getType())
 				{
 				case EQUALS:
 					if (Bytes.equals(compValue, value))
-						result.add(entity);
+						addEntity = true;
 					break;
 				case GREATER:
 					if (Bytes.compareTo(compValue, value) > 0)
-						result.add(entity);
+						addEntity = true;
 					break;
 
 				case GREATER_EQUALS:
 					if (Bytes.compareTo(compValue, value) >= 0)
-						result.add(entity);
+						addEntity = true;
 					break;
 
 				case LOWER:
 					if (Bytes.compareTo(compValue, value) < 0)
-						result.add(entity);
+						addEntity = true;
 					break;
 
 				case LOWER_EQUALS:
 					if (Bytes.compareTo(compValue, value) <= 0)
-						result.add(entity);
+						addEntity = true;
 					break;
+				}
+
+				if (addEntity)
+				{
+					// Check limits
+					if (!query.getLimit().incrementResult())
+						return;
+
+					result.add(entity);
 				}
 			}
 
