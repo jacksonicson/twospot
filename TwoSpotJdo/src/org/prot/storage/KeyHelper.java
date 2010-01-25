@@ -5,6 +5,8 @@ import org.prot.storage.connection.StorageUtils;
 
 public class KeyHelper
 {
+	private static final int MAX_PROPERTY_SIZE = 10 * 1024;
+
 	public static final byte[] createRowKey(String appId, String kind, Key key)
 	{
 		assert (appId.length() < 20);
@@ -49,6 +51,9 @@ public class KeyHelper
 		byte[] bAppId = Bytes.toBytes(appId);
 		byte[] bKind = Bytes.toBytes(kind);
 		byte[] bPropertyName = Bytes.toBytes(propertyName);
+
+		if (value.length > MAX_PROPERTY_SIZE)
+			value = Bytes.head(value, MAX_PROPERTY_SIZE);
 
 		byte[] propKey = Bytes.add(bAppId, StorageUtils.bSlash, bKind);
 		propKey = Bytes.add(propKey, StorageUtils.bSlash, bPropertyName);
