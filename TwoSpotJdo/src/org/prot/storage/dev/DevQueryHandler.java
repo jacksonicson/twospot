@@ -2,12 +2,10 @@ package org.prot.storage.dev;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 import org.prot.jdo.storage.messages.EntityMessage;
-import org.prot.jdo.storage.messages.IndexMessage;
 import org.prot.jdo.storage.messages.types.IStorageProperty;
 import org.prot.storage.Key;
 import org.prot.storage.query.AtomarCondition;

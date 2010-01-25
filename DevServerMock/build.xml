@@ -32,7 +32,7 @@
 
 		<enhance classpathref="enhancer.classpath"
 		         failonerror="true"
-		         verbose="true">
+		         verbose="false">
 			<jvmarg line="-Dlog4j.configuration=${log4j.config.file}" />
 
 			<fileset dir="${build}">

@@ -148,9 +148,7 @@ public class UserServiceImpl implements UserService
 			UserSession session = (UserSession) query.execute();
 			if (session != null)
 			{
-				persistenceManager.currentTransaction().begin();
 				persistenceManager.deletePersistent(session);
-				persistenceManager.currentTransaction().commit();
 			} else
 			{
 				logger.warn("Could not find and delete user session: " + uid);
@@ -158,7 +156,6 @@ public class UserServiceImpl implements UserService
 
 		} catch (Exception e)
 		{
-			persistenceManager.currentTransaction().rollback();
 			logger.error("Could not unregister user", e);
 		} finally
 		{

@@ -30,6 +30,9 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 {
 	private static final long serialVersionUID = -5519841357863023031L;
 
+	// Activate this flag to disable the in memory query execution
+	private static final boolean TESTMODE = false;
+
 	private static final Logger logger = Logger.getLogger(JDOQLQuery.class);
 
 	private StorageQuery storageQuery;
@@ -192,10 +195,15 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 			candidates.add(candidate);
 		}
 
-		// Filter the candidates in memory
-		JavaQueryEvaluator evaluator = new JDOQLEvaluator(this, candidates, compilation, parameters, om
-				.getClassLoaderResolver());
-		Collection results = evaluator.execute(true, true, true, true, true);
+		Collection results = candidates;
+
+		if (!TESTMODE)
+		{
+			// Filter the candidates in memory
+			JavaQueryEvaluator evaluator = new JDOQLEvaluator(this, candidates, compilation, parameters, om
+					.getClassLoaderResolver());
+			results = evaluator.execute(true, true, true, true, true);
+		}
 
 		return results;
 	}

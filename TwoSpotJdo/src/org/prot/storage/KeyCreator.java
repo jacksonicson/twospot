@@ -54,7 +54,7 @@ public class KeyCreator
 
 		// Select a shard
 		long shard = 0;
-		byte[] shardName = Bytes.add(Bytes.toBytes(appId), Bytes.toBytes(shard)); 
+		byte[] shardName = Bytes.add(Bytes.toBytes(appId), Bytes.toBytes(shard));
 
 		// There is a counter for each application
 		Get get = new Get(shardName);
@@ -80,7 +80,7 @@ public class KeyCreator
 
 			// Current sharded counter value
 			Result result = table.get(get);
-			if(result.size() <= 0)
+			if (result.size() <= 0)
 				throw new NullPointerException("no reuslsts");
 
 			// Load the counters
@@ -97,8 +97,8 @@ public class KeyCreator
 			put.add(StorageUtils.bCounter, StorageUtils.bCounter, Bytes.toBytes(incCounter));
 
 			// Check if the counter has changed since reading it
-			updateSuccess = table.checkAndPut(shardName, StorageUtils.bCounter,
-					StorageUtils.bCounter, Bytes.toBytes(counter), put);
+			updateSuccess = table.checkAndPut(shardName, StorageUtils.bCounter, StorageUtils.bCounter, Bytes
+					.toBytes(counter), put);
 		}
 
 		if (!updateSuccess)
