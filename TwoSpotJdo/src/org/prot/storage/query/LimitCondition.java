@@ -3,7 +3,6 @@ package org.prot.storage.query;
 import java.io.Serializable;
 
 import org.apache.log4j.Logger;
-import org.prot.storage.Key;
 
 public class LimitCondition implements Serializable
 {
@@ -32,8 +31,6 @@ public class LimitCondition implements Serializable
 
 	private Long countOffset;
 
-	private Key keyOffset;
-
 	private final boolean incrementOperation()
 	{
 		fetchOperationCounter++;
@@ -46,9 +43,9 @@ public class LimitCondition implements Serializable
 
 	public final void resetIndexCounter()
 	{
-		indexCounter = 0; 
+		indexCounter = 0;
 	}
-	
+
 	public final boolean incrementIndex()
 	{
 		indexCounter++;
@@ -56,9 +53,6 @@ public class LimitCondition implements Serializable
 		boolean inRange = true;
 		inRange &= incrementOperation();
 		inRange &= indexCounter < MAX_FETCH_INDEX_ROWS;
-
-		if (!inRange)
-			logger.warn("Too many indices fetched" + indexCounter);
 
 		return inRange;
 	}
@@ -77,9 +71,6 @@ public class LimitCondition implements Serializable
 		inRange &= incrementOperation();
 		inRange &= resultCounter < MAX_FETCH_OPERATIONS;
 
-		if (!inRange)
-			logger.warn("Too many results fetched: " + resultCounter);
-
 		return inRange;
 	}
 
@@ -91,13 +82,6 @@ public class LimitCondition implements Serializable
 	public void setOffset(long offset)
 	{
 		this.countOffset = offset;
-		this.keyOffset = null;
-	}
-
-	public void setOffset(Key offset)
-	{
-		this.keyOffset = offset;
-		this.countOffset = null;
 	}
 
 	public void setUnique(boolean unique)
