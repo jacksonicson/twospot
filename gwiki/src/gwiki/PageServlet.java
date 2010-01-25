@@ -52,6 +52,7 @@ public class PageServlet extends HttpServlet
 		}
 
 		target += text.substring(last);
+		target = target.replaceAll("\n", "<br/>");
 
 		request.setAttribute("page", page);
 		request.setAttribute("encText", target);

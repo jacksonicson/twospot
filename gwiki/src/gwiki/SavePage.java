@@ -17,8 +17,8 @@ public class SavePage extends HttpServlet
 	{
 		String pname = request.getParameter("pname");
 		String text = request.getParameter("text");
-		
-		System.out.println("Pname: " + pname); 
+
+		System.out.println("Pname: " + pname);
 
 		PersistenceManager manager = DataConnection.getManager();
 		WikiPage page = DataConnection.fetchPage(manager, pname);
@@ -30,12 +30,11 @@ public class SavePage extends HttpServlet
 		page.setText(text);
 
 		manager.currentTransaction().setNontransactionalWrite(true);
-		manager.currentTransaction().begin(); 
+		manager.currentTransaction().begin();
 		manager.makePersistent(page);
 		manager.currentTransaction().commit();
 		manager.close();
 
 		response.sendRedirect("/page?pname=" + pname);
-
 	}
 }
