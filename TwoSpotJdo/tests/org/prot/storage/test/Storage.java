@@ -305,31 +305,69 @@ public class Storage
 	}
 
 	@Test
-	public void testFetch() throws Exception
+	public void testDetachCopy() throws Exception
 	{
 		Random r = new Random();
+		String username = "Alex";
+		String message = "Message from Alex";
+		long timestamp = System.currentTimeMillis();
+		int asdf = r.nextInt();
+		double type = r.nextDouble();
 
 		Person person = new Person();
-		person.setUsername("Alex");
-		person.setMessage("Message from Alex");
-		person.setTime(System.currentTimeMillis());
-		person.setAsdf(r.nextInt());
-		person.setType(r.nextDouble());
+		person.setUsername(username);
+		person.setMessage(message);
+		person.setTime(timestamp);
+		person.setAsdf(asdf);
+		person.setType(type);
 
 		try
 		{
 			manager.currentTransaction().begin();
 			manager.makePersistent(person);
 			manager.currentTransaction().commit();
-			
-			System.out.println("Fetched by Id: " + person.getMessage());
-			
-		//	person = manager.detachCopy(person);
-			
-			
-		//	person = (Person)manager.getObjectById(person.getKey());
-			
-			
+
+			person = manager.detachCopy(person);
+
+			Assert.assertTrue(username.equals(person.getUsername()));
+			Assert.assertTrue(message.equals(person.getMessage()));
+			Assert.assertTrue(timestamp == person.getTime());
+			Assert.assertTrue(asdf == person.getAsdf());
+			Assert.assertTrue(type == person.getType());
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testMakePersistent() throws Exception
+	{
+		Random r = new Random();
+		String username = "Alex";
+		String message = "Message from Alex";
+		long timestamp = System.currentTimeMillis();
+		int asdf = r.nextInt();
+		double type = r.nextDouble();
+
+		Person person = new Person();
+		person.setUsername(username);
+		person.setMessage(message);
+		person.setTime(timestamp);
+		person.setAsdf(asdf);
+		person.setType(type);
+
+		try
+		{
+			manager.currentTransaction().begin();
+			manager.makePersistent(person);
+			manager.currentTransaction().commit();
+
+			Assert.assertTrue(username.equals(person.getUsername()));
+			Assert.assertTrue(message.equals(person.getMessage()));
+			Assert.assertTrue(timestamp == person.getTime());
+			Assert.assertTrue(asdf == person.getAsdf());
+			Assert.assertTrue(type == person.getType());
 
 		} catch (Exception e)
 		{
