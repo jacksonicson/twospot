@@ -31,6 +31,28 @@ public class FetchFieldManager extends AbstractFieldManager
 		this.acmd = om.getMetaDataManager().getMetaDataForClass(cls, clr);
 	}
 
+	public FetchFieldManager(CodedInputStream input, ObjectManager om) throws IOException
+	{
+		parseFrom(input);
+		this.acmd = om.getMetaDataManager().getMetaDataForClass(msg.getClassName(), om.getClassLoaderResolver());
+	}
+	
+	public FetchFieldManager(CodedInputStream input, AbstractClassMetaData acmd) throws IOException
+	{
+		parseFrom(input); 
+		this.acmd = acmd;
+	}
+	
+	public String getMessageClass()
+	{
+		return msg.getClassName();
+	}
+	
+	public AbstractClassMetaData getAcmd()
+	{
+		return acmd;
+	}
+	
 	private void parseFrom(CodedInputStream input) throws IOException
 	{
 		EntityMessage.Builder builder = EntityMessage.newBuilder();

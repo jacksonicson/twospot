@@ -84,7 +84,7 @@ public class ObjectRemover
 
 	byte[] retrieveObject(HTable table, String appId, String kind, Key key) throws IOException
 	{
-		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
+		byte[] rowKey = KeyHelper.createRowKey(appId, key);
 
 		Get get = new Get(rowKey);
 		Result result = table.get(get);
@@ -100,7 +100,7 @@ public class ObjectRemover
 	void removeObjectFromIndexByProperty(HTable table, String appId, String kind, Key key,
 			Map<String, byte[]> index) throws IOException
 	{
-		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
+		byte[] rowKey = KeyHelper.createRowKey(appId, key);
 
 		// Create a put operation for each property name
 		ArrayList<Delete> deleteList = new ArrayList<Delete>();
@@ -120,7 +120,7 @@ public class ObjectRemover
 	private void removeObjectFromIndexByKind(HTable table, String appId, String kind, Key key)
 			throws IOException
 	{
-		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
+		byte[] rowKey = KeyHelper.createRowKey(appId, key);
 		byte[] indexRowKey = KeyHelper.createIndexByKindRowKey(appId, kind, rowKey);
 
 		Get get = new Get(indexRowKey);
@@ -134,7 +134,7 @@ public class ObjectRemover
 	private void removeObjectFromEntities(HTable table, String appId, String kind, Key key)
 			throws IOException
 	{
-		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
+		byte[] rowKey = KeyHelper.createRowKey(appId, key);
 
 		Get get = new Get(rowKey);
 		if (!table.exists(get))

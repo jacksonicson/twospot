@@ -62,7 +62,7 @@ public class ObjectCreator
 			throws IOException
 	{
 		// Create a new put operation
-		byte[] rowKey = KeyHelper.createRowKey(appId, kind, key);
+		byte[] rowKey = KeyHelper.createRowKey(appId, key);
 		Put put = new Put(rowKey);
 		put.add(StorageUtils.bEntity, StorageUtils.bSerialized, obj);
 

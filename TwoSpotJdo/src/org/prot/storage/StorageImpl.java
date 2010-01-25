@@ -97,12 +97,12 @@ public class StorageImpl implements Storage
 		}
 	}
 
-	@Deprecated
-	public byte[] query(String appId, String kind, Key key)
+	@Override
+	public byte[] query(String appId, Key key)
 	{
 		ImplQueryHandler handler = new ImplQueryHandler(connectionFactory);
 		QueryEngine engine = new QueryEngine(handler);
-		return engine.fetch(appId, kind, key);
+		return engine.fetch(appId, key);
 	}
 
 	@Override

@@ -218,14 +218,14 @@ public class Storage
 
 		Query query = manager.newQuery(Person.class);
 		query.setRange(0, 10);
-		
+
 		List<Person> persons = (List<Person>) query.execute();
 		Assert.assertTrue(persons.size() == 10);
 
 		for (Person p : persons)
 			manager.deletePersistent(p);
 	}
-	
+
 	@Test
 	public void testQueryUnique() throws Exception
 	{
@@ -253,9 +253,9 @@ public class Storage
 		}
 
 		Query query = manager.newQuery(Person.class);
-		query.setUnique(true); 
-		
-		Person person = (Person)query.execute();
+		query.setUnique(true);
+
+		Person person = (Person) query.execute();
 		Assert.assertTrue(person != null);
 	}
 
@@ -301,6 +301,39 @@ public class Storage
 		{
 			e.printStackTrace();
 			throw e;
+		}
+	}
+
+	@Test
+	public void testFetch() throws Exception
+	{
+		Random r = new Random();
+
+		Person person = new Person();
+		person.setUsername("Alex");
+		person.setMessage("Message from Alex");
+		person.setTime(System.currentTimeMillis());
+		person.setAsdf(r.nextInt());
+		person.setType(r.nextDouble());
+
+		try
+		{
+			manager.currentTransaction().begin();
+			person = manager.makePersistent(person);
+			manager.currentTransaction().commit();
+			
+			
+			person = manager.detachCopy(person);
+			
+			
+			person = (Person)manager.getObjectById(person.getKey());
+			System.out.println("Fetched by Id: " + person.getMessage());
+			
+			
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 	}
 

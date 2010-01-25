@@ -50,4 +50,11 @@ public class StorageDev implements Storage
 		QueryEngine engine = new QueryEngine(handler);
 		return engine.run(query);
 	}
+
+	@Override
+	public byte[] query(String appId, Key key)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

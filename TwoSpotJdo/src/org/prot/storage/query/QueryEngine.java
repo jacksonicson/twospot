@@ -21,9 +21,9 @@ public class QueryEngine
 		// this.connection = connectionFactory.createManagedConnection();
 	}
 
-	public byte[] fetch(String appId, String kind, Key key)
+	public byte[] fetch(String appId, Key key)
 	{
-		StorageQuery query = new StorageQuery(appId, kind);
+		StorageQuery query = new StorageQuery(appId, key);
 		List<byte[]> result = run(query);
 		if (result.size() == 1)
 		{

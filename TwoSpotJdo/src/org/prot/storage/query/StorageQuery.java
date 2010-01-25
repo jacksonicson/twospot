@@ -38,6 +38,11 @@ public class StorageQuery implements Serializable
 		this(appId, kind, null);
 	}
 
+	public StorageQuery(String appId, Key key)
+	{
+		this(appId, null, key);
+	}
+
 	public StorageQuery(String appId, String kind, Key key)
 	{
 		this.appId = appId;

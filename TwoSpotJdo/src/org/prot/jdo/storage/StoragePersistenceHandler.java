@@ -23,24 +23,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.datanucleus.ClassLoaderResolver;
+import org.datanucleus.FetchPlan;
 import org.datanucleus.ObjectManager;
 import org.datanucleus.StateManager;
+import org.datanucleus.exceptions.NucleusDataStoreException;
 import org.datanucleus.exceptions.NucleusException;
-import org.datanucleus.exceptions.NucleusUnsupportedOptionException;
+import org.datanucleus.exceptions.NucleusObjectNotFoundException;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.AbstractMemberMetaData;
+import org.datanucleus.store.FieldValues;
 import org.datanucleus.store.StoreManager;
 import org.datanucleus.store.StorePersistenceHandler;
 import org.datanucleus.util.Localiser;
+import org.prot.jdo.storage.field.FetchFieldManager;
 import org.prot.jdo.storage.field.InsertFieldManager;
 import org.prot.jdo.storage.messages.EntityMessage;
 import org.prot.jdo.storage.messages.IndexMessage;
 import org.prot.jdo.storage.messages.types.StorageProperty;
 import org.prot.jdo.storage.messages.types.StorageType;
 import org.prot.storage.Key;
-import org.prot.storage.NotImplementedException;
 import org.prot.storage.Storage;
 
+import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
 
 public class StoragePersistenceHandler implements StorePersistenceHandler
@@ -95,13 +100,97 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 
 	public void fetchObject(StateManager sm, int[] fieldNumbers)
 	{
-		throw new NotImplementedException();
+		StorageManagedConnection connection = (StorageManagedConnection) storeManager.getConnection(sm
+				.getObjectManager());
+		Storage storage = connection.getStorage();
+
+		AbstractClassMetaData acmd = sm.getClassMetaData();
+		Key key = (Key) sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
+
+		byte[] object = storage.query(StorageHelper.APP_ID, key);
+		CodedInputStream in = CodedInputStream.newInstance(object);
+
+		FetchFieldManager fm;
+		try
+		{
+			fm = new FetchFieldManager(in, acmd);
+		} catch (IOException e)
+		{
+			throw new NucleusDataStoreException(e.getMessage(), e);
+		}
+
+		sm.replaceFields(acmd.getAllMemberPositions(), fm);
 	}
 
-	public Object findObject(ObjectManager om, Object id)
+	public Object findObject(final ObjectManager om, Object id)
 	{
-		// Cannot find object without a type
-		throw new NucleusUnsupportedOptionException();
+		StorageManagedConnection connection = (StorageManagedConnection) storeManager.getConnection(om);
+		Storage storage = connection.getStorage();
+
+		Key key = (Key)id;
+
+		byte[] object = storage.query(StorageHelper.APP_ID, key);
+		if (object == null)
+			throw new NucleusObjectNotFoundException();
+		
+		CodedInputStream in = CodedInputStream.newInstance(object);
+		
+		final FetchFieldManager fm;
+		try
+		{
+			fm = new FetchFieldManager(in, om);
+		} catch (IOException e)
+		{
+			throw new NucleusDataStoreException(e.getMessage(), e);
+		}
+		
+		final AbstractClassMetaData acmd = fm.getAcmd();
+		final Class<?> cl = om.getClassLoaderResolver().classForName(fm.getMessageClass());
+		final ClassLoaderResolver clr = om.getClassLoaderResolver();
+		
+		Object candidate = om.findObjectUsingAID(cl, new FieldValues()
+		{
+			@Override
+			public void fetchFields(StateManager sm)
+			{
+				// Replace all primary key fields
+				sm.replaceFields(acmd.getPKMemberPositions(), fm);
+
+				// Replace all basic member fields
+				int[] memberPositions = acmd.getBasicMemberPositions(clr, om.getMetaDataManager());
+				sm.replaceFields(memberPositions, fm);
+			}
+
+			@Override
+			public void fetchNonLoadedFields(StateManager sm)
+			{
+				// Replace non loaded fields
+				sm.replaceNonLoadedFields(acmd.getAllMemberPositions(), fm);
+			}
+
+			@Override
+			public FetchPlan getFetchPlanForLoading()
+			{
+				return null;
+			}
+
+		}, true, true);
+		
+		return candidate;
+	}
+
+	@Override
+	public void locateObject(StateManager sm)
+	{
+		StorageManagedConnection connection = (StorageManagedConnection) storeManager.getConnection(sm
+				.getObjectManager());
+		Storage storage = connection.getStorage();
+
+		Key key = (Key) sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
+
+		byte[] object = storage.query(StorageHelper.APP_ID, key);
+		if (object == null)
+			throw new NucleusObjectNotFoundException();
 	}
 
 	private List<IndexMessage> buildIndexMessages(AbstractClassMetaData acmd)
@@ -238,11 +327,5 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 			// Release the connection
 			mconn.release();
 		}
-	}
-
-	@Override
-	public void locateObject(StateManager sm)
-	{
-		throw new NotImplementedException();
 	}
 }

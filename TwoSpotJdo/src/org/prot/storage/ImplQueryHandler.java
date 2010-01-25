@@ -48,7 +48,7 @@ public class ImplQueryHandler implements QueryHandler
 	{
 		HTable entityTable = StorageUtils.getTableEntity(connection);
 
-		byte[] rowKey = KeyHelper.createRowKey(query.getAppId(), query.getKind(), query.getKey());
+		byte[] rowKey = KeyHelper.createRowKey(query.getAppId(), query.getKey());
 		List<byte[]> keySet = new LinkedList<byte[]>();
 		keySet.add(rowKey);
 

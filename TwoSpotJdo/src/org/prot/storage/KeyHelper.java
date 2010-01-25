@@ -7,23 +7,17 @@ public class KeyHelper
 {
 	private static final int MAX_PROPERTY_SIZE = 10 * 1024;
 
-	public static final byte[] createRowKey(String appId, String kind, Key key)
+	public static final byte[] createRowKey(String appId, Key key)
 	{
+		byte[] bKey = key.getKey();
+
 		assert (appId.length() < 20);
 		int diff = 20 - appId.length();
 		byte[] bAppId = appId.getBytes();
 		byte[] bDiff = new byte[diff];
 		bAppId = Bytes.add(bAppId, bDiff);
 
-		assert (kind.length() < 20);
-		diff = 20 - kind.length();
-		byte[] bKind = kind.getBytes();
-		bDiff = new byte[diff];
-		bKind = Bytes.add(bKind, bDiff);
-
-		byte[] bKey = key.getKey();
-
-		return Bytes.add(Bytes.add(bAppId, bKind), bKey);
+		return Bytes.add(bKey, bAppId);
 	}
 
 	public static final byte[] createIndexByKindRowKey(String appId, String kind, byte[] rowKey)
