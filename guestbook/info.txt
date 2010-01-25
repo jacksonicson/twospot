@@ -1,0 +1,3 @@
+GoGo Demo-Anwendung
+- Alle Libs vom DevServer werden im Verzeichnis lib erwartet
+- Das Eclipse-Projekt greift auf das ../Libs-Verzeichnis zurück

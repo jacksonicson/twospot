@@ -1,0 +1,19 @@
+<project><path id='gogo_classpath'><pathelement location="../Libs/gen/twospot-appserver.jar" />
+<pathelement location="../Libs/lib/datanucleus/deps/asm-3.1.jar" />
+<pathelement location="../Libs/lib/datanucleus/deps/jdo2-api-2.3-eb.jar" />
+<pathelement location="../Libs/lib/datanucleus/datanucleus-core-2.0.0-m3.jar" />
+<pathelement location="../Libs/lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar" />
+<pathelement location="../Libs/gen/hbaseplugin.jar" />
+<pathelement location="../Libs/lib/jetty-7.0.1/jetty-servlet-7.0.1.v20091125.jar" />
+<pathelement location="../Libs/lib/jetty-7.0.1/jetty-webapp-7.0.1.v20091125.jar" />
+<pathelement location="../Libs/lib/jetty-7.0.1/servlet-api-2.5.jar" />
+</path><fileset dir='../' id='gogo_libfiles'><include name="Libs/gen/twospot-appserver.jar" />
+<include name="Libs/lib/datanucleus/deps/asm-3.1.jar" />
+<include name="Libs/lib/datanucleus/deps/jdo2-api-2.3-eb.jar" />
+<include name="Libs/lib/datanucleus/datanucleus-core-2.0.0-m3.jar" />
+<include name="Libs/lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar" />
+<include name="Libs/gen/hbaseplugin.jar" />
+<include name="Libs/lib/jetty-7.0.1/jetty-servlet-7.0.1.v20091125.jar" />
+<include name="Libs/lib/jetty-7.0.1/jetty-webapp-7.0.1.v20091125.jar" />
+<include name="Libs/lib/jetty-7.0.1/servlet-api-2.5.jar" />
+</fileset></project>
