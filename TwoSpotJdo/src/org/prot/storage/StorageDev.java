@@ -54,7 +54,8 @@ public class StorageDev implements Storage
 	@Override
 	public byte[] query(String appId, Key key)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		DevQueryHandler handler = new DevQueryHandler(memStorage);
+		QueryEngine engine = new QueryEngine(handler);
+		return engine.fetch(appId, key);
 	}
 }

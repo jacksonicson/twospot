@@ -29,16 +29,26 @@ public class DevQueryHandler implements QueryHandler
 		if (query.getKey() != null)
 		{
 			Key key = query.getKey();
-			MemTable table = storage.getTable(query.getKind());
-			logger.debug("Fetching object by key");
-			byte[] entity = table.get(key);
-			result.add(entity);
-
+			for (MemTable table : storage.getAllTables())
+			{
+				byte[] entity = table.get(key);
+				if (entity != null)
+				{
+					result.add(entity);
+					return;
+				}
+			}
 		} else if (query.getKind() != null)
 		{
-			logger.debug("Fetching object by kind");
 			MemTable table = storage.getTable(query.getKind());
-			result.addAll(table.getAll());
+			for (byte[] object : table.getAll())
+			{
+				// Check limits
+				if (!query.getLimit().incrementResult())
+					return;
+
+				result.add(object);
+			}
 		}
 	}
 
@@ -61,6 +71,10 @@ public class DevQueryHandler implements QueryHandler
 			MemTable table = storage.getTable(query.getKind());
 			for (byte[] entity : table.getAll())
 			{
+				// Check limits
+				if (!query.getLimit().incrementResult())
+					return;
+
 				// Deserialize the message (get the index)
 				EntityMessage.Builder builder = EntityMessage.newBuilder();
 				builder.mergeFrom(entity);

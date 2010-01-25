@@ -319,15 +319,15 @@ public class Storage
 		try
 		{
 			manager.currentTransaction().begin();
-			person = manager.makePersistent(person);
+			manager.makePersistent(person);
 			manager.currentTransaction().commit();
 			
-			
-			person = manager.detachCopy(person);
-			
-			
-			person = (Person)manager.getObjectById(person.getKey());
 			System.out.println("Fetched by Id: " + person.getMessage());
+			
+		//	person = manager.detachCopy(person);
+			
+			
+		//	person = (Person)manager.getObjectById(person.getKey());
 			
 			
 

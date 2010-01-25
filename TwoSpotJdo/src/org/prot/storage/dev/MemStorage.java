@@ -1,16 +1,47 @@
 package org.prot.storage.dev;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.log4j.Logger;
 import org.prot.storage.Key;
 
 public class MemStorage
 {
+	private static final Logger logger = Logger.getLogger(MemStorage.class);
+
 	private HashMap<String, MemTable> tables = new HashMap<String, MemTable>();
+
+	private Set<String> listTables()
+	{
+		Set<String> tableNames = new HashSet<String>();
+		File file = new File(".");
+		String[] files = file.list();
+		for (String filename : files)
+		{
+			if (filename.indexOf(".table") != -1)
+			{
+				tableNames.add(filename.substring(0, filename.length() - ".table".length()));
+			}
+		}
+
+		return tableNames;
+	}
+
+	public Set<MemTable> getAllTables()
+	{
+		Set<MemTable> memTable = new HashSet<MemTable>();
+		for (String name : listTables())
+			memTable.add(getTable(name));
+
+		return memTable;
+	}
 
 	public MemTable getTable(String tableName)
 	{
