@@ -90,6 +90,9 @@ public class StorageProperty implements IStorageProperty
 		} else if (type == Key.class)
 		{
 			return StorageType.KEY;
+		} else if (type == Character.class || type == char.class)
+		{
+			return StorageType.CHAR;
 		} else if (type == Integer.class || type == int.class)
 		{
 			return StorageType.INTEGER;
@@ -102,6 +105,15 @@ public class StorageProperty implements IStorageProperty
 		} else if (type == Boolean.class || type == boolean.class)
 		{
 			return StorageType.BOOLEAN;
+		} else if (type == Float.class || type == float.class)
+		{
+			return StorageType.FLOAT;
+		} else if (type == Byte.class || type == byte.class)
+		{
+			return StorageType.BYTE;
+		} else if (type == Short.class || type == short.class)
+		{
+			return StorageType.SHORT;
 		} else
 		{
 			throw new NucleusException("Unknown field type: " + type);
