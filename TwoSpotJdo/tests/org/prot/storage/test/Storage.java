@@ -1,5 +1,6 @@
 package org.prot.storage.test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -11,7 +12,6 @@ import javax.jdo.Query;
 import junit.framework.Assert;
 
 import org.apache.log4j.xml.DOMConfigurator;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,21 +20,30 @@ import org.prot.storage.test.data.Person;
 
 public class Storage
 {
+	private static PersistenceManagerFactory pmf;
+
 	private static PersistenceManager manager;
 
 	@BeforeClass
-	public static void connect()
+	public static void connect() throws Exception
 	{
 		// Configure logger
 		DOMConfigurator.configure(Test.class.getResource("/etc/log4j.xml"));
 
-		PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("etc/jdoDefault.properties");
-		manager = pmf.getPersistenceManager();
-		StorageHelper.setAppId("gogo");
+		try
+		{
+			pmf = JDOHelper.getPersistenceManagerFactory("etc/jdoDefault.properties");
+			manager = pmf.getPersistenceManager();
+			StorageHelper.setAppId("gogo");
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	@Before
-	@After
+	// @After
 	public void clean() throws Exception
 	{
 		try
@@ -45,6 +54,7 @@ public class Storage
 			Query query = manager.newQuery(Person.class);
 			List<Person> persons = (List<Person>) query.execute();
 
+			System.out.println("Removing: " + persons.size());
 			for (Person p : persons)
 				manager.deletePersistent(p);
 		} catch (Exception e)
@@ -271,9 +281,7 @@ public class Storage
 		person.setAsdf(r.nextInt());
 		person.setType(r.nextDouble());
 
-		manager.currentTransaction().begin();
 		person = manager.makePersistent(person);
-		manager.currentTransaction().commit();
 
 		try
 		{
@@ -291,16 +299,85 @@ public class Storage
 			persons = (List<Person>) query.execute();
 			Assert.assertTrue(persons.size() > 0);
 
-			for (Person p : persons)
-			{
-				Assert.assertEquals("New message from Alex", p.getMessage());
-				manager.deletePersistent(p);
-			}
-
 		} catch (Exception e)
 		{
 			e.printStackTrace();
 			throw e;
+		}
+	}
+
+	@Test
+	public void testComplexUpdate() throws Exception
+	{
+		final Random r = new Random();
+
+		for (int i = 0; i < 1; i++)
+		{
+			Person person = new Person();
+			person.setUsername("Alex");
+			person.setMessage("Message from Alex");
+			person.setTime(System.currentTimeMillis());
+			person.setAsdf(r.nextInt());
+			person.setType(r.nextDouble());
+
+			person = manager.makePersistent(person);
+		}
+
+		try
+		{
+			List<Thread> tl = new ArrayList<Thread>();
+
+			for (int i = 0; i < 1; i++)
+			{
+				Thread thr = new Thread()
+				{
+					public void run()
+					{
+						PersistenceManager mmanger = pmf.getPersistenceManager();
+
+						Query query = mmanger.newQuery(Person.class);
+						List<Person> persons = (List<Person>) query.execute();
+
+						for (int k = 0; k < 1; k++)
+						{
+							for (Person p : persons)
+							{
+								try
+								{
+									p.getTime();
+									p.setTime(10);
+									mmanger.makePersistent(p);
+								} catch (Exception e)
+								{
+									e.printStackTrace();
+								}
+							}
+						}
+					}
+				};
+				thr.start();
+				tl.add(thr);
+			}
+
+			for (Thread t : tl)
+				t.join();
+
+			Thread.sleep(3000);
+
+			Query query = manager.newQuery(Person.class);
+			List<Person> persons = (List<Person>) query.execute();
+
+			for (Person test : persons)
+			{
+				System.out.println(test.getTime());
+			}
+
+			System.out.println("_----------");
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			// throw e;
 		}
 	}
 

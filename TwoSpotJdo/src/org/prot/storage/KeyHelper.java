@@ -9,8 +9,10 @@ public class KeyHelper
 
 	public static final byte[] createRowKey(String appId, Key key)
 	{
+		// The key which is application wide unique
 		byte[] bKey = key.getKey();
 
+		// The appId as 20 byte string
 		assert (appId.length() < 20);
 		int diff = 20 - appId.length();
 		byte[] bAppId = appId.getBytes();

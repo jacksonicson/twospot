@@ -108,7 +108,17 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 		Key key = (Key) sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
 
 		byte[] object = storage.query(StorageHelper.APP_ID, key);
-		CodedInputStream in = CodedInputStream.newInstance(object);
+		if (object == null)
+			throw new NucleusObjectNotFoundException();
+
+		CodedInputStream in;
+		try
+		{
+			in = CodedInputStream.newInstance(object);
+		} catch (NullPointerException e)
+		{
+			throw new NucleusDataStoreException("Could not decode object", e);
+		}
 
 		FetchFieldManager fm;
 		try
@@ -127,14 +137,14 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 		StorageManagedConnection connection = (StorageManagedConnection) storeManager.getConnection(om);
 		Storage storage = connection.getStorage();
 
-		Key key = (Key)id;
+		Key key = (Key) id;
 
 		byte[] object = storage.query(StorageHelper.APP_ID, key);
 		if (object == null)
 			throw new NucleusObjectNotFoundException();
-		
+
 		CodedInputStream in = CodedInputStream.newInstance(object);
-		
+
 		final FetchFieldManager fm;
 		try
 		{
@@ -143,11 +153,11 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 		{
 			throw new NucleusDataStoreException(e.getMessage(), e);
 		}
-		
+
 		final AbstractClassMetaData acmd = fm.getAcmd();
 		final Class<?> cl = om.getClassLoaderResolver().classForName(fm.getMessageClass());
 		final ClassLoaderResolver clr = om.getClassLoaderResolver();
-		
+
 		Object candidate = om.findObjectUsingAID(cl, new FieldValues()
 		{
 			@Override
@@ -175,7 +185,7 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 			}
 
 		}, true, true);
-		
+
 		return candidate;
 	}
 

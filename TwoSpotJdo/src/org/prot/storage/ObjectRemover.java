@@ -46,14 +46,14 @@ public class ObjectRemover
 		byte[] obj = retrieveObject(tableEntities, appId, kind, key);
 		Map<String, byte[]> indexMap = createIndexMap(obj);
 
-		// Remove entity from the entites table
-		removeObjectFromEntities(tableEntities, appId, kind, key);
-
 		// Remove entity from the index by kind table
 		removeObjectFromIndexByKind(tableIndexByKind, appId, kind, key);
 
 		// Remove entity from the indexByProperty table
 		removeObjectFromIndexByProperty(tableIndexByPropertyAsc, appId, kind, key, indexMap);
+
+		// Finally remove entity from the entites table
+		removeObjectFromEntities(tableEntities, appId, kind, key);
 	}
 
 	Map<String, byte[]> createIndexMap(byte[] obj) throws InvalidProtocolBufferException

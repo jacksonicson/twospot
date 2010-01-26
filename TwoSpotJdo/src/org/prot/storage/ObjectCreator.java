@@ -65,7 +65,7 @@ public class ObjectCreator
 		byte[] rowKey = KeyHelper.createRowKey(appId, key);
 		Put put = new Put(rowKey);
 		put.add(StorageUtils.bEntity, StorageUtils.bSerialized, obj);
-
+ 
 		// Execute put
 		table.put(put);
 

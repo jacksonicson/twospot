@@ -1,9 +1,11 @@
 package org.prot.storage;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.hadoop.hbase.client.HTable;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 import org.prot.storage.connection.ConnectionFactory;
 import org.prot.storage.connection.HBaseManagedConnection;
@@ -40,16 +42,56 @@ public class ObjectUpdater
 		Map<String, byte[]> oldIndex = remover.createIndexMap(oldObj);
 		Map<String, byte[]> newIndex = remover.createIndexMap(obj);
 
-		// Remove the entity from the indey by property table
-		remover.removeObjectFromIndexByProperty(tableIndexByPropertyAsc, appId, kind, key, oldIndex);
+		// Create the difference of the old and new index list
+		// List of index entries to delete
+		Map<String, byte[]> toDel = new HashMap<String, byte[]>();
 
-		// We don't have to delete the index by kind table because the key
-		// doesn't change!
+		// List of index entries to add
+		Map<String, byte[]> toAdd = new HashMap<String, byte[]>();
+
+		// Iterate over all new index antries and check if they are new or have
+		// changed to the old ones
+		for (String index : newIndex.keySet())
+		{
+			// Check if the old index list contains the index entry
+			if (oldIndex.containsKey(index))
+			{
+				// The old index list contains the index entry, check now if the
+				// values have changed
+				if (!Bytes.equals(oldIndex.get(index), newIndex.get(index)))
+				{
+					// We need to delete the old index entry
+					toDel.put(index, oldIndex.get(index));
+					// We need to add the new index entry
+					toAdd.put(index, newIndex.get(index));
+				}
+			} else
+			{
+				// The old index list does not contain the new index entry. We
+				// need to add the new index entry
+				toAdd.put(index, newIndex.get(index));
+			}
+		}
+
+		// Iterate over the old index list and check if the index entries are
+		// not present in the new index list
+		for (String index : oldIndex.keySet())
+		{
+			// The new index list does not contain the old entry
+			if (!newIndex.containsKey(index))
+			{
+				// We need to remove the old index entry
+				toDel.put(index, oldIndex.get(index));
+			}
+		}
+
+		// Remove all old index enties
+		remover.removeObjectFromIndexByProperty(tableIndexByPropertyAsc, appId, kind, key, toDel);
 
 		// Write the new entity to the entity table
 		byte[] rowKey = ObjectCreator.writeEntity(tableEntities, appId, kind, key, obj);
 
-		// Recreate the index by property table
-		creator.writeIndexByPropertyAsc(tableIndexByPropertyAsc, rowKey, appId, kind, newIndex);
+		// Add the new index entries
+		creator.writeIndexByPropertyAsc(tableIndexByPropertyAsc, rowKey, appId, kind, toAdd);
 	}
 }

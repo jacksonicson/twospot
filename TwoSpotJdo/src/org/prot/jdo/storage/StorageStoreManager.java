@@ -48,7 +48,7 @@ public class StorageStoreManager extends AbstractStoreManager
 		{
 			StorageHelper.setDevMode(conf.getBooleanProperty("twospot.devserver"));
 		}
-
+		
 		logConfiguration();
 	}
 
