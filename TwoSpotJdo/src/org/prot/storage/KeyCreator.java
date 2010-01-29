@@ -111,18 +111,23 @@ public class KeyCreator
 		List<Key> keys = new ArrayList<Key>();
 		for (; counter < incCounter; counter++)
 		{
-			// Encode a timestamp in the key
-			long invTime = Long.MAX_VALUE - System.currentTimeMillis();
-
 			// Encode a random value which distributes the entities
 			long random = KeyCreator.random.nextLong();
 
 			// Calculate the shard offset
 			long shardedIndex = shard * SHARD_SIZE + counter;
 
-			// Key has the form: RANDOM | INV_TIME | COUNTER
-			byte[] bKey = Bytes.add(Bytes.toBytes(invTime), Bytes.toBytes(shardedIndex));
-			bKey = Bytes.add(Bytes.toBytes(random), bKey);
+			// Key is fixed length
+			byte[] bRandom = Bytes.toBytes(random);
+			if (bRandom.length < 8)
+				bRandom = Bytes.padTail(bRandom, 8 - bRandom.length);
+
+			byte[] bShardedIndex = Bytes.toBytes(shardedIndex);
+			if (bShardedIndex.length < 8)
+				bShardedIndex = Bytes.padTail(bShardedIndex, 8 - bShardedIndex.length);
+
+			// Put the key together
+			byte[] bKey = Bytes.add(bRandom, bShardedIndex);
 
 			Key key = new Key();
 			key.setKey(bKey);

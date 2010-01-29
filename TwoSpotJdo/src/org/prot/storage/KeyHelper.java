@@ -13,11 +13,9 @@ public class KeyHelper
 		byte[] bKey = key.getKey();
 
 		// The appId as 20 byte string
-		assert (appId.length() < 20);
-		int diff = 20 - appId.length();
-		byte[] bAppId = appId.getBytes();
-		byte[] bDiff = new byte[diff];
-		bAppId = Bytes.add(bAppId, bDiff);
+		byte[] bAppId = Bytes.toBytes(appId);
+		if (bAppId.length < 20)
+			bAppId = Bytes.padTail(bAppId, 20 - bAppId.length);
 
 		return Bytes.add(bKey, bAppId);
 	}
