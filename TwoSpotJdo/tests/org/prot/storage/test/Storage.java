@@ -327,13 +327,14 @@ public class Storage
 		{
 			List<Thread> tl = new ArrayList<Thread>();
 
-			for (int i = 0; i < 1; i++)
+			for (int i = 0; i < 6; i++)
 			{
 				Thread thr = new Thread()
 				{
 					public void run()
 					{
 						PersistenceManager mmanger = pmf.getPersistenceManager();
+						mmanger.currentTransaction().begin();
 
 						Query query = mmanger.newQuery(Person.class);
 						List<Person> persons = (List<Person>) query.execute();
@@ -344,7 +345,6 @@ public class Storage
 							{
 								try
 								{
-									p.getTime();
 									p.setTime(10);
 									mmanger.makePersistent(p);
 								} catch (Exception e)
@@ -353,6 +353,8 @@ public class Storage
 								}
 							}
 						}
+						
+						mmanger.currentTransaction().commit();
 					}
 				};
 				thr.start();
@@ -362,7 +364,6 @@ public class Storage
 			for (Thread t : tl)
 				t.join();
 
-			Thread.sleep(3000);
 
 			Query query = manager.newQuery(Person.class);
 			List<Person> persons = (List<Person>) query.execute();
@@ -371,8 +372,6 @@ public class Storage
 			{
 				System.out.println(test.getTime());
 			}
-
-			System.out.println("_----------");
 
 		} catch (Exception e)
 		{

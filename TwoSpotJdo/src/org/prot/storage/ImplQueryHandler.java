@@ -68,6 +68,8 @@ public class ImplQueryHandler implements QueryHandler
 		byte[] stopKey = Bytes.add(bAppId, StorageUtils.bSlash, bKind);
 
 		Scan scan = new Scan(startKey, stopKey);
+		scan.setCaching(30);
+
 		ResultScanner scanner = indexByKindTable.getScanner(scan);
 		List<byte[]> keySet = new LinkedList<byte[]>();
 		for (Iterator<Result> iterator = scanner.iterator(); iterator.hasNext();)
@@ -216,6 +218,8 @@ public class ImplQueryHandler implements QueryHandler
 
 		// Create the scanner
 		Scan scan = createScanner(condition, bAppId, bKind, bProperty, bValue);
+		scan.setCaching(30);
+
 		ResultScanner resultScanner = indexTable.getScanner(scan);
 
 		// Create a new set for the results
