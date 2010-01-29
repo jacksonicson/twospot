@@ -163,6 +163,9 @@ public class ControllerRegistry
 	public void dump()
 	{
 		for (ControllerStats controller : controllers.values())
+		{
+			logger.debug("#########################");
 			controller.dump();
+		}
 	}
 }

@@ -132,10 +132,15 @@ public class ControllerStats
 
 	public void dump()
 	{
+		logger.debug("=============================");
 		logger.debug("Controller: " + this.address);
 		stats.dump();
+		logger.debug(" ");
 		logger.debug("Instances (count): " + instances.size());
 		for (InstanceStats instance : instances.values())
+		{
+			logger.debug(" ");
 			instance.dump();
+		}
 	}
 }
