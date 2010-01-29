@@ -31,7 +31,7 @@ public class JettyAppManagement implements RuntimeManagement
 		long requestCounter = 0;
 	}
 
-	private final int datasLength = 10;
+	private final int DATAS_LENGTH = 10;
 	private LinkedList<Data> datas = new LinkedList<Data>();
 	private Data current = null;
 
@@ -56,8 +56,7 @@ public class JettyAppManagement implements RuntimeManagement
 		{
 			current.stopTime = System.currentTimeMillis();
 
-			logger.debug("Length: " + datas.size());
-			if (datas.size() >= datasLength)
+			if (datas.size() >= DATAS_LENGTH)
 				datas.remove(0);
 
 			newData();
@@ -84,7 +83,7 @@ public class JettyAppManagement implements RuntimeManagement
 		boolean lowResources = connector.isLowResources();
 		if (lowResources)
 		{
-			overloadCounter = 3;
+			overloadCounter = 5;
 			return lowResources;
 		} else
 		{
@@ -97,7 +96,7 @@ public class JettyAppManagement implements RuntimeManagement
 	private float averageLoad()
 	{
 		long maxLoad = 0;
-		double average = 0;
+		double average = 1d;
 
 		for (Data data : datas)
 		{
@@ -107,10 +106,15 @@ public class JettyAppManagement implements RuntimeManagement
 				maxLoad = data.maxRequests;
 		}
 
-		average /= datas.size();
-		average = (average + current.currentRequests) / 2;
+		if (datas.size() > 0)
+		{
+			average /= datas.size();
+			average = (average + current.currentRequests) / 2;
 
-		return (float) average / (float) maxLoad;
+			return (float) average / (float) maxLoad;
+		}
+
+		return 0f;
 	}
 
 	private float averageRps()
@@ -130,7 +134,10 @@ public class JettyAppManagement implements RuntimeManagement
 				maxTime = data.stopTime;
 		}
 
-		return (float) counter / ((float) (maxTime - minTime) / 1000f);
+		if (datas.size() > 0)
+			return (float) counter / ((float) (maxTime - minTime) / 1000f);
+
+		return 0f;
 	}
 
 	@Override
