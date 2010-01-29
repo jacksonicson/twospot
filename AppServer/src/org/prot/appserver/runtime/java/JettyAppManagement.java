@@ -95,24 +95,18 @@ public class JettyAppManagement implements RuntimeManagement
 
 	private float averageLoad()
 	{
-		long maxLoad = 0;
-		double average = 1d;
-
+		double maxLoad = 1d;
 		for (Data data : datas)
 		{
-			average += data.currentRequests;
-
-			if (data.maxRequests > maxLoad)
-				maxLoad = data.maxRequests;
+			double rps = (double) data.requestCounter / ((double) (data.stopTime - data.startTime) / 1000d);
+			if (maxLoad < rps)
+				maxLoad = rps;
 		}
+
+		double rps = averageRps();
 
 		if (datas.size() > 0)
-		{
-			average /= datas.size();
-			average = (average + current.currentRequests) / 2;
-
-			return (float) average / (float) maxLoad;
-		}
+			return (float) (rps / maxLoad);
 
 		return 0f;
 	}
