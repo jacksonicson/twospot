@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.prot.jdo.storage.StorageHelper;
+import org.prot.storage.Key;
 import org.prot.storage.test.data.Person;
 
 public class Storage
@@ -267,6 +268,43 @@ public class Storage
 
 		Person person = (Person) query.execute();
 		Assert.assertTrue(person != null);
+	}
+	
+	@Test
+	public void testKey() throws Exception
+	{
+		List<String> keys = new ArrayList<String>();
+		try
+		{
+			Random r = new Random();
+
+			for (int i = 0; i < 3; i++)
+			{
+				Person person = new Person();
+				person.setUsername("Alex");
+				person.setMessage("Message from Alex " + i);
+				person.setTime(System.currentTimeMillis());
+				person.setAsdf(i);
+				person.setType(r.nextDouble());
+
+				manager.currentTransaction().begin();
+				manager.makePersistent(person);
+				keys.add(person.getKey().toString());
+				manager.currentTransaction().commit();
+			}
+			
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			throw e;
+		}
+
+		for(String key : keys)
+		{
+			Person compare = (Person)manager.getObjectById(new Key(key));
+			Assert.assertEquals(compare.getUsername(), "Alex");
+			System.out.println("Person: " + compare.getMessage());
+		}
 	}
 
 	@Test
