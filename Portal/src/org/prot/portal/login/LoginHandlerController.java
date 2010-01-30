@@ -66,6 +66,9 @@ public class LoginHandlerController extends SimpleFormController
 		uidCookie.setDomain(host);
 		response.addCookie(uidCookie);
 
+		logger.debug("LoginCookie UID: " + uidCookie);
+		logger.debug("LoginCookie domain: " + host);
+		
 		// Redirect (if there is a destination url)
 		if (loginCommand.getRedirectUrl() != null && loginCommand.getRedirectUrl().isEmpty() == false)
 		{

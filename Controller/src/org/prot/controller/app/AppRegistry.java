@@ -44,14 +44,18 @@ public class AppRegistry implements TokenChecker
 		{
 			Long time = blocked.get(appId);
 			if (time == null)
-				return false;
-
-			if (System.currentTimeMillis() - time > 50000)
 			{
 				blocked.remove(appId);
 				return false;
 			}
 
+			if ((System.currentTimeMillis() - time) > 30000)
+			{
+				blocked.remove(appId);
+				return false;
+			}
+
+			logger.debug("Blocking " + appId);
 			return true;
 		}
 	}
