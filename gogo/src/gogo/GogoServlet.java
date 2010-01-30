@@ -130,6 +130,7 @@ public class GogoServlet extends HttpServlet
 
 			// Tell the query the class
 			query.setClass(BlogEntry.class);
+			query.setRange(0, 50);
 
 			// Execute the query
 			List<BlogEntry> result = (List<BlogEntry>) query.execute();

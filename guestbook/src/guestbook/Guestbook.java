@@ -19,7 +19,7 @@ public class Guestbook extends HttpServlet
 	{
 		PersistenceManager manager = DataConnection.getManager();
 
-		long time = System.currentTimeMillis() - 500;
+		long time = System.currentTimeMillis() - 1000;
 
 		Query query = manager.newQuery();
 		query.setClass(GuestEntry.class);
