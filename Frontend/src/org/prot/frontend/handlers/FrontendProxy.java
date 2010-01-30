@@ -14,6 +14,7 @@ import org.eclipse.jetty.server.Request;
 import org.prot.frontend.cache.AppCache;
 import org.prot.frontend.cache.CacheResult;
 import org.prot.manager.stats.ControllerInfo;
+import org.prot.util.ErrorCodes;
 import org.prot.util.handler.HttpProxyHelper;
 
 public class FrontendProxy extends HttpProxyHelper<RequestState>
@@ -35,7 +36,7 @@ public class FrontendProxy extends HttpProxyHelper<RequestState>
 		String uri = baseRequest.getUri().toString();
 		StringBuilder builder = new StringBuilder(5 + 3 + address.length() + 1 + 4 + 1 + 10 + uri.length()
 				+ 10);
-		
+
 		builder.append(baseRequest.getScheme());
 		builder.append("://");
 		builder.append(address);
@@ -56,7 +57,7 @@ public class FrontendProxy extends HttpProxyHelper<RequestState>
 		CacheResult result = appCache.getController(appId);
 		if (result.getControllerInfo() == null)
 		{
-			response.sendError(HttpStatus.INTERNAL_SERVER_ERROR_500,
+			response.sendError(ErrorCodes.CONTROLLER_BLOCKS,
 					"Manager unreachable or did not return a Controller.");
 			baseRequest.setHandled(true);
 			return;
@@ -77,10 +78,9 @@ public class FrontendProxy extends HttpProxyHelper<RequestState>
 			logger.debug("Controller blocks: " + state.getAppId());
 			logger.debug("Redirecting client to: " + state.getRequest().getRequestURL().toString());
 
-			// appCache.controllerBlocks(state.getAppId(),
-			// state.getCached().getControllerInfo().getAddress());
-			// state.getResponse().sendRedirect(state.getRequest().getRequestURL().toString());
-			// return true;
+			appCache.controllerBlocks(state.getAppId(), state.getCached().getControllerInfo().getAddress());
+			state.getResponse().sendRedirect(state.getRequest().getRequestURL().toString());
+			return true;
 		}
 
 		return false;
@@ -95,14 +95,14 @@ public class FrontendProxy extends HttpProxyHelper<RequestState>
 	{
 		appCache.release(state.getCached());
 
-		// try
-		// {
-		// state.getResponse().sendError(HttpStatus.REQUEST_TIMEOUT_408,
-		// "Connection with the Controller timed out");
-		// } catch (IOException e)
-		// {
-		// logger.trace("IOException", e);
-		// }
+		try
+		{
+			state.getResponse().sendError(HttpStatus.REQUEST_TIMEOUT_408,
+					"Connection with the Controller timed out");
+		} catch (IOException e)
+		{
+			logger.trace("IOException", e);
+		}
 	}
 
 	protected boolean error(RequestState state, Throwable e)
