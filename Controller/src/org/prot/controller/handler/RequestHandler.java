@@ -18,6 +18,7 @@ import org.prot.controller.app.AppLife;
 import org.prot.controller.app.AppManager;
 import org.prot.controller.stats.ControllerStatsCollector;
 import org.prot.util.AppIdExtractor;
+import org.prot.util.ErrorCodes;
 import org.prot.util.ReservedAppIds;
 
 public class RequestHandler extends AbstractHandler
@@ -84,7 +85,7 @@ public class RequestHandler extends AbstractHandler
 
 				response.sendError(HttpStatus.BAD_REQUEST_400,
 						"Invalid or missing AppId (scheme://domain/AppId/...)");
-				
+
 				baseRequest.setHandled(true);
 				return;
 			}
@@ -92,8 +93,8 @@ public class RequestHandler extends AbstractHandler
 			// Check if it is a ping request from an AppServer
 			if (appId.equals(ReservedAppIds.APP_PING))
 			{
-				logger.debug("ping from AppServer"); 
-				
+				logger.debug("ping from AppServer");
+
 				// Simply response this request with ok
 				response.getWriter().print("ok");
 				baseRequest.setHandled(true);
@@ -106,10 +107,9 @@ public class RequestHandler extends AbstractHandler
 				// Currently this Controller blocks all requests for the
 				// application
 				logger.debug("Recived request for blocked: " + appId);
-				
-				response.sendError(HttpStatus.MOVED_TEMPORARILY_302,
-						"Controller blocks requested application");
-				
+
+				response.sendError(ErrorCodes.CONTROLLER_BLOCKS, "Controller blocks requested application");
+
 				baseRequest.setHandled(true);
 				return;
 			}
