@@ -42,7 +42,7 @@
 	</logger>
 
 	<logger name="org.prot" additivity="false">
-		<level value="WARN" />
+		<level value="DEBUG" />
 		<appender-ref ref="Rolling" />
 		<appender-ref ref="SocketAppender" />
 	</logger>

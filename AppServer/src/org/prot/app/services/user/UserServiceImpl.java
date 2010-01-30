@@ -110,6 +110,8 @@ public final class UserServiceImpl implements UserService
 		{
 			if (cookie.getName().equals(Cookies.USER_ID))
 			{
+				logger.debug("Removing cookie");
+
 				cookie.setMaxAge(0);
 				cookie.setValue(null);
 				httpConnection.getResponse().addCookie(cookie);
