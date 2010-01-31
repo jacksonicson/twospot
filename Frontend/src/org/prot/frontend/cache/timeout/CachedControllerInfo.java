@@ -17,7 +17,7 @@ public class CachedControllerInfo extends ControllerInfo
 
 	public void setBlocked(boolean blocked)
 	{
-		if(blocked)
+		if (blocked)
 			this.blocked = System.currentTimeMillis();
 		else
 			this.blocked = null;
@@ -30,7 +30,7 @@ public class CachedControllerInfo extends ControllerInfo
 
 	public boolean isBlocked()
 	{
-		return blocked == null;
+		return blocked != null;
 	}
 
 	public long getTimestamp()
