@@ -154,6 +154,7 @@ public class Configuration
 
 		case DEVELOPMENT:
 			config.setAppDirectory(workingDir + "/" + config.getAppId());
+			config.setAppScratchDir(config.getAppScratchDir() + "/" + config.getAppServerPort());
 			break;
 		}
 
