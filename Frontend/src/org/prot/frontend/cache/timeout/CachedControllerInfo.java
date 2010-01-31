@@ -8,7 +8,7 @@ public class CachedControllerInfo extends ControllerInfo
 
 	private long timestamp;
 
-	private boolean blocked;
+	private Long blocked = null;
 
 	public CachedControllerInfo(ControllerInfo info)
 	{
@@ -17,12 +17,20 @@ public class CachedControllerInfo extends ControllerInfo
 
 	public void setBlocked(boolean blocked)
 	{
-		this.blocked = blocked;
+		if(blocked)
+			this.blocked = System.currentTimeMillis();
+		else
+			this.blocked = null;
+	}
+
+	public Long getBlocked()
+	{
+		return blocked;
 	}
 
 	public boolean isBlocked()
 	{
-		return blocked;
+		return blocked == null;
 	}
 
 	public long getTimestamp()

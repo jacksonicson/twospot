@@ -57,11 +57,22 @@ public class CacheEntry
 		}
 
 		logger.debug("Known controllers: " + controllers.keySet().size());
+	}
 
-		synchronized (requestCounter)
+	void relaxBlocks()
+	{
+		long currentTime = System.currentTimeMillis();
+		synchronized (controllers)
 		{
-			for (Long counter : requestCounter.values())
-				logger.debug("Counter: " + counter);
+			for (CachedControllerInfo info : controllers.values())
+			{
+				if (!info.isBlocked())
+					continue;
+
+				long diff = currentTime - info.getBlocked();
+				if (diff > 15000)
+					info.setBlocked(false);
+			}
 		}
 	}
 

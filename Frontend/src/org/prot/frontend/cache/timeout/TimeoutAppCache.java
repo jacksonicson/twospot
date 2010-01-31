@@ -107,7 +107,10 @@ public class TimeoutAppCache implements AppCache
 	public void updateCache()
 	{
 		for (CacheEntry entry : cache.values())
+		{
 			entry.removeOlderThan(CONTROLLER_LIFETIME);
+			entry.relaxBlocks();
+		}
 	}
 
 	class Updater extends SchedulerTask
