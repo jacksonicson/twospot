@@ -73,7 +73,7 @@ public class FrontendProxy extends HttpProxyHelper<RequestState>
 	protected boolean handleStatus(RequestState state, Buffer version, int status, Buffer reason)
 			throws IOException
 	{
-		if (status == HttpStatus.SERVICE_UNAVAILABLE_503)
+		if (status == ErrorCodes.CONTROLLER_BLOCKS)
 		{
 			logger.debug("Controller blocks: " + state.getAppId());
 			logger.debug("Redirecting client to: " + state.getRequest().getRequestURL().toString());
