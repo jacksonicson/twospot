@@ -149,6 +149,7 @@ public class Configuration
 		{
 		case SERVER:
 			config.setAppDirectory(workingDir + "/" + config.getAppServerPort());
+			config.setAppScratchDir(config.getAppScratchDir() + "/" + config.getAppServerPort());
 			break;
 
 		case DEVELOPMENT:

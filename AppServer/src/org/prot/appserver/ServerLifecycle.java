@@ -1,5 +1,6 @@
 package org.prot.appserver;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
@@ -9,11 +10,12 @@ import org.prot.appserver.config.AppConfigurer;
 import org.prot.appserver.config.Configuration;
 import org.prot.appserver.config.ConfigurationException;
 import org.prot.appserver.extract.AppExtractor;
-import org.prot.appserver.management.RuntimeManagement;
 import org.prot.appserver.management.AppServerManager;
+import org.prot.appserver.management.RuntimeManagement;
 import org.prot.appserver.runtime.AppRuntime;
 import org.prot.appserver.runtime.NoSuchRuntimeException;
 import org.prot.appserver.runtime.RuntimeRegistry;
+import org.prot.util.io.Directory;
 
 public class ServerLifecycle
 {
@@ -38,6 +40,8 @@ public class ServerLifecycle
 
 		configuration = Configuration.getInstance();
 
+		prepareScratch();
+
 		loadApp();
 
 		extractApp();
@@ -47,6 +51,20 @@ public class ServerLifecycle
 		launchRuntime();
 
 		manageApp();
+	}
+
+	private final void prepareScratch()
+	{
+		String scratch = configuration.getAppScratchDir();
+		File file = new File(scratch);
+		if (file.exists())
+		{
+			logger.info("Removing old scratchdir: " + scratch);
+			Directory.deleteFolder(file);
+		}
+
+		logger.info("Creating scratchdir: " + scratch);
+		file.mkdirs();
 	}
 
 	private final void loadApp()

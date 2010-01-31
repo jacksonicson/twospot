@@ -9,6 +9,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.apache.log4j.Logger;
+import org.prot.util.io.Directory;
 
 public class WarExtractor implements AppExtractor
 {
@@ -19,27 +20,6 @@ public class WarExtractor implements AppExtractor
 	{
 		String folder = createFolder(destPath);
 		decompress(archive, folder);
-	}
-
-	private boolean deleteFolder(File folder)
-	{
-		boolean success = true;
-
-		// Iterate over the content
-		for (String content : folder.list())
-		{
-			// File on the new path
-			File file = new File(folder, content);
-
-			// Check if its a folder
-			if (file.isDirectory())
-				deleteFolder(file);
-
-			// Finally delete the file or folder
-			success &= file.delete();
-		}
-
-		return success;
 	}
 
 	private String createFolder(String destPath) throws IOException
@@ -54,7 +34,7 @@ public class WarExtractor implements AppExtractor
 			boolean deleteFolder = false;
 			for (int retries = 3; retries > 0; retries--)
 			{
-				if (deleteFolder = deleteFolder(file))
+				if (deleteFolder = Directory.deleteFolder(file))
 				{
 					logger.debug("Existing app directory deleted");
 					break;
