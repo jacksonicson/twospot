@@ -18,6 +18,9 @@
 		<copy todir="${dest}/Libs/">
 			<fileset dir="../Libs">
 				<include name="**/*.jar" />
+				<include name="**/*.lib" />
+				<include name="**/*.so" />
+				<include name="**/*.dll" />
 			</fileset>
 			<!--<fileset dir="../Libs/gen">
 				<include name="**/*.jar" />
