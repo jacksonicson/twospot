@@ -12,3 +12,4 @@
 ./Libs/lib/jetty-7.0.1/jetty-webapp-7.0.1.v20091125.jar
 ./Libs/lib/jetty-7.0.1/jetty-continuation-7.0.1.v20091125.jar
 ./Libs/lib/jetty-7.0.1/jetty-server-7.0.1.v20091125.jar
+./Libs/lib/sigar/sigar.jar

@@ -12,9 +12,9 @@ message Controller
 
 	optional float load = 10; 
 	optional uint32 runningApps = 11; 
-		
 	optional float cpu = 12 [default = -1];
-	optional float procCpu = 17 [default = -1]; 
+	optional float procCpu = 17 [default = -1];
+	optional float idleCpu = 18 [default = -1]; 
 	optional float rps = 13 [default = 0];
 	optional int64 freeMem = 14 [default = -1];
 	optional int64 totalMem = 15 [default = -1];
@@ -26,12 +26,10 @@ message Controller
 message AppServer
 {
 	required string appId = 1;
-	 
-	required float load = 2;
-
 	required float cpu = 3;
-	
 	optional float rps = 10; 
-	
 	optional bool overloaded = 11 [default = false];
+	optional int64 runtime = 12 [default = 0];
+	optional int64 cpuTotal = 19 [default = 0];
+	optional int64 cpuProcTotal = 21 [default = 0];
 }

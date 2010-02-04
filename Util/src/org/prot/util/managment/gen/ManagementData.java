@@ -56,6 +56,13 @@ public final class ManagementData {
     public boolean hasProcCpu() { return hasProcCpu; }
     public float getProcCpu() { return procCpu_; }
     
+    // optional float idleCpu = 18 [default = -1];
+    public static final int IDLECPU_FIELD_NUMBER = 18;
+    private boolean hasIdleCpu;
+    private float idleCpu_ = -1F;
+    public boolean hasIdleCpu() { return hasIdleCpu; }
+    public float getIdleCpu() { return idleCpu_; }
+    
     // optional float rps = 13 [default = 0];
     public static final int RPS_FIELD_NUMBER = 13;
     private boolean hasRps;
@@ -133,6 +140,9 @@ public final class ManagementData {
       if (hasProcCpu()) {
         output.writeFloat(17, getProcCpu());
       }
+      if (hasIdleCpu()) {
+        output.writeFloat(18, getIdleCpu());
+      }
       for (org.prot.util.managment.gen.ManagementData.AppServer element : getAppServersList()) {
         output.writeMessage(20, element);
       }
@@ -179,6 +189,10 @@ public final class ManagementData {
       if (hasProcCpu()) {
         size += com.google.protobuf.CodedOutputStream
           .computeFloatSize(17, getProcCpu());
+      }
+      if (hasIdleCpu()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(18, getIdleCpu());
       }
       for (org.prot.util.managment.gen.ManagementData.AppServer element : getAppServersList()) {
         size += com.google.protobuf.CodedOutputStream
@@ -338,6 +352,9 @@ public final class ManagementData {
         if (other.hasProcCpu()) {
           setProcCpu(other.getProcCpu());
         }
+        if (other.hasIdleCpu()) {
+          setIdleCpu(other.getIdleCpu());
+        }
         if (other.hasRps()) {
           setRps(other.getRps());
         }
@@ -408,6 +425,10 @@ public final class ManagementData {
             }
             case 141: {
               setProcCpu(input.readFloat());
+              break;
+            }
+            case 149: {
+              setIdleCpu(input.readFloat());
               break;
             }
             case 162: {
@@ -511,6 +532,24 @@ public final class ManagementData {
       public Builder clearProcCpu() {
         result.hasProcCpu = false;
         result.procCpu_ = -1F;
+        return this;
+      }
+      
+      // optional float idleCpu = 18 [default = -1];
+      public boolean hasIdleCpu() {
+        return result.hasIdleCpu();
+      }
+      public float getIdleCpu() {
+        return result.getIdleCpu();
+      }
+      public Builder setIdleCpu(float value) {
+        result.hasIdleCpu = true;
+        result.idleCpu_ = value;
+        return this;
+      }
+      public Builder clearIdleCpu() {
+        result.hasIdleCpu = false;
+        result.idleCpu_ = -1F;
         return this;
       }
       
@@ -664,13 +703,6 @@ public final class ManagementData {
     public boolean hasAppId() { return hasAppId; }
     public java.lang.String getAppId() { return appId_; }
     
-    // required float load = 2;
-    public static final int LOAD_FIELD_NUMBER = 2;
-    private boolean hasLoad;
-    private float load_ = 0F;
-    public boolean hasLoad() { return hasLoad; }
-    public float getLoad() { return load_; }
-    
     // required float cpu = 3;
     public static final int CPU_FIELD_NUMBER = 3;
     private boolean hasCpu;
@@ -692,9 +724,29 @@ public final class ManagementData {
     public boolean hasOverloaded() { return hasOverloaded; }
     public boolean getOverloaded() { return overloaded_; }
     
+    // optional int64 runtime = 12 [default = 0];
+    public static final int RUNTIME_FIELD_NUMBER = 12;
+    private boolean hasRuntime;
+    private long runtime_ = 0L;
+    public boolean hasRuntime() { return hasRuntime; }
+    public long getRuntime() { return runtime_; }
+    
+    // optional int64 cpuTotal = 19 [default = 0];
+    public static final int CPUTOTAL_FIELD_NUMBER = 19;
+    private boolean hasCpuTotal;
+    private long cpuTotal_ = 0L;
+    public boolean hasCpuTotal() { return hasCpuTotal; }
+    public long getCpuTotal() { return cpuTotal_; }
+    
+    // optional int64 cpuProcTotal = 21 [default = 0];
+    public static final int CPUPROCTOTAL_FIELD_NUMBER = 21;
+    private boolean hasCpuProcTotal;
+    private long cpuProcTotal_ = 0L;
+    public boolean hasCpuProcTotal() { return hasCpuProcTotal; }
+    public long getCpuProcTotal() { return cpuProcTotal_; }
+    
     public final boolean isInitialized() {
       if (!hasAppId) return false;
-      if (!hasLoad) return false;
       if (!hasCpu) return false;
       return true;
     }
@@ -704,9 +756,6 @@ public final class ManagementData {
       if (hasAppId()) {
         output.writeString(1, getAppId());
       }
-      if (hasLoad()) {
-        output.writeFloat(2, getLoad());
-      }
       if (hasCpu()) {
         output.writeFloat(3, getCpu());
       }
@@ -715,6 +764,15 @@ public final class ManagementData {
       }
       if (hasOverloaded()) {
         output.writeBool(11, getOverloaded());
+      }
+      if (hasRuntime()) {
+        output.writeInt64(12, getRuntime());
+      }
+      if (hasCpuTotal()) {
+        output.writeInt64(19, getCpuTotal());
+      }
+      if (hasCpuProcTotal()) {
+        output.writeInt64(21, getCpuProcTotal());
       }
     }
     
@@ -728,10 +786,6 @@ public final class ManagementData {
         size += com.google.protobuf.CodedOutputStream
           .computeStringSize(1, getAppId());
       }
-      if (hasLoad()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(2, getLoad());
-      }
       if (hasCpu()) {
         size += com.google.protobuf.CodedOutputStream
           .computeFloatSize(3, getCpu());
@@ -743,6 +797,18 @@ public final class ManagementData {
       if (hasOverloaded()) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(11, getOverloaded());
+      }
+      if (hasRuntime()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(12, getRuntime());
+      }
+      if (hasCpuTotal()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(19, getCpuTotal());
+      }
+      if (hasCpuProcTotal()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(21, getCpuProcTotal());
       }
       memoizedSerializedSize = size;
       return size;
@@ -882,9 +948,6 @@ public final class ManagementData {
         if (other.hasAppId()) {
           setAppId(other.getAppId());
         }
-        if (other.hasLoad()) {
-          setLoad(other.getLoad());
-        }
         if (other.hasCpu()) {
           setCpu(other.getCpu());
         }
@@ -893,6 +956,15 @@ public final class ManagementData {
         }
         if (other.hasOverloaded()) {
           setOverloaded(other.getOverloaded());
+        }
+        if (other.hasRuntime()) {
+          setRuntime(other.getRuntime());
+        }
+        if (other.hasCpuTotal()) {
+          setCpuTotal(other.getCpuTotal());
+        }
+        if (other.hasCpuProcTotal()) {
+          setCpuProcTotal(other.getCpuProcTotal());
         }
         return this;
       }
@@ -916,10 +988,6 @@ public final class ManagementData {
               setAppId(input.readString());
               break;
             }
-            case 21: {
-              setLoad(input.readFloat());
-              break;
-            }
             case 29: {
               setCpu(input.readFloat());
               break;
@@ -930,6 +998,18 @@ public final class ManagementData {
             }
             case 88: {
               setOverloaded(input.readBool());
+              break;
+            }
+            case 96: {
+              setRuntime(input.readInt64());
+              break;
+            }
+            case 152: {
+              setCpuTotal(input.readInt64());
+              break;
+            }
+            case 168: {
+              setCpuProcTotal(input.readInt64());
               break;
             }
           }
@@ -955,24 +1035,6 @@ public final class ManagementData {
       public Builder clearAppId() {
         result.hasAppId = false;
         result.appId_ = getDefaultInstance().getAppId();
-        return this;
-      }
-      
-      // required float load = 2;
-      public boolean hasLoad() {
-        return result.hasLoad();
-      }
-      public float getLoad() {
-        return result.getLoad();
-      }
-      public Builder setLoad(float value) {
-        result.hasLoad = true;
-        result.load_ = value;
-        return this;
-      }
-      public Builder clearLoad() {
-        result.hasLoad = false;
-        result.load_ = 0F;
         return this;
       }
       
@@ -1027,6 +1089,60 @@ public final class ManagementData {
       public Builder clearOverloaded() {
         result.hasOverloaded = false;
         result.overloaded_ = false;
+        return this;
+      }
+      
+      // optional int64 runtime = 12 [default = 0];
+      public boolean hasRuntime() {
+        return result.hasRuntime();
+      }
+      public long getRuntime() {
+        return result.getRuntime();
+      }
+      public Builder setRuntime(long value) {
+        result.hasRuntime = true;
+        result.runtime_ = value;
+        return this;
+      }
+      public Builder clearRuntime() {
+        result.hasRuntime = false;
+        result.runtime_ = 0L;
+        return this;
+      }
+      
+      // optional int64 cpuTotal = 19 [default = 0];
+      public boolean hasCpuTotal() {
+        return result.hasCpuTotal();
+      }
+      public long getCpuTotal() {
+        return result.getCpuTotal();
+      }
+      public Builder setCpuTotal(long value) {
+        result.hasCpuTotal = true;
+        result.cpuTotal_ = value;
+        return this;
+      }
+      public Builder clearCpuTotal() {
+        result.hasCpuTotal = false;
+        result.cpuTotal_ = 0L;
+        return this;
+      }
+      
+      // optional int64 cpuProcTotal = 21 [default = 0];
+      public boolean hasCpuProcTotal() {
+        return result.hasCpuProcTotal();
+      }
+      public long getCpuProcTotal() {
+        return result.getCpuProcTotal();
+      }
+      public Builder setCpuProcTotal(long value) {
+        result.hasCpuProcTotal = true;
+        result.cpuProcTotal_ = value;
+        return this;
+      }
+      public Builder clearCpuProcTotal() {
+        result.hasCpuProcTotal = false;
+        result.cpuProcTotal_ = 0L;
         return this;
       }
     }
