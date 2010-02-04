@@ -39,8 +39,6 @@ public class SimpleLoadBalancer implements LoadBalancer
 			rank += 0.3 * ((controller.getValues().cpu < 0) ? 0 : controller.getValues().cpu);
 			rank += 2.0 * (controller.getValues().freeMemory / (controller.getValues().totalMemory + 1));
 			rank += 0.5 * controller.size();
-			rank += 0.003 * controller.getValues().rps;
-			logger.debug("Ranking: " + rank);
 
 			// Controller is not running the application
 			// Check if its the new best controller
@@ -91,21 +89,33 @@ public class SimpleLoadBalancer implements LoadBalancer
 
 			// Get the controller info
 			ControllerInfo selected = controllerInfos.get(controller.getAddress());
-			if (selected == null) // No controller info available - cannot use
-				// this controller
+			if (selected == null) // No controller info available
 				continue;
 
 			// The controller is running the requested application
 			resultInfo.add(selected);
 			resultStats.add(controller);
 
-			// Check if the controller or instance reports an overload
-			if (instance.getValues().overloaded || controller.getValues().overloaded)
-				overloaded++;
+			// Check if the instance is running long enough!
+			if (instance.getValues().runtime > 15000)
+			{
+				// Check if the controller or instance reports an overload
+				if (instance.getValues().overloaded || controller.getValues().overloaded)
+					overloaded++;
 
-			// Check the cpu usage of the instance
-			if (instance.getValues().procCpu > Configuration.getConfiguration().getSlbInstanceCpuLimit())
-				overloaded++;
+				// Check the cpu usage of the instance
+				if (instance.getValues().procCpu > Configuration.getConfiguration().getSlbInstanceCpuLimit())
+					overloaded++;
+
+				// Check if the idle time is big enough
+				if (controller.getValues().idleCpu < Configuration.getConfiguration().getSlbMinIdleCpu())
+					overloaded++;
+
+				// CPU-Bursting
+				double usedCpuUnits = instance.getValues().getCpuTimeFactor();
+				if (usedCpuUnits > Configuration.getConfiguration().getSlbGuaranteedCpuUnits())
+					overloaded++;
+			}
 		}
 
 		// Check if we have found Controllers which are running the application

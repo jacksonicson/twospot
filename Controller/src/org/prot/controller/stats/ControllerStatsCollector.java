@@ -7,6 +7,7 @@ import org.prot.controller.app.AppInfo;
 import org.prot.controller.app.AppRegistry;
 import org.prot.controller.config.Configuration;
 import org.prot.controller.stats.processors.BalancingProcessor;
+import org.prot.util.SystemStats;
 import org.prot.util.managment.gen.ManagementData;
 import org.prot.util.scheduler.Scheduler;
 import org.prot.util.scheduler.SchedulerTask;
@@ -59,6 +60,7 @@ public class ControllerStatsCollector
 
 		controller.setCpu((float) systemStats.getSystemLoad());
 		controller.setProcCpu((float) systemStats.getProcessLoad());
+		controller.setIdleCpu((float) systemStats.getSystemIdle());
 		controller.setFreeMem(systemStats.getFreePhysicalMemorySize());
 		controller.setTotalMem(systemStats.getTotalPhysicalMemorySize());
 

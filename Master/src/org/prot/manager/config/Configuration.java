@@ -22,6 +22,9 @@ public class Configuration
 	// Load-Balancer
 	private double slbInstanceCpuLimit;
 	private double slbInstanceOverloadLimit;
+	private double slbMinIdleCpu;
+	private int slbTotalCpuUnits;
+	private int slbGuaranteedCpuUnits;
 
 	public static Configuration getConfiguration()
 	{
@@ -44,7 +47,12 @@ public class Configuration
 
 			// Load balancer configuration settings
 			this.slbInstanceCpuLimit = Double.parseDouble(properties.getProperty("slb.instance.cpuLimit"));
-			this.slbInstanceOverloadLimit = Double.parseDouble(properties.getProperty("slb.instance.overloadLimit"));
+			this.slbInstanceOverloadLimit = Double.parseDouble(properties
+					.getProperty("slb.instance.overloadLimit"));
+			this.slbMinIdleCpu = Double.parseDouble(properties.getProperty("slb.controller.minIdleTime"));
+			this.slbTotalCpuUnits = Integer.parseInt(properties.getProperty("slb.controller.totalCpuUnits"));
+			this.slbGuaranteedCpuUnits = Integer.parseInt(properties
+					.getProperty("slb.controller.guranteedCpuUnits"));
 
 		} catch (IOException e)
 		{
@@ -81,5 +89,19 @@ public class Configuration
 	{
 		return slbInstanceOverloadLimit;
 	}
-	
+
+	public double getSlbMinIdleCpu()
+	{
+		return slbMinIdleCpu;
+	}
+
+	public int getSlbTotalCpuUnits()
+	{
+		return slbTotalCpuUnits;
+	}
+
+	public int getSlbGuaranteedCpuUnits()
+	{
+		return slbGuaranteedCpuUnits;
+	}
 }

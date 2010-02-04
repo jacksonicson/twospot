@@ -48,7 +48,7 @@ public class AlmostIdleProcessor implements BalancingProcessor
 				continue;
 
 			// Check the AppServer load
-			if (appInfo.getAppManagement().getAppServer().getLoad() < 0.05)
+			if (appInfo.getAppManagement().getAppServer().getRps() < 5)
 			{
 				// Check if this Controller is the last Controller serving the
 				// AppServer

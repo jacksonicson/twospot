@@ -1,6 +1,7 @@
 package org.prot.manager.stats;
 
 import org.apache.log4j.Logger;
+import org.prot.manager.config.Configuration;
 import org.prot.util.managment.gen.ManagementData;
 
 public class InstanceStats
@@ -19,15 +20,78 @@ public class InstanceStats
 		public double rps;
 		public boolean overloaded;
 		public long overloadedHold;
-		public float load;
+		public long runtime;
+
+		public long cpuTotal;
+		private long[] cpuTotalHistory = null;
+
+		public long cpuProcTotal;
+		public long[] cpuProcTotalHistory = null;
+
+		public void addCpuTotal(long cpuTotal)
+		{
+			if (cpuTotalHistory == null)
+			{
+				cpuTotalHistory = new long[5];
+				for (int i = 0; i < cpuTotalHistory.length; i++)
+					cpuTotalHistory[i] = cpuTotal;
+
+				this.cpuTotal = cpuTotal;
+			}
+
+			for (int i = 0; i < cpuTotalHistory.length - 1; i++)
+				cpuTotalHistory[i] = cpuTotalHistory[i + 1];
+
+			cpuTotalHistory[cpuTotalHistory.length - 1] = this.cpuTotal;
+			this.cpuTotal = cpuTotal;
+		}
+
+		public void addCpuProcTotal(long cpuProcTotal)
+		{
+			if (cpuProcTotalHistory == null)
+			{
+				cpuProcTotalHistory = new long[5];
+				for (int i = 0; i < cpuProcTotalHistory.length; i++)
+					cpuProcTotalHistory[i] = cpuProcTotal;
+
+				this.cpuProcTotal = cpuProcTotal;
+			}
+
+			for (int i = 0; i < cpuProcTotalHistory.length - 1; i++)
+				cpuProcTotalHistory[i] = cpuProcTotalHistory[i + 1];
+
+			cpuProcTotalHistory[cpuProcTotalHistory.length - 1] = this.cpuProcTotal;
+			this.cpuProcTotal = cpuProcTotal;
+
+		}
+
+		public double getCpuTimeFactor()
+		{
+			if (cpuTotalHistory != null)
+			{
+				long cpuTotalDiff = cpuTotalHistory[0] - cpuTotal;
+				long cpuProcTotalDiff = cpuProcTotalHistory[0] - cpuProcTotal;
+
+				if (cpuTotalDiff == 0 || cpuProcTotalDiff == 0)
+					return 0;
+
+				double unitLength = cpuTotalDiff / Configuration.getConfiguration().getSlbTotalCpuUnits();
+				double usedUnits = cpuProcTotalDiff / unitLength;
+
+				return usedUnits;
+			}
+
+			return 0;
+		}
 
 		public void dump()
 		{
 			logger.debug("   RPS: " + rps);
 			logger.debug("   Overloaded: " + overloaded);
 			logger.debug("   Overloaded hold: " + overloadedHold);
-			logger.debug("   Load: " + load);
 			logger.debug("   Proc CPU: " + procCpu);
+			logger.debug("   Runtime: " + runtime);
+			logger.debug("   CPU units: " + getCpuTimeFactor());
 		}
 	}
 
@@ -62,7 +126,10 @@ public class InstanceStats
 		this.stat.procCpu = appServer.getCpu();
 		this.stat.overloaded = appServer.getOverloaded();
 		this.stat.rps = appServer.getRps();
-		this.stat.load = appServer.getLoad();
+		this.stat.runtime = appServer.getRuntime();
+
+		this.stat.addCpuTotal(appServer.getCpuTotal());
+		this.stat.addCpuProcTotal(appServer.getCpuProcTotal());
 	}
 
 	public boolean decrementAssignmentCounter()

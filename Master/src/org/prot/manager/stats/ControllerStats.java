@@ -31,6 +31,7 @@ public class ControllerStats
 		public double cpu;
 		public double rps;
 		public double procCpu;
+		public double idleCpu;
 
 		public long freeMemory;
 		public long totalMemory;
@@ -41,6 +42,7 @@ public class ControllerStats
 		{
 			logger.debug("   CPU: " + cpu);
 			logger.debug("   Proc CPU: " + procCpu);
+			logger.debug("   Idle CPU: " + idleCpu);
 			logger.debug("   RPS: " + rps);
 			logger.debug("   FreeMem: " + freeMemory);
 			logger.debug("   TotalMem: " + totalMemory);
@@ -86,6 +88,8 @@ public class ControllerStats
 		// Update Controller stats
 		this.stats.cpu = controller.getCpu();
 		this.stats.procCpu = controller.getProcCpu();
+		this.stats.idleCpu = controller.getIdleCpu();
+
 		this.stats.freeMemory = controller.getFreeMem();
 		this.stats.overloaded = controller.getOverloaded();
 		this.stats.rps = controller.getRps();

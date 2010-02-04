@@ -4,11 +4,8 @@ import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.Connector;
-import org.hyperic.sigar.Sigar;
-import org.hyperic.sigar.SigarException;
-import org.hyperic.sigar.SigarProxy;
-import org.hyperic.sigar.SigarProxyCache;
 import org.prot.appserver.management.RuntimeManagement;
+import org.prot.util.SystemStats;
 import org.prot.util.managment.gen.ManagementData.AppServer;
 
 import ort.prot.util.server.CountingRequestLog;
@@ -17,13 +14,15 @@ public class JettyAppManagement implements RuntimeManagement
 {
 	private static final Logger logger = Logger.getLogger(JettyAppManagement.class);
 
-	private SigarProxy sigar;
+	private SystemStats systemStats = new SystemStats();
 
 	private CountingRequestLog countingRequestLog;
 
 	private Connector connector;
 
 	private int overloadCounter = 0;
+
+	private long startTime = System.currentTimeMillis();
 
 	private class Data
 	{
@@ -43,9 +42,6 @@ public class JettyAppManagement implements RuntimeManagement
 
 	public JettyAppManagement()
 	{
-		Sigar sigarImpl = new Sigar();
-		sigar = SigarProxyCache.newInstance(sigarImpl, 100);
-
 		newData();
 	}
 
@@ -102,24 +98,6 @@ public class JettyAppManagement implements RuntimeManagement
 		}
 	}
 
-	private float averageLoad()
-	{
-		double maxLoad = 1d;
-		for (Data data : datas)
-		{
-			double rps = (double) data.requestCounter / ((double) (data.stopTime - data.startTime) / 1000d);
-			if (maxLoad < rps)
-				maxLoad = rps;
-		}
-
-		double rps = averageRps();
-
-		if (datas.size() > 0)
-			return (float) (rps / maxLoad);
-
-		return 0f;
-	}
-
 	private float averageRps()
 	{
 		long counter = 0;
@@ -143,19 +121,9 @@ public class JettyAppManagement implements RuntimeManagement
 		return 0f;
 	}
 
-	private float getProcessLoad()
+	private long getRuntime()
 	{
-		try
-		{
-			long pid = sigar.getPid();
-			float myCpu = (float) sigar.getProcCpu(pid).getPercent();
-			return myCpu;
-		} catch (SigarException e)
-		{
-			logger.error("Could not load system load average", e);
-		}
-
-		return -1;
+		return System.currentTimeMillis() - startTime;
 	}
 
 	@Override
@@ -163,11 +131,12 @@ public class JettyAppManagement implements RuntimeManagement
 	{
 		updateData();
 
-		appServer.setLoad(averageLoad());
 		appServer.setRps(averageRps());
 		appServer.setOverloaded(isOverloaded());
-
-		appServer.setCpu(getProcessLoad());
+		appServer.setRuntime(getRuntime());
+		appServer.setCpu((float) systemStats.getProcessLoad());
+		appServer.setCpuTotal(systemStats.getCpuTotal());
+		appServer.setCpuProcTotal(systemStats.getProcTotal());
 
 		rollStats();
 	}
