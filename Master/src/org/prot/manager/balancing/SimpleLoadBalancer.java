@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.prot.manager.config.Configuration;
 import org.prot.manager.stats.ControllerInfo;
 import org.prot.manager.stats.ControllerRegistry;
 import org.prot.manager.stats.ControllerStats;
@@ -75,7 +76,7 @@ public class SimpleLoadBalancer implements LoadBalancer
 		Map<String, ControllerStats> controllerStats = registry.getControllers();
 
 		// Set for the results
-		Set<ControllerInfo> result = new HashSet<ControllerInfo>();
+		Set<ControllerInfo> resultInfo = new HashSet<ControllerInfo>();
 		Set<ControllerStats> resultStats = new HashSet<ControllerStats>();
 
 		// Number of Controllers which report an overload
@@ -85,36 +86,41 @@ public class SimpleLoadBalancer implements LoadBalancer
 		{
 			// Check if the controller is running the application
 			InstanceStats instance = controller.getInstance(appId);
-			if (instance == null)
+			if (instance == null) // Controller doesn't run the application
 				continue;
 
-			// Add the controller to the result set
+			// Get the controller info
 			ControllerInfo selected = controllerInfos.get(controller.getAddress());
-			if (selected == null)
+			if (selected == null) // No controller info available - cannot use
+				// this controller
 				continue;
 
 			// The controller is running the requested application
-			result.add(selected);
+			resultInfo.add(selected);
 			resultStats.add(controller);
 
-			// Check if controller reports an overload
+			// Check if the controller or instance reports an overload
 			if (instance.getValues().overloaded || controller.getValues().overloaded)
+				overloaded++;
+
+			// Check the cpu usage of the instance
+			if (instance.getValues().procCpu > Configuration.getConfiguration().getSlbInstanceCpuLimit())
 				overloaded++;
 		}
 
 		// Check if we have found Controllers which are running the application
-		if (!result.isEmpty())
+		if (!resultInfo.isEmpty())
 		{
-			int countControllers = result.size();
+			int countControllers = resultInfo.size();
 			double relativeOverload = (double) overloaded / (double) countControllers;
 
 			// Return the current results if there are enough Controllers which
 			// are not overloaded
-			if (relativeOverload < 0.5d)
+			if (relativeOverload < Configuration.getConfiguration().getSlbInstanceOverloadLimit())
 			{
 				logger.debug("No overload " + relativeOverload + " - Returning # controllers: "
-						+ result.size());
-				return result;
+						+ resultInfo.size());
+				return resultInfo;
 			}
 		}
 
@@ -125,18 +131,18 @@ public class SimpleLoadBalancer implements LoadBalancer
 
 		// Check if another Controller was found
 		if (bestControllerInfo == null)
-			return result;
+			return resultInfo;
 
 		// Add the best controller
-		result.add(bestControllerInfo);
+		resultInfo.add(bestControllerInfo);
 
 		// Update internal stat data about this assignment (Controller -
 		// Application)
 		registry.assignToController(appId, bestControllerInfo.getAddress());
 
 		// Return the results
-		logger.debug("Returning # controllers: " + result.size());
-		return result;
+		logger.debug("Returning # controllers: " + resultInfo.size());
+		return resultInfo;
 	}
 
 	public void setRegistry(ControllerRegistry registry)

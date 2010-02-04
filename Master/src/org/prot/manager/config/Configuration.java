@@ -19,6 +19,10 @@ public class Configuration
 	// Port under which the UDP server for management data is listening
 	private int masterDatagramPort = -1;
 
+	// Load-Balancer
+	private double slbInstanceCpuLimit;
+	private double slbInstanceOverloadLimit;
+
 	public static Configuration getConfiguration()
 	{
 		if (configuration == null)
@@ -31,11 +35,16 @@ public class Configuration
 	{
 		try
 		{
+			// Load the global configuration file
 			properties.load(this.getClass().getResourceAsStream("/etc/config.properties"));
 
+			// Management-Data
 			this.rmiControllerPort = Integer.parseInt(properties.getProperty("rmi.controller.registry.port"));
-
 			this.masterDatagramPort = Integer.parseInt(properties.getProperty("master.datagramPort"));
+
+			// Load balancer configuration settings
+			this.slbInstanceCpuLimit = Double.parseDouble(properties.getProperty("slb.instance.cpuLimit"));
+			this.slbInstanceOverloadLimit = Double.parseDouble(properties.getProperty("slb.instance.overloadLimit"));
 
 		} catch (IOException e)
 		{
@@ -62,4 +71,15 @@ public class Configuration
 	{
 		return masterDatagramPort;
 	}
+
+	public double getSlbInstanceCpuLimit()
+	{
+		return slbInstanceCpuLimit;
+	}
+
+	public double getSlbInstanceOverloadLimit()
+	{
+		return slbInstanceOverloadLimit;
+	}
+	
 }
