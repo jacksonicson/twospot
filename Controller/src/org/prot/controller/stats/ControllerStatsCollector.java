@@ -57,8 +57,9 @@ public class ControllerStatsCollector
 	{
 		controller.setAddress(Configuration.getConfiguration().getAddress());
 
-		controller.setCpu((float) systemStats.getSystemLoadAverage());
-		controller.setFreeMem(systemStats.getFrePhysicalMemorySize());
+		controller.setCpu((float) systemStats.getSystemLoad());
+		controller.setProcCpu((float) systemStats.getProcessLoad());
+		controller.setFreeMem(systemStats.getFreePhysicalMemorySize());
 		controller.setTotalMem(systemStats.getTotalPhysicalMemorySize());
 
 		for (AppInfo info : registry.getDuplicatedAppInfos())

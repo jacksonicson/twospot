@@ -36,7 +36,7 @@ public class SimpleLoadBalancer implements LoadBalancer
 			// Calculate a ranking for the controller
 			double rank = 0;
 			rank += 0.3 * ((controller.getValues().cpu < 0) ? 0 : controller.getValues().cpu);
-			rank += 2.0 * (controller.getValues().freeMemory / controller.getValues().totalMemory);
+			rank += 2.0 * (controller.getValues().freeMemory / (controller.getValues().totalMemory + 1));
 			rank += 0.5 * controller.size();
 			rank += 0.003 * controller.getValues().rps;
 			logger.debug("Ranking: " + rank);

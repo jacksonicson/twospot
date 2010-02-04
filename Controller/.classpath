@@ -61,5 +61,13 @@
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-websocket-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-xml-7.0.1.v20091125.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/servlet-api-2.5.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/sigar/libsigar-amd64-linux.so"/>
+	<classpathentry kind="lib" path="/Libs/lib/sigar/libsigar-ia64-hpux-11.sl"/>
+	<classpathentry kind="lib" path="/Libs/lib/sigar/libsigar-ia64-linux.so"/>
+	<classpathentry kind="lib" path="/Libs/lib/sigar/libsigar-x86-linux.so"/>
+	<classpathentry kind="lib" path="/Libs/lib/sigar/sigar-amd64-winnt.dll"/>
+	<classpathentry kind="lib" path="/Libs/lib/sigar/sigar-x86-winnt.dll"/>
+	<classpathentry kind="lib" path="/Libs/lib/sigar/sigar-x86-winnt.lib"/>
+	<classpathentry kind="lib" path="/Libs/lib/sigar/sigar.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -5,7 +5,7 @@ def createClasspathList(eclipseProject, killPath=True):
     project = fProject.read()
     
     pattern = "path=\""
-    mustContain = ".jar"
+    mustContain = [".jar", ".so", ".dll", ".lib"]
     
     li = []
     pointer = 0
@@ -24,10 +24,17 @@ def createClasspathList(eclipseProject, killPath=True):
             if last != -1:
                 extract = extract[last + 1 : len(extract)]
         
-        # Check if extract is a jar file
-        if(extract.find(mustContain) == -1):
+        # Check if extract is a valid lib file
+        isLib = False
+        for test in mustContain:
+            if(extract.find(test) != -1):
+                isLib = True
+                break
+        
+        if isLib is False:
+            print "Invalid lib %s" % extract
             continue
-
+                
         li.append(extract)
         
     return li

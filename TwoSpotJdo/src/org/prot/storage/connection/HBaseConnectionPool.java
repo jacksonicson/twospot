@@ -105,7 +105,6 @@ public class HBaseConnectionPool
 	{
 		TimerTask timeoutTask = new TimerTask()
 		{
-
 			public void run()
 			{
 				disposeTimedOutConnections();

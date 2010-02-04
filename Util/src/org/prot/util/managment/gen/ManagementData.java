@@ -49,6 +49,13 @@ public final class ManagementData {
     public boolean hasCpu() { return hasCpu; }
     public float getCpu() { return cpu_; }
     
+    // optional float procCpu = 17 [default = -1];
+    public static final int PROCCPU_FIELD_NUMBER = 17;
+    private boolean hasProcCpu;
+    private float procCpu_ = -1F;
+    public boolean hasProcCpu() { return hasProcCpu; }
+    public float getProcCpu() { return procCpu_; }
+    
     // optional float rps = 13 [default = 0];
     public static final int RPS_FIELD_NUMBER = 13;
     private boolean hasRps;
@@ -123,6 +130,9 @@ public final class ManagementData {
       if (hasOverloaded()) {
         output.writeBool(16, getOverloaded());
       }
+      if (hasProcCpu()) {
+        output.writeFloat(17, getProcCpu());
+      }
       for (org.prot.util.managment.gen.ManagementData.AppServer element : getAppServersList()) {
         output.writeMessage(20, element);
       }
@@ -165,6 +175,10 @@ public final class ManagementData {
       if (hasOverloaded()) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(16, getOverloaded());
+      }
+      if (hasProcCpu()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(17, getProcCpu());
       }
       for (org.prot.util.managment.gen.ManagementData.AppServer element : getAppServersList()) {
         size += com.google.protobuf.CodedOutputStream
@@ -321,6 +335,9 @@ public final class ManagementData {
         if (other.hasCpu()) {
           setCpu(other.getCpu());
         }
+        if (other.hasProcCpu()) {
+          setProcCpu(other.getProcCpu());
+        }
         if (other.hasRps()) {
           setRps(other.getRps());
         }
@@ -387,6 +404,10 @@ public final class ManagementData {
             }
             case 128: {
               setOverloaded(input.readBool());
+              break;
+            }
+            case 141: {
+              setProcCpu(input.readFloat());
               break;
             }
             case 162: {
@@ -472,6 +493,24 @@ public final class ManagementData {
       public Builder clearCpu() {
         result.hasCpu = false;
         result.cpu_ = -1F;
+        return this;
+      }
+      
+      // optional float procCpu = 17 [default = -1];
+      public boolean hasProcCpu() {
+        return result.hasProcCpu();
+      }
+      public float getProcCpu() {
+        return result.getProcCpu();
+      }
+      public Builder setProcCpu(float value) {
+        result.hasProcCpu = true;
+        result.procCpu_ = value;
+        return this;
+      }
+      public Builder clearProcCpu() {
+        result.hasProcCpu = false;
+        result.procCpu_ = -1F;
         return this;
       }
       
@@ -632,6 +671,13 @@ public final class ManagementData {
     public boolean hasLoad() { return hasLoad; }
     public float getLoad() { return load_; }
     
+    // required float cpu = 3;
+    public static final int CPU_FIELD_NUMBER = 3;
+    private boolean hasCpu;
+    private float cpu_ = 0F;
+    public boolean hasCpu() { return hasCpu; }
+    public float getCpu() { return cpu_; }
+    
     // optional float rps = 10;
     public static final int RPS_FIELD_NUMBER = 10;
     private boolean hasRps;
@@ -649,6 +695,7 @@ public final class ManagementData {
     public final boolean isInitialized() {
       if (!hasAppId) return false;
       if (!hasLoad) return false;
+      if (!hasCpu) return false;
       return true;
     }
     
@@ -659,6 +706,9 @@ public final class ManagementData {
       }
       if (hasLoad()) {
         output.writeFloat(2, getLoad());
+      }
+      if (hasCpu()) {
+        output.writeFloat(3, getCpu());
       }
       if (hasRps()) {
         output.writeFloat(10, getRps());
@@ -681,6 +731,10 @@ public final class ManagementData {
       if (hasLoad()) {
         size += com.google.protobuf.CodedOutputStream
           .computeFloatSize(2, getLoad());
+      }
+      if (hasCpu()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(3, getCpu());
       }
       if (hasRps()) {
         size += com.google.protobuf.CodedOutputStream
@@ -831,6 +885,9 @@ public final class ManagementData {
         if (other.hasLoad()) {
           setLoad(other.getLoad());
         }
+        if (other.hasCpu()) {
+          setCpu(other.getCpu());
+        }
         if (other.hasRps()) {
           setRps(other.getRps());
         }
@@ -861,6 +918,10 @@ public final class ManagementData {
             }
             case 21: {
               setLoad(input.readFloat());
+              break;
+            }
+            case 29: {
+              setCpu(input.readFloat());
               break;
             }
             case 85: {
@@ -912,6 +973,24 @@ public final class ManagementData {
       public Builder clearLoad() {
         result.hasLoad = false;
         result.load_ = 0F;
+        return this;
+      }
+      
+      // required float cpu = 3;
+      public boolean hasCpu() {
+        return result.hasCpu();
+      }
+      public float getCpu() {
+        return result.getCpu();
+      }
+      public Builder setCpu(float value) {
+        result.hasCpu = true;
+        result.cpu_ = value;
+        return this;
+      }
+      public Builder clearCpu() {
+        result.hasCpu = false;
+        result.cpu_ = 0F;
         return this;
       }
       

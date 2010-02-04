@@ -15,6 +15,7 @@ public class InstanceStats
 
 	public class StatValues
 	{
+		public double procCpu;
 		public double rps;
 		public boolean overloaded;
 		public long overloadedHold;
@@ -26,6 +27,7 @@ public class InstanceStats
 			logger.debug("   Overloaded: " + overloaded);
 			logger.debug("   Overloaded hold: " + overloadedHold);
 			logger.debug("   Load: " + load);
+			logger.debug("   Proc CPU: " + procCpu);
 		}
 	}
 
@@ -57,6 +59,7 @@ public class InstanceStats
 		this.assignmentCounter = 0;
 		this.lastUpdate = System.currentTimeMillis();
 
+		this.stat.procCpu = appServer.getCpu();
 		this.stat.overloaded = appServer.getOverloaded();
 		this.stat.rps = appServer.getRps();
 		this.stat.load = appServer.getLoad();
@@ -64,7 +67,7 @@ public class InstanceStats
 
 	public boolean decrementAssignmentCounter()
 	{
-		boolean assigned = assignmentCounter > 0; 
+		boolean assigned = assignmentCounter > 0;
 		if (assignmentCounter > 0)
 			assignmentCounter--;
 

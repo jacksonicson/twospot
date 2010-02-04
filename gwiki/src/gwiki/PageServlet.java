@@ -2,9 +2,13 @@ package gwiki;
 
 import gwiki.data.WikiPage;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.jdo.PersistenceManager;
 import javax.servlet.ServletException;
@@ -16,16 +20,35 @@ import org.prot.storage.Key;
 
 public class PageServlet extends HttpServlet
 {
+
+	private static final int length = 1024 * 200;
+	private static byte[] data = new byte[length];
+
+	static
+	{
+		Random r = new Random();
+		r.nextBytes(data);
+	}
+
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException
 	{
+
 		try
 		{
-			Thread.sleep(500);
-		} catch (Exception e)
+			Thread.sleep(10);
+		} catch (InterruptedException e1)
 		{
-
+			e1.printStackTrace();
 		}
+
+		long time = System.currentTimeMillis();
+		ZipOutputStream out = new ZipOutputStream(new ByteArrayOutputStream(length));
+		out.putNextEntry(new ZipEntry("blaaa"));
+		out.write(data);
+		out.close();
+		time = System.currentTimeMillis() - time;
+		System.out.println("Time: " + time);
 
 		String pageId = request.getParameter("pid");
 

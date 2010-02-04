@@ -8,7 +8,7 @@
 
 	<property name="dest" value="./devserver" />
 
-	<target name="prepare">
+	<target name="prepare" depends="cleanup">
 		<mkdir dir="${dest}" />
 	</target>
 

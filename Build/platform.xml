@@ -98,14 +98,31 @@
 	</target>
 
 	<target name="build">
+		<echo message="Building ProtoBuf" />
 		<ant antfile="../ProtoBuf/build.xml" dir="../ProtoBuf" />
+
+		<echo message="Building TwoSpotJdo" />
 		<ant antfile="../TwoSpotJdo/build.xml" dir="../TwoSpotJdo" />
+
+		<echo message="Building Util" />
 		<ant antfile="../Util/build.xml" dir="../Util/" />
+
+		<echo message="Building Controller" />
 		<ant antfile="../Controller/build.xml" dir="../Controller/" />
+
+		<echo message="Building Master" />
 		<ant antfile="../Master/build.xml" dir="../Master/" />
+
+		<echo message="Building Frontend" />
 		<ant antfile="../Frontend/build.xml" dir="../Frontend/" />
+
+		<echo message="Building AppServer" />
 		<ant antfile="../AppServer/build.xml" dir="../AppServer/" />
+
+		<echo message="Building HttpFileServer" />
 		<ant antfile="../HttpFileServer/build.xml" dir="../HttpFileServer/" />
+
+		<echo message="Building DevServerMock" />
 		<ant antfile="../DevServerMock/build.xml" dir="../DevServerMock/" />
 	</target>
 
