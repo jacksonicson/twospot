@@ -1,0 +1,348 @@
+Index: src/org/prot/appserver/runtime/java/AppDeployer.java
+===================================================================
+--- src/org/prot/appserver/runtime/java/AppDeployer.java	(revision 1108)
++++ src/org/prot/appserver/runtime/java/AppDeployer.java	(working copy)
+@@ -83,11 +83,19 @@
+ 		JavaConfiguration runtimeConfig = (JavaConfiguration) appInfo.getRuntimeConfiguration();
+ 		Configuration configuration = Configuration.getInstance();
+ 
++		
+ 		// Create a new Context for the web application
+ 		webAppContext = new WebAppContext();
++		
++		webAppContext.setServer(contexts.getServer());
++		webAppContext.setCompactPath(true);
++		webAppContext.setCopyWebDir(true);
++		webAppContext.setAliases(false);
++		
++		
+ 		webAppContext.setWar(configuration.getAppDirectory());
+ 		webAppContext.setContextPath("/");
+-
++		
+ 		// Configure the system classes (application can see this classes)
+ 		String[] ownSystemClasses = { "org.prot.app." };
+ 		webAppContext.setSystemClasses(ownSystemClasses);
+@@ -105,7 +113,7 @@
+ 		}
+ 
+ 		// Custom error handling
+-		webAppContext.setErrorHandler(new ErrorHandler());
++//		webAppContext.setErrorHandler(new ErrorHandler());
+ 
+ 		// Set the scratch directory for this web application
+ 		webAppContext.setTempDirectory(new File(configuration.getAppScratchDir()));
+@@ -114,11 +122,12 @@
+ 		webAppContext.setExtractWAR(false);
+ 
+ 		// Used by the web archiver (don't use that)
+-		webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
+-				".*/jsp-api-[^/]*\\.jar$|.*/jsp-[^/]*\\.jar$");
++//		webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
++//				".*/jsp-api-[^/]*\\.jar$|.*/jsp-[^/]*\\.jar$");
+ 
+ 		// All classes from the parent class loader are visible
+ 		webAppContext.setParentLoaderPriority(false);
++		
+ 
+ 		// Default web application configuration descriptor
+ 		webAppContext.setDefaultsDescriptor("/etc/webdefault.xml");
+@@ -126,8 +135,10 @@
+ 		// Register and start the context
+ 		logger.debug("Adding and starting handler");
+ 		contexts.addHandler(webAppContext);
+-		if (contexts.isStarted())
+-			contexts.start();
++		
++		if (contexts.isStarting() || contexts.isStarted())
++			webAppContext.start();
++		
+ 		logger.debug("Application handler started");
+ 	}
+ 
+Index: .classpath
+===================================================================
+--- .classpath	(revision 1113)
++++ .classpath	(working copy)
+@@ -3,13 +3,11 @@
+ 	<classpathentry kind="src" path="src"/>
+ 	<classpathentry kind="src" path="etc"/>
+ 	<classpathentry kind="src" path="jsrc"/>
+-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
++	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+ 	<classpathentry kind="lib" path="/Libs/lib/apache_commons/commons-logging-1.1.1.jar"/>
+ 	<classpathentry kind="lib" path="/Libs/lib/snakeyaml-1.5/snakeyaml-1.5.jar" sourcepath="/Libs/lib/snakeyaml-1.5/snakeyaml-1.5-sources.jar"/>
+ 	<classpathentry kind="lib" path="/Libs/lib/jython-2.5.1/jython.jar"/>
+ 	<classpathentry kind="lib" path="/Libs/lib/log4j-1.2.15/log4j-1.2.15.jar"/>
+-	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-core.jar"/>
+-	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/spring.jar"/>
+ 	<classpathentry kind="lib" path="/Libs/lib/apache-cli-1.2/commons-cli-1.2.jar"/>
+ 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/asm-3.1.jar"/>
+ 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/ehcache-1.1.jar"/>
+@@ -23,17 +21,9 @@
+ 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-jpa-2.0.0-m3.jar"/>
+ 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-management-1.0.2.jar"/>
+ 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/deps/hbase-0.20.0.jar"/>
+-	<classpathentry kind="lib" path="/Libs/lib/jasper/el-api.jar"/>
+-	<classpathentry kind="lib" path="/Libs/lib/jasper/jsp-api.jar"/>
+-	<classpathentry kind="lib" path="/Libs/lib/jasper/tomcat-juli.jar"/>
+ 	<classpathentry kind="lib" path="/Libs/lib/apache_commons/commons-el.jar"/>
+-	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-beans.jar" sourcepath="/Libs/lib/spring-framework-2.5.6.SEC01/spring-sources.jar"/>
+-	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-context.jar" sourcepath="D:/work/mscNotes/3party/src"/>
+-	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-web.jar"/>
+-	<classpathentry kind="lib" path="/Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-webmvc.jar"/>
+ 	<classpathentry kind="lib" path="/Libs/gen/hbaseplugin.jar"/>
+ 	<classpathentry kind="lib" path="/Libs/lib/zookeeper-3.2.1/zookeeper-3.2.1.jar"/>
+-	<classpathentry kind="lib" path="/Libs/lib/h2-1.2.123/h2-1.2.123.jar"/>
+ 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-rdbms-2.0.0-m2.jar"/>
+ 	<classpathentry kind="lib" path="/Libs/gen/twospot-controller.jar"/>
+ 	<classpathentry kind="lib" path="/Libs/gen/twospot-util.jar"/>
+@@ -47,7 +37,7 @@
+ 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-annotations-7.0.1.v20091125.jar"/>
+ 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-client-7.0.1.v20091125.jar" sourcepath="D:/work/jetty7src/jetty/jetty-client/src/main/java"/>
+ 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-continuation-7.0.1.v20091125.jar"/>
+-	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-deploy-7.0.1.v20091125.jar"/>
++	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-deploy-7.0.1.v20091125.jar" sourcepath="D:/work/jetty7src/jetty/jetty-deploy/src/main/java"/>
+ 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-http-7.0.1.v20091125.jar"/>
+ 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-io-7.0.1.v20091125.jar"/>
+ 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-jmx-7.0.1.v20091125.jar"/>
+@@ -64,8 +54,22 @@
+ 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-websocket-7.0.1.v20091125.jar"/>
+ 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/jetty-xml-7.0.1.v20091125.jar"/>
+ 	<classpathentry kind="lib" path="/Libs/lib/jetty-7.0.1/servlet-api-2.5.jar"/>
+-	<classpathentry kind="lib" path="/Libs/lib/jasper/jasper-el.jar"/>
+-	<classpathentry kind="lib" path="/Libs/lib/jasper/jasper-jdt.jar"/>
+-	<classpathentry kind="lib" path="/Libs/lib/jasper/jasper.jar"/>
++	<classpathentry kind="lib" path="/Libs/lib/jetty-6.1.22/jsp-2.1/ant-1.6.5.jar"/>
++	<classpathentry kind="lib" path="/Libs/lib/jetty-6.1.22/jsp-2.1/core-3.1.1.jar"/>
++	<classpathentry kind="lib" path="/Libs/lib/jetty-6.1.22/jsp-2.1/jsp-2.1-glassfish-9.1.1.B60.25.p2.jar"/>
++	<classpathentry kind="lib" path="/Libs/lib/jetty-6.1.22/jsp-2.1/jsp-2.1-jetty-6.1.22.jar"/>
++	<classpathentry kind="lib" path="/Libs/lib/jetty-6.1.22/jsp-2.1/jsp-api-2.1-glassfish-9.1.1.B60.25.p2.jar"/>
++	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.beans-3.0.0.RELEASE.jar"/>
++	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.context-3.0.0.RELEASE.jar"/>
++	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.context.support-3.0.0.RELEASE.jar"/>
++	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.core-3.0.0.RELEASE.jar"/>
++	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.web-3.0.0.RELEASE.jar"/>
++	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.asm-3.0.0.RELEASE.jar"/>
++	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.expression-3.0.0.RELEASE.jar"/>
++	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.aop-3.0.0.RELEASE.jar"/>
++	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.aspects-3.0.0.RELEASE.jar"/>
++	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.instrument-3.0.0.RELEASE.jar"/>
++	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RELEASE/aopalliance.jar"/>
++	<classpathentry kind="lib" path="/Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.web.servlet-3.0.0.RELEASE.jar"/>
+ 	<classpathentry kind="output" path="bin"/>
+ </classpath>
+Index: classpath.txt
+===================================================================
+--- classpath.txt	(revision 1113)
++++ classpath.txt	(working copy)
+@@ -3,8 +3,6 @@
+ ./Libs/lib/snakeyaml-1.5/snakeyaml-1.5-sources.jar
+ ./Libs/lib/jython-2.5.1/jython.jar
+ ./Libs/lib/log4j-1.2.15/log4j-1.2.15.jar
+-./Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-core.jar
+-./Libs/lib/spring-framework-2.5.6.SEC01/spring.jar
+ ./Libs/lib/apache-cli-1.2/commons-cli-1.2.jar
+ ./Libs/lib/datanucleus/deps/asm-3.1.jar
+ ./Libs/lib/datanucleus/deps/ehcache-1.1.jar
+@@ -18,18 +16,9 @@
+ ./Libs/lib/datanucleus/datanucleus-jpa-2.0.0-m3.jar
+ ./Libs/lib/datanucleus/datanucleus-management-1.0.2.jar
+ ./Libs/lib/datanucleus/deps/hbase-0.20.0.jar
+-./Libs/lib/jasper/el-api.jar
+-./Libs/lib/jasper/jsp-api.jar
+-./Libs/lib/jasper/tomcat-juli.jar
+ ./Libs/lib/apache_commons/commons-el.jar
+-./Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-beans.jar
+-./Libs/lib/spring-framework-2.5.6.SEC01/spring-sources.jar
+-./Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-context.jar
+-./Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-web.jar
+-./Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-webmvc.jar
+ ./Libs/gen/hbaseplugin.jar
+ ./Libs/lib/zookeeper-3.2.1/zookeeper-3.2.1.jar
+-./Libs/lib/h2-1.2.123/h2-1.2.123.jar
+ ./Libs/lib/datanucleus/datanucleus-rdbms-2.0.0-m2.jar
+ ./Libs/gen/twospot-controller.jar
+ ./Libs/gen/twospot-util.jar
+@@ -60,6 +49,20 @@
+ ./Libs/lib/jetty-7.0.1/jetty-websocket-7.0.1.v20091125.jar
+ ./Libs/lib/jetty-7.0.1/jetty-xml-7.0.1.v20091125.jar
+ ./Libs/lib/jetty-7.0.1/servlet-api-2.5.jar
+-./Libs/lib/jasper/jasper-el.jar
+-./Libs/lib/jasper/jasper-jdt.jar
+-./Libs/lib/jasper/jasper.jar
++./Libs/lib/jetty-6.1.22/jsp-2.1/ant-1.6.5.jar
++./Libs/lib/jetty-6.1.22/jsp-2.1/core-3.1.1.jar
++./Libs/lib/jetty-6.1.22/jsp-2.1/jsp-2.1-glassfish-9.1.1.B60.25.p2.jar
++./Libs/lib/jetty-6.1.22/jsp-2.1/jsp-2.1-jetty-6.1.22.jar
++./Libs/lib/jetty-6.1.22/jsp-2.1/jsp-api-2.1-glassfish-9.1.1.B60.25.p2.jar
++./Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.beans-3.0.0.RELEASE.jar
++./Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.context-3.0.0.RELEASE.jar
++./Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.context.support-3.0.0.RELEASE.jar
++./Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.core-3.0.0.RELEASE.jar
++./Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.web-3.0.0.RELEASE.jar
++./Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.asm-3.0.0.RELEASE.jar
++./Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.expression-3.0.0.RELEASE.jar
++./Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.aop-3.0.0.RELEASE.jar
++./Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.aspects-3.0.0.RELEASE.jar
++./Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.instrument-3.0.0.RELEASE.jar
++./Libs/lib/spring-framework-3.0.0.RELEASE/aopalliance.jar
++./Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.web.servlet-3.0.0.RELEASE.jar
+Index: classpath.xml
+===================================================================
+--- classpath.xml	(revision 1113)
++++ classpath.xml	(working copy)
+@@ -3,8 +3,6 @@
+ <pathelement location="../Libs/lib/snakeyaml-1.5/snakeyaml-1.5-sources.jar" />
+ <pathelement location="../Libs/lib/jython-2.5.1/jython.jar" />
+ <pathelement location="../Libs/lib/log4j-1.2.15/log4j-1.2.15.jar" />
+-<pathelement location="../Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-core.jar" />
+-<pathelement location="../Libs/lib/spring-framework-2.5.6.SEC01/spring.jar" />
+ <pathelement location="../Libs/lib/apache-cli-1.2/commons-cli-1.2.jar" />
+ <pathelement location="../Libs/lib/datanucleus/deps/asm-3.1.jar" />
+ <pathelement location="../Libs/lib/datanucleus/deps/ehcache-1.1.jar" />
+@@ -18,18 +16,9 @@
+ <pathelement location="../Libs/lib/datanucleus/datanucleus-jpa-2.0.0-m3.jar" />
+ <pathelement location="../Libs/lib/datanucleus/datanucleus-management-1.0.2.jar" />
+ <pathelement location="../Libs/lib/datanucleus/deps/hbase-0.20.0.jar" />
+-<pathelement location="../Libs/lib/jasper/el-api.jar" />
+-<pathelement location="../Libs/lib/jasper/jsp-api.jar" />
+-<pathelement location="../Libs/lib/jasper/tomcat-juli.jar" />
+ <pathelement location="../Libs/lib/apache_commons/commons-el.jar" />
+-<pathelement location="../Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-beans.jar" />
+-<pathelement location="../Libs/lib/spring-framework-2.5.6.SEC01/spring-sources.jar" />
+-<pathelement location="../Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-context.jar" />
+-<pathelement location="../Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-web.jar" />
+-<pathelement location="../Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-webmvc.jar" />
+ <pathelement location="../Libs/gen/hbaseplugin.jar" />
+ <pathelement location="../Libs/lib/zookeeper-3.2.1/zookeeper-3.2.1.jar" />
+-<pathelement location="../Libs/lib/h2-1.2.123/h2-1.2.123.jar" />
+ <pathelement location="../Libs/lib/datanucleus/datanucleus-rdbms-2.0.0-m2.jar" />
+ <pathelement location="../Libs/gen/twospot-controller.jar" />
+ <pathelement location="../Libs/gen/twospot-util.jar" />
+@@ -60,16 +49,28 @@
+ <pathelement location="../Libs/lib/jetty-7.0.1/jetty-websocket-7.0.1.v20091125.jar" />
+ <pathelement location="../Libs/lib/jetty-7.0.1/jetty-xml-7.0.1.v20091125.jar" />
+ <pathelement location="../Libs/lib/jetty-7.0.1/servlet-api-2.5.jar" />
+-<pathelement location="../Libs/lib/jasper/jasper-el.jar" />
+-<pathelement location="../Libs/lib/jasper/jasper-jdt.jar" />
+-<pathelement location="../Libs/lib/jasper/jasper.jar" />
++<pathelement location="../Libs/lib/jetty-6.1.22/jsp-2.1/ant-1.6.5.jar" />
++<pathelement location="../Libs/lib/jetty-6.1.22/jsp-2.1/core-3.1.1.jar" />
++<pathelement location="../Libs/lib/jetty-6.1.22/jsp-2.1/jsp-2.1-glassfish-9.1.1.B60.25.p2.jar" />
++<pathelement location="../Libs/lib/jetty-6.1.22/jsp-2.1/jsp-2.1-jetty-6.1.22.jar" />
++<pathelement location="../Libs/lib/jetty-6.1.22/jsp-2.1/jsp-api-2.1-glassfish-9.1.1.B60.25.p2.jar" />
++<pathelement location="../Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.beans-3.0.0.RELEASE.jar" />
++<pathelement location="../Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.context-3.0.0.RELEASE.jar" />
++<pathelement location="../Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.context.support-3.0.0.RELEASE.jar" />
++<pathelement location="../Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.core-3.0.0.RELEASE.jar" />
++<pathelement location="../Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.web-3.0.0.RELEASE.jar" />
++<pathelement location="../Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.asm-3.0.0.RELEASE.jar" />
++<pathelement location="../Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.expression-3.0.0.RELEASE.jar" />
++<pathelement location="../Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.aop-3.0.0.RELEASE.jar" />
++<pathelement location="../Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.aspects-3.0.0.RELEASE.jar" />
++<pathelement location="../Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.instrument-3.0.0.RELEASE.jar" />
++<pathelement location="../Libs/lib/spring-framework-3.0.0.RELEASE/aopalliance.jar" />
++<pathelement location="../Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.web.servlet-3.0.0.RELEASE.jar" />
+ </path><fileset dir='../' id='libfiles'><include name="Libs/lib/apache_commons/commons-logging-1.1.1.jar" />
+ <include name="Libs/lib/snakeyaml-1.5/snakeyaml-1.5.jar" />
+ <include name="Libs/lib/snakeyaml-1.5/snakeyaml-1.5-sources.jar" />
+ <include name="Libs/lib/jython-2.5.1/jython.jar" />
+ <include name="Libs/lib/log4j-1.2.15/log4j-1.2.15.jar" />
+-<include name="Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-core.jar" />
+-<include name="Libs/lib/spring-framework-2.5.6.SEC01/spring.jar" />
+ <include name="Libs/lib/apache-cli-1.2/commons-cli-1.2.jar" />
+ <include name="Libs/lib/datanucleus/deps/asm-3.1.jar" />
+ <include name="Libs/lib/datanucleus/deps/ehcache-1.1.jar" />
+@@ -83,18 +84,9 @@
+ <include name="Libs/lib/datanucleus/datanucleus-jpa-2.0.0-m3.jar" />
+ <include name="Libs/lib/datanucleus/datanucleus-management-1.0.2.jar" />
+ <include name="Libs/lib/datanucleus/deps/hbase-0.20.0.jar" />
+-<include name="Libs/lib/jasper/el-api.jar" />
+-<include name="Libs/lib/jasper/jsp-api.jar" />
+-<include name="Libs/lib/jasper/tomcat-juli.jar" />
+ <include name="Libs/lib/apache_commons/commons-el.jar" />
+-<include name="Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-beans.jar" />
+-<include name="Libs/lib/spring-framework-2.5.6.SEC01/spring-sources.jar" />
+-<include name="Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-context.jar" />
+-<include name="Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-web.jar" />
+-<include name="Libs/lib/spring-framework-2.5.6.SEC01/modules/spring-webmvc.jar" />
+ <include name="Libs/gen/hbaseplugin.jar" />
+ <include name="Libs/lib/zookeeper-3.2.1/zookeeper-3.2.1.jar" />
+-<include name="Libs/lib/h2-1.2.123/h2-1.2.123.jar" />
+ <include name="Libs/lib/datanucleus/datanucleus-rdbms-2.0.0-m2.jar" />
+ <include name="Libs/gen/twospot-controller.jar" />
+ <include name="Libs/gen/twospot-util.jar" />
+@@ -125,7 +117,21 @@
+ <include name="Libs/lib/jetty-7.0.1/jetty-websocket-7.0.1.v20091125.jar" />
+ <include name="Libs/lib/jetty-7.0.1/jetty-xml-7.0.1.v20091125.jar" />
+ <include name="Libs/lib/jetty-7.0.1/servlet-api-2.5.jar" />
+-<include name="Libs/lib/jasper/jasper-el.jar" />
+-<include name="Libs/lib/jasper/jasper-jdt.jar" />
+-<include name="Libs/lib/jasper/jasper.jar" />
++<include name="Libs/lib/jetty-6.1.22/jsp-2.1/ant-1.6.5.jar" />
++<include name="Libs/lib/jetty-6.1.22/jsp-2.1/core-3.1.1.jar" />
++<include name="Libs/lib/jetty-6.1.22/jsp-2.1/jsp-2.1-glassfish-9.1.1.B60.25.p2.jar" />
++<include name="Libs/lib/jetty-6.1.22/jsp-2.1/jsp-2.1-jetty-6.1.22.jar" />
++<include name="Libs/lib/jetty-6.1.22/jsp-2.1/jsp-api-2.1-glassfish-9.1.1.B60.25.p2.jar" />
++<include name="Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.beans-3.0.0.RELEASE.jar" />
++<include name="Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.context-3.0.0.RELEASE.jar" />
++<include name="Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.context.support-3.0.0.RELEASE.jar" />
++<include name="Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.core-3.0.0.RELEASE.jar" />
++<include name="Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.web-3.0.0.RELEASE.jar" />
++<include name="Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.asm-3.0.0.RELEASE.jar" />
++<include name="Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.expression-3.0.0.RELEASE.jar" />
++<include name="Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.aop-3.0.0.RELEASE.jar" />
++<include name="Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.aspects-3.0.0.RELEASE.jar" />
++<include name="Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.instrument-3.0.0.RELEASE.jar" />
++<include name="Libs/lib/spring-framework-3.0.0.RELEASE/aopalliance.jar" />
++<include name="Libs/lib/spring-framework-3.0.0.RELEASE/org.springframework.web.servlet-3.0.0.RELEASE.jar" />
+ </fileset></project>
+\ No newline at end of file
+Index: etc/etc/spring_java.xml
+===================================================================
+--- etc/etc/spring_java.xml	(revision 1109)
++++ etc/etc/spring_java.xml	(working copy)
+@@ -12,14 +12,12 @@
+ 		<property name="acceptors" value="1" />
+ 		<property name="statsOn" value="true" />
+ 
+-
+-		<property name="maxIdleTime" value="500" />
++		<property name="maxIdleTime" value="5000" />
+ 	</bean>
+ 
+ 	<bean id="ThreadPool" class="org.eclipse.jetty.util.thread.QueuedThreadPool">
+ 		<property name="minThreads" value="7" />
+ 		<property name="maxThreads" value="20" />
+-		<property name="maxStopTimeMs" value="100" />
+ 	</bean>
+ 
+ 	<!-- Server -->
+@@ -32,7 +30,7 @@
+ 			</list>
+ 		</property>
+ 
+-		<property name="handler" ref="HandlerCollection" />
++		<property name="handler" ref="ContextCollectionHandler" />
+ 
+ 		<property name="sessionIdManager">
+ 			<bean class="org.eclipse.jetty.server.session.HashSessionIdManager">
+Index: etc/etc/webdefault.xml
+===================================================================
+--- etc/etc/webdefault.xml	(revision 1114)
++++ etc/etc/webdefault.xml	(working copy)
+@@ -109,11 +109,11 @@
+     <servlet-class>org.eclipse.jetty.servlet.DefaultServlet</servlet-class>
+     <init-param>
+       <param-name>acceptRanges</param-name>
+-      <param-value>true</param-value>
++      <param-value>false</param-value>
+     </init-param>
+     <init-param>
+       <param-name>dirAllowed</param-name>
+-      <param-value>true</param-value>
++      <param-value>false</param-value>
+     </init-param>
+     <init-param>
+       <param-name>welcomeServlets</param-name>
