@@ -6,6 +6,7 @@ option java_outer_classname = "ManagementData";
 
 message Controller
 {
+	// Address of the Controller (Identifies the Controller)
 	required string address = 1; 
 
 	// Number of running applications

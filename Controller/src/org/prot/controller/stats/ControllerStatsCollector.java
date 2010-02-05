@@ -1,6 +1,7 @@
 package org.prot.controller.stats;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.prot.controller.app.AppInfo;
@@ -57,20 +58,20 @@ public class ControllerStatsCollector
 	void fill(ManagementData.Controller.Builder controller)
 	{
 		controller.setAddress(Configuration.getConfiguration().getAddress());
-
 		controller.setCpu(systemStats.getSystemLoad());
 		controller.setProcCpu(systemStats.getProcessLoadSinceLastCall());
 		controller.setIdleCpu(systemStats.getSystemIdle());
-		controller.setFreeMem(systemStats.getFreePhysicalMemorySize());
 		controller.setTotalMem(systemStats.getTotalPhysicalMemorySize());
+		controller.setFreeMem(systemStats.getFreePhysicalMemorySize());
+		controller.setRps((float)rpsCounter.getRps());
+		controller.setOverloaded(false);
 
-		for (AppInfo info : registry.getDuplicatedAppInfos())
+		Set<AppInfo> appInfos = registry.getDuplicatedAppInfos();
+		controller.setRunningApps(appInfos.size());
+		for (AppInfo info : appInfos)
 		{
 			if (info.getAppManagement().getAppServer() != null)
-			{
-				logger.debug("Controller is adding an Management AppInfo");
 				controller.addAppServers(info.getAppManagement().getAppServer());
-			}
 		}
 	}
 
