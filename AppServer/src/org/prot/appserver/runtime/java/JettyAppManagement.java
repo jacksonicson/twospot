@@ -27,14 +27,14 @@ public class JettyAppManagement implements RuntimeManagement
 	private float getRps()
 	{
 		long time = System.currentTimeMillis() - lastPoll;
-		double rps = (double) countingRequestLog.getCounter() / (double) (time / 1000);
+		double rps = (double) countingRequestLog.getCounter() / (double) (time / 1000 + 1);
 		return (float) rps;
 	}
 
 	private float getDelay()
 	{
 		double delay = (double) countingRequestLog.getSummedRequestTime()
-				/ (double) countingRequestLog.getCounter();
+				/ ((double) countingRequestLog.getCounter() + 1d);
 		return (float) delay;
 	}
 

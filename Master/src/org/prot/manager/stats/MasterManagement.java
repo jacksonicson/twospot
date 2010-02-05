@@ -27,7 +27,7 @@ public class MasterManagement extends UdpListener
 
 	protected void handleDatagram(DatagramPacket packet) throws IOException
 	{
-		logger.debug("Datagram received: " + packet.getLength());
+		logger.debug("== Datagram received: " + packet.getLength());
 		ByteArrayInputStream in = new ByteArrayInputStream(packet.getData(), 0, packet.getLength());
 		Controller controller = Controller.parseFrom(in);
 

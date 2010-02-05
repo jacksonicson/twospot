@@ -12,26 +12,28 @@ public class CountingRequestLog extends AbstractLifeCycle implements RequestLog
 
 	private long counter = 0;
 
-	public CountingRequestLog()
-	{
-		// logger.error("asdlöfjasdöfj");
-	}
+	private long summedRequestTime;
 
 	@Override
 	public void log(Request request, Response response)
 	{
 		this.counter++;
-		// System.out.println("time: " + (System.currentTimeMillis() -
-		// request.getTimeStamp()));
+		this.summedRequestTime += System.currentTimeMillis() - request.getTimeStamp();
 	}
 
 	public void reset()
 	{
 		this.counter = 0;
+		this.summedRequestTime = 0;
 	}
 
 	public long getCounter()
 	{
 		return this.counter;
+	}
+
+	public long getSummedRequestTime()
+	{
+		return this.summedRequestTime;
 	}
 }

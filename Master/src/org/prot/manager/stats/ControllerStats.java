@@ -26,7 +26,7 @@ public class ControllerStats
 	// Stores all isntance data for each application
 	private Map<String, InstanceStats> instances = new ConcurrentHashMap<String, InstanceStats>();
 
-	public class StatValues
+	public class Values
 	{
 		public double cpu;
 		public double rps;
@@ -36,20 +36,14 @@ public class ControllerStats
 		public long freeMemory;
 		public long totalMemory;
 
-		public boolean overloaded;
-
 		public void dump()
 		{
-			logger.debug("   CPU: " + cpu);
-			logger.debug("   Proc CPU: " + procCpu);
-			logger.debug("   Idle CPU: " + idleCpu);
-			logger.debug("   RPS: " + rps);
-			logger.debug("   FreeMem: " + freeMemory);
-			logger.debug("   TotalMem: " + totalMemory);
+			logger.debug("CPU:" + cpu + " ProcCpu:" + procCpu + " IdleCpu:" + idleCpu + " RPS:" + rps
+					+ " FreeMem:" + freeMemory + " TotalMem:" + totalMemory);
 		}
 	}
 
-	private final StatValues stats = new StatValues();
+	private final Values stats = new Values();
 
 	ControllerStats(String address)
 	{
@@ -68,7 +62,7 @@ public class ControllerStats
 
 	synchronized boolean isOld()
 	{
-		return System.currentTimeMillis() - lastUpdate > 60 * 1000;
+		return System.currentTimeMillis() - lastUpdate > 15000;
 	}
 
 	synchronized void assign(String appId)
@@ -91,7 +85,6 @@ public class ControllerStats
 		this.stats.idleCpu = controller.getIdleCpu();
 
 		this.stats.freeMemory = controller.getFreeMem();
-		this.stats.overloaded = controller.getOverloaded();
 		this.stats.rps = controller.getRps();
 		this.stats.totalMemory = controller.getTotalMem();
 
@@ -127,7 +120,7 @@ public class ControllerStats
 		}
 	}
 
-	public StatValues getValues()
+	public Values getValues()
 	{
 		return stats;
 	}
@@ -139,15 +132,9 @@ public class ControllerStats
 
 	public void dump()
 	{
-		logger.debug("=============================");
 		logger.debug("Controller: " + this.address);
 		stats.dump();
-		logger.debug(" ");
-		logger.debug("Instances (count): " + instances.size());
 		for (InstanceStats instance : instances.values())
-		{
-			logger.debug(" ");
 			instance.dump();
-		}
 	}
 }

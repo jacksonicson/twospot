@@ -10,17 +10,17 @@ public class InstanceStats
 
 	private final String appId;
 
-	private long lastUpdated;
+	final private Values stat = new Values();
 
-	private long assignmentCounter = 0;
+	private long assignmentTimer = 0;
 
-	public class StatValues
+	public class Values
 	{
 		public double procCpu;
 		public double rps;
-		public boolean overloaded;
-		public long overloadedHold;
+		private long overloaded;
 		public long runtime;
+		public float averageDelay;
 
 		public long cpuTotal;
 		private long[] cpuTotalHistory = null;
@@ -28,9 +28,17 @@ public class InstanceStats
 		public long cpuProcTotal;
 		public long[] cpuProcTotalHistory = null;
 
-		
-		public long lastExpansion = 0;
-		
+		public void setOverloaded(boolean overloaded)
+		{
+			if (overloaded)
+				this.overloaded = System.currentTimeMillis();
+		}
+
+		public boolean isOverloaded()
+		{
+			return (System.currentTimeMillis() - overloaded) < 20000;
+		}
+
 		public void addCpuTotal(long cpuTotal)
 		{
 			if (cpuTotalHistory == null)
@@ -89,16 +97,10 @@ public class InstanceStats
 
 		public void dump()
 		{
-			logger.debug("   RPS: " + rps);
-			logger.debug("   Overloaded: " + overloaded);
-			logger.debug("   Overloaded hold: " + overloadedHold);
-			logger.debug("   Proc CPU: " + procCpu);
-			logger.debug("   Runtime: " + runtime);
-			logger.debug("   CPU units: " + getCpuUnits());
+			logger.debug("      RPS:" + rps + " Overload:" + overloaded + " ProcCPU: " + procCpu
+					+ " Runtime:" + runtime + " AverageDelay:" + averageDelay + " CPUUnits:" + getCpuUnits());
 		}
 	}
-
-	final private StatValues stat = new StatValues();
 
 	InstanceStats(String appId)
 	{
@@ -108,10 +110,10 @@ public class InstanceStats
 	InstanceStats(String appId, boolean assigned)
 	{
 		this(appId);
-		this.assignmentCounter = 3;
+		this.assignmentTimer = 5;
 	}
 
-	public StatValues getValues()
+	public Values getValues()
 	{
 		return this.stat;
 	}
@@ -123,23 +125,28 @@ public class InstanceStats
 
 	void update(ManagementData.AppServer appServer)
 	{
-		this.assignmentCounter = 0;
-		this.lastUpdated = System.currentTimeMillis();
+		this.assignmentTimer = 0;
 
 		this.stat.procCpu = appServer.getProcCpu();
-		this.stat.overloaded = appServer.getOverloaded();
+		this.stat.setOverloaded(appServer.getOverloaded());
 		this.stat.rps = appServer.getRps();
 		this.stat.runtime = appServer.getRuntime();
+		this.stat.averageDelay = appServer.getAverageDelay();
 
 		this.stat.addCpuTotal(appServer.getCpuTotal());
 		this.stat.addCpuProcTotal(appServer.getCpuProcTotal());
 	}
 
+	public boolean isAssigned()
+	{
+		return assignmentTimer > 0;
+	}
+
 	public boolean decrementAssignmentCounter()
 	{
-		boolean assigned = assignmentCounter > 0;
-		if (assignmentCounter > 0)
-			assignmentCounter--;
+		boolean assigned = assignmentTimer > 0;
+		if (assignmentTimer > 0)
+			assignmentTimer--;
 
 		return assigned;
 	}

@@ -53,7 +53,7 @@ public class ControllerStatsCollector
 	private float getRps()
 	{
 		double time = System.currentTimeMillis() - lastPoll;
-		double rps = (double) requests / (time / 1000d);
+		double rps = (double) requests / (time / 1000d + 1d);
 		return (float) rps;
 	}
 
@@ -76,6 +76,7 @@ public class ControllerStatsCollector
 		}
 
 		lastPoll = System.currentTimeMillis();
+		requests = 0;
 	}
 
 	class StatsTask extends SchedulerTask

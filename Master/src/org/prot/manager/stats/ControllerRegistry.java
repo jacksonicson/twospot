@@ -15,9 +15,9 @@ public class ControllerRegistry
 {
 	private static final Logger logger = Logger.getLogger(ControllerRegistry.class);
 
-	private Map<String, ControllerInfo> controllerInfos = new ConcurrentHashMap<String, ControllerInfo>();
-
 	private Map<String, ControllerStats> publicControllers = new HashMap<String, ControllerStats>();
+
+	private Map<String, ControllerInfo> controllerInfos = new ConcurrentHashMap<String, ControllerInfo>();
 
 	private Map<String, ControllerStats> controllers = new ConcurrentHashMap<String, ControllerStats>();
 
@@ -163,9 +163,6 @@ public class ControllerRegistry
 	public void dump()
 	{
 		for (ControllerStats controller : controllers.values())
-		{
-			logger.debug("#########################");
 			controller.dump();
-		}
 	}
 }

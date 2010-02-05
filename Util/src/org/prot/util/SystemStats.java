@@ -34,7 +34,7 @@ public class SystemStats
 			long procDiff = procTotal - buffProcessLoadProcTotal;
 			long sysDiff = sysTotal - buffProcessLoadSysTotal;
 
-			double mine = (double) procDiff / (double) sysDiff;
+			double mine = (double) procDiff / ((double) sysDiff + 1d);
 
 			this.buffProcessLoadProcTotal = procTotal;
 			this.buffProcessLoadSysTotal = sysTotal;
@@ -63,7 +63,7 @@ public class SystemStats
 			long idleDiff = idle - buffSystemIdleIdle;
 			this.buffSystemIdleIdle = idle;
 
-			double idleProc = (double) idleDiff / (double) sysDiff;
+			double idleProc = (double) idleDiff / ((double) sysDiff + 1d);
 
 			return idleProc;
 		} catch (SigarException e)

@@ -12,15 +12,6 @@ public class ControllerInfo implements Serializable
 
 	private String serviceAddress;
 
-	public ControllerInfo()
-	{
-	}
-
-	public ControllerInfo(ControllerInfo info)
-	{
-		update(info);
-	}
-
 	public void update(ControllerInfo info)
 	{
 		this.address = info.getAddress();

@@ -77,13 +77,6 @@ public final class ManagementData {
     public boolean hasRps() { return hasRps; }
     public float getRps() { return rps_; }
     
-    // required bool overloaded = 16;
-    public static final int OVERLOADED_FIELD_NUMBER = 16;
-    private boolean hasOverloaded;
-    private boolean overloaded_ = false;
-    public boolean hasOverloaded() { return hasOverloaded; }
-    public boolean getOverloaded() { return overloaded_; }
-    
     // repeated .test.AppServer appServers = 20;
     public static final int APPSERVERS_FIELD_NUMBER = 20;
     private java.util.List<org.prot.util.managment.gen.ManagementData.AppServer> appServers_ =
@@ -105,7 +98,6 @@ public final class ManagementData {
       if (!hasTotalMem) return false;
       if (!hasFreeMem) return false;
       if (!hasRps) return false;
-      if (!hasOverloaded) return false;
       for (org.prot.util.managment.gen.ManagementData.AppServer element : getAppServersList()) {
         if (!element.isInitialized()) return false;
       }
@@ -131,9 +123,6 @@ public final class ManagementData {
       }
       if (hasTotalMem()) {
         output.writeInt64(15, getTotalMem());
-      }
-      if (hasOverloaded()) {
-        output.writeBool(16, getOverloaded());
       }
       if (hasProcCpu()) {
         output.writeDouble(17, getProcCpu());
@@ -175,10 +164,6 @@ public final class ManagementData {
       if (hasTotalMem()) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(15, getTotalMem());
-      }
-      if (hasOverloaded()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(16, getOverloaded());
       }
       if (hasProcCpu()) {
         size += com.google.protobuf.CodedOutputStream
@@ -355,9 +340,6 @@ public final class ManagementData {
         if (other.hasRps()) {
           setRps(other.getRps());
         }
-        if (other.hasOverloaded()) {
-          setOverloaded(other.getOverloaded());
-        }
         if (!other.appServers_.isEmpty()) {
           if (result.appServers_.isEmpty()) {
             result.appServers_ = new java.util.ArrayList<org.prot.util.managment.gen.ManagementData.AppServer>();
@@ -404,10 +386,6 @@ public final class ManagementData {
             }
             case 120: {
               setTotalMem(input.readInt64());
-              break;
-            }
-            case 128: {
-              setOverloaded(input.readBool());
               break;
             }
             case 137: {
@@ -576,24 +554,6 @@ public final class ManagementData {
         return this;
       }
       
-      // required bool overloaded = 16;
-      public boolean hasOverloaded() {
-        return result.hasOverloaded();
-      }
-      public boolean getOverloaded() {
-        return result.getOverloaded();
-      }
-      public Builder setOverloaded(boolean value) {
-        result.hasOverloaded = true;
-        result.overloaded_ = value;
-        return this;
-      }
-      public Builder clearOverloaded() {
-        result.hasOverloaded = false;
-        result.overloaded_ = false;
-        return this;
-      }
-      
       // repeated .test.AppServer appServers = 20;
       public java.util.List<org.prot.util.managment.gen.ManagementData.AppServer> getAppServersList() {
         return java.util.Collections.unmodifiableList(result.appServers_);
@@ -700,14 +660,21 @@ public final class ManagementData {
     public boolean hasCpuProcTotal() { return hasCpuProcTotal; }
     public long getCpuProcTotal() { return cpuProcTotal_; }
     
-    // optional float rps = 10;
+    // required float rps = 10;
     public static final int RPS_FIELD_NUMBER = 10;
     private boolean hasRps;
     private float rps_ = 0F;
     public boolean hasRps() { return hasRps; }
     public float getRps() { return rps_; }
     
-    // optional bool overloaded = 11 [default = false];
+    // required float averageDelay = 13;
+    public static final int AVERAGEDELAY_FIELD_NUMBER = 13;
+    private boolean hasAverageDelay;
+    private float averageDelay_ = 0F;
+    public boolean hasAverageDelay() { return hasAverageDelay; }
+    public float getAverageDelay() { return averageDelay_; }
+    
+    // required bool overloaded = 11;
     public static final int OVERLOADED_FIELD_NUMBER = 11;
     private boolean hasOverloaded;
     private boolean overloaded_ = false;
@@ -720,6 +687,9 @@ public final class ManagementData {
       if (!hasProcCpu) return false;
       if (!hasCpuTotal) return false;
       if (!hasCpuProcTotal) return false;
+      if (!hasRps) return false;
+      if (!hasAverageDelay) return false;
+      if (!hasOverloaded) return false;
       return true;
     }
     
@@ -739,6 +709,9 @@ public final class ManagementData {
       }
       if (hasRuntime()) {
         output.writeInt64(12, getRuntime());
+      }
+      if (hasAverageDelay()) {
+        output.writeFloat(13, getAverageDelay());
       }
       if (hasCpuTotal()) {
         output.writeInt64(19, getCpuTotal());
@@ -773,6 +746,10 @@ public final class ManagementData {
       if (hasRuntime()) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(12, getRuntime());
+      }
+      if (hasAverageDelay()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(13, getAverageDelay());
       }
       if (hasCpuTotal()) {
         size += com.google.protobuf.CodedOutputStream
@@ -935,6 +912,9 @@ public final class ManagementData {
         if (other.hasRps()) {
           setRps(other.getRps());
         }
+        if (other.hasAverageDelay()) {
+          setAverageDelay(other.getAverageDelay());
+        }
         if (other.hasOverloaded()) {
           setOverloaded(other.getOverloaded());
         }
@@ -974,6 +954,10 @@ public final class ManagementData {
             }
             case 96: {
               setRuntime(input.readInt64());
+              break;
+            }
+            case 109: {
+              setAverageDelay(input.readFloat());
               break;
             }
             case 152: {
@@ -1082,7 +1066,7 @@ public final class ManagementData {
         return this;
       }
       
-      // optional float rps = 10;
+      // required float rps = 10;
       public boolean hasRps() {
         return result.hasRps();
       }
@@ -1100,7 +1084,25 @@ public final class ManagementData {
         return this;
       }
       
-      // optional bool overloaded = 11 [default = false];
+      // required float averageDelay = 13;
+      public boolean hasAverageDelay() {
+        return result.hasAverageDelay();
+      }
+      public float getAverageDelay() {
+        return result.getAverageDelay();
+      }
+      public Builder setAverageDelay(float value) {
+        result.hasAverageDelay = true;
+        result.averageDelay_ = value;
+        return this;
+      }
+      public Builder clearAverageDelay() {
+        result.hasAverageDelay = false;
+        result.averageDelay_ = 0F;
+        return this;
+      }
+      
+      // required bool overloaded = 11;
       public boolean hasOverloaded() {
         return result.hasOverloaded();
       }

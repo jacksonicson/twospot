@@ -21,6 +21,10 @@ public class HighLoadProcessor implements BalancingProcessor
 		if (!connector.isStarted())
 			return;
 
+		// Only if there are more than one application
+		if (appInfos.size() > 1)
+			return;
+
 		// Check if this Controller is under a high load
 		if (connector.isLowResources())
 		{
@@ -68,8 +72,8 @@ public class HighLoadProcessor implements BalancingProcessor
 				return;
 
 			// Only works if there are enough controller machines available!
-//			logger.debug("Banning application: " + bestApp.getAppId());
-//			bestApp.setState(AppState.BANNED);
+			logger.debug("Banning application: " + bestApp.getAppId());
+			bestApp.setState(AppState.BANNED);
 		}
 	}
 

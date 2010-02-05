@@ -30,9 +30,6 @@ message Controller
 	// Average requests per second 
 	required float rps = 13;
 
-	// The Controller does not have enough threads to process all requests	
-	required bool overloaded = 16;
-	
 	// Encapsulated management data of the AppServers 
 	repeated AppServer appServers = 20;
 }
@@ -55,8 +52,11 @@ message AppServer
 	required int64 cpuProcTotal = 21;
 	
 	// Average requets per second
-	optional float rps = 10; 
+	required float rps = 10; 
+	
+	// Average delay of a request 
+	required float averageDelay = 13;
 	
 	// The AppServer does not have enough threads to process all requets
-	optional bool overloaded = 11 [default = false];
+	required bool overloaded = 11;
 }

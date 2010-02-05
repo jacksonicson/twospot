@@ -100,14 +100,11 @@ public class SimpleLoadBalancer implements LoadBalancer
 			resultStats.add(controller);
 			instanceStats.add(instance);
 
-			// Time since last expansion
-			long expansion = System.currentTimeMillis() - instance.getValues().lastExpansion;
-
 			// Check if the instance is running long enough!
-			if (instance.getValues().runtime > 25000 && expansion > 15000)
+			if (instance.getValues().runtime > 25000 && !instance.isAssigned())
 			{
 				// Check if the controller or instance reports an overload
-				if (instance.getValues().overloaded || controller.getValues().overloaded)
+				if (instance.getValues().isOverloaded())
 				{
 					logger.debug("Instance is overloaded");
 					overloaded++;
@@ -168,9 +165,6 @@ public class SimpleLoadBalancer implements LoadBalancer
 		// Update internal stat data about this assignment (Controller -
 		// Application)
 		registry.assignToController(appId, bestControllerInfo.getAddress());
-
-		for (InstanceStats instance : instanceStats)
-			instance.getValues().lastExpansion = System.currentTimeMillis();
 
 		// Return the results
 		logger.debug("Returning # controllers: " + resultInfo.size());
