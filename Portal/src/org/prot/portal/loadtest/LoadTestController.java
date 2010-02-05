@@ -1,6 +1,7 @@
 package org.prot.portal.loadtest;
 
-import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -13,7 +14,7 @@ import org.springframework.web.servlet.mvc.Controller;
 
 public class LoadTestController implements Controller
 {
-	private static final int length = 1024 * 512;
+	private static final int length = 1024 * 1024;
 	private static byte[] data = new byte[length];
 
 	static
@@ -26,13 +27,16 @@ public class LoadTestController implements Controller
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
 			throws Exception
 	{
-		ByteArrayOutputStream bout = new ByteArrayOutputStream(length);
-		ZipOutputStream out = new ZipOutputStream(bout);
+		ZipOutputStream out = new ZipOutputStream(new OutputStream()
+		{
+			@Override
+			public void write(int b) throws IOException
+			{
+			}
+		});
 		out.putNextEntry(new ZipEntry("test"));
 		out.write(data);
 		out.close();
-
-		response.getOutputStream().write(bout.toByteArray());
 
 		return null;
 	}

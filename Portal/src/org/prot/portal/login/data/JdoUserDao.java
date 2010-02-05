@@ -54,6 +54,10 @@ public class JdoUserDao implements UserDao
 		{
 			logger.info("Making persistent error", e);
 			tx.rollback();
+		} finally
+		{
+			if (tx.isActive())
+				tx.rollback();
 		}
 	}
 

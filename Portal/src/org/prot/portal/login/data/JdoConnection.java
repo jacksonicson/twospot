@@ -13,11 +13,11 @@ public class JdoConnection
 	{
 		ClassLoader loader = this.getClass().getClassLoader();
 		pmf = JDOHelper.getPersistenceManagerFactory("etc/jdoDefault.properties", loader, loader);
-		pm = pmf.getPersistenceManager();
+
 	}
 
 	public PersistenceManager getPersistenceManager()
 	{
-		return pm;
+		return pmf.getPersistenceManager();
 	}
 }

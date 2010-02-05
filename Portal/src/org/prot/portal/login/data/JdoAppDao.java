@@ -85,16 +85,19 @@ public class JdoAppDao implements AppDao
 
 		PersistenceManager pm = jdoConnection.getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
-		tx.begin();
-
+		
 		try
 		{
+			tx.begin();
 			pm.makePersistent(application);
 			tx.commit();
 		} catch (Exception e)
 		{
 			logger.info("Making persistent error", e);
 			tx.rollback();
+		} finally {
+			if(tx.isActive())
+				tx.rollback();
 		}
 	}
 
