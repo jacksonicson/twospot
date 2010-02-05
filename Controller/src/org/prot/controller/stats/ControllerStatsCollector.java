@@ -21,7 +21,9 @@ public class ControllerStatsCollector
 
 	private final SystemStats systemStats = new SystemStats();
 
-	private final RpsCounter rpsCounter = new RpsCounter();
+	private long lastPoll = 0;
+
+	private long requests = 0;
 
 	private List<BalancingProcessor> processors;
 
@@ -32,14 +34,7 @@ public class ControllerStatsCollector
 
 	public void handle(final AppInfo appInfo)
 	{
-		try
-		{
-			appInfo.getAppManagement().getStats();
-			rpsCounter.count();
-		} catch (Exception e)
-		{
-			logger.error("Error while handling stats: " + e);
-		}
+		requests++;
 	}
 
 	public void balance()
@@ -55,6 +50,13 @@ public class ControllerStatsCollector
 			appInfo.getAppManagement().update(appServer);
 	}
 
+	private float getRps()
+	{
+		double time = System.currentTimeMillis() - lastPoll;
+		double rps = (double) requests / (time / 1000d);
+		return (float) rps;
+	}
+
 	void fill(ManagementData.Controller.Builder controller)
 	{
 		controller.setAddress(Configuration.getConfiguration().getAddress());
@@ -63,8 +65,7 @@ public class ControllerStatsCollector
 		controller.setIdleCpu(systemStats.getSystemIdle());
 		controller.setTotalMem(systemStats.getTotalPhysicalMemorySize());
 		controller.setFreeMem(systemStats.getFreePhysicalMemorySize());
-		controller.setRps((float)rpsCounter.getRps());
-		controller.setOverloaded(false);
+		controller.setRps(getRps());
 
 		Set<AppInfo> appInfos = registry.getDuplicatedAppInfos();
 		controller.setRunningApps(appInfos.size());
@@ -73,6 +74,8 @@ public class ControllerStatsCollector
 			if (info.getAppManagement().getAppServer() != null)
 				controller.addAppServers(info.getAppManagement().getAppServer());
 		}
+
+		lastPoll = System.currentTimeMillis();
 	}
 
 	class StatsTask extends SchedulerTask
