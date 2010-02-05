@@ -128,11 +128,12 @@ public class JettyAppManagement implements RuntimeManagement
 	{
 		updateData();
 
-		appServer.setRps(averageRps());
-		appServer.setOverloaded(isOverloaded());
 		appServer.setRuntime(getRuntime());
+		appServer.setProcCpu(systemStats.getProcessLoadSinceLastCall());
 		appServer.setCpuTotal(systemStats.getCpuTotal());
 		appServer.setCpuProcTotal(systemStats.getProcTotal());
+		appServer.setRps(averageRps());
+		appServer.setOverloaded(isOverloaded());
 
 		rollStats();
 	}
