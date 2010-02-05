@@ -1,4 +1,4 @@
-package org.prot.stoarge.tools;
+package org.prot.storage.tools;
 
 import java.io.IOException;
 
