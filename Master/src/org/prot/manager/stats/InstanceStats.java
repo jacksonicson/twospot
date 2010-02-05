@@ -28,6 +28,9 @@ public class InstanceStats
 		public long cpuProcTotal;
 		public long[] cpuProcTotalHistory = null;
 
+		
+		public long lastExpansion = 0;
+		
 		public void addCpuTotal(long cpuTotal)
 		{
 			if (cpuTotalHistory == null)

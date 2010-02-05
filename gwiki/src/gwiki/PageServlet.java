@@ -2,8 +2,8 @@ package gwiki;
 
 import gwiki.data.WikiPage;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,23 +22,11 @@ public class PageServlet extends HttpServlet
 {
 	private static final long serialVersionUID = -8491124727700643700L;
 
-	private static final int length = 1024 * 265;
-	private static byte[] data = new byte[length];
-
-	static
-	{
-		Random r = new Random();
-		r.nextBytes(data);
-	}
+	
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException
 	{
-		ZipOutputStream out = new ZipOutputStream(new ByteArrayOutputStream(length));
-		out.putNextEntry(new ZipEntry("test"));
-		out.write(data);
-		out.close();
-
 		String pageId = request.getParameter("pid");
 		PersistenceManager manager = DataConnection.getManager();
 

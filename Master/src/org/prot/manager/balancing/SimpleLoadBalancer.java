@@ -77,6 +77,9 @@ public class SimpleLoadBalancer implements LoadBalancer
 		Set<ControllerInfo> resultInfo = new HashSet<ControllerInfo>();
 		Set<ControllerStats> resultStats = new HashSet<ControllerStats>();
 
+		// Set of instance stats
+		Set<InstanceStats> instanceStats = new HashSet<InstanceStats>();
+
 		// Number of Controllers which report an overload
 		int overloaded = 0;
 
@@ -95,26 +98,42 @@ public class SimpleLoadBalancer implements LoadBalancer
 			// The controller is running the requested application
 			resultInfo.add(selected);
 			resultStats.add(controller);
+			instanceStats.add(instance);
+
+			// Time since last expansion
+			long expansion = System.currentTimeMillis() - instance.getValues().lastExpansion;
 
 			// Check if the instance is running long enough!
-			if (instance.getValues().runtime > 15000)
+			if (instance.getValues().runtime > 25000 && expansion > 15000)
 			{
 				// Check if the controller or instance reports an overload
 				if (instance.getValues().overloaded || controller.getValues().overloaded)
+				{
+					logger.debug("Instance is overloaded");
 					overloaded++;
+				}
 
 				// Check the cpu usage of the instance
 				if (instance.getValues().procCpu > Configuration.getConfiguration().getSlbInstanceCpuLimit())
+				{
+					logger.debug("Instance uses too much CPU");
 					overloaded++;
+				}
 
 				// Check if the idle time is big enough
 				if (controller.getValues().idleCpu < Configuration.getConfiguration().getSlbMinIdleCpu())
+				{
+					logger.debug("Controller has not enough Idle");
 					overloaded++;
+				}
 
 				// CPU-Bursting
 				double usedCpuUnits = instance.getValues().getCpuUnits();
 				if (usedCpuUnits > Configuration.getConfiguration().getSlbGuaranteedCpuUnits())
+				{
+					logger.debug("Instance uses too much CPU UNITS");
 					overloaded++;
+				}
 			}
 		}
 
@@ -149,6 +168,9 @@ public class SimpleLoadBalancer implements LoadBalancer
 		// Update internal stat data about this assignment (Controller -
 		// Application)
 		registry.assignToController(appId, bestControllerInfo.getAddress());
+
+		for (InstanceStats instance : instanceStats)
+			instance.getValues().lastExpansion = System.currentTimeMillis();
 
 		// Return the results
 		logger.debug("Returning # controllers: " + resultInfo.size());
