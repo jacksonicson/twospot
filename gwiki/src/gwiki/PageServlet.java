@@ -20,8 +20,9 @@ import org.prot.storage.Key;
 
 public class PageServlet extends HttpServlet
 {
+	private static final long serialVersionUID = -8491124727700643700L;
 
-	private static final int length = 1024 * 200;
+	private static final int length = 1024 * 265;
 	private static byte[] data = new byte[length];
 
 	static
@@ -33,25 +34,12 @@ public class PageServlet extends HttpServlet
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException
 	{
-
-		try
-		{
-			Thread.sleep(10);
-		} catch (InterruptedException e1)
-		{
-			e1.printStackTrace();
-		}
-
-		long time = System.currentTimeMillis();
 		ZipOutputStream out = new ZipOutputStream(new ByteArrayOutputStream(length));
-		out.putNextEntry(new ZipEntry("blaaa"));
+		out.putNextEntry(new ZipEntry("test"));
 		out.write(data);
 		out.close();
-		time = System.currentTimeMillis() - time;
-		System.out.println("Time: " + time);
 
 		String pageId = request.getParameter("pid");
-
 		PersistenceManager manager = DataConnection.getManager();
 
 		WikiPage page = null;

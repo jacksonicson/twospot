@@ -40,10 +40,8 @@ public class SavePage extends HttpServlet
 
 			if (page == null)
 				page = new WikiPage();
-
 			page.setTitle(pname);
 			page.setText(text);
-
 			manager.makePersistent(page);
 
 			pid = page.getKey().toCompactString();
