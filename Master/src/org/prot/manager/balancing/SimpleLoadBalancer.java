@@ -112,7 +112,7 @@ public class SimpleLoadBalancer implements LoadBalancer
 					overloaded++;
 
 				// CPU-Bursting
-				double usedCpuUnits = instance.getValues().getCpuTimeFactor();
+				double usedCpuUnits = instance.getValues().getCpuUnits();
 				if (usedCpuUnits > Configuration.getConfiguration().getSlbGuaranteedCpuUnits())
 					overloaded++;
 			}

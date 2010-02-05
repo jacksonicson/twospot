@@ -16,23 +16,20 @@ public class JettyAppManagement implements RuntimeManagement
 
 	private SystemStats systemStats = new SystemStats();
 
+	private long startTime = System.currentTimeMillis();
+
 	private CountingRequestLog countingRequestLog;
 
 	private Connector connector;
 
 	private int overloadCounter = 0;
 
-	private long startTime = System.currentTimeMillis();
-
 	private class Data
 	{
 		long startTime = 0;
 		long stopTime = 0;
-
 		long maxRequests = 0;
-
 		long currentRequests = 0;
-
 		long requestCounter = 0;
 	}
 
@@ -134,7 +131,6 @@ public class JettyAppManagement implements RuntimeManagement
 		appServer.setRps(averageRps());
 		appServer.setOverloaded(isOverloaded());
 		appServer.setRuntime(getRuntime());
-		appServer.setCpu((float) systemStats.getProcessLoad());
 		appServer.setCpuTotal(systemStats.getCpuTotal());
 		appServer.setCpuProcTotal(systemStats.getProcTotal());
 

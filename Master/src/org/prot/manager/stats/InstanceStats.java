@@ -10,7 +10,7 @@ public class InstanceStats
 
 	private final String appId;
 
-	private long lastUpdate;
+	private long lastUpdated;
 
 	private long assignmentCounter = 0;
 
@@ -65,7 +65,7 @@ public class InstanceStats
 
 		}
 
-		public double getCpuTimeFactor()
+		public double getCpuUnits()
 		{
 			if (cpuTotalHistory != null)
 			{
@@ -91,7 +91,7 @@ public class InstanceStats
 			logger.debug("   Overloaded hold: " + overloadedHold);
 			logger.debug("   Proc CPU: " + procCpu);
 			logger.debug("   Runtime: " + runtime);
-			logger.debug("   CPU units: " + getCpuTimeFactor());
+			logger.debug("   CPU units: " + getCpuUnits());
 		}
 	}
 
@@ -121,9 +121,9 @@ public class InstanceStats
 	void update(ManagementData.AppServer appServer)
 	{
 		this.assignmentCounter = 0;
-		this.lastUpdate = System.currentTimeMillis();
+		this.lastUpdated = System.currentTimeMillis();
 
-		this.stat.procCpu = appServer.getCpu();
+		this.stat.procCpu = appServer.getProcCpu();
 		this.stat.overloaded = appServer.getOverloaded();
 		this.stat.rps = appServer.getRps();
 		this.stat.runtime = appServer.getRuntime();

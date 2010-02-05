@@ -28,63 +28,56 @@ public final class ManagementData {
     public boolean hasAddress() { return hasAddress; }
     public java.lang.String getAddress() { return address_; }
     
-    // optional float load = 10;
-    public static final int LOAD_FIELD_NUMBER = 10;
-    private boolean hasLoad;
-    private float load_ = 0F;
-    public boolean hasLoad() { return hasLoad; }
-    public float getLoad() { return load_; }
-    
-    // optional uint32 runningApps = 11;
+    // required uint32 runningApps = 11;
     public static final int RUNNINGAPPS_FIELD_NUMBER = 11;
     private boolean hasRunningApps;
     private int runningApps_ = 0;
     public boolean hasRunningApps() { return hasRunningApps; }
     public int getRunningApps() { return runningApps_; }
     
-    // optional float cpu = 12 [default = -1];
+    // required double cpu = 12;
     public static final int CPU_FIELD_NUMBER = 12;
     private boolean hasCpu;
-    private float cpu_ = -1F;
+    private double cpu_ = 0D;
     public boolean hasCpu() { return hasCpu; }
-    public float getCpu() { return cpu_; }
+    public double getCpu() { return cpu_; }
     
-    // optional float procCpu = 17 [default = -1];
+    // required double procCpu = 17;
     public static final int PROCCPU_FIELD_NUMBER = 17;
     private boolean hasProcCpu;
-    private float procCpu_ = -1F;
+    private double procCpu_ = 0D;
     public boolean hasProcCpu() { return hasProcCpu; }
-    public float getProcCpu() { return procCpu_; }
+    public double getProcCpu() { return procCpu_; }
     
-    // optional float idleCpu = 18 [default = -1];
+    // required double idleCpu = 18;
     public static final int IDLECPU_FIELD_NUMBER = 18;
     private boolean hasIdleCpu;
-    private float idleCpu_ = -1F;
+    private double idleCpu_ = 0D;
     public boolean hasIdleCpu() { return hasIdleCpu; }
-    public float getIdleCpu() { return idleCpu_; }
+    public double getIdleCpu() { return idleCpu_; }
     
-    // optional float rps = 13 [default = 0];
+    // required int64 totalMem = 15;
+    public static final int TOTALMEM_FIELD_NUMBER = 15;
+    private boolean hasTotalMem;
+    private long totalMem_ = 0L;
+    public boolean hasTotalMem() { return hasTotalMem; }
+    public long getTotalMem() { return totalMem_; }
+    
+    // required int64 freeMem = 14;
+    public static final int FREEMEM_FIELD_NUMBER = 14;
+    private boolean hasFreeMem;
+    private long freeMem_ = 0L;
+    public boolean hasFreeMem() { return hasFreeMem; }
+    public long getFreeMem() { return freeMem_; }
+    
+    // required float rps = 13;
     public static final int RPS_FIELD_NUMBER = 13;
     private boolean hasRps;
     private float rps_ = 0F;
     public boolean hasRps() { return hasRps; }
     public float getRps() { return rps_; }
     
-    // optional int64 freeMem = 14 [default = -1];
-    public static final int FREEMEM_FIELD_NUMBER = 14;
-    private boolean hasFreeMem;
-    private long freeMem_ = -1L;
-    public boolean hasFreeMem() { return hasFreeMem; }
-    public long getFreeMem() { return freeMem_; }
-    
-    // optional int64 totalMem = 15 [default = -1];
-    public static final int TOTALMEM_FIELD_NUMBER = 15;
-    private boolean hasTotalMem;
-    private long totalMem_ = -1L;
-    public boolean hasTotalMem() { return hasTotalMem; }
-    public long getTotalMem() { return totalMem_; }
-    
-    // optional bool overloaded = 16 [default = false];
+    // required bool overloaded = 16;
     public static final int OVERLOADED_FIELD_NUMBER = 16;
     private boolean hasOverloaded;
     private boolean overloaded_ = false;
@@ -105,6 +98,14 @@ public final class ManagementData {
     
     public final boolean isInitialized() {
       if (!hasAddress) return false;
+      if (!hasRunningApps) return false;
+      if (!hasCpu) return false;
+      if (!hasProcCpu) return false;
+      if (!hasIdleCpu) return false;
+      if (!hasTotalMem) return false;
+      if (!hasFreeMem) return false;
+      if (!hasRps) return false;
+      if (!hasOverloaded) return false;
       for (org.prot.util.managment.gen.ManagementData.AppServer element : getAppServersList()) {
         if (!element.isInitialized()) return false;
       }
@@ -116,14 +117,11 @@ public final class ManagementData {
       if (hasAddress()) {
         output.writeString(1, getAddress());
       }
-      if (hasLoad()) {
-        output.writeFloat(10, getLoad());
-      }
       if (hasRunningApps()) {
         output.writeUInt32(11, getRunningApps());
       }
       if (hasCpu()) {
-        output.writeFloat(12, getCpu());
+        output.writeDouble(12, getCpu());
       }
       if (hasRps()) {
         output.writeFloat(13, getRps());
@@ -138,10 +136,10 @@ public final class ManagementData {
         output.writeBool(16, getOverloaded());
       }
       if (hasProcCpu()) {
-        output.writeFloat(17, getProcCpu());
+        output.writeDouble(17, getProcCpu());
       }
       if (hasIdleCpu()) {
-        output.writeFloat(18, getIdleCpu());
+        output.writeDouble(18, getIdleCpu());
       }
       for (org.prot.util.managment.gen.ManagementData.AppServer element : getAppServersList()) {
         output.writeMessage(20, element);
@@ -158,17 +156,13 @@ public final class ManagementData {
         size += com.google.protobuf.CodedOutputStream
           .computeStringSize(1, getAddress());
       }
-      if (hasLoad()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(10, getLoad());
-      }
       if (hasRunningApps()) {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt32Size(11, getRunningApps());
       }
       if (hasCpu()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(12, getCpu());
+          .computeDoubleSize(12, getCpu());
       }
       if (hasRps()) {
         size += com.google.protobuf.CodedOutputStream
@@ -188,11 +182,11 @@ public final class ManagementData {
       }
       if (hasProcCpu()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(17, getProcCpu());
+          .computeDoubleSize(17, getProcCpu());
       }
       if (hasIdleCpu()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(18, getIdleCpu());
+          .computeDoubleSize(18, getIdleCpu());
       }
       for (org.prot.util.managment.gen.ManagementData.AppServer element : getAppServersList()) {
         size += com.google.protobuf.CodedOutputStream
@@ -340,9 +334,6 @@ public final class ManagementData {
         if (other.hasAddress()) {
           setAddress(other.getAddress());
         }
-        if (other.hasLoad()) {
-          setLoad(other.getLoad());
-        }
         if (other.hasRunningApps()) {
           setRunningApps(other.getRunningApps());
         }
@@ -355,14 +346,14 @@ public final class ManagementData {
         if (other.hasIdleCpu()) {
           setIdleCpu(other.getIdleCpu());
         }
-        if (other.hasRps()) {
-          setRps(other.getRps());
+        if (other.hasTotalMem()) {
+          setTotalMem(other.getTotalMem());
         }
         if (other.hasFreeMem()) {
           setFreeMem(other.getFreeMem());
         }
-        if (other.hasTotalMem()) {
-          setTotalMem(other.getTotalMem());
+        if (other.hasRps()) {
+          setRps(other.getRps());
         }
         if (other.hasOverloaded()) {
           setOverloaded(other.getOverloaded());
@@ -395,16 +386,12 @@ public final class ManagementData {
               setAddress(input.readString());
               break;
             }
-            case 85: {
-              setLoad(input.readFloat());
-              break;
-            }
             case 88: {
               setRunningApps(input.readUInt32());
               break;
             }
-            case 101: {
-              setCpu(input.readFloat());
+            case 97: {
+              setCpu(input.readDouble());
               break;
             }
             case 109: {
@@ -423,12 +410,12 @@ public final class ManagementData {
               setOverloaded(input.readBool());
               break;
             }
-            case 141: {
-              setProcCpu(input.readFloat());
+            case 137: {
+              setProcCpu(input.readDouble());
               break;
             }
-            case 149: {
-              setIdleCpu(input.readFloat());
+            case 145: {
+              setIdleCpu(input.readDouble());
               break;
             }
             case 162: {
@@ -463,25 +450,7 @@ public final class ManagementData {
         return this;
       }
       
-      // optional float load = 10;
-      public boolean hasLoad() {
-        return result.hasLoad();
-      }
-      public float getLoad() {
-        return result.getLoad();
-      }
-      public Builder setLoad(float value) {
-        result.hasLoad = true;
-        result.load_ = value;
-        return this;
-      }
-      public Builder clearLoad() {
-        result.hasLoad = false;
-        result.load_ = 0F;
-        return this;
-      }
-      
-      // optional uint32 runningApps = 11;
+      // required uint32 runningApps = 11;
       public boolean hasRunningApps() {
         return result.hasRunningApps();
       }
@@ -499,61 +468,97 @@ public final class ManagementData {
         return this;
       }
       
-      // optional float cpu = 12 [default = -1];
+      // required double cpu = 12;
       public boolean hasCpu() {
         return result.hasCpu();
       }
-      public float getCpu() {
+      public double getCpu() {
         return result.getCpu();
       }
-      public Builder setCpu(float value) {
+      public Builder setCpu(double value) {
         result.hasCpu = true;
         result.cpu_ = value;
         return this;
       }
       public Builder clearCpu() {
         result.hasCpu = false;
-        result.cpu_ = -1F;
+        result.cpu_ = 0D;
         return this;
       }
       
-      // optional float procCpu = 17 [default = -1];
+      // required double procCpu = 17;
       public boolean hasProcCpu() {
         return result.hasProcCpu();
       }
-      public float getProcCpu() {
+      public double getProcCpu() {
         return result.getProcCpu();
       }
-      public Builder setProcCpu(float value) {
+      public Builder setProcCpu(double value) {
         result.hasProcCpu = true;
         result.procCpu_ = value;
         return this;
       }
       public Builder clearProcCpu() {
         result.hasProcCpu = false;
-        result.procCpu_ = -1F;
+        result.procCpu_ = 0D;
         return this;
       }
       
-      // optional float idleCpu = 18 [default = -1];
+      // required double idleCpu = 18;
       public boolean hasIdleCpu() {
         return result.hasIdleCpu();
       }
-      public float getIdleCpu() {
+      public double getIdleCpu() {
         return result.getIdleCpu();
       }
-      public Builder setIdleCpu(float value) {
+      public Builder setIdleCpu(double value) {
         result.hasIdleCpu = true;
         result.idleCpu_ = value;
         return this;
       }
       public Builder clearIdleCpu() {
         result.hasIdleCpu = false;
-        result.idleCpu_ = -1F;
+        result.idleCpu_ = 0D;
         return this;
       }
       
-      // optional float rps = 13 [default = 0];
+      // required int64 totalMem = 15;
+      public boolean hasTotalMem() {
+        return result.hasTotalMem();
+      }
+      public long getTotalMem() {
+        return result.getTotalMem();
+      }
+      public Builder setTotalMem(long value) {
+        result.hasTotalMem = true;
+        result.totalMem_ = value;
+        return this;
+      }
+      public Builder clearTotalMem() {
+        result.hasTotalMem = false;
+        result.totalMem_ = 0L;
+        return this;
+      }
+      
+      // required int64 freeMem = 14;
+      public boolean hasFreeMem() {
+        return result.hasFreeMem();
+      }
+      public long getFreeMem() {
+        return result.getFreeMem();
+      }
+      public Builder setFreeMem(long value) {
+        result.hasFreeMem = true;
+        result.freeMem_ = value;
+        return this;
+      }
+      public Builder clearFreeMem() {
+        result.hasFreeMem = false;
+        result.freeMem_ = 0L;
+        return this;
+      }
+      
+      // required float rps = 13;
       public boolean hasRps() {
         return result.hasRps();
       }
@@ -571,43 +576,7 @@ public final class ManagementData {
         return this;
       }
       
-      // optional int64 freeMem = 14 [default = -1];
-      public boolean hasFreeMem() {
-        return result.hasFreeMem();
-      }
-      public long getFreeMem() {
-        return result.getFreeMem();
-      }
-      public Builder setFreeMem(long value) {
-        result.hasFreeMem = true;
-        result.freeMem_ = value;
-        return this;
-      }
-      public Builder clearFreeMem() {
-        result.hasFreeMem = false;
-        result.freeMem_ = -1L;
-        return this;
-      }
-      
-      // optional int64 totalMem = 15 [default = -1];
-      public boolean hasTotalMem() {
-        return result.hasTotalMem();
-      }
-      public long getTotalMem() {
-        return result.getTotalMem();
-      }
-      public Builder setTotalMem(long value) {
-        result.hasTotalMem = true;
-        result.totalMem_ = value;
-        return this;
-      }
-      public Builder clearTotalMem() {
-        result.hasTotalMem = false;
-        result.totalMem_ = -1L;
-        return this;
-      }
-      
-      // optional bool overloaded = 16 [default = false];
+      // required bool overloaded = 16;
       public boolean hasOverloaded() {
         return result.hasOverloaded();
       }
@@ -703,12 +672,33 @@ public final class ManagementData {
     public boolean hasAppId() { return hasAppId; }
     public java.lang.String getAppId() { return appId_; }
     
-    // required float cpu = 3;
-    public static final int CPU_FIELD_NUMBER = 3;
-    private boolean hasCpu;
-    private float cpu_ = 0F;
-    public boolean hasCpu() { return hasCpu; }
-    public float getCpu() { return cpu_; }
+    // required int64 runtime = 12;
+    public static final int RUNTIME_FIELD_NUMBER = 12;
+    private boolean hasRuntime;
+    private long runtime_ = 0L;
+    public boolean hasRuntime() { return hasRuntime; }
+    public long getRuntime() { return runtime_; }
+    
+    // required double procCpu = 3;
+    public static final int PROCCPU_FIELD_NUMBER = 3;
+    private boolean hasProcCpu;
+    private double procCpu_ = 0D;
+    public boolean hasProcCpu() { return hasProcCpu; }
+    public double getProcCpu() { return procCpu_; }
+    
+    // required int64 cpuTotal = 19;
+    public static final int CPUTOTAL_FIELD_NUMBER = 19;
+    private boolean hasCpuTotal;
+    private long cpuTotal_ = 0L;
+    public boolean hasCpuTotal() { return hasCpuTotal; }
+    public long getCpuTotal() { return cpuTotal_; }
+    
+    // required int64 cpuProcTotal = 21;
+    public static final int CPUPROCTOTAL_FIELD_NUMBER = 21;
+    private boolean hasCpuProcTotal;
+    private long cpuProcTotal_ = 0L;
+    public boolean hasCpuProcTotal() { return hasCpuProcTotal; }
+    public long getCpuProcTotal() { return cpuProcTotal_; }
     
     // optional float rps = 10;
     public static final int RPS_FIELD_NUMBER = 10;
@@ -724,30 +714,12 @@ public final class ManagementData {
     public boolean hasOverloaded() { return hasOverloaded; }
     public boolean getOverloaded() { return overloaded_; }
     
-    // optional int64 runtime = 12 [default = 0];
-    public static final int RUNTIME_FIELD_NUMBER = 12;
-    private boolean hasRuntime;
-    private long runtime_ = 0L;
-    public boolean hasRuntime() { return hasRuntime; }
-    public long getRuntime() { return runtime_; }
-    
-    // optional int64 cpuTotal = 19 [default = 0];
-    public static final int CPUTOTAL_FIELD_NUMBER = 19;
-    private boolean hasCpuTotal;
-    private long cpuTotal_ = 0L;
-    public boolean hasCpuTotal() { return hasCpuTotal; }
-    public long getCpuTotal() { return cpuTotal_; }
-    
-    // optional int64 cpuProcTotal = 21 [default = 0];
-    public static final int CPUPROCTOTAL_FIELD_NUMBER = 21;
-    private boolean hasCpuProcTotal;
-    private long cpuProcTotal_ = 0L;
-    public boolean hasCpuProcTotal() { return hasCpuProcTotal; }
-    public long getCpuProcTotal() { return cpuProcTotal_; }
-    
     public final boolean isInitialized() {
       if (!hasAppId) return false;
-      if (!hasCpu) return false;
+      if (!hasRuntime) return false;
+      if (!hasProcCpu) return false;
+      if (!hasCpuTotal) return false;
+      if (!hasCpuProcTotal) return false;
       return true;
     }
     
@@ -756,8 +728,8 @@ public final class ManagementData {
       if (hasAppId()) {
         output.writeString(1, getAppId());
       }
-      if (hasCpu()) {
-        output.writeFloat(3, getCpu());
+      if (hasProcCpu()) {
+        output.writeDouble(3, getProcCpu());
       }
       if (hasRps()) {
         output.writeFloat(10, getRps());
@@ -786,9 +758,9 @@ public final class ManagementData {
         size += com.google.protobuf.CodedOutputStream
           .computeStringSize(1, getAppId());
       }
-      if (hasCpu()) {
+      if (hasProcCpu()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(3, getCpu());
+          .computeDoubleSize(3, getProcCpu());
       }
       if (hasRps()) {
         size += com.google.protobuf.CodedOutputStream
@@ -948,23 +920,23 @@ public final class ManagementData {
         if (other.hasAppId()) {
           setAppId(other.getAppId());
         }
-        if (other.hasCpu()) {
-          setCpu(other.getCpu());
-        }
-        if (other.hasRps()) {
-          setRps(other.getRps());
-        }
-        if (other.hasOverloaded()) {
-          setOverloaded(other.getOverloaded());
-        }
         if (other.hasRuntime()) {
           setRuntime(other.getRuntime());
+        }
+        if (other.hasProcCpu()) {
+          setProcCpu(other.getProcCpu());
         }
         if (other.hasCpuTotal()) {
           setCpuTotal(other.getCpuTotal());
         }
         if (other.hasCpuProcTotal()) {
           setCpuProcTotal(other.getCpuProcTotal());
+        }
+        if (other.hasRps()) {
+          setRps(other.getRps());
+        }
+        if (other.hasOverloaded()) {
+          setOverloaded(other.getOverloaded());
         }
         return this;
       }
@@ -988,8 +960,8 @@ public final class ManagementData {
               setAppId(input.readString());
               break;
             }
-            case 29: {
-              setCpu(input.readFloat());
+            case 25: {
+              setProcCpu(input.readDouble());
               break;
             }
             case 85: {
@@ -1038,21 +1010,75 @@ public final class ManagementData {
         return this;
       }
       
-      // required float cpu = 3;
-      public boolean hasCpu() {
-        return result.hasCpu();
+      // required int64 runtime = 12;
+      public boolean hasRuntime() {
+        return result.hasRuntime();
       }
-      public float getCpu() {
-        return result.getCpu();
+      public long getRuntime() {
+        return result.getRuntime();
       }
-      public Builder setCpu(float value) {
-        result.hasCpu = true;
-        result.cpu_ = value;
+      public Builder setRuntime(long value) {
+        result.hasRuntime = true;
+        result.runtime_ = value;
         return this;
       }
-      public Builder clearCpu() {
-        result.hasCpu = false;
-        result.cpu_ = 0F;
+      public Builder clearRuntime() {
+        result.hasRuntime = false;
+        result.runtime_ = 0L;
+        return this;
+      }
+      
+      // required double procCpu = 3;
+      public boolean hasProcCpu() {
+        return result.hasProcCpu();
+      }
+      public double getProcCpu() {
+        return result.getProcCpu();
+      }
+      public Builder setProcCpu(double value) {
+        result.hasProcCpu = true;
+        result.procCpu_ = value;
+        return this;
+      }
+      public Builder clearProcCpu() {
+        result.hasProcCpu = false;
+        result.procCpu_ = 0D;
+        return this;
+      }
+      
+      // required int64 cpuTotal = 19;
+      public boolean hasCpuTotal() {
+        return result.hasCpuTotal();
+      }
+      public long getCpuTotal() {
+        return result.getCpuTotal();
+      }
+      public Builder setCpuTotal(long value) {
+        result.hasCpuTotal = true;
+        result.cpuTotal_ = value;
+        return this;
+      }
+      public Builder clearCpuTotal() {
+        result.hasCpuTotal = false;
+        result.cpuTotal_ = 0L;
+        return this;
+      }
+      
+      // required int64 cpuProcTotal = 21;
+      public boolean hasCpuProcTotal() {
+        return result.hasCpuProcTotal();
+      }
+      public long getCpuProcTotal() {
+        return result.getCpuProcTotal();
+      }
+      public Builder setCpuProcTotal(long value) {
+        result.hasCpuProcTotal = true;
+        result.cpuProcTotal_ = value;
+        return this;
+      }
+      public Builder clearCpuProcTotal() {
+        result.hasCpuProcTotal = false;
+        result.cpuProcTotal_ = 0L;
         return this;
       }
       
@@ -1089,60 +1115,6 @@ public final class ManagementData {
       public Builder clearOverloaded() {
         result.hasOverloaded = false;
         result.overloaded_ = false;
-        return this;
-      }
-      
-      // optional int64 runtime = 12 [default = 0];
-      public boolean hasRuntime() {
-        return result.hasRuntime();
-      }
-      public long getRuntime() {
-        return result.getRuntime();
-      }
-      public Builder setRuntime(long value) {
-        result.hasRuntime = true;
-        result.runtime_ = value;
-        return this;
-      }
-      public Builder clearRuntime() {
-        result.hasRuntime = false;
-        result.runtime_ = 0L;
-        return this;
-      }
-      
-      // optional int64 cpuTotal = 19 [default = 0];
-      public boolean hasCpuTotal() {
-        return result.hasCpuTotal();
-      }
-      public long getCpuTotal() {
-        return result.getCpuTotal();
-      }
-      public Builder setCpuTotal(long value) {
-        result.hasCpuTotal = true;
-        result.cpuTotal_ = value;
-        return this;
-      }
-      public Builder clearCpuTotal() {
-        result.hasCpuTotal = false;
-        result.cpuTotal_ = 0L;
-        return this;
-      }
-      
-      // optional int64 cpuProcTotal = 21 [default = 0];
-      public boolean hasCpuProcTotal() {
-        return result.hasCpuProcTotal();
-      }
-      public long getCpuProcTotal() {
-        return result.getCpuProcTotal();
-      }
-      public Builder setCpuProcTotal(long value) {
-        result.hasCpuProcTotal = true;
-        result.cpuProcTotal_ = value;
-        return this;
-      }
-      public Builder clearCpuProcTotal() {
-        result.hasCpuProcTotal = false;
-        result.cpuProcTotal_ = 0L;
         return this;
       }
     }

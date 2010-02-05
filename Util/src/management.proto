@@ -1,35 +1,61 @@
 package test; 
 
 option optimize_for = LITE_RUNTIME;
-
 option java_package = "org.prot.util.managment.gen";
 option java_outer_classname = "ManagementData";
-
 
 message Controller
 {
 	required string address = 1; 
 
-	optional float load = 10; 
-	optional uint32 runningApps = 11; 
-	optional float cpu = 12 [default = -1];
-	optional float procCpu = 17 [default = -1];
-	optional float idleCpu = 18 [default = -1]; 
-	optional float rps = 13 [default = 0];
-	optional int64 freeMem = 14 [default = -1];
-	optional int64 totalMem = 15 [default = -1];
-	optional bool overloaded = 16 [default = false];
-		
+	// Number of running applications
+	required uint32 runningApps = 11; 
+	
+	// CPU usage of the whole machine 
+	required double cpu = 12;
+	
+	// CPU usage of the Controller process
+	required double procCpu = 17;
+	
+	// CPU usage of the idle process
+	required double idleCpu = 18;
+	
+	// Available memory
+	required int64 totalMem = 15;
+	
+	// Free memory
+	required int64 freeMem = 14;
+	
+	// Average requests per second 
+	required float rps = 13;
+
+	// The Controller does not have enough threads to process all requests	
+	required bool overloaded = 16;
+	
+	// Encapsulated management data of the AppServers 
 	repeated AppServer appServers = 20;
 }
 
 message AppServer
 {
+	// AppId of the application currently running in the AppServer
 	required string appId = 1;
-	required float cpu = 3;
+	
+	// Runtime of the AppServer in milliseconds
+	required int64 runtime = 12; 
+	
+	// CPU Usage of the AppServer process
+	required double procCpu = 3;
+
+	// Total CPU time of the system
+	required int64 cpuTotal = 19;
+
+	// Total CPU time consumed by the AppServer
+	required int64 cpuProcTotal = 21;
+	
+	// Average requets per second
 	optional float rps = 10; 
+	
+	// The AppServer does not have enough threads to process all requets
 	optional bool overloaded = 11 [default = false];
-	optional int64 runtime = 12 [default = 0];
-	optional int64 cpuTotal = 19 [default = 0];
-	optional int64 cpuProcTotal = 21 [default = 0];
 }

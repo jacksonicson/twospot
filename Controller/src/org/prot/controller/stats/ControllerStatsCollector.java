@@ -58,9 +58,9 @@ public class ControllerStatsCollector
 	{
 		controller.setAddress(Configuration.getConfiguration().getAddress());
 
-		controller.setCpu((float) systemStats.getSystemLoad());
-		controller.setProcCpu((float) systemStats.getProcessLoad());
-		controller.setIdleCpu((float) systemStats.getSystemIdle());
+		controller.setCpu(systemStats.getSystemLoad());
+		controller.setProcCpu(systemStats.getProcessLoadSinceLastCall());
+		controller.setIdleCpu(systemStats.getSystemIdle());
 		controller.setFreeMem(systemStats.getFreePhysicalMemorySize());
 		controller.setTotalMem(systemStats.getTotalPhysicalMemorySize());
 
@@ -79,7 +79,7 @@ public class ControllerStatsCollector
 		@Override
 		public long getInterval()
 		{
-			return 3000;
+			return 5000;
 		}
 
 		@Override
