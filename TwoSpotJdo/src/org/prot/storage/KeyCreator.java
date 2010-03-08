@@ -127,7 +127,7 @@ public class KeyCreator
 				bShardedIndex = Bytes.padTail(bShardedIndex, 8 - bShardedIndex.length);
 
 			// Put the key together
-			byte[] bKey = Bytes.add(bRandom, bShardedIndex);
+			byte[] bKey = Bytes.add(Bytes.add(bRandom, bShardedIndex), Bytes.toBytes(appId));
 
 			Key key = new Key();
 			key.setKey(bKey);
