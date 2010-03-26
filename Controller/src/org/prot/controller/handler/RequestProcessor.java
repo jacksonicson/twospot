@@ -47,12 +47,18 @@ public class RequestProcessor extends HttpProxyHelper<AppInfo>
 		}
 	}
 
+	protected void requestFinished(AppInfo appInfo)
+	{
+		appInfo.stopRequest();
+	}
+	
 	@Override
 	protected boolean error(AppInfo appInfo, Throwable t)
 	{
 		if (t instanceof ConnectException)
 		{
 			appManager.staleApp(appInfo);
+			appInfo.stopRequest();
 			return true;
 		} else if (t instanceof IOException)
 		{

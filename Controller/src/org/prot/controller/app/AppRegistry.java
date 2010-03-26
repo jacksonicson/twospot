@@ -97,7 +97,7 @@ public class AppRegistry implements TokenChecker
 	void updateStates()
 	{
 		// Method is always executed within the same thread as
-		// removeDeadAppInfos(). There is not need for a synchronization on
+		// removeDeadAppInfos(). There is no need for a synchronization on
 		// appInfos.
 
 		synchronized (appInfos)
@@ -110,16 +110,22 @@ public class AppRegistry implements TokenChecker
 				{
 					// Do a state transition if necessary
 					AppState state = info.getStatus();
+
+					// Time since the last touch
+					long lastTouch = System.currentTimeMillis() - info.getTouch();
+
 					switch (state)
 					{
 					case DEPLOYED:
-						// TODO: Wait for all Requests to finish
-						info.setState(AppState.KILLED);
+						// Wait for all Requests to finish
+						if (lastTouch > 60000 || info.getActiveRequests() <= 0)
+							info.setState(AppState.KILLED);
 						break;
 
 					case DROPPED:
-						// TODO: Wait for all Requests to finish
-						info.setState(AppState.KILLED);
+						// Wait for all Requests to finish
+						if (lastTouch > 60000 || info.getActiveRequests() <= 0)
+							info.setState(AppState.KILLED);
 						break;
 
 					case BANNED:

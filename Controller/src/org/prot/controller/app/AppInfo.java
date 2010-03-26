@@ -31,6 +31,9 @@ public final class AppInfo
 	// Timestamp which tells last usage
 	private long touch;
 
+	// Number of active requests
+	private int activeRequests;
+
 	// Timestamp of the last state change
 	private long stateChange = System.currentTimeMillis();
 
@@ -64,6 +67,21 @@ public final class AppInfo
 		{
 			processToken = null;
 		}
+	}
+
+	synchronized void startRequest()
+	{
+		this.activeRequests++;
+	}
+
+	synchronized public void stopRequest()
+	{
+		this.activeRequests--;
+	}
+
+	int getActiveRequests()
+	{
+		return this.activeRequests;
 	}
 
 	void touch()

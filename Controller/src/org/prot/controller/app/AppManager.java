@@ -40,7 +40,7 @@ public class AppManager implements DeploymentListener, SynchronizationListener
 	{
 		return registry.isBlocked(appId);
 	}
-
+	
 	public AppInfo requireApp(String appId)
 	{
 		// Get or register the AppServer
@@ -48,6 +48,7 @@ public class AppManager implements DeploymentListener, SynchronizationListener
 
 		// Update last access timestamp (Idle are killed)
 		appInfo.touch();
+		appInfo.stopRequest();
 
 		// Fast path
 		if (appInfo.getStatus() == AppState.ONLINE)
