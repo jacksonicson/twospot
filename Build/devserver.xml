@@ -22,6 +22,9 @@
 		<copy todir="${dest}/Libs/">
 			<fileset dir="../Libs">
 				<include name="**/*.jar" />
+				<include name="**/*.so" />
+				<include name="**/*.lib" />
+				<include name="**/*.dll" />
 			</fileset>
 		</copy>
 
