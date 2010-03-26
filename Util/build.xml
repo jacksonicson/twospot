@@ -18,6 +18,7 @@
 		<delete dir="${build}" />
 	</target>
 
+	<!-- ATTENTION: Requires the Google ProtoBuf-Compiler (http://code.google.com/p/protobuf/) -->  
 	<target name="protoc">
 		<exec executable="protoc">
 			<arg value="-I=${src}" />
