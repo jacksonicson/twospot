@@ -1,8 +1,10 @@
-= Infodoc for the TWOSPOT-Platform =
+= TwoSpot =
 
 == Requirements
   * Python 2.5.2
   * Java 1.6
+  * Hadoop 0.20.1
+  * HBase 0.20.1
 
 == Configuration ==
 All configuration files are located within the /conf directory. The /conf directory contains one subdirectory for every platform component: 
@@ -44,4 +46,5 @@ Valid NAME's are:
 To start all componentes use: twospot.sh start (linux) or twospot.bat (windows)
 
 To stop all running twospot components use: twospot.sh kill
-The kill command locates all *.pid files. The filename describes the process identifier which will be killed.  
+The kill command locates all *.pid files. The filename describes the process identifier which will be killed.
+  
