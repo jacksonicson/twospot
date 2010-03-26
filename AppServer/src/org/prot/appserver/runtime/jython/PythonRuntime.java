@@ -65,9 +65,11 @@ public class PythonRuntime implements AppRuntime
 		{
 			for (Map<String, String> handler : handlers)
 			{
-				String url = handler.get("regUrl");
+				String url = handler.get("refUrl");
 				String file = handler.get("file");
 
+				logger.debug("WebConfiguration url: " + url + " file: " + file);
+				
 				WebConfiguration webConfig = new WebConfiguration(url, file);
 				config.addWebConfig(webConfig);
 			}

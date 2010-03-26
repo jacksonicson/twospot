@@ -13,7 +13,6 @@ public class WebConfiguration
 
 	public String matches(String uri)
 	{
-
 		if (uri.matches(regExp))
 		{
 			return this.pythonFile;
