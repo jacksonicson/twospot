@@ -9,7 +9,7 @@ import yaml
 import zipfile
 
 ###########################################
-# Properties (TODO: This is the portal app)
+# Properties
 ###########################################
 
 DEV_MODE = False
@@ -20,8 +20,8 @@ SERVER_DEPLOY = 'deploy.twospot.local'
 
 # Production
 if not DEV_MODE:
-    SERVER_PORTAL = 'portal.app.twospot.com'
-    SERVER_DEPLOY = 'deploy.app.twospot.com'
+    SERVER_PORTAL = 'portal.twospot.informatik.fh-augsburg.de'
+    SERVER_DEPLOY = 'deploy.twospot.informatik.fh-augsburg.de'
     
 PORT = 6060
 TIMEOUT = 10

@@ -1,5 +1,3 @@
-import os
-
 first = True
 startTime = None
 
@@ -53,7 +51,3 @@ for times in responseTimes:
         file.write("%f," % 1000)
 file.write('\n')
 file.close()
-
-# os.remove("C:/temp/performance_org.csv")
-
-
