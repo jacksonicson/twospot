@@ -22,9 +22,9 @@
 				<include name="**/*.so" />
 				<include name="**/*.dll" />
 			</fileset>
-			<!--<fileset dir="../Libs/gen">
+			<fileset dir="../Libs/gen">
 				<include name="**/*.jar" />
-			</fileset>-->
+			</fileset>
 		</copy>
 
 		<!-- copy the configuration (etc) -->
