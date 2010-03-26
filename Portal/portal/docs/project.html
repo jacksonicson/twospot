@@ -1,0 +1,27 @@
+<h2>Build</h2>
+
+<p>Die TowSpot-Quellcodes sind in einer Reihe kleinerer Eclipse-Projekte organisiert.
+    Jedes Projekt enth&auml;lt eine ANT-Buildfile mit dem Namen <code>build.xml</code>.
+    Das Skript erstellt aus dem Projekt einer JAR-Datei und legt diese zentral
+    im <code>Libs</code>-Projekt ab. Dort befinden sich auch die Abh&auml;ngigkeiten
+    zur 3Party-Libraries. Die Projekte h&auml;ngen selbst nur von den <code>JAR</code>-Dateien
+    im <code>Libs</code>-Projekt ab. Direkte Eclipse-Projektabh&auml;ngigkeiten
+existieren nicht!</p>
+<p>Die ANT-Buildfiles weisen folgende Voraussetzungen auf:</p>
+<ul>
+    <li><a href="http://python.org/download/">Python 2.6.4</a></li>
+    <li><a href="http://code.google.com/p/protobuf/">Google ProtoBuf (Compiler) 2.2.0</a></li>
+</ul>
+<p>Um die gesamten TowSpot-Plattform zu kompilieren befindet sich im <code>Build</code>-Projekt
+    eine zentralen ANT-Buildfile mit dem Namen <code>plattform.xml</code>. Diese
+    ruft die Buildfiles der einzelnen Projekte in der richtigen Reihenfolge auf.
+    Anschlie&szlig;end erstellt sie das ZIP-Archiv <code>twospot.zip</code>, das die gesamte
+    TowSpot-Plattform enth&auml;lt. Im Build-Projekt befinden sich noch die <code>portal.xml</code>-Buildfile,
+    die ein WAR-Archiv aus der Portal-Anwendung erstellt.</p>
+    
+    <h3>Installation</h3>
+    <p>Voraussetzung f&uuml;r den Betrieb der TwoSpot-Plattform ist eine funktionsf&auml;hige
+        Installation der HBase-Datenbank in der Version 0.20.2. Das von der plattform.xml-Buildfile
+        erstelle ZIP-Paket enth&auml;lt die gesamte TwoSpot-Plattform. Die Konfigurationseinstellungen
+        werden in der <code>info.txt</code>-Datei im Build-Projekt genauer erl&auml;utert.    </p>
+    <p>&nbsp;</p>

@@ -1,12 +1,21 @@
 <h2>UserService</h2>
 
 <p>
-Die TwoSpot-Platform stellt einen zentralen Benutzer-Service zur Verf&uuml;gung. Der Benutzerservice selbst ist in der Portal-Anwendung implementiert. Alle Registrierungsdaten wie z.B. Name, E-Mail und Passwort werden in der Portal-Datenbank gespeichert. Die TwoSpot-Anwendungen erhalten bis auf den Benutzernamen <b>keinen</b> Zugriff auf die  Registrierungsdaten.
+Die TwoSpot-Plattform stellt einen zentralen Benutzer-Service zur Verf&uuml;gung.
+Der Benutzerservice selbst ist in der Portal-Anwendung implementiert. Alle Registrierungsdaten
+wie z.B. Name, E-Mail und Passwort werden in der Portal-Datenbank gespeichert.
+Die TwoSpot-Anwendungen erhalten bis auf den Benutzernamen <b>keinen</b> Zugriff
+auf die Registrierungsdaten.
 </p>
 
 <h3>Funktionsweise</h3>
 <p>
-&uuml;ber die UserService-API k&ouml;nnen die TwoSpot-Anwendungen den Benutzer auf die Login-Seite des UserService weiterleiten. Bei der Weiteleitung werden dem UserService zwei URL's &uuml;berben. Die <code>okUrl</code> wird vom UserService aufgerufen, falls sich der Benutzer mit g&uuml;ltigen Daten einloggt. Die <code>failedUrl</code> wird aufgerufen, falls der Benutzer den Login-Vorgang abbricht oder nicht eingeloggt werden konnte.
+&uuml;ber die UserService-API k&ouml;nnen die TwoSpot-Anwendungen den Benutzer
+auf die Login-Seite des UserService weiterleiten. Bei der Weiteleitung werden
+dem UserService zwei URL's &uuml;bergeben. Die <code>okUrl</code> wird vom UserService
+aufgerufen, falls sich der Benutzer mit g&uuml;ltigen Daten einloggt. Die <code>failedUrl</code> wird
+aufgerufen, falls der Benutzer den Login-Vorgang abbricht oder nicht eingeloggt
+werden konnte.
 </p>
 
 <h3>Verwendung</h3>

@@ -7,7 +7,17 @@
 <p>Im Unterschied zu relationalen Datenbanken stellt HBase keine SQL-Schnittstelle zur Verf&uuml;gung. Auch ein gro&szlig;teil der aus SQL-Datenbanken bekannten Funktionalit&auml;t wie Prim&auml;rschl&uuml;sse, Indices, Fremdschl&uuml;ssel oder Constraints steht bei Verwendung der HBase-Datenbank nicht zur Verf&uuml;gung.
 </p>
 
-<p>Der Zugriff auf die HBase-Datenbank erfolgt &uuml;ber JDO (Java Data Objects). JDO ist ein Standard der eine einheitliche Schnittstelle f&uuml;r das Arbeiten mit persistenten Daten beschreibt. Der Vorteil von JDO gegen&uuml;ber JPA (Java Persistence API), Hibernate oder anderen OR-Mappern liegt in der Unabh&auml;ngigkeit zu der zugrundeliegenden Speichertechnologie. Diese Eigenschaft wird auch als datastore-agnostic bezeichnet und bedeutet vereinfacht ausgedr&uuml;ckt, dass nicht nur relationale Datenbanken sondern jede beliebige Speicherl&ouml;sung eingesetzt werden k&ouml;nnen. Beispiele hierf&uuml;r sind Objektorientierte-, Dokumentenbasierte- oder auch Spalten-Basierte Datenbanken. Dementsprechend l&auml;sst sich JDO auch mit der HBase-Datenbank einsetzten. 
+<p>Der Zugriff auf die HBase-Datenbank erfolgt &uuml;ber JDO (Java Data Objects).
+    JDO ist ein Standard der eine einheitliche Schnittstelle f&uuml;r das Arbeiten
+    mit persistenten Daten beschreibt. Der Vorteil von JDO gegen&uuml;ber JPA
+    (Java Persistence API), Hibernate oder anderen OR-Mappern liegt in der Unabh&auml;ngigkeit
+    zu der zugrunde liegenden Speichertechnologie. Diese Eigenschaft wird auch
+    als datastore-agnostic bezeichnet und bedeutet vereinfacht ausgedr&uuml;ckt,
+    dass nicht nur relationale Datenbanken sondern jede beliebige Speicherl&ouml;sung
+    eingesetzt werden k&ouml;nnen. Beispiele hierf&uuml;r sind objektorientierte-,
+    dokumentenbasierte- oder auch spaltenbasierte Datenbanken. Dementsprechend
+    l&auml;sst
+    sich JDO auch mit der HBase-Datenbank einsetzten. 
 </p>
 
 <h3>JDO in TwoSpot</h3>
@@ -58,10 +68,10 @@ Anschlie&szlig;end m&uuml;ssen die Klasse und die zu persistierneden Attribute
 &uuml;ber Annotations definiert werden. Die Klasse wird dabei mit <code>@PersistenceCapable</code> annotiert.
 Dar&uuml;ber erh&auml;lt JDO die Information, dass es sich um eine persistente
 Klasse handelt. Alle persistenten Attribute werden mit <code>@Persistent</code> annotiert.
-Diese Attribute werden von JDO gespeichert. Es ist dar&uuml;ber hinau&szlig; sinnvoll
+Diese Attribute werden von JDO gespeichert. Es ist dar&uuml;ber hinaus sinnvoll
 nicht persistente Attribute mit <code>@NotPersistent</code> zu annotieren. </p>
 <p>Um persistente Objekte der Klasse eindeutig identifizieren zu k&ouml;nnen
-    muss zus&auml;thlich ein Schl&uuml;sselattribut angelegt werden. Dieses muss
+    muss zus&auml;tzlich ein Schl&uuml;sselattribut angelegt werden. Dieses muss
     in TwoSpot immer den Typ <code>Key</code> haben. Um den Schl&uuml;ssel automatisch
     mit eindeutigen Werten zu bef&uuml;llen stellt TwoSpot einen eigenen Generator
     zur Verf&uuml;gung. Dieser wird in der <code>@Persistent</code>-Annotation
@@ -131,7 +141,8 @@ erzeugen. Dies bilden letztendlich die Schnittstelle zur Datenbank.
 zu speichern. Ein Beispiel daf&uuml;r ist in der GoGo-Beispielanwendung gegeben.</p>
 <p>
     Der folgende Quellcodeausschnitt erstellt eine Instanz der <code>BlogEntry</code>-Klasse,
-    erstellt ein <code>PersistenceManager</code>-Objekt und speichert das Objet in der Datenbank. 
+    erstellt ein <code>PersistenceManager</code>-Objekt und speichert das Objekt
+    in der Datenbank. 
 </p>
 
 <pre class="prettyprint lang-java">
@@ -150,10 +161,10 @@ try
 	// Do some error handling here
 }
 </pre>
-<p>Nachdem das <code>BlogEntry</code>- Objet gespeichert wurde, soll dieses wieder
-    aus der Datenbank geladen werden. Hierzu wird &uuml;ber den <code>PersistenceManager</code> ein <code>Query</code>
+<p>Nachdem das <code>BlogEntry</code>-Objekt gespeichert wurde, soll dieses
+    wieder aus der Datenbank geladen werden. Hierzu wird &uuml;ber den <code>PersistenceManager</code> ein <code>Query</code>
     
-    erzeugt. Beim Erstellen des Queries empfielt es sich den Objekt-Typ zu &uuml;bergeben.</p>
+    erzeugt. Beim Erstellen des Queries empfiehlt es sich den Objekt-Typ zu &uuml;bergeben.</p>
 <pre class="prettyprint lang-java">
 Query query = manager.newQuery(BlogEntry.class);
 </pre>
@@ -164,9 +175,9 @@ Query query = manager.newQuery(BlogEntry.class);
 List<BlogEntry> result = (List<BlogEntry>) query.execute();
 </pre>
 <p>Die Ergebnisse werden zu einem gewissen Ma&szlig;e zeitlich sortiert ausgegeben.
-    Neuere Objekte befinden sich damit am Anfang der liste, &auml;ltere Objekte am
-    Ende. Es ist durchaus m&ouml;glich, dass Objekte, deren Erstellungsdaten dicht
-    beeinander liegen nicht in der korrekten Reihenfolge ausgegeben werden!</p>
+    Neuere Objekte befinden sich damit am Anfang der liste, &auml;ltere Objekte
+    am Ende. Es ist durchaus m&ouml;glich, dass Objekte, deren Erstellungsdaten
+    dicht beieinander liegen nicht in der korrekten Reihenfolge ausgegeben werden!</p>
 <p>Um Selektion weiter einzuschr&auml;nken kann dem Query ein Filter &uuml;bergeben werden.
     Der folgende Quellcodeausschnitt zeigt einige Beispiele f&uuml;r Filter-Bedingungen:</p>
 <pre class="prettyprint lang-java">
@@ -186,6 +197,6 @@ query.setFilter(&quot;number &gt; 25 &amp;&amp; number &lt; 30&quot;);</pre>
 <p>Der DevServer verwendet dasselbe JDO-Plugin f&uuml;r DataNucleus wie der Server
     selbst. Lediglich als Speicherbackend kommt im DevServer keine HBase-Datenbank
     sondern einfache Bin&auml;rdateien zum Einsatz. Der Funktionsumfang und das
-    Verhalten der Datenbank ist im DevServer und im Produktiv-Server identisch. Lediglich
-    die Performance-Characteristika k&ouml;nnen sich zwischen den beiden Systemen
-    unterscheiden!</p>
+    Verhalten der Datenbank ist im DevServer und im Produktiv-Server identisch.
+    Lediglich die Performance-Charakteristika k&ouml;nnen sich zwischen den beiden
+    Systemen unterscheiden!</p>
