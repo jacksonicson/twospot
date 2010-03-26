@@ -3,12 +3,8 @@ package gwiki;
 import gwiki.data.WikiPage;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import javax.jdo.PersistenceManager;
 import javax.servlet.ServletException;
@@ -61,28 +57,43 @@ public class PageServlet extends HttpServlet
 			page.setText("-empty-");
 		}
 
-		String target = "";
+		
 		String text = page.getText();
-		Pattern p = Pattern.compile("___[a-zA-Z_0-9]+___");
-		Matcher m = p.matcher(text);
-
-		int last = 0;
-		while (m.find())
-		{
-			String first = text.substring(last, m.start());
-			String link = text.substring(m.start() + 3, m.end() - 3);
-			last = m.end();
-
-			target += first + "<a href='/page?pname=" + link + "'>" + link + "</a>";
-		}
-
-		target += text.substring(last);
-		target = target.replaceAll("\n", "<br/>");
-
+		Pattern p0 = Pattern.compile("___[a-zA-Z_0-9]+___");
+		Pattern p1 = Pattern.compile("===[a-zA-Z_0-9\\s]+===");
+		Pattern p2 = Pattern.compile("==[a-zA-Z_0-9\\s]+==");
+		Pattern p3 = Pattern.compile("=[a-zA-Z_0-9\\s]+=");
+		text = replaceBy(p0, text, "<a href='/page?pname=" + "%v" + "'>" + "%v" + "</a>");
+		text = replaceBy(p1, text, "<h2>%v</h2>");
+		text = replaceBy(p2, text, "<h3>%v</h3>");
+		text = replaceBy(p3, text, "<h4>%v</h4>");
+		
+		text= text.replaceAll("\n", "<br/>");
+		
 		request.setAttribute("page", page);
-		request.setAttribute("encText", target);
+		request.setAttribute("encText", text);
 		request.getRequestDispatcher("emptyPage.jsp").forward(request, response);
 
 		manager.close();
+	}
+	
+	private String replaceBy(Pattern p, String s, String r)
+	{
+		Matcher m = p.matcher(s);
+		String target = "";
+		int last = 0;
+		while (m.find())
+		{
+			String first = s.substring(last, m.start());
+			String link = s.substring(m.start() + 3, m.end() - 3);
+			last = m.end();
+			
+			r = r.replaceAll("%v", link);
+			target += first + r; 
+		}
+
+		target += s.substring(last);
+		
+		return target; 
 	}
 }

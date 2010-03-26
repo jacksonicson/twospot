@@ -34,5 +34,15 @@
      <input type="submit" />
 </form>
 
+<h3>Formatting</h3>
+<p>
+<ul>
+<li>Wiki Links: ___pageName___</li>
+<li>Headling 1: ===Headline 1===</li>
+<li>Headling 2: ==Headline 1==</li>
+<li>Headling 3: =Headline 1=</li>
+</ul>
+</p>
+
 </body>
 </html>
