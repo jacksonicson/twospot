@@ -14,7 +14,7 @@
 
 	<property>
 		<name>hbase.client.retries.number</name>
-		<value>2</value>
+		<value>10</value>
 	</property>
 
 	<property>
