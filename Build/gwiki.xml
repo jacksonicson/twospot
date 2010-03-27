@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="all" name="CentralGWiki">
+
+	<property name="gwikidir" value="../GWiki/" />
+
+	<target name="all">
+		<ant antfile="${gwikidir}/buildintern.xml" dir="${gwikidir}" />
+		<zip basedir="${gwikidir}" destfile="gwikinull.war" />
+	</target>
+
+</project>
