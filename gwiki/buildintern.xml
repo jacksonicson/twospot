@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="internAll" name="GoGo Intern">
+<project basedir="." default="internAll" name="GWiki intern">
 
 	<property name="src" value="./src" />
 	<property name="dest" value="./WEB-INF/classes" />
