@@ -87,9 +87,7 @@ public class PageServlet extends HttpServlet
 			String first = s.substring(last, m.start());
 			String link = s.substring(m.start() + 3, m.end() - 3);
 			last = m.end();
-			
-			r = r.replaceAll("%v", link);
-			target += first + r; 
+			target += first + r.replaceAll("%v", link); 
 		}
 
 		target += s.substring(last);
