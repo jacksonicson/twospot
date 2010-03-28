@@ -40,12 +40,11 @@ public class IdleProcessor implements BalancingProcessor
 
 			// Check if there are management data for the AppServer
 			if (appInfo.getAppManagement().getAppServer() == null)
-				continue;
+				logger.debug("Missing management data for the appserver");
+			// continue;
 
 			// Check when the AppServr has been used the last time
-			long time = appInfo.getTouch();
-			time = currentTime - time;
-
+			long time = currentTime - appInfo.getTouch();
 			if (time > IDLE_THREASHOLD)
 			{
 				logger.debug("Killing IDLE AppServer: " + appInfo.getAppId());
