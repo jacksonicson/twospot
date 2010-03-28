@@ -190,9 +190,9 @@ class ProcessWorker implements Runnable
 		{
 			appInfo.setState(AppState.KILLED);
 
-			// Resume all continuations
+			// Complete all continuations
 			logger.debug("Could not start AppServer - finishing all continuations");
-			appInfo.resumeContinuations();
+			appInfo.completeContinuations();
 		}
 	}
 

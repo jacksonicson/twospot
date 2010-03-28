@@ -108,6 +108,7 @@ public final class AppInfo
 		// Check state
 		switch (state)
 		{
+		case NEW:
 		case STARTING:
 			// Add this to the continuation
 			continuation.setAttribute(CONTINUATION_ATTRIBUTE_APPINFO, this);
@@ -132,6 +133,14 @@ public final class AppInfo
 	{
 		for (Continuation continuation : continuations)
 			continuation.resume();
+
+		continuations.clear();
+	}
+	
+	synchronized void completeContinuations()
+	{
+		for (Continuation continuation : continuations)
+			continuation.complete();
 
 		continuations.clear();
 	}
@@ -210,7 +219,7 @@ public final class AppInfo
 			this.state = status;
 		} else
 		{
-			logger.debug("Invalid state change from " + this.state + " to " + status);
+			logger.warn("Invalid state change from " + this.state + " to " + status);
 		}
 	}
 
