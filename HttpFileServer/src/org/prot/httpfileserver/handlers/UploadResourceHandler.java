@@ -138,6 +138,9 @@ public class UploadResourceHandler extends AbstractHandler
 			return;
 		}
 
+		// Only use lower case appIds
+		appId = appId.toLowerCase();
+		
 		// Check if there is a version and extract it
 		index = uri.indexOf('/');
 		if (index >= 0)

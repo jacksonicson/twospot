@@ -74,6 +74,9 @@ public class DownloadResourceHandler extends ResourceHandler
 			version = "null";
 		}
 
+		// Only use lower case appIds
+		appId = appId.toLowerCase(); 
+		
 		// Debug
 		logger.debug("Resource with AppId: " + appId + " Version: " + version);
 
