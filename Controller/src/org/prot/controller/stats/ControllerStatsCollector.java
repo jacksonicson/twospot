@@ -66,7 +66,7 @@ public class ControllerStatsCollector
 		controller.setTotalMem(systemStats.getTotalPhysicalMemorySize());
 		controller.setFreeMem(systemStats.getFreePhysicalMemorySize());
 		controller.setRps(getRps());
-
+		
 		Set<AppInfo> appInfos = registry.getDuplicatedAppInfos();
 		controller.setRunningApps(appInfos.size());
 		for (AppInfo info : appInfos)

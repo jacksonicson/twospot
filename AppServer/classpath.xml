@@ -69,6 +69,7 @@
 <pathelement location="../Libs/lib/sigar/sigar-x86-winnt.dll" />
 <pathelement location="../Libs/lib/sigar/sigar-x86-winnt.lib" />
 <pathelement location="../Libs/lib/sigar/sigar.jar" />
+<pathelement location="../Libs/lib/winstone-0.9.10.jar" />
 </path><fileset dir='../' id='libfiles'><include name="Libs/lib/apache_commons/commons-logging-1.1.1.jar" />
 <include name="Libs/lib/snakeyaml-1.5/snakeyaml-1.5.jar" />
 <include name="Libs/lib/snakeyaml-1.5/snakeyaml-1.5-sources.jar" />
@@ -140,4 +141,5 @@
 <include name="Libs/lib/sigar/sigar-x86-winnt.dll" />
 <include name="Libs/lib/sigar/sigar-x86-winnt.lib" />
 <include name="Libs/lib/sigar/sigar.jar" />
+<include name="Libs/lib/winstone-0.9.10.jar" />
 </fileset></project>

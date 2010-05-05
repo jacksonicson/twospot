@@ -27,6 +27,7 @@
 			<list>
 				<ref bean="PythonRuntime" />
 				<ref bean="JavaRuntime" />
+				<ref bean="WinstoneRuntime" />
 			</list>
 		</property>
 	</bean>
@@ -37,6 +38,7 @@
 	<!-- Runtimes -->
 	<bean id="PythonRuntime" class="org.prot.appserver.runtime.jython.PythonRuntime" />
 	<bean id="JavaRuntime" class="org.prot.appserver.runtime.java.JavaRuntime" />
+	<bean id="WinstoneRuntime" class="org.prot.appserver.runtime.winstone.WinstoneRuntime" />
 
 </beans>
 

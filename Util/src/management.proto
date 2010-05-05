@@ -34,6 +34,11 @@ message Controller
 	repeated AppServer appServers = 20;
 }
 
+message Test
+{
+	required Test test = 1;
+}
+
 message AppServer
 {
 	// AppId of the application currently running in the AppServer

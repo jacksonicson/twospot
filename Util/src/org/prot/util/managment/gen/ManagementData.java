@@ -633,6 +633,285 @@ public final class ManagementData {
     // @@protoc_insertion_point(class_scope:test.Controller)
   }
   
+  public static final class Test extends
+      com.google.protobuf.GeneratedMessageLite {
+    // Use Test.newBuilder() to construct.
+    private Test() {
+      initFields();
+    }
+    private Test(boolean noInit) {}
+    
+    private static final Test defaultInstance;
+    public static Test getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public Test getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    // required .test.Test test = 1;
+    public static final int TEST_FIELD_NUMBER = 1;
+    private boolean hasTest;
+    private org.prot.util.managment.gen.ManagementData.Test test_;
+    public boolean hasTest() { return hasTest; }
+    public org.prot.util.managment.gen.ManagementData.Test getTest() { return test_; }
+    
+    private void initFields() {
+      test_ = org.prot.util.managment.gen.ManagementData.Test.getDefaultInstance();
+    }
+    public final boolean isInitialized() {
+      if (!hasTest) return false;
+      if (!getTest().isInitialized()) return false;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (hasTest()) {
+        output.writeMessage(1, getTest());
+      }
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (hasTest()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getTest());
+      }
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    public static org.prot.util.managment.gen.ManagementData.Test parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static org.prot.util.managment.gen.ManagementData.Test parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static org.prot.util.managment.gen.ManagementData.Test parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static org.prot.util.managment.gen.ManagementData.Test parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static org.prot.util.managment.gen.ManagementData.Test parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static org.prot.util.managment.gen.ManagementData.Test parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static org.prot.util.managment.gen.ManagementData.Test parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static org.prot.util.managment.gen.ManagementData.Test parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static org.prot.util.managment.gen.ManagementData.Test parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static org.prot.util.managment.gen.ManagementData.Test parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(org.prot.util.managment.gen.ManagementData.Test prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageLite.Builder<
+          org.prot.util.managment.gen.ManagementData.Test, Builder> {
+      private org.prot.util.managment.gen.ManagementData.Test result;
+      
+      // Construct using org.prot.util.managment.gen.ManagementData.Test.newBuilder()
+      private Builder() {}
+      
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new org.prot.util.managment.gen.ManagementData.Test();
+        return builder;
+      }
+      
+      protected org.prot.util.managment.gen.ManagementData.Test internalGetResult() {
+        return result;
+      }
+      
+      public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
+        result = new org.prot.util.managment.gen.ManagementData.Test();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(result);
+      }
+      
+      public org.prot.util.managment.gen.ManagementData.Test getDefaultInstanceForType() {
+        return org.prot.util.managment.gen.ManagementData.Test.getDefaultInstance();
+      }
+      
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
+      public org.prot.util.managment.gen.ManagementData.Test build() {
+        if (result != null && !isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return buildPartial();
+      }
+      
+      private org.prot.util.managment.gen.ManagementData.Test buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        if (!isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return buildPartial();
+      }
+      
+      public org.prot.util.managment.gen.ManagementData.Test buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");
+        }
+        org.prot.util.managment.gen.ManagementData.Test returnMe = result;
+        result = null;
+        return returnMe;
+      }
+      
+      public Builder mergeFrom(org.prot.util.managment.gen.ManagementData.Test other) {
+        if (other == org.prot.util.managment.gen.ManagementData.Test.getDefaultInstance()) return this;
+        if (other.hasTest()) {
+          mergeTest(other.getTest());
+        }
+        return this;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              return this;
+            default: {
+              if (!parseUnknownField(input, extensionRegistry, tag)) {
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              org.prot.util.managment.gen.ManagementData.Test.Builder subBuilder = org.prot.util.managment.gen.ManagementData.Test.newBuilder();
+              if (hasTest()) {
+                subBuilder.mergeFrom(getTest());
+              }
+              input.readMessage(subBuilder, extensionRegistry);
+              setTest(subBuilder.buildPartial());
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // required .test.Test test = 1;
+      public boolean hasTest() {
+        return result.hasTest();
+      }
+      public org.prot.util.managment.gen.ManagementData.Test getTest() {
+        return result.getTest();
+      }
+      public Builder setTest(org.prot.util.managment.gen.ManagementData.Test value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        result.hasTest = true;
+        result.test_ = value;
+        return this;
+      }
+      public Builder setTest(org.prot.util.managment.gen.ManagementData.Test.Builder builderForValue) {
+        result.hasTest = true;
+        result.test_ = builderForValue.build();
+        return this;
+      }
+      public Builder mergeTest(org.prot.util.managment.gen.ManagementData.Test value) {
+        if (result.hasTest() &&
+            result.test_ != org.prot.util.managment.gen.ManagementData.Test.getDefaultInstance()) {
+          result.test_ =
+            org.prot.util.managment.gen.ManagementData.Test.newBuilder(result.test_).mergeFrom(value).buildPartial();
+        } else {
+          result.test_ = value;
+        }
+        result.hasTest = true;
+        return this;
+      }
+      public Builder clearTest() {
+        result.hasTest = false;
+        result.test_ = org.prot.util.managment.gen.ManagementData.Test.getDefaultInstance();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:test.Test)
+    }
+    
+    static {
+      defaultInstance = new Test(true);
+      org.prot.util.managment.gen.ManagementData.internalForceInit();
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:test.Test)
+  }
+  
   public static final class AppServer extends
       com.google.protobuf.GeneratedMessageLite {
     // Use AppServer.newBuilder() to construct.
