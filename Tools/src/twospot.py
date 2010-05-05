@@ -221,6 +221,9 @@ def createProject(directory, projectType, projectName):
     if not os.path.isdir(directory):
         raise InvalidDirectory("Destination path is not a directory")  
     
+    # Only use lower case project names
+    projectName = projectName.lower()
+    
     # Create the application folder
     directory += os.sep + projectName
     if os.path.exists(directory):
