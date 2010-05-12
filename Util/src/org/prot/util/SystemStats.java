@@ -6,6 +6,12 @@ import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
 import org.hyperic.sigar.SigarProxy;
 
+/**
+ * Uses the Sigar library to acquire system stats. 
+ * 
+ * @author Andreas Wolke
+ *
+ */
 public class SystemStats
 {
 	private static final Logger logger = Logger.getLogger(SystemStats.class);

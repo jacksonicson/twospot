@@ -8,8 +8,12 @@ import org.apache.log4j.Logger;
 import org.apache.zookeeper.KeeperException;
 import org.prot.util.zookeeper.jobs.CreateZNodeStructure;
 
-public class JobQueue
-{
+/**
+ * 
+ * @author Andreas Wolke
+ * 
+ */
+public class JobQueue {
 	private static final Logger logger = Logger.getLogger(JobQueue.class);
 
 	private final ZooHelper zooHelper;
@@ -22,26 +26,21 @@ public class JobQueue
 
 	private List<Job> jobQueue = new ArrayList<Job>();
 
-	JobQueue(ZooHelper zooHelper)
-	{
+	JobQueue(ZooHelper zooHelper) {
 		this.zooHelper = zooHelper;
 		jobQueue.add(new CreateZNodeStructure());
 	}
 
-	void proceed()
-	{
+	void proceed() {
 		run();
 	}
 
-	void finishSetup()
-	{
+	void finishSetup() {
 		this.setup = false;
 	}
 
-	void reconnected()
-	{
-		synchronized (jobQueue)
-		{
+	void reconnected() {
+		synchronized (jobQueue) {
 			// Add all connections jobs at the beginning of the job queue
 			for (int i = 0; i < connectionJobs.size(); i++)
 				jobQueue.add(i, connectionJobs.get(i));
@@ -50,31 +49,25 @@ public class JobQueue
 		}
 	}
 
-	public void insertConnectionJob(Job job)
-	{
+	public void insertConnectionJob(Job job) {
 		assert (setup == false);
 		connectionJobs.add(job);
 	}
 
-	public boolean insertAndWait(Job job)
-	{
+	public boolean insertAndWait(Job job) {
 		// Jobs must not be retryable
 		assert (job.isRetryable() == false);
 
 		// Execute a job without a queue
-		try
-		{
+		try {
 			return execute(job, false) == JobState.OK;
-		} catch (KeeperException e)
-		{
+		} catch (KeeperException e) {
 			return false;
 		}
 	}
 
-	public void insert(Job job)
-	{
-		synchronized (jobQueue)
-		{
+	public void insert(Job job) {
+		synchronized (jobQueue) {
 			jobQueue.add(job);
 			jobQueue.notify();
 		}
@@ -82,10 +75,8 @@ public class JobQueue
 		proceed();
 	}
 
-	public void requires(Job target, Job toInsert)
-	{
-		synchronized (jobQueue)
-		{
+	public void requires(Job target, Job toInsert) {
+		synchronized (jobQueue) {
 			// Check inde of the job
 			int index = jobQueue.indexOf(target);
 
@@ -104,15 +95,11 @@ public class JobQueue
 		proceed();
 	}
 
-	public void run()
-	{
-		synchronized (running)
-		{
-			while (!jobQueue.isEmpty())
-			{
+	public void run() {
+		synchronized (running) {
+			while (!jobQueue.isEmpty()) {
 				Job todo = null;
-				synchronized (jobQueue)
-				{
+				synchronized (jobQueue) {
 					if (jobQueue.isEmpty())
 						return;
 
@@ -120,13 +107,10 @@ public class JobQueue
 				}
 
 				JobState jobState = JobState.FAILED;
-				try
-				{
+				try {
 					jobState = execute(todo, true);
-				} catch (KeeperException e)
-				{
-					switch (e.code())
-					{
+				} catch (KeeperException e) {
+					switch (e.code()) {
 					case SESSIONEXPIRED:
 					case SESSIONMOVED:
 						logger.warn("Stopping job queue and waiting for reconnect");
@@ -136,8 +120,7 @@ public class JobQueue
 					}
 				}
 
-				synchronized (jobQueue)
-				{
+				synchronized (jobQueue) {
 					jobQueue.remove(todo);
 					if (jobState == JobState.RETRY)
 						jobQueue.add(0, todo);
@@ -148,8 +131,7 @@ public class JobQueue
 		}
 	}
 
-	private JobState execute(Job job, boolean queued) throws KeeperException
-	{
+	private JobState execute(Job job, boolean queued) throws KeeperException {
 		logger.info("processing job: " + job.getClass().getName());
 
 		// Setup the job
@@ -157,21 +139,16 @@ public class JobQueue
 
 		// Retry this job?
 		JobState jobState = null;
-		try
-		{
+		try {
 			// Execute the job
 			jobState = job.execute(zooHelper);
-		} catch (KeeperException e)
-		{
+		} catch (KeeperException e) {
 			throw e;
-		} catch (InterruptedException e)
-		{
+		} catch (InterruptedException e) {
 			logger.error("InterruptedException", e);
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			logger.error("IOException", e);
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			logger.error("Exception", e);
 			System.exit(1);
 		}
@@ -181,8 +158,7 @@ public class JobQueue
 			return jobState;
 
 		// Check if job is retryable
-		if (jobState == JobState.RETRY && job.isRetryable() == false)
-		{
+		if (jobState == JobState.RETRY && job.isRetryable() == false) {
 			jobState = JobState.FAILED;
 			logger.debug("ZooKeeper job failed and is not retryable: " + job.getClass().getName());
 		}

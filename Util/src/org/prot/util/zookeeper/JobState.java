@@ -1,12 +1,17 @@
 package org.prot.util.zookeeper;
 
-public enum JobState
-{
+/**
+ * States in which a job can be
+ * 
+ * @author Andreas Wolke
+ * 
+ */
+public enum JobState {
 	OK,
 
 	RETRY,
 
 	RETRY_LATER,
-	
+
 	FAILED,
 }

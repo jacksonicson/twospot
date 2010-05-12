@@ -24,9 +24,16 @@ import org.eclipse.jetty.io.Buffer;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.util.TypeUtil;
 
-public class HttpProxyHelper<M>
-{
-	private static final Logger logger = Logger.getLogger(HttpProxyHelper.class);
+/**
+ * Base class to implement a HTTP proxy based on Jetty.
+ * 
+ * @author Andreas Wolke
+ * 
+ * @param <M>
+ */
+public class HttpProxyHelper<M> {
+	private static final Logger logger = Logger
+			.getLogger(HttpProxyHelper.class);
 
 	private static final String CONTINUATION_FLAG = "PROXY";
 
@@ -36,13 +43,11 @@ public class HttpProxyHelper<M>
 
 	private final boolean LIMIT_TRAFFIC;
 
-	public HttpProxyHelper(boolean limitTraffic)
-	{
+	public HttpProxyHelper(boolean limitTraffic) {
 		LIMIT_TRAFFIC = limitTraffic;
 	}
 
-	protected void setupInvalidHeaders()
-	{
+	protected void setupInvalidHeaders() {
 		invalidHeaders.add(HttpHeaders.PROXY_CONNECTION.toLowerCase());
 		invalidHeaders.add(HttpHeaders.CONNECTION.toLowerCase());
 		invalidHeaders.add(HttpHeaders.KEEP_ALIVE.toLowerCase());
@@ -62,8 +67,7 @@ public class HttpProxyHelper<M>
 	 * @param exchange
 	 *            the HttpExchange object
 	 */
-	protected void requestSent(M management, HttpExchange exchange)
-	{
+	protected void requestSent(M management, HttpExchange exchange) {
 		// This is a template method
 	}
 
@@ -72,8 +76,7 @@ public class HttpProxyHelper<M>
 	 * 
 	 * @param management
 	 */
-	protected void expired(M management)
-	{
+	protected void expired(M management) {
 		// This is a template method
 	}
 
@@ -82,8 +85,7 @@ public class HttpProxyHelper<M>
 	 * 
 	 * @param management
 	 */
-	protected void requestFinished(M management)
-	{
+	protected void requestFinished(M management) {
 		// This is a template method
 	}
 
@@ -95,15 +97,13 @@ public class HttpProxyHelper<M>
 	 * @return true if the method has handled the error. If false the error will
 	 *         be logged.
 	 */
-	protected boolean error(M management, Throwable t)
-	{
+	protected boolean error(M management, Throwable t) {
 		// This is a template method
 		return false;
 	}
 
-	protected boolean handleStatus(M management, Buffer version, int status, Buffer reason)
-			throws IOException
-	{
+	protected boolean handleStatus(M management, Buffer version, int status,
+			Buffer reason) throws IOException {
 		return false;
 	}
 
@@ -111,65 +111,55 @@ public class HttpProxyHelper<M>
 	 * Implementation
 	 */
 
-	private boolean isFilteredHeader(String header)
-	{
+	private boolean isFilteredHeader(String header) {
 		return invalidHeaders.contains(header);
 	}
 
-	public void forwardRequest(final Request jetRequest, final HttpServletRequest request,
-			final HttpServletResponse response, final HttpURI url) throws Exception
-	{
+	public void forwardRequest(final Request jetRequest,
+			final HttpServletRequest request,
+			final HttpServletResponse response, final HttpURI url)
+			throws Exception {
 		forwardRequest(jetRequest, request, response, url, null);
 	}
 
-	class CountingInputStream extends InputStream
-	{
+	class CountingInputStream extends InputStream {
 		private long byteCounter = 0;
 
 		private static final long limit = 1 * 1024 * 1024;
 
 		private final InputStream target;
 
-		public CountingInputStream(InputStream in)
-		{
+		public CountingInputStream(InputStream in) {
 			this.target = in;
 		}
 
-		public long skip(long n) throws IOException
-		{
+		public long skip(long n) throws IOException {
 			return target.skip(n);
 		}
 
-		public int available() throws IOException
-		{
+		public int available() throws IOException {
 			return target.available();
 		}
 
-		public void close() throws IOException
-		{
+		public void close() throws IOException {
 			target.close();
 		}
 
-		public synchronized void mark(int readlimit)
-		{
+		public synchronized void mark(int readlimit) {
 			target.mark(readlimit);
 		}
 
-		public synchronized void reset() throws IOException
-		{
+		public synchronized void reset() throws IOException {
 			target.reset();
 		}
 
-		public boolean markSupported()
-		{
+		public boolean markSupported() {
 			return target.markSupported();
 		}
 
-		public final int read(byte b[]) throws IOException
-		{
+		public final int read(byte b[]) throws IOException {
 			byteCounter += b.length;
-			if (byteCounter > limit)
-			{
+			if (byteCounter > limit) {
 				logger.warn("Limited input stream");
 				throw new IOException("Limited input stream");
 			}
@@ -177,11 +167,9 @@ public class HttpProxyHelper<M>
 			return target.read(b, 0, b.length);
 		}
 
-		public final int read(byte b[], int off, int len) throws IOException
-		{
+		public final int read(byte b[], int off, int len) throws IOException {
 			byteCounter += len;
-			if (byteCounter > limit)
-			{
+			if (byteCounter > limit) {
 				logger.warn("Limited input stream");
 				throw new IOException("Limited input stream");
 			}
@@ -190,11 +178,9 @@ public class HttpProxyHelper<M>
 		}
 
 		@Override
-		public final int read() throws IOException
-		{
+		public final int read() throws IOException {
 			byteCounter++;
-			if (byteCounter > limit)
-			{
+			if (byteCounter > limit) {
 				logger.warn("Limited input stream");
 				throw new IOException("Limited input stream");
 			}
@@ -203,15 +189,15 @@ public class HttpProxyHelper<M>
 		}
 	}
 
-	public void forwardRequest(final Request jetRequest, final HttpServletRequest request,
-			final HttpServletResponse response, final HttpURI url, final M obj) throws Exception
-	{
+	public void forwardRequest(final Request jetRequest,
+			final HttpServletRequest request,
+			final HttpServletResponse response, final HttpURI url, final M obj)
+			throws Exception {
 		if (url == null)
 			throw new NullPointerException("URL must not be null");
 
 		// Check if its a CONNECT request
-		if (request.getMethod().equalsIgnoreCase("CONNECT"))
-		{
+		if (request.getMethod().equalsIgnoreCase("CONNECT")) {
 			response.sendError(HttpStatus.NOT_IMPLEMENTED_501);
 			jetRequest.setHandled(true);
 			return;
@@ -227,12 +213,11 @@ public class HttpProxyHelper<M>
 		final OutputStream out = response.getOutputStream();
 
 		// Get a continuation for this request
-		final Continuation continuation = ContinuationSupport.getContinuation(jetRequest);
-		if (!continuation.isInitial())
-		{
+		final Continuation continuation = ContinuationSupport
+				.getContinuation(jetRequest);
+		if (!continuation.isInitial()) {
 			// Check if the proxy flag has been set
-			if (continuation.getAttribute(CONTINUATION_FLAG) != null)
-			{
+			if (continuation.getAttribute(CONTINUATION_FLAG) != null) {
 				// Request timed out!
 				response.sendError(HttpServletResponse.SC_GATEWAY_TIMEOUT);
 				jetRequest.setHandled(true);
@@ -241,11 +226,9 @@ public class HttpProxyHelper<M>
 		}
 
 		// Handling the response
-		HttpExchange exchange = new HttpExchange()
-		{
+		HttpExchange exchange = new HttpExchange() {
 			@Override
-			public void onResponseComplete() throws IOException
-			{
+			public void onResponseComplete() throws IOException {
 				continuation.complete();
 				jetRequest.setHandled(true);
 
@@ -253,21 +236,20 @@ public class HttpProxyHelper<M>
 			}
 
 			@Override
-			public void onResponseContent(Buffer buffer) throws IOException
-			{
+			public void onResponseContent(Buffer buffer) throws IOException {
 				buffer.writeTo(out);
 			}
 
 			@Override
-			public void onResponseStatus(Buffer version, int status, Buffer reason) throws IOException
-			{
+			public void onResponseStatus(Buffer version, int status,
+					Buffer reason) throws IOException {
 				if (!handleStatus(obj, version, status, reason))
 					response.setStatus(status);
 			}
 
 			@Override
-			public void onResponseHeader(Buffer name, Buffer value) throws IOException
-			{
+			public void onResponseHeader(Buffer name, Buffer value)
+					throws IOException {
 				if (isFilteredHeader(name.toString()))
 					return;
 
@@ -279,27 +261,27 @@ public class HttpProxyHelper<M>
 			}
 
 			@Override
-			public void onConnectionFailed(Throwable ex)
-			{
+			public void onConnectionFailed(Throwable ex) {
 				onException(ex);
 			}
 
 			@Override
-			public void onException(Throwable ex)
-			{
+			public void onException(Throwable ex) {
 				if (response.isCommitted() == false)
-					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+					response
+							.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
 				if (!error(obj, ex))
-					logger.error("Unhandled exception in the ProxyHelper: ", ex);
+					logger
+							.error("Unhandled exception in the ProxyHelper: ",
+									ex);
 
 				continuation.complete();
 				jetRequest.setHandled(true);
 			}
 
 			@Override
-			public void onExpire()
-			{
+			public void onExpire() {
 				if (response.isCommitted() == false)
 					response.setStatus(HttpServletResponse.SC_REQUEST_TIMEOUT);
 
@@ -310,10 +292,10 @@ public class HttpProxyHelper<M>
 			}
 
 			@Override
-			public void cancel()
-			{
+			public void cancel() {
 				if (response.isCommitted() == false)
-					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+					response
+							.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
 				continuation.complete();
 				jetRequest.setHandled(true);
@@ -332,10 +314,10 @@ public class HttpProxyHelper<M>
 
 		// Check the connection Header
 		String connectionHeader = request.getHeader(HttpHeaders.CONNECTION);
-		if (connectionHeader != null)
-		{
+		if (connectionHeader != null) {
 			connectionHeader = connectionHeader.toLowerCase();
-			if (connectionHeader.indexOf("keep-alive") < 0 && connectionHeader.indexOf("close") < 0)
+			if (connectionHeader.indexOf("keep-alive") < 0
+					&& connectionHeader.indexOf("close") < 0)
 				connectionHeader = null;
 		}
 
@@ -343,8 +325,8 @@ public class HttpProxyHelper<M>
 		boolean hasContent = false;
 		boolean xForwardedFor = true;
 		long contentLength = -1;
-		for (Enumeration<?> headerNames = request.getHeaderNames(); headerNames.hasMoreElements();)
-		{
+		for (Enumeration<?> headerNames = request.getHeaderNames(); headerNames
+				.hasMoreElements();) {
 			String name = (String) headerNames.nextElement();
 
 			if (isFilteredHeader(name))
@@ -355,17 +337,17 @@ public class HttpProxyHelper<M>
 
 			if (name.equalsIgnoreCase(HttpHeaders.CONTENT_TYPE))
 				hasContent = true;
-			else if (name.equalsIgnoreCase(HttpHeaders.CONTENT_LENGTH))
-			{
+			else if (name.equalsIgnoreCase(HttpHeaders.CONTENT_LENGTH)) {
 				contentLength = request.getContentLength();
-				exchange.setRequestHeader(HttpHeaders.CONTENT_LENGTH, TypeUtil.toString(contentLength));
+				exchange.setRequestHeader(HttpHeaders.CONTENT_LENGTH, TypeUtil
+						.toString(contentLength));
 
 				hasContent = contentLength > 0;
 			} else if (name.equalsIgnoreCase(HttpHeaders.X_FORWARDED_FOR))
 				xForwardedFor = true;
 
-			for (Enumeration<?> values = request.getHeaders(name); values.hasMoreElements();)
-			{
+			for (Enumeration<?> values = request.getHeaders(name); values
+					.hasMoreElements();) {
 				String value = (String) values.nextElement();
 				if (value == null)
 					continue;
@@ -377,7 +359,8 @@ public class HttpProxyHelper<M>
 		// Add additional proxy headers
 		exchange.setRequestHeader(HttpHeaders.VIA, "0.0 (twospot)");
 		if (xForwardedFor == false)
-			exchange.addRequestHeader(HttpHeaders.X_FORWARDED_FOR, request.getRemoteAddr());
+			exchange.addRequestHeader(HttpHeaders.X_FORWARDED_FOR, request
+					.getRemoteAddr());
 
 		// Set content body
 		if (hasContent)
@@ -394,8 +377,7 @@ public class HttpProxyHelper<M>
 		jetRequest.setHandled(true);
 	}
 
-	public void setHttpClient(HttpClient httpClient)
-	{
+	public void setHttpClient(HttpClient httpClient) {
 		this.httpClient = httpClient;
 	}
 }

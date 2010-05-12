@@ -3,7 +3,7 @@ package org.prot.util;
 public final class AppIdExtractor
 {
 	/**
-	 * Extracts the AppId from URL's of the type: scheme://appId.domain:port/xxx
+	 * Extracts the AppId from URL's of the type: scheme://appId.domain:port/*
 	 * 
 	 * @param the
 	 *            complete url
@@ -11,27 +11,27 @@ public final class AppIdExtractor
 	 */
 	public static String fromDomain(String url)
 	{
-		// Remove the scheme part
+		// Remove the schema part
 		int start = url.indexOf("://");
 		if (start == -1)
 			return null;
 		start += 3;
 
 		// Find the first dot and remove everything after it
-		int dest = url.indexOf(".", start);
-		if (dest == -1)
+		int end = url.indexOf(".", start);
+		if (end == -1)
 			return null;
 
 		// Extract the AppId and check its length
-		int length = dest - start;
+		int length = end - start;
 		if (length >= ReservedAppIds.MIN_LENGTH && length <= ReservedAppIds.MAX_LENGTH)
-			return url.substring(start, dest);
+			return url.substring(start, end);
 
 		return null;
 	}
 
 	/**
-	 * Extracts the AppId from URL's of the type: scheme://doamin:port/appId/xxx
+	 * Extracts the AppId from URL's of the type: scheme://domain:port/appId/*
 	 * 
 	 * @param the
 	 *            complete url
@@ -41,7 +41,7 @@ public final class AppIdExtractor
 	{
 		int index = -1;
 
-		// Remove the scheme part
+		// Remove the schema part
 		index = url.indexOf("://");
 		if (index != -1)
 			url = url.substring(index + 3);
@@ -54,21 +54,21 @@ public final class AppIdExtractor
 		int index = -1;
 
 		// Remove the first slash
-		int startIndex = 0;
+		int start = 0;
 		if (uri.startsWith("/"))
-			startIndex = 1;
+			start = 1;
 
 		// Extract everything before the next slash
-		index = uri.indexOf("/", startIndex);
+		index = uri.indexOf("/", start);
 		if (index != -1)
 		{
 			if (index == 0)
 				return null;
 			else
 			{
-				int length = index - startIndex;
+				int length = index - start;
 				if (length >= ReservedAppIds.MIN_LENGTH && length <= ReservedAppIds.MAX_LENGTH)
-					return uri.substring(startIndex, index);
+					return uri.substring(start, index);
 			}
 		}
 

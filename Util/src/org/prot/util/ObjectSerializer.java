@@ -9,46 +9,44 @@ import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
-public class ObjectSerializer
-{
-	private static final Logger logger = Logger.getLogger(ObjectSerializer.class);
+/**
+ * Wrapper around the java ObjectInput and ObjectOutput streams.
+ * 
+ * @author Andreas Wolke
+ * 
+ */
+public class ObjectSerializer {
+	private static final Logger logger = Logger
+			.getLogger(ObjectSerializer.class);
 
-	public Object deserialize(byte[] input)
-	{
-		if (input == null || input.length == 0)
-		{
+	public Object deserialize(byte[] input) {
+		if (input == null || input.length == 0) {
 			logger.warn("Cannot deserialize - no data available");
 			return null;
 		}
 
 		ByteArrayInputStream byteIn = new ByteArrayInputStream(input);
-		try
-		{
+		try {
 			ObjectInputStream in = new ObjectInputStream(byteIn);
 			Object object = in.readObject();
 			return object;
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			logger.error("IOException", e);
-		} catch (ClassNotFoundException e)
-		{
+		} catch (ClassNotFoundException e) {
 			logger.error("ClassNotFoundException", e);
 		}
 
 		return null;
 	}
 
-	public byte[] serialize(Serializable object)
-	{
+	public byte[] serialize(Serializable object) {
 		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
 		ObjectOutputStream out;
-		try
-		{
+		try {
 			out = new ObjectOutputStream(byteOut);
 			out.writeObject(object);
 			return byteOut.toByteArray();
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			logger.error("IOException", e);
 		}
 

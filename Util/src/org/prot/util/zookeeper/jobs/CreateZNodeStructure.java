@@ -14,30 +14,26 @@ import org.prot.util.zookeeper.JobState;
 import org.prot.util.zookeeper.ZNodes;
 import org.prot.util.zookeeper.ZooHelper;
 
-public class CreateZNodeStructure implements Job
-{
+public class CreateZNodeStructure implements Job {
 	private static final Logger logger = Logger.getLogger(CreateZNodeStructure.class);
 
 	@Override
-	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException
-	{
+	public JobState execute(ZooHelper zooHelper) throws KeeperException, InterruptedException, IOException {
 		ZooKeeper zooKeeper = zooHelper.getZooKeeper();
 		List<ACL> acl = zooHelper.getACL();
 
-		try
-		{
+		try {
+			// Creaets the apps node
 			zooKeeper.create(ZNodes.ZNODE_APPS, new byte[] {}, acl, CreateMode.PERSISTENT);
-		} catch (KeeperException e)
-		{
+		} catch (KeeperException e) {
 			if (e.code() != Code.NODEEXISTS)
 				logger.error("KeeperException", e);
 		}
 
-		try
-		{
+		try {
+			// Creates the controllers node
 			zooKeeper.create(ZNodes.ZNODE_CONTROLLER, new byte[] {}, acl, CreateMode.PERSISTENT);
-		} catch (KeeperException e)
-		{
+		} catch (KeeperException e) {
 			if (e.code() != Code.NODEEXISTS)
 				logger.error("KeeperException", e);
 		}
@@ -46,13 +42,11 @@ public class CreateZNodeStructure implements Job
 	}
 
 	@Override
-	public boolean isRetryable()
-	{
+	public boolean isRetryable() {
 		return false;
 	}
 
 	@Override
-	public void init(ZooHelper zooHelper)
-	{
+	public void init(ZooHelper zooHelper) {
 	}
 }
