@@ -178,7 +178,7 @@ def deploy(directory):
 
         # Add the directory to the zip file
         # This does not work with all operating systems!
-        #if relRoot is not "":
+        # if relRoot is not "":
         #    zip.write(root, relRoot)
             
         # Iterate over all files in the directory
@@ -237,8 +237,8 @@ def createProject(directory, projectType, projectName):
         os.mkdir(directory + os.sep + "src")
         os.mkdir(directory + os.sep + "lib")
         os.mkdir(directory + os.sep + "WEB-INF")
-        os.mkdir(directory + os.sep + "/WEB-INF/lib")
-        os.mkdir(directory + os.sep + "/WEB-INF/classes")
+        os.mkdir(directory + os.sep + "WEB-INF" + os.sep + "lib")
+        os.mkdir(directory + os.sep + "WEB-INF" + os.sep + "classes")
         
         # Tokens to replace
         tokens = {"PROJ_NAME" : projectName}
@@ -259,9 +259,9 @@ def createProject(directory, projectType, projectName):
         compileBuildfile(buildfile, buildfileTarget, tokens)
         
     elif projectType == "python":
-        os.mkdir(directory + os.sep + "/WEB-INF")
-        os.mkdir(directory + os.sep + "/WEB-INF/python")
-        os.mkdir(directory + os.sep + "/WEB-INF/python/" + projectName)
+        os.mkdir(directory + os.sep + "WEB-INF")
+        os.mkdir(directory + os.sep + "WEB-INF" + os.sep + "python")
+        os.mkdir(directory + os.sep + "WEB-INF" + os.sep + "python" + os.sep + projectName)
     else:
         raise InvalidProjectType("Valid project types are java, python")
     
@@ -296,7 +296,7 @@ def runServer(directory):
     if index != -1:
         directory = directory[0:index]
     else:
-        raise InvalidDirectoryName("The application directoy has to be equal to the AppId %s" % appId)
+        raise InvalidDirectoryName("The application directory has to be equal to the AppId %s" % appId)
     
     # Launch the server process
     appSrvPort = '8080'     # The port on which the DevServer listens
