@@ -40,7 +40,7 @@ public class DeployApp implements Job
 			if (stat == null)
 			{
 				// First we need to register the ZooKeeper-Node for the AppId
-				zooHelper.getQueue().requires(this, new RegisterApp(appId));
+				zooHelper.getQueue().insert(this, new RegisterApp(appId));
 
 				// We are not done with this task
 				return JobState.RETRY;

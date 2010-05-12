@@ -139,7 +139,7 @@ public class WatchApp implements Job, Watcher
 				if (stat == null)
 				{
 					// Register the application
-					zooHelper.getQueue().requires(this, new RegisterApp(watch));
+					zooHelper.getQueue().insert(this, new RegisterApp(watch));
 
 					// Retry
 					return JobState.RETRY;
