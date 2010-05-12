@@ -13,8 +13,7 @@ import org.prot.appserver.runtime.java.JavaConfiguration;
 import winstone.Launcher;
 
 public class WinstoneRuntime implements AppRuntime {
-	private static final Logger logger = Logger
-			.getLogger(WinstoneRuntime.class);
+	private static final Logger logger = Logger.getLogger(WinstoneRuntime.class);
 
 	private static final String IDENTIFIER = "WINSTONE";
 
@@ -34,18 +33,19 @@ public class WinstoneRuntime implements AppRuntime {
 		logger.debug("Configuring server port: " + port);
 
 		// Get the configuration
-		JavaConfiguration runtimeConfig = (JavaConfiguration) appInfo
-				.getRuntimeConfiguration();
+		JavaConfiguration runtimeConfig = (JavaConfiguration) appInfo.getRuntimeConfiguration();
 		Configuration configuration = Configuration.getInstance();
 
 		Map<String, String> args = new HashMap<String, String>();
 		args.put("webroot", configuration.getAppDirectory());
-		args.put("httpPort", ""+port);
+		args.put("httpPort", "" + port);
+		args.put("handlerCountStartup", "" + 1);
+		args.put("useJasper", ""+true);
 
 		Launcher.initLogger(args);
 		new Launcher(args);
-		
-		logger.info("Server is online now"); 
+
+		logger.info("Server is online now");
 	}
 
 	@Override
