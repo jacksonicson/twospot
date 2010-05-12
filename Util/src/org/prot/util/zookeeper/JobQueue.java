@@ -9,6 +9,7 @@ import org.apache.zookeeper.KeeperException;
 import org.prot.util.zookeeper.jobs.CreateZNodeStructure;
 
 /**
+ * Manages a queue of jobs
  * 
  * @author Andreas Wolke
  * 
@@ -18,27 +19,43 @@ public class JobQueue {
 
 	private final ZooHelper zooHelper;
 
+	// Is this queue in the setup mode
 	private boolean setup = true;
 
+	// Used for thread synchronization
 	private Boolean running = false;
 
+	// Jobs which must be executed after a connection to the ZooKeeper server
+	// has been established
 	private List<Job> connectionJobs = new ArrayList<Job>();
 
+	// Regular job queue
 	private List<Job> jobQueue = new ArrayList<Job>();
 
 	JobQueue(ZooHelper zooHelper) {
 		this.zooHelper = zooHelper;
+
+		// Register some predefined jobs
 		jobQueue.add(new CreateZNodeStructure());
 	}
 
+	/**
+	 * Process all registered jobs
+	 */
 	void proceed() {
 		run();
 	}
 
+	/**
+	 * Exits the setup mode
+	 */
 	void finishSetup() {
 		this.setup = false;
 	}
 
+	/**
+	 * Schedules all registered connectionJobs with the highest priority
+	 */
 	void reconnected() {
 		synchronized (jobQueue) {
 			// Add all connections jobs at the beginning of the job queue
@@ -49,11 +66,23 @@ public class JobQueue {
 		}
 	}
 
+	/**
+	 * Register a new connectionJob
+	 * 
+	 * @param Job
+	 */
 	public void insertConnectionJob(Job job) {
 		assert (setup == false);
 		connectionJobs.add(job);
 	}
 
+	/**
+	 * Insert a new job into the job queue and executes it. The method blocks
+	 * until the job has been executed.
+	 * 
+	 * @param job
+	 * @return Returns true if the job ends with the state OK otherwise false.
+	 */
 	public boolean insertAndWait(Job job) {
 		// Jobs must not be retryable
 		assert (job.isRetryable() == false);
@@ -66,6 +95,13 @@ public class JobQueue {
 		}
 	}
 
+	/**
+	 * Insert a new job at the and of the current job queue. Execute the whole
+	 * queue until all jobs have been processed. (Calls the
+	 * <code>proceed()</code> Method)
+	 * 
+	 * @param job
+	 */
 	public void insert(Job job) {
 		synchronized (jobQueue) {
 			jobQueue.add(job);
@@ -75,10 +111,18 @@ public class JobQueue {
 		proceed();
 	}
 
-	public void requires(Job target, Job toInsert) {
+	/**
+	 * Insert a new job after another job (dependency). Execute the whole queue
+	 * until all jobs have been processed. (Calls the <code>proceed()</code>
+	 * Method)
+	 * 
+	 * @param required
+	 * @param job
+	 */
+	public void insert(Job required, Job job) {
 		synchronized (jobQueue) {
-			// Check inde of the job
-			int index = jobQueue.indexOf(target);
+			// Check index of the target job
+			int index = jobQueue.indexOf(required);
 
 			// Decrement the index
 			index--;
@@ -88,15 +132,19 @@ public class JobQueue {
 				index = 0;
 
 			// Insert the required job before the target job
-			jobQueue.add(index, toInsert);
+			jobQueue.add(index, job);
 			jobQueue.notify();
 		}
 
 		proceed();
 	}
 
+	/**
+	 * Executes the queue
+	 */
 	public void run() {
 		synchronized (running) {
+
 			while (!jobQueue.isEmpty()) {
 				Job todo = null;
 				synchronized (jobQueue) {
@@ -131,6 +179,14 @@ public class JobQueue {
 		}
 	}
 
+	/**
+	 * Execute a job
+	 * 
+	 * @param job
+	 * @param queued
+	 * @return
+	 * @throws KeeperException
+	 */
 	private JobState execute(Job job, boolean queued) throws KeeperException {
 		logger.info("processing job: " + job.getClass().getName());
 
