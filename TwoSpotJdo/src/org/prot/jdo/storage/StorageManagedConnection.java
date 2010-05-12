@@ -41,6 +41,7 @@ public class StorageManagedConnection extends AbstractManagedConnection
 		super();
 	}
 
+	@Override
 	public Object getConnection()
 	{
 		// Unsupported - use getStorage instead
@@ -54,7 +55,7 @@ public class StorageManagedConnection extends AbstractManagedConnection
 		{
 			logger.debug("Creating storage");
 
-			// Create the storage
+			// Create the instance of the storage
 			if (StorageHelper.isDevMode())
 			{
 				logger.info("Storage is running in dev mode");

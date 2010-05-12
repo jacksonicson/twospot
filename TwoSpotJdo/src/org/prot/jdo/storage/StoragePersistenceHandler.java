@@ -48,8 +48,15 @@ import org.prot.storage.Storage;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
 
-public class StoragePersistenceHandler implements StorePersistenceHandler
-{
+/**
+ * Implements the low level communication with the actual datastore (Storage)
+ * 
+ * @author Andreas Wolke
+ * 
+ */
+public class StoragePersistenceHandler implements StorePersistenceHandler {
+	
+	// log4j
 	private static final Logger logger = Logger.getLogger(StoragePersistenceHandler.class);
 
 	protected static final Localiser LOCALISER = Localiser.getInstance(
@@ -57,28 +64,24 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 
 	private StorageStoreManager storeManager;
 
-	StoragePersistenceHandler(StoreManager storeMgr)
-	{
+	StoragePersistenceHandler(StoreManager storeMgr) {
 		this.storeManager = (StorageStoreManager) storeMgr;
 	}
 
 	@Override
-	public void close()
-	{
+	public void close() {
 		// Do nothing here
 	}
 
-	public void deleteObject(StateManager sm)
-	{
+	public void deleteObject(StateManager sm) {
 		// Cannot delete a read only object
 		storeManager.assertReadOnlyForUpdateOfObject(sm);
 
 		// Get a connection
 		StorageManagedConnection mconn = (StorageManagedConnection) storeManager.getConnection(sm
 				.getObjectManager());
-		try
-		{
-			// Aquire object infos
+		try {
+			// Acquire object infos
 			String appId = StorageHelper.APP_ID;
 			String kind = sm.getObject().getClass().getSimpleName();
 
@@ -91,15 +94,13 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 			Storage storage = mconn.getStorage();
 			storage.deleteObject(appId, kind, key);
 
-		} finally
-		{
+		} finally {
 			// Release the connection
 			mconn.release();
 		}
 	}
 
-	public void fetchObject(StateManager sm, int[] fieldNumbers)
-	{
+	public void fetchObject(StateManager sm, int[] fieldNumbers) {
 		StorageManagedConnection connection = (StorageManagedConnection) storeManager.getConnection(sm
 				.getObjectManager());
 		Storage storage = connection.getStorage();
@@ -112,28 +113,23 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 			throw new NucleusObjectNotFoundException();
 
 		CodedInputStream in;
-		try
-		{
+		try {
 			in = CodedInputStream.newInstance(object);
-		} catch (NullPointerException e)
-		{
+		} catch (NullPointerException e) {
 			throw new NucleusDataStoreException("Could not decode object", e);
 		}
 
 		FetchFieldManager fm;
-		try
-		{
+		try {
 			fm = new FetchFieldManager(in, acmd);
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			throw new NucleusDataStoreException(e.getMessage(), e);
 		}
 
 		sm.replaceFields(acmd.getAllMemberPositions(), fm);
 	}
 
-	public Object findObject(final ObjectManager om, Object id)
-	{
+	public Object findObject(final ObjectManager om, Object id) {
 		StorageManagedConnection connection = (StorageManagedConnection) storeManager.getConnection(om);
 		Storage storage = connection.getStorage();
 
@@ -146,11 +142,9 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 		CodedInputStream in = CodedInputStream.newInstance(object);
 
 		final FetchFieldManager fm;
-		try
-		{
+		try {
 			fm = new FetchFieldManager(in, om);
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			throw new NucleusDataStoreException(e.getMessage(), e);
 		}
 
@@ -158,11 +152,9 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 		final Class<?> cl = om.getClassLoaderResolver().classForName(fm.getMessageClass());
 		final ClassLoaderResolver clr = om.getClassLoaderResolver();
 
-		Object candidate = om.findObjectUsingAID(cl, new FieldValues()
-		{
+		Object candidate = om.findObjectUsingAID(cl, new FieldValues() {
 			@Override
-			public void fetchFields(StateManager sm)
-			{
+			public void fetchFields(StateManager sm) {
 				// Replace all primary key fields
 				sm.replaceFields(acmd.getPKMemberPositions(), fm);
 
@@ -172,15 +164,13 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 			}
 
 			@Override
-			public void fetchNonLoadedFields(StateManager sm)
-			{
+			public void fetchNonLoadedFields(StateManager sm) {
 				// Replace non loaded fields
 				sm.replaceNonLoadedFields(acmd.getAllMemberPositions(), fm);
 			}
 
 			@Override
-			public FetchPlan getFetchPlanForLoading()
-			{
+			public FetchPlan getFetchPlanForLoading() {
 				return null;
 			}
 
@@ -190,8 +180,7 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 	}
 
 	@Override
-	public void locateObject(StateManager sm)
-	{
+	public void locateObject(StateManager sm) {
 		StorageManagedConnection connection = (StorageManagedConnection) storeManager.getConnection(sm
 				.getObjectManager());
 		Storage storage = connection.getStorage();
@@ -203,14 +192,12 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 			throw new NucleusObjectNotFoundException();
 	}
 
-	private List<IndexMessage> buildIndexMessages(AbstractClassMetaData acmd)
-	{
+	private List<IndexMessage> buildIndexMessages(AbstractClassMetaData acmd) {
 		List<IndexMessage> index = new ArrayList<IndexMessage>();
 
 		// Iterate over all fields
 		int[] memberPositions = acmd.getAllMemberPositions();
-		for (int memberPosition : memberPositions)
-		{
+		for (int memberPosition : memberPositions) {
 			// Get field finso
 			AbstractMemberMetaData member = acmd.getMetaDataForManagedMemberAtPosition(memberPosition);
 
@@ -232,8 +219,7 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 		return index;
 	}
 
-	private byte[] createMessage(StateManager sm) throws IOException
-	{
+	private byte[] createMessage(StateManager sm) throws IOException {
 		AbstractClassMetaData acmd = sm.getClassMetaData();
 
 		// Write the class-name
@@ -265,14 +251,12 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 		return stream.toByteArray();
 	}
 
-	public void insertObject(StateManager sm)
-	{
+	public void insertObject(StateManager sm) {
 		// Check if read-only so update not permitted
 		storeManager.assertReadOnlyForUpdateOfObject(sm);
 
 		// Check if the storage manager manages the class
-		if (!storeManager.managesClass(sm.getClassMetaData().getFullClassName()))
-		{
+		if (!storeManager.managesClass(sm.getClassMetaData().getFullClassName())) {
 			// Manage the class
 			storeManager.addClass(sm.getClassMetaData().getFullClassName(), sm.getObjectManager()
 					.getClassLoaderResolver());
@@ -283,8 +267,7 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 				.getObjectManager());
 		Storage storage = connection.getStorage();
 
-		try
-		{
+		try {
 			// Serialize the message
 			byte[] serializedObject = createMessage(sm);
 
@@ -296,18 +279,15 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 			String kind = sm.getClassMetaData().getEntityName();
 			storage.createObject(appId, kind, key, serializedObject);
 
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			throw new NucleusException("Error while inserting object", e);
-		} finally
-		{
+		} finally {
 			// Release the connection
 			connection.release();
 		}
 	}
 
-	public void updateObject(StateManager sm, int[] fieldNumbers)
-	{
+	public void updateObject(StateManager sm, int[] fieldNumbers) {
 		// Check if read-only so update not permitted
 		storeManager.assertReadOnlyForUpdateOfObject(sm);
 
@@ -316,8 +296,7 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 				.getObjectManager());
 		Storage storage = mconn.getStorage();
 
-		try
-		{
+		try {
 			// Serialize the message
 			byte[] serializedObject = createMessage(sm);
 
@@ -329,11 +308,9 @@ public class StoragePersistenceHandler implements StorePersistenceHandler
 			String kind = sm.getClassMetaData().getEntityName();
 			storage.updateObject(appId, kind, key, serializedObject);
 
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			throw new NucleusException("Error while updating object", e);
-		} finally
-		{
+		} finally {
 			// Release the connection
 			mconn.release();
 		}

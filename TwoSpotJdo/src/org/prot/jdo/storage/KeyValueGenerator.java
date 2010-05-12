@@ -9,20 +9,31 @@ import org.datanucleus.store.valuegenerator.ValueGenerationBlock;
 import org.prot.storage.Key;
 import org.prot.storage.Storage;
 
-public class KeyValueGenerator extends AbstractDatastoreGenerator
-{
+/**
+ * Creates keys using the Storage datastore
+ * 
+ * @author Andreas Wolke
+ * 
+ */
+public class KeyValueGenerator extends AbstractDatastoreGenerator {
+
+	// log4j
 	private static final Logger logger = Logger.getLogger(KeyValueGenerator.class);
 
-	private static final int MIN_KEY_BLOCK_SIZE = 50;
+	// Minimum number of keys which should be allocated using the Storage
+	private static final int MIN_KEY_BLOCK_SIZE = 10;
 
-	public KeyValueGenerator(String name, Properties props)
-	{
+	public KeyValueGenerator(String name, Properties props) {
 		super(name, props);
 	}
 
 	@Override
-	protected ValueGenerationBlock reserveBlock(long size)
-	{
+	protected ValueGenerationBlock reserveBlock() {
+		return reserveBlock(MIN_KEY_BLOCK_SIZE);
+	}
+
+	@Override
+	protected ValueGenerationBlock reserveBlock(long size) {
 		if (size < MIN_KEY_BLOCK_SIZE)
 			size = MIN_KEY_BLOCK_SIZE;
 
@@ -30,31 +41,26 @@ public class KeyValueGenerator extends AbstractDatastoreGenerator
 		StorageManagedConnection connection = (StorageManagedConnection) connectionProvider
 				.retrieveConnection();
 
-		try
-		{
+		try {
 			Storage storage = connection.getStorage();
 			List<Key> keys = storage.createKey(StorageHelper.APP_ID, size);
 			return new ValueGenerationBlock(keys);
-		} finally
-		{
+		} finally {
 			connection.release();
 		}
 	}
 
-	protected boolean requiresRepository()
-	{
+	protected boolean requiresRepository() {
 		// No we don't require a repository
 		return false;
 	}
 
-	protected boolean repositoryExists()
-	{
+	protected boolean repositoryExists() {
 		// Repository does always exist (storage creates it)
 		return true;
 	}
 
-	protected boolean createRepository()
-	{
+	protected boolean createRepository() {
 		// We don't create a repository
 		return true;
 	}

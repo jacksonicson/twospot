@@ -26,8 +26,7 @@ import org.prot.storage.query.StorageQuery;
 
 import com.google.protobuf.CodedInputStream;
 
-public class JDOQLQuery extends AbstractJDOQLQuery
-{
+public class JDOQLQuery extends AbstractJDOQLQuery {
 	private static final long serialVersionUID = -5519841357863023031L;
 
 	// Activate this flag to disable the in memory query execution
@@ -37,31 +36,25 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 
 	private StorageQuery storageQuery;
 
-	public JDOQLQuery(ObjectManager om)
-	{
+	public JDOQLQuery(ObjectManager om) {
 		this(om, (JDOQLQuery) null);
 	}
 
-	public JDOQLQuery(ObjectManager om, JDOQLQuery q)
-	{
+	public JDOQLQuery(ObjectManager om, JDOQLQuery q) {
 		super(om, q);
 	}
 
-	public JDOQLQuery(ObjectManager om, String query)
-	{
+	public JDOQLQuery(ObjectManager om, String query) {
 		super(om, query);
 	}
 
-	protected boolean isCompiled()
-	{
+	protected boolean isCompiled() {
 		return super.isCompiled();
 	}
 
 	@SuppressWarnings("unchecked")
-	protected synchronized void compileInternal(boolean forExecute, Map parameterValues)
-	{
-		if (isCompiled())
-		{
+	protected synchronized void compileInternal(boolean forExecute, Map parameterValues) {
+		if (isCompiled()) {
 			logger.debug("Query is already compiled");
 			return;
 		}
@@ -75,8 +68,7 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 				candidateClass, clr);
 
 		// Check the query type
-		switch (type)
-		{
+		switch (type) {
 		case SELECT:
 			logger.debug("Compiling SELECT query");
 
@@ -98,13 +90,11 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 	}
 
 	@SuppressWarnings("unchecked")
-	private StorageQuery compileQueryFull(Map parameters, AbstractClassMetaData acmd)
-	{
+	private StorageQuery compileQueryFull(Map parameters, AbstractClassMetaData acmd) {
 		// Create a new storage query
 		StorageQuery storageQuery = new StorageQuery(StorageHelper.APP_ID, candidateClass.getSimpleName());
 
-		if (this.getRange() != null)
-		{
+		if (this.getRange() != null) {
 			storageQuery.getLimit().setOffset(this.getRangeFromIncl());
 			storageQuery.getLimit().setCount(this.getRangeToExcl());
 		}
@@ -120,8 +110,7 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 	}
 
 	@SuppressWarnings("unchecked")
-	protected Object performExecute(Map parameters)
-	{
+	protected Object performExecute(Map parameters) {
 		// Create a new connection to the storage
 		StorageManagedConnection connection = (StorageManagedConnection) om.getStoreManager().getConnection(
 				om);
@@ -140,34 +129,29 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 		final AbstractClassMetaData acmd = om.getMetaDataManager().getMetaDataForClass(candidateClass, clr);
 
 		// Assign StateManagers to any returned objects
-		for (Iterator<byte[]> itEntities = entities.iterator(); itEntities.hasNext();)
-		{
+		for (Iterator<byte[]> itEntities = entities.iterator(); itEntities.hasNext();) {
 			final byte[] entityData = itEntities.next();
 
 			// Create a new coded input stream to deserialize the entity data
 			CodedInputStream in = CodedInputStream.newInstance(entityData);
 
-			// Get the candidate class (NOT USING THE CLASSNAME FROM THE ENTITY
+			// Get the candidate class (NOT USING THE CLASSNAME OF THE ENTITY
 			// MESSAGE HERE)
 			Class candidateClass = clr.classForName(acmd.getFullClassName());
 
 			// New fetch field manager to fill the entity instance
 			final FetchFieldManager manager;
-			try
-			{
+			try {
 				manager = new FetchFieldManager(in, om, clr, candidateClass);
-			} catch (IOException e)
-			{
+			} catch (IOException e) {
 				logger.error("Could not fetch entity", e);
 				continue;
 			}
 
 			// Create the candidate object (deserialize)
-			Object candidate = om.findObjectUsingAID(candidateClass, new FieldValues()
-			{
+			Object candidate = om.findObjectUsingAID(candidateClass, new FieldValues() {
 				@Override
-				public void fetchFields(StateManager sm)
-				{
+				public void fetchFields(StateManager sm) {
 					// Replace all primary key fields
 					sm.replaceFields(acmd.getPKMemberPositions(), manager);
 
@@ -177,15 +161,13 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 				}
 
 				@Override
-				public void fetchNonLoadedFields(StateManager sm)
-				{
+				public void fetchNonLoadedFields(StateManager sm) {
 					// Replace non loaded fields
 					sm.replaceNonLoadedFields(acmd.getAllMemberPositions(), manager);
 				}
 
 				@Override
-				public FetchPlan getFetchPlanForLoading()
-				{
+				public FetchPlan getFetchPlanForLoading() {
 					return null;
 				}
 
@@ -197,8 +179,7 @@ public class JDOQLQuery extends AbstractJDOQLQuery
 
 		Collection results = candidates;
 
-		if (!TESTMODE)
-		{
+		if (!TESTMODE) {
 			// Filter the candidates in memory
 			JavaQueryEvaluator evaluator = new JDOQLEvaluator(this, candidates, compilation, parameters, om
 					.getClassLoaderResolver());

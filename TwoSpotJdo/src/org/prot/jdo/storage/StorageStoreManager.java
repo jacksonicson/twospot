@@ -13,47 +13,35 @@ import org.datanucleus.metadata.MetaDataListener;
 import org.datanucleus.store.AbstractStoreManager;
 import org.datanucleus.store.NucleusConnection;
 
-public class StorageStoreManager extends AbstractStoreManager
-{
+public class StorageStoreManager extends AbstractStoreManager {
+
 	private static final Logger logger = Logger.getLogger(StorageStoreManager.class);
 
-	private MetaDataListener metadataListener;
+	private final MetaDataListener metadataListener;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param clr
-	 *            ClassLoader resolver
-	 * @param omfContext
-	 *            ObjectManagerFactory context
-	 */
-	public StorageStoreManager(ClassLoaderResolver clr, OMFContext omfContext)
-	{
+	public StorageStoreManager(ClassLoaderResolver clr, OMFContext omfContext) {
 		super("hbase", clr, omfContext);
 
-		// Handler for metadata
+		// Listener for the metadata of a class
 		metadataListener = new StorageMetaDataListener();
 		omfContext.getMetaDataManager().registerListener(metadataListener);
 
 		// Handler for persistence process
-		persistenceHandler = new StoragePersistenceHandler(this);
+		super.persistenceHandler = new StoragePersistenceHandler(this);
 
 		// Check the configuration
 		PersistenceConfiguration conf = omfContext.getPersistenceConfiguration();
-		if (!conf.hasProperty("twospot.devserver"))
-		{
+		if (!conf.hasProperty("twospot.devserver")) {
 			logger.warn("Missing configuration property twospot.devserver");
 			StorageHelper.setDevMode(true);
-		} else
-		{
+		} else {
 			StorageHelper.setDevMode(conf.getBooleanProperty("twospot.devserver"));
 		}
-		
+
 		logConfiguration();
 	}
 
-	protected void registerConnectionMgr()
-	{
+	protected void registerConnectionMgr() {
 		super.registerConnectionMgr();
 		this.connectionMgr.disableConnectionPool();
 	}
@@ -61,22 +49,19 @@ public class StorageStoreManager extends AbstractStoreManager
 	/**
 	 * Release of resources
 	 */
-	public void close()
-	{
+	public void close() {
 		omfContext.getMetaDataManager().deregisterListener(metadataListener);
 		super.close();
 	}
 
-	public NucleusConnection getNucleusConnection(ObjectManager om)
-	{
+	public NucleusConnection getNucleusConnection(ObjectManager om) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * Accessor for the supported options in string form
 	 */
-	public Collection<String> getSupportedOptions()
-	{
+	public Collection<String> getSupportedOptions() {
 		Set<String> set = new HashSet<String>();
 		set.add("ApplicationIdentity");
 		set.add("TransactionIsolationLevel.read-committed");

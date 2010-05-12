@@ -25,23 +25,20 @@ import org.datanucleus.metadata.MetaDataListener;
 import org.datanucleus.util.Localiser;
 
 /**
- * Listener for the load of metadata for classes. Allows us to reject metadata
- * when it isn't supported by this datastore.
+ * Is called whenever the metadata for a class are loaded
+ * 
+ * @author Andreas Wolke
  */
-public class StorageMetaDataListener implements MetaDataListener
-{
+public class StorageMetaDataListener implements MetaDataListener {
 	private static final Logger logger = Logger.getLogger(StorageMetaDataListener.class);
 
 	protected static final Localiser LOCALISER = Localiser.getInstance(
 			"org.datanucleus.store.hbase.Localisation", StorageStoreManager.class.getClassLoader());
 
-	public void loaded(AbstractClassMetaData cmd)
-	{
+	public void loaded(AbstractClassMetaData cmd) {
 		logger.debug("Meta data listener loaded");
 
 		if (cmd.getIdentityType() != IdentityType.APPLICATION)
-		{
 			throw new InvalidMetaDataException(LOCALISER, "HBase.DatastoreID", cmd.getFullClassName());
-		}
 	}
 }

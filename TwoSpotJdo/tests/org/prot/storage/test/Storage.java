@@ -29,7 +29,7 @@ public class Storage
 	public static void connect() throws Exception
 	{
 		// Configure logger
-		DOMConfigurator.configure(Test.class.getResource("/etc/log4j.xml"));
+		DOMConfigurator.configure(Storage.class.getResource("/etc/log4j.xml"));
 
 		try
 		{
