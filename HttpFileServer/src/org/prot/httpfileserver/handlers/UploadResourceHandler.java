@@ -18,9 +18,9 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.util.IO;
 import org.eclipse.jetty.util.resource.Resource;
 
-public class UploadResourceHandler extends AbstractHandler
-{
-	private static final Logger logger = Logger.getLogger(UploadResourceHandler.class);
+public class UploadResourceHandler extends AbstractHandler {
+	private static final Logger logger = Logger
+			.getLogger(UploadResourceHandler.class);
 
 	// Lock parallel writes to the same file
 	private List<String> lockList = new Vector<String>();
@@ -28,10 +28,8 @@ public class UploadResourceHandler extends AbstractHandler
 	// Location where the files are stored
 	private Resource baseResource;
 
-	boolean acquireLock(String file)
-	{
-		synchronized (lockList)
-		{
+	boolean acquireLock(String file) {
+		synchronized (lockList) {
 			if (lockList.contains(file))
 				return false;
 
@@ -40,19 +38,16 @@ public class UploadResourceHandler extends AbstractHandler
 		}
 	}
 
-	void freeLock(String file)
-	{
-		synchronized (lockList)
-		{
+	void freeLock(String file) {
+		synchronized (lockList) {
 			lockList.remove(file);
 		}
 	}
 
-	public void setResourceBase(String resourceBase) throws IOException
-	{
+	public void setResourceBase(String resourceBase) throws IOException {
 		baseResource = Resource.newResource(resourceBase);
 		if (baseResource == null)
-			throw new IOException("Could open resouce: " + resourceBase);
+			throw new IOException("Could open resource: " + resourceBase);
 
 		if (!baseResource.exists() || !baseResource.isDirectory())
 			baseResource = null;
@@ -60,9 +55,9 @@ public class UploadResourceHandler extends AbstractHandler
 		logger.info("Using resouce base: " + baseResource);
 	}
 
-	File createTempFile(String name) throws IOException
-	{
-		File target = new File(baseResource.getFile().getAbsoluteFile() + "/" + "." + name + ".war");
+	File createTempFile(String name) throws IOException {
+		File target = new File(baseResource.getFile().getAbsoluteFile() + "/"
+				+ "." + name + ".war");
 		if (target.exists())
 			target.delete();
 
@@ -72,9 +67,9 @@ public class UploadResourceHandler extends AbstractHandler
 		return target;
 	}
 
-	void renameTempFile(File resource, String name) throws IOException
-	{
-		File dest = new File(baseResource.getFile().getAbsolutePath() + "/" + name + ".war");
+	void renameTempFile(File resource, String name) throws IOException {
+		File dest = new File(baseResource.getFile().getAbsolutePath() + "/"
+				+ name + ".war");
 		if (dest.exists())
 			dest.delete();
 
@@ -82,34 +77,30 @@ public class UploadResourceHandler extends AbstractHandler
 		resource.renameTo(dest);
 	}
 
-	boolean validateAppId(String appId)
-	{
+	boolean validateAppId(String appId) {
 		return true;
 	}
 
-	boolean validateVersionInfo(String version)
-	{
+	boolean validateVersionInfo(String version) {
 		return true;
 	}
 
-	boolean validateToken(String token)
-	{
+	boolean validateToken(String token) {
 		return true;
 	}
 
-	void respondError(Request request, HttpServletResponse response, int error) throws IOException
-	{
+	void respondError(Request request, HttpServletResponse response, int error)
+			throws IOException {
 		response.sendError(error);
 		request.setHandled(true);
 	}
 
 	@Override
-	public void handle(String target, Request baseRequest, HttpServletRequest request,
-			HttpServletResponse response) throws IOException, ServletException
-	{
+	public void handle(String target, Request baseRequest,
+			HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
 		// Check if its a POST request
-		if (HttpMethods.POST.equalsIgnoreCase(request.getMethod()) == false)
-		{
+		if (HttpMethods.POST.equalsIgnoreCase(request.getMethod()) == false) {
 			logger.debug("Could not upload - use HTTP-POST");
 			return;
 		}
@@ -127,49 +118,44 @@ public class UploadResourceHandler extends AbstractHandler
 
 		// Check if there is an appId and extract it
 		int index = uri.indexOf('/');
-		if (index >= 0)
-		{
+		if (index >= 0) {
 			appId = uri.substring(0, index);
 			uri = uri.substring(index + 1);
-		} else
-		{
+		} else {
 			logger.debug("missing appId information");
 			respondError(baseRequest, response, HttpStatus.BAD_REQUEST_400);
 			return;
 		}
 
-		// Only use lower case appIds
-		appId = appId.toLowerCase();
-		
 		// Check if there is a version and extract it
 		index = uri.indexOf('/');
-		if (index >= 0)
-		{
+		if (index >= 0) {
 			version = uri.substring(0, index);
 			uri = uri.substring(index + 1);
-		} else
-		{
+		} else {
 			logger.debug("missing version information");
 			respondError(baseRequest, response, HttpStatus.BAD_REQUEST_400);
 			return;
 		}
 
+		// Only use lower case appIds and versions
+		appId = appId.toLowerCase();
+		version = version.toLowerCase();
+
 		// Check if there is a token and extract it
 		index = uri.indexOf('/');
-		if (index >= 0)
-		{
+		if (index >= 0) {
 			token = uri.substring(0, index);
 			uri = uri.substring(index + 1);
-		} else
-		{
+		} else {
 			logger.debug("missing token information");
 			respondError(baseRequest, response, HttpStatus.BAD_REQUEST_400);
 			return;
 		}
 
 		// Validate appId, version and token
-		if (!validateAppId(appId) || !validateVersionInfo(version) || !validateToken(token))
-		{
+		if (!validateAppId(appId) || !validateVersionInfo(version)
+				|| !validateToken(token)) {
 			logger.debug("invalid appId, version info or token");
 			respondError(baseRequest, response, HttpStatus.BAD_REQUEST_400);
 			return;
@@ -180,13 +166,12 @@ public class UploadResourceHandler extends AbstractHandler
 		logger.debug("Filename: " + filename);
 
 		// Debug
-		logger.debug("AppId: " + appId + " Version: " + version + " File: " + filename);
+		logger.debug("AppId: " + appId + " Version: " + version + " File: "
+				+ filename);
 
-		try
-		{
+		try {
 			// Acquire the file lock
-			if (acquireLock(filename) == false)
-			{
+			if (acquireLock(filename) == false) {
 				logger.debug("could not aquire file lock");
 				respondError(baseRequest, response, HttpStatus.BAD_REQUEST_400);
 				return;
@@ -204,13 +189,12 @@ public class UploadResourceHandler extends AbstractHandler
 			logger.debug("Upload completed");
 			response.getWriter().print("upload done");
 
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			logger.error("Error while uploading a file", e);
-			respondError(baseRequest, response, HttpStatus.INTERNAL_SERVER_ERROR_500);
+			respondError(baseRequest, response,
+					HttpStatus.INTERNAL_SERVER_ERROR_500);
 			return;
-		} finally
-		{
+		} finally {
 			// Free the file lock
 			freeLock(filename);
 			baseRequest.setHandled(true);

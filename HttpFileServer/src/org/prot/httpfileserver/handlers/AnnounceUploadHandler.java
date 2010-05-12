@@ -12,22 +12,21 @@ import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
-public class AnnounceUploadHandler extends AbstractHandler
-{
-	private static final Logger logger = Logger.getLogger(AnnounceUploadHandler.class);
+public class AnnounceUploadHandler extends AbstractHandler {
+	private static final Logger logger = Logger
+			.getLogger(AnnounceUploadHandler.class);
 
 	@Override
-	public void handle(String target, Request baseRequest, HttpServletRequest request,
-			HttpServletResponse response) throws IOException, ServletException
-	{
+	public void handle(String target, Request baseRequest,
+			HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
 		// Don't handle requests twice
 		if (baseRequest.isHandled())
 			return;
 
 		// Check HTTP Method
-		if (baseRequest.getMethod().equals(HttpMethods.GET) == false)
-		{
-			logger.debug("Could not generate token - use HTTP GET");
+		if (baseRequest.getMethod().equals(HttpMethods.GET) == false) {
+			logger.debug("Could not generate upload token - use HTTP GET");
 			return;
 		}
 
@@ -35,10 +34,9 @@ public class AnnounceUploadHandler extends AbstractHandler
 		if (uri.startsWith("/"))
 			uri = uri.substring(0);
 
-		if (uri.indexOf("announce") != -1)
-		{
+		if (uri.indexOf("announce") != -1) {
 			String token = "" + System.currentTimeMillis();
-			logger.debug("Announced upload token is " + token);
+			logger.debug("generated upload token: " + token);
 
 			response.getWriter().print(token);
 			response.setStatus(HttpStatus.OK_200);

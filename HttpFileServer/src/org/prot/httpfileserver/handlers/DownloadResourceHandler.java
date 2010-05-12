@@ -10,38 +10,33 @@ import org.eclipse.jetty.http.HttpMethods;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.util.resource.Resource;
 
-public class DownloadResourceHandler extends ResourceHandler
-{
-	private static final Logger logger = Logger.getLogger(DownloadResourceHandler.class);
+public class DownloadResourceHandler extends ResourceHandler {
+	private static final Logger logger = Logger
+			.getLogger(DownloadResourceHandler.class);
 
-	public void setResourceBase(String resourceBase)
-	{
+	public void setResourceBase(String resourceBase) {
 		Resource res;
-		try
-		{
+		try {
 			res = Resource.newResource(resourceBase);
 			super.setBaseResource(res);
 			logger.info("Using resourceBase: " + resourceBase);
 
-		} catch (MalformedURLException e)
-		{
+		} catch (MalformedURLException e) {
 			logger.error("Could not set base resource", e);
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			logger.error("Could not set base resource", e);
 		}
 	}
 
-	protected Resource getResource(HttpServletRequest request) throws MalformedURLException
-	{
+	protected Resource getResource(HttpServletRequest request)
+			throws MalformedURLException {
 		// Check Method
-		if (request.getMethod().equals(HttpMethods.GET) == false)
-		{
+		if (request.getMethod().equals(HttpMethods.GET) == false) {
 			logger.debug("Could not download file - use HTTP GET");
 			return null;
 		}
 
-		// Get the request uri
+		// Get the request URI
 		String uri = request.getRequestURI();
 
 		// Kill the first slash
@@ -54,8 +49,7 @@ public class DownloadResourceHandler extends ResourceHandler
 
 		// Check if there is a version information
 		// URL: http://host:port/appId/version/*
-		if (index >= 0)
-		{
+		if (index >= 0) {
 			appId = uri.substring(0, index);
 			uri = uri.substring(index + 1);
 
@@ -68,19 +62,20 @@ public class DownloadResourceHandler extends ResourceHandler
 			else
 				version = uri;
 
-		} else
-		{
+		} else {
 			appId = uri;
 			version = "null";
 		}
 
-		// Only use lower case appIds
-		appId = appId.toLowerCase(); 
-		
-		// Debug
-		logger.debug("Resource with AppId: " + appId + " Version: " + version);
+		// Only use lower case appIds and versions
+		appId = appId.toLowerCase();
+		version = version.toLowerCase();
 
-		// Load the file
+		// Debug
+		logger.debug("Loading resource with AppId: " + appId + " Version: "
+				+ version);
+
+		// Load the WAR file
 		String file = appId + version + ".war";
 		return getResource("/" + file);
 	}
