@@ -43,7 +43,7 @@ public class KeyValueGenerator extends AbstractDatastoreGenerator {
 
 		try {
 			Storage storage = connection.getStorage();
-			List<Key> keys = storage.createKey(StorageHelper.APP_ID, size);
+			List<Key> keys = storage.createKey(StorageHelper.getAppId(), size);
 			return new ValueGenerationBlock(keys);
 		} finally {
 			connection.release();

@@ -92,7 +92,7 @@ public class JDOQLQuery extends AbstractJDOQLQuery {
 	@SuppressWarnings("unchecked")
 	private StorageQuery compileQueryFull(Map parameters, AbstractClassMetaData acmd) {
 		// Create a new storage query
-		StorageQuery storageQuery = new StorageQuery(StorageHelper.APP_ID, candidateClass.getSimpleName());
+		StorageQuery storageQuery = new StorageQuery(StorageHelper.getAppId(), candidateClass.getSimpleName());
 
 		if (this.getRange() != null) {
 			storageQuery.getLimit().setOffset(this.getRangeFromIncl());

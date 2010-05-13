@@ -82,7 +82,7 @@ public class StoragePersistenceHandler implements StorePersistenceHandler {
 				.getObjectManager());
 		try {
 			// Acquire object infos
-			String appId = StorageHelper.APP_ID;
+			String appId = StorageHelper.getAppId();
 			String kind = sm.getObject().getClass().getSimpleName();
 
 			// Get the primary key
@@ -108,7 +108,7 @@ public class StoragePersistenceHandler implements StorePersistenceHandler {
 		AbstractClassMetaData acmd = sm.getClassMetaData();
 		Key key = (Key) sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
 
-		byte[] object = storage.query(StorageHelper.APP_ID, key);
+		byte[] object = storage.query(StorageHelper.getAppId(), key);
 		if (object == null)
 			throw new NucleusObjectNotFoundException();
 
@@ -135,7 +135,7 @@ public class StoragePersistenceHandler implements StorePersistenceHandler {
 
 		Key key = (Key) id;
 
-		byte[] object = storage.query(StorageHelper.APP_ID, key);
+		byte[] object = storage.query(StorageHelper.getAppId(), key);
 		if (object == null)
 			throw new NucleusObjectNotFoundException();
 
@@ -187,7 +187,7 @@ public class StoragePersistenceHandler implements StorePersistenceHandler {
 
 		Key key = (Key) sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
 
-		byte[] object = storage.query(StorageHelper.APP_ID, key);
+		byte[] object = storage.query(StorageHelper.getAppId(), key);
 		if (object == null)
 			throw new NucleusObjectNotFoundException();
 	}
@@ -275,7 +275,7 @@ public class StoragePersistenceHandler implements StorePersistenceHandler {
 			Key key = (Key) sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
 
 			// Create the object in the storage service
-			String appId = StorageHelper.APP_ID;
+			String appId = StorageHelper.getAppId();
 			String kind = sm.getClassMetaData().getEntityName();
 			storage.createObject(appId, kind, key, serializedObject);
 
@@ -304,7 +304,7 @@ public class StoragePersistenceHandler implements StorePersistenceHandler {
 			Key key = (Key) sm.provideField(sm.getClassMetaData().getPKMemberPositions()[0]);
 
 			// Create the object in the storage service
-			String appId = StorageHelper.APP_ID;
+			String appId = StorageHelper.getAppId();
 			String kind = sm.getClassMetaData().getEntityName();
 			storage.updateObject(appId, kind, key, serializedObject);
 

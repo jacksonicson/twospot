@@ -4,8 +4,11 @@ import java.util.List;
 
 import org.prot.storage.query.StorageQuery;
 
-public interface Storage
-{
+public interface Storage {
+
+	/*
+	 * Used by the JDO implementation
+	 */
 	public List<Key> createKey(String appId, long amount);
 
 	public void createObject(String appId, String kind, Key key, byte[] obj);
@@ -17,4 +20,11 @@ public interface Storage
 	public List<byte[]> query(StorageQuery query);
 
 	public byte[] query(String appId, Key key);
+
+	/*
+	 * Used by the DB browser
+	 */
+	public List<String> listKinds(String appId);
+
+	public List<byte[]> scanEntities(String appId, String kind);
 }

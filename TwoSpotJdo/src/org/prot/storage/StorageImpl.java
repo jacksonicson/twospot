@@ -9,36 +9,29 @@ import org.prot.storage.connection.StorageUtils;
 import org.prot.storage.query.QueryEngine;
 import org.prot.storage.query.StorageQuery;
 
-public class StorageImpl implements Storage
-{
+public class StorageImpl implements Storage {
 	private static final Logger logger = Logger.getLogger(StorageImpl.class);
 
 	private ConnectionFactory connectionFactory;
 
-	public StorageImpl()
-	{
+	public StorageImpl() {
 		this.connectionFactory = new ConnectionFactory();
 	}
 
 	@Override
-	public List<Key> createKey(String appId, long amount)
-	{
+	public List<Key> createKey(String appId, long amount) {
 		KeyCreator keyCreator = new KeyCreator(connectionFactory);
-		try
-		{
+		try {
 			return keyCreator.fetchKey(appId, amount);
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			logger.error(e);
 			return null;
-		} finally
-		{
+		} finally {
 		}
 	}
 
 	@Override
-	public void createObject(String appId, String kind, Key key, byte[] obj)
-	{
+	public void createObject(String appId, String kind, Key key, byte[] obj) {
 		// Asserts
 		assert (key != null);
 
@@ -47,20 +40,16 @@ public class StorageImpl implements Storage
 
 		// Create the entity
 		ObjectCreator creator = new ObjectCreator(connectionFactory);
-		try
-		{
+		try {
 			creator.createObject(appId, kind, key, obj);
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			logger.error("", e);
-		} finally
-		{
+		} finally {
 		}
 	}
 
 	@Override
-	public void updateObject(String appId, String kind, Key key, byte[] obj)
-	{
+	public void updateObject(String appId, String kind, Key key, byte[] obj) {
 		// Asserts
 		assert (key != null);
 
@@ -69,59 +58,68 @@ public class StorageImpl implements Storage
 
 		// Update the entity;
 		ObjectUpdater updater = new ObjectUpdater(connectionFactory);
-		try
-		{
+		try {
 			updater.updateObject(appId, kind, key, obj);
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			logger.error(e);
-		} catch (ClassNotFoundException e)
-		{
+		} catch (ClassNotFoundException e) {
 			logger.error(e);
-		} finally
-		{
+		} finally {
 		}
 	}
 
 	@Override
-	public List<byte[]> query(StorageQuery query)
-	{
+	public List<byte[]> query(StorageQuery query) {
 		ImplQueryHandler handler = new ImplQueryHandler(connectionFactory);
 		QueryEngine engine = new QueryEngine(handler);
 
-		try
-		{
+		try {
 			return engine.run(query);
-		} finally
-		{
+		} finally {
 		}
 	}
 
 	@Override
-	public byte[] query(String appId, Key key)
-	{
+	public byte[] query(String appId, Key key) {
 		ImplQueryHandler handler = new ImplQueryHandler(connectionFactory);
 		QueryEngine engine = new QueryEngine(handler);
 		return engine.fetch(appId, key);
 	}
 
 	@Override
-	public boolean deleteObject(String appId, String kind, Key key)
-	{
-		try
-		{
+	public boolean deleteObject(String appId, String kind, Key key) {
+		try {
 			ObjectRemover remover = new ObjectRemover(connectionFactory);
 			remover.removeObject(appId, kind, key);
 			return true;
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			logger.error(e);
 			return false;
-		} catch (NullPointerException e)
-		{
+		} catch (NullPointerException e) {
 			return false;
-		} finally
-		{
+		} finally {
+		}
+	}
+
+	@Override
+	public List<String> listKinds(String appId) {
+		try {
+			Analyzer analyzer = new Analyzer(connectionFactory);
+			return analyzer.listKinds(appId);
+		} catch (IOException e) {
+			logger.error(e);
+			return null;
+		}
+	}
+
+	@Override
+	public List<byte[]> scanEntities(String appId, String kind) {
+		try {
+			Analyzer analyzer = new Analyzer(connectionFactory);
+			return analyzer.scanEntities(appId, kind);
+		} catch (IOException e) {
+			logger.error(e);
+			return null;
 		}
 	}
 }

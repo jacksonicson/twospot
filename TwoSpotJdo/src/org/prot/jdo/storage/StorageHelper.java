@@ -20,7 +20,9 @@ package org.prot.jdo.storage;
 public class StorageHelper {
 	private static boolean devMode = false;
 
-	public static String APP_ID = "null";
+	private static String APP_ID = "null";
+
+	private static ThreadLocal<String> TL_APP_ID = new ThreadLocal<String>();
 
 	public static void setDevMode(boolean devMode) {
 		StorageHelper.devMode = devMode;
@@ -30,7 +32,15 @@ public class StorageHelper {
 		return devMode;
 	}
 
+	public static void setTlAppId(String appId) {
+		TL_APP_ID.set(appId);
+	}
+
 	public static void setAppId(String appId) {
 		APP_ID = appId;
+	}
+
+	public static String getAppId() {
+		return APP_ID;
 	}
 }
