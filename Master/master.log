@@ -21055,3 +21055,171 @@ java.net.SocketException: Socket is not connected: shutdown
 2010-05-13 14:56:57,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
 2010-05-13 14:56:57,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
 2010-05-13 14:56:57,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5831574269525608 RPS:0.0 FreeMem:1998163968 TotalMem:4294967296
+2010-05-13 14:57:00,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:00,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:00,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5763163741390802 RPS:0.0 FreeMem:1998053376 TotalMem:4294967296
+2010-05-13 14:57:03,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:03,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:03,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5191111111111111 RPS:0.0 FreeMem:1997922304 TotalMem:4294967296
+2010-05-13 14:57:06,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:06,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:06,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5589378957893567 RPS:0.0 FreeMem:1998016512 TotalMem:4294967296
+2010-05-13 14:57:09,593: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:09,593: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:09,593: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.618042439728919 RPS:0.0 FreeMem:1998405632 TotalMem:4294967296
+2010-05-13 14:57:12,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:12,595: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:12,595: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.6197089212309743 RPS:0.0 FreeMem:1998512128 TotalMem:4294967296
+2010-05-13 14:57:15,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:15,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:15,595: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.6144872791912009 RPS:0.0 FreeMem:1998606336 TotalMem:4294967296
+2010-05-13 14:57:18,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:18,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:18,595: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.25866666666666666 RPS:0.0 FreeMem:1956777984 TotalMem:4294967296
+2010-05-13 14:57:21,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:21,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:21,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5815374361253055 RPS:0.0 FreeMem:1997496320 TotalMem:4294967296
+2010-05-13 14:57:24,593: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:24,593: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:24,593: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5658260193311854 RPS:0.0 FreeMem:1996419072 TotalMem:4294967296
+2010-05-13 14:57:27,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:27,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:27,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.4929467955126069 RPS:0.0 FreeMem:1996468224 TotalMem:4294967296
+2010-05-13 14:57:30,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:30,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:30,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5502721919786691 RPS:0.0 FreeMem:1995452416 TotalMem:4294967296
+2010-05-13 14:57:33,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:33,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:33,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.4669926650366748 RPS:0.0 FreeMem:1996734464 TotalMem:4294967296
+2010-05-13 14:57:36,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:36,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:36,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.6248611419684514 RPS:0.0 FreeMem:1996742656 TotalMem:4294967296
+2010-05-13 14:57:39,593: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:39,593: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:39,593: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.6145983779580046 RPS:0.0 FreeMem:1996017664 TotalMem:4294967296
+2010-05-13 14:57:42,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:42,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:42,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5623819575602711 RPS:0.0 FreeMem:1998233600 TotalMem:4294967296
+2010-05-13 14:57:45,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:45,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:45,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5103877346961448 RPS:0.0 FreeMem:1997361152 TotalMem:4294967296
+2010-05-13 14:57:48,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:48,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:48,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5972669703366292 RPS:0.0 FreeMem:2000207872 TotalMem:4294967296
+2010-05-13 14:57:51,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:51,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:51,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5884901677591379 RPS:0.0 FreeMem:1996124160 TotalMem:4294967296
+2010-05-13 14:57:54,593: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:54,593: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:54,593: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5015552099533437 RPS:0.0 FreeMem:1996861440 TotalMem:4294967296
+2010-05-13 14:57:57,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:57:57,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:57:57,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.585 RPS:0.0 FreeMem:1997357056 TotalMem:4294967296
+2010-05-13 14:58:00,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:00,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:00,595: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.6005999333407399 RPS:0.0 FreeMem:1999376384 TotalMem:4294967296
+2010-05-13 14:58:03,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:03,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:03,595: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5642222222222222 RPS:0.0 FreeMem:1996365824 TotalMem:4294967296
+2010-05-13 14:58:06,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:06,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:06,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5919795600977561 RPS:0.0 FreeMem:1996783616 TotalMem:4294967296
+2010-05-13 14:58:09,593: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:09,593: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:09,593: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.4773914009554494 RPS:0.0 FreeMem:1995137024 TotalMem:4294967296
+2010-05-13 14:58:12,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:12,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:12,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.39584490612154205 RPS:0.0 FreeMem:1980137472 TotalMem:4294967296
+2010-05-13 14:58:15,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:15,595: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:15,595: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5657631637413908 RPS:0.0 FreeMem:1973243904 TotalMem:4294967296
+2010-05-13 14:58:18,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:18,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:18,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.26211111111111113 RPS:0.0 FreeMem:1958387712 TotalMem:4294967296
+2010-05-13 14:58:21,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:21,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:21,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.49472398089525715 RPS:0.0 FreeMem:1979092992 TotalMem:4294967296
+2010-05-13 14:58:24,593: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:24,593: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:24,593: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5850650072230248 RPS:0.0 FreeMem:1979199488 TotalMem:4294967296
+2010-05-13 14:58:27,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:27,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:27,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5311562812395868 RPS:0.0 FreeMem:1964105728 TotalMem:4294967296
+2010-05-13 14:58:30,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:30,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:30,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5763973774863874 RPS:0.0 FreeMem:1971994624 TotalMem:4294967296
+2010-05-13 14:58:33,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:33,595: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:33,595: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.6197089212309743 RPS:0.0 FreeMem:1972039680 TotalMem:4294967296
+2010-05-13 14:58:36,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:36,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:36,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.6300822039546767 RPS:0.0 FreeMem:1972150272 TotalMem:4294967296
+2010-05-13 14:58:39,593: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:39,595: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:39,595: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.3228530163315187 RPS:0.0 FreeMem:1962962944 TotalMem:4294967296
+2010-05-13 14:58:42,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:42,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:42,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5103877346961448 RPS:0.0 FreeMem:1965158400 TotalMem:4294967296
+2010-05-13 14:58:45,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:45,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:45,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5954444444444444 RPS:0.0 FreeMem:1963499520 TotalMem:4294967296
+2010-05-13 14:58:48,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:48,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:48,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5886209578842093 RPS:0.0 FreeMem:1984589824 TotalMem:4294967296
+2010-05-13 14:58:51,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:51,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:51,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5206620750944234 RPS:0.0 FreeMem:1972084736 TotalMem:4294967296
+2010-05-13 14:58:54,593: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:54,593: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:54,593: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.6006443012663852 RPS:0.0 FreeMem:1971011584 TotalMem:4294967296
+2010-05-13 14:58:57,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:58:57,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:58:57,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.586647411686292 RPS:0.0 FreeMem:1966493696 TotalMem:4294967296
+2010-05-13 14:59:00,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:59:00,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:59:00,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.6023775136095989 RPS:0.0 FreeMem:1967644672 TotalMem:4294967296
+2010-05-13 14:59:03,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:59:03,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:59:03,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5589868918018218 RPS:0.0 FreeMem:1966964736 TotalMem:4294967296
+2010-05-13 14:59:06,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:59:06,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:59:06,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.6059562173574842 RPS:0.0 FreeMem:1967063040 TotalMem:4294967296
+2010-05-13 14:59:09,593: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:59:09,593: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:59:09,593: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5675555555555556 RPS:0.0 FreeMem:1982062592 TotalMem:4294967296
+2010-05-13 14:59:12,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:59:12,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:59:12,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.47228085768247974 RPS:0.0 FreeMem:1966641152 TotalMem:4294967296
+2010-05-13 14:59:15,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:59:15,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:59:15,595: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.6213063763608087 RPS:0.0 FreeMem:1967493120 TotalMem:4294967296
+2010-05-13 14:59:18,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:59:18,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:59:18,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.3176718871487282 RPS:0.0 FreeMem:1965518848 TotalMem:4294967296
+2010-05-13 14:59:21,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:59:21,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:59:21,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5799066459213158 RPS:0.0 FreeMem:1966272512 TotalMem:4294967296
+2010-05-13 14:59:24,593: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:59:24,593: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:59:24,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.6249722283936903 RPS:0.0 FreeMem:1966829568 TotalMem:4294967296
+2010-05-13 14:59:27,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:59:27,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:59:27,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.618 RPS:0.0 FreeMem:1966579712 TotalMem:4294967296
+2010-05-13 14:59:30,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:59:30,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:59:30,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.6197777777777778 RPS:0.0 FreeMem:1966641152 TotalMem:4294967296
+2010-05-13 14:59:33,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:59:33,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:59:33,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.607464178607131 RPS:0.0 FreeMem:1966583808 TotalMem:4294967296
+2010-05-13 14:59:36,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:59:36,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:59:36,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.5659371180979891 RPS:0.0 FreeMem:1964228608 TotalMem:4294967296
+2010-05-13 14:59:39,593: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:59:39,593: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:59:39,593: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.4686215705875819 RPS:0.0 FreeMem:1983602688 TotalMem:4294967296
+2010-05-13 14:59:42,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:59:42,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:59:42,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.6007334148238693 RPS:0.0 FreeMem:1983954944 TotalMem:4294967296
+2010-05-13 14:59:45,594: [Thread-1] MasterManagement, DEBUG, org.prot.manager.stats.MasterManagement: == Datagram received: 64
+2010-05-13 14:59:45,594: [Thread-1] ControllerStats, DEBUG, org.prot.manager.stats.ControllerStats: Controller: 192.168.178.12
+2010-05-13 14:59:45,594: [Thread-1] ControllerStats$Values, DEBUG, org.prot.manager.stats.ControllerStats: CPU:NaN ProcCpu:0.0 IdleCpu:0.4756666666666667 RPS:0.0 FreeMem:1980461056 TotalMem:4294967296
