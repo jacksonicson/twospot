@@ -29,8 +29,7 @@
                </form:select></td>
           </tr>
           <tr>
-               <td>Query: <form:errors path="query" /></td>
-               <td><form:input path="query" /></td>
+               
           </tr>
           <tr>
                <td colspan="2"><input type="submit" value="Run" /></td>
@@ -41,18 +40,30 @@
 <br/>
 
 <table border="1">
+	<c:forEach var="entity" items="${data}">
      <tr>
-          <c:forEach var="head" items="${dataTableHead}">
-               <td>${head}</td>
-          </c:forEach>
+          <td>${entity.className}</td>
+          <td>
+          	<table cellspacing="10">
+         	 <c:forEach var="index" items="${entity.indexMessages}">
+          		<tr>
+          			<td>${index.fieldNumber}</td>
+          			<td>${index.fieldName}</td>
+          			<td>${index.fieldType}</td>
+          			<td><%
+          			
+          				org.prot.jdo.storage.messages.EntityMessage entityMessage = (org.prot.jdo.storage.messages.EntityMessage)pageContext.getAttribute("entity");
+          				org.prot.jdo.storage.messages.IndexMessage indexMessage = (org.prot.jdo.storage.messages.IndexMessage)pageContext.getAttribute("index");
+          				
+          				org.prot.jdo.storage.messages.types.IStorageProperty storageProperty = entityMessage.getProperty(indexMessage.getFieldName());
+          				out.print(storageProperty.getValue());
+          				
+          			 %></td>
+          		</tr>
+          	</c:forEach>
+          	</table>
+          </td>
      </tr>
-
-     <c:forEach var="tablet" items="${dataTablet}">
-          <tr>
-               <c:forEach var="cellData" items="${tablet}">
-                    <td>${cellData}</td>
-               </c:forEach>
-          </tr>
      </c:forEach>
 </table>
 
