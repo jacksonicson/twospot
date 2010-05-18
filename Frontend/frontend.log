@@ -564,3 +564,872 @@ java.net.SocketException: Socket is not connected: shutdown
 2010-05-13 14:53:53,999: [qtp21509627-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
 2010-05-13 14:54:37,169: [qtp21509627-13] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
 2010-05-13 14:55:09,133: [qtp21509627-13] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:23:55,783: [main] XmlBeanDefinitionReader, INFO, org.springframework.beans.factory.xml.XmlBeanDefinitionReader: Loading XML bean definitions from class path resource [/etc/spring.xml]
+2010-05-13 19:23:55,947: [main] XmlBeanDefinitionReader, INFO, org.springframework.beans.factory.xml.XmlBeanDefinitionReader: Loading XML bean definitions from class path resource [/etc/zookeeper.xml]
+2010-05-13 19:23:56,161: [main] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: ZooKeeper is connecting...
+2010-05-13 19:23:56,178: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:zookeeper.version=3.2.1-808558, built on 08/27/2009 18:48 GMT
+2010-05-13 19:23:56,178: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:host.name=gogo.twospot.local
+2010-05-13 19:23:56,179: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.version=1.6.0_19
+2010-05-13 19:23:56,179: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.vendor=Sun Microsystems Inc.
+2010-05-13 19:23:56,179: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.home=C:\Program Files (x86)\Java\jre6
+2010-05-13 19:23:56,180: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.class.path=D:\work\mscWolke\trunk\dev\Frontend\bin;D:\work\mscWolke\trunk\dev\Libs\lib\log4j-1.2.15\log4j-1.2.15.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\modules\spring-core.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\spring-sources.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\spring.jar;D:\work\mscWolke\trunk\dev\Libs\lib\apache_commons\commons-logging-1.1.1.jar;D:\work\mscWolke\trunk\dev\Libs\lib\zookeeper-3.2.1\zookeeper-3.2.1.jar;D:\work\mscWolke\trunk\dev\Libs\gen\twospot-util.jar;D:\work\mscWolke\trunk\dev\Libs\gen\twospot-master.jar;D:\work\mscWolke\trunk\dev\Util\etc;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-annotations-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-client-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-continuation-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-http-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-io-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-jmx-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-jndi-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-plus-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-server-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-util-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-xml-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\servlet-api-2.5.jar
+2010-05-13 19:23:56,181: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.library.path=C:\Program Files (x86)\Java\jre6\bin;.;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files (x86)/Java/jre6/bin/client;C:/Program Files (x86)/Java/jre6/bin;c:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\TortoiseSVN\bin;C:\Program Files\SlikSvn\bin\;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\TortoiseGit\bin;C:\Program Files (x86)\Java\jdk1.6.0_19\bin;C:\Program Files (x86)\protobuf;C:\Python26;D:\work\mscWolke\trunk\dev\Tools\src;C:\ant\bin;C:\Python26\Scripts
+2010-05-13 19:23:56,181: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.io.tmpdir=C:\Users\jack\AppData\Local\Temp\
+2010-05-13 19:23:56,182: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.compiler=<NA>
+2010-05-13 19:23:56,182: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.name=Windows 7
+2010-05-13 19:23:56,182: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.arch=x86
+2010-05-13 19:23:56,183: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.version=6.1
+2010-05-13 19:23:56,184: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.name=jack
+2010-05-13 19:23:56,184: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.home=C:\Users\jack
+2010-05-13 19:23:56,185: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.dir=D:\work\mscWolke\trunk\dev\Frontend
+2010-05-13 19:23:56,187: [main] ZooKeeper, INFO, org.apache.zookeeper.ZooKeeper: Initiating client connection, connectString=192.168.178.13:2222 sessionTimeout=4000 watcher=org.prot.util.zookeeper.ZooHelper@176cad3
+2010-05-13 19:23:56,189: [main] ClientCnxn, INFO, org.apache.zookeeper.ClientCnxn: zookeeper.disableAutoWatchReset is false
+2010-05-13 19:23:56,304: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-13 19:23:56,308: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-13 19:23:56,310: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Priming connection to java.nio.channels.SocketChannel[connected local=/192.168.178.12:52671 remote=/192.168.178.13:2222]
+2010-05-13 19:23:56,315: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Server connection successful
+2010-05-13 19:23:56,322: [main-EventThread] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: ZooKeeper event
+2010-05-13 19:23:56,323: [main-EventThread] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: Unhandled ZooKeeper event
+2010-05-13 19:23:57,305: [main] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: Connected with ZooKeeper
+2010-05-13 19:23:57,310: [main] JobQueue, INFO, org.prot.util.zookeeper.JobQueue: processing job: org.prot.util.zookeeper.jobs.CreateZNodeStructure
+2010-05-13 19:23:57,391: [main] JobQueue, INFO, org.prot.util.zookeeper.JobQueue: processing job: org.prot.frontend.zookeeper.jobs.WatchMaster
+2010-05-13 19:23:57,395: [main] WatchMaster, INFO, org.prot.frontend.zookeeper.jobs.WatchMaster: Updating configuration with the Manager
+2010-05-13 19:32:28,695: [qtp7346727-20] ExceptionSafeFrontendProxy, DEBUG, org.prot.frontend.ExceptionSafeFrontendProxy: Connecting with master: 192.168.178.12
+2010-05-13 19:32:28,849: [qtp7346727-20] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:32:38,617: [qtp7346727-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:34:46,476: [qtp7346727-26] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:35:12,973: [qtp7346727-26] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:36:57,400: [qtp7346727-21] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:37:03,807: [qtp7346727-21] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:38:43,467: [qtp7346727-26] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:41:05,305: [qtp7346727-15] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:43:41,382: [qtp7346727-15] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:45:12,461: [qtp7346727-15] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:45:24,257: [qtp7346727-30] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:46:42,977: [qtp7346727-25] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:54:13,591: [qtp7346727-29] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:54:36,316: [qtp7346727-25] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:55:38,111: [qtp7346727-22] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:56:01,661: [qtp7346727-26] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:56:08,588: [qtp7346727-30] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:56:17,978: [qtp7346727-15] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:56:33,500: [qtp7346727-19] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:56:57,198: [qtp7346727-22] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-13 19:57:04,856: [qtp7346727-15] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:04:51,972: [main] XmlBeanDefinitionReader, INFO, org.springframework.beans.factory.xml.XmlBeanDefinitionReader: Loading XML bean definitions from class path resource [/etc/spring.xml]
+2010-05-14 01:04:52,024: [main] XmlBeanDefinitionReader, INFO, org.springframework.beans.factory.xml.XmlBeanDefinitionReader: Loading XML bean definitions from class path resource [/etc/zookeeper.xml]
+2010-05-14 01:04:52,125: [main] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: ZooKeeper is connecting...
+2010-05-14 01:04:52,143: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:zookeeper.version=3.2.1-808558, built on 08/27/2009 18:48 GMT
+2010-05-14 01:04:52,143: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:host.name=gogo.twospot.local
+2010-05-14 01:04:52,144: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.version=1.6.0_19
+2010-05-14 01:04:52,144: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.vendor=Sun Microsystems Inc.
+2010-05-14 01:04:52,144: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.home=C:\Program Files (x86)\Java\jre6
+2010-05-14 01:04:52,144: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.class.path=D:\work\mscWolke\trunk\dev\Frontend\bin;D:\work\mscWolke\trunk\dev\Libs\lib\log4j-1.2.15\log4j-1.2.15.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\modules\spring-core.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\spring-sources.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\spring.jar;D:\work\mscWolke\trunk\dev\Libs\lib\apache_commons\commons-logging-1.1.1.jar;D:\work\mscWolke\trunk\dev\Libs\lib\zookeeper-3.2.1\zookeeper-3.2.1.jar;D:\work\mscWolke\trunk\dev\Libs\gen\twospot-util.jar;D:\work\mscWolke\trunk\dev\Libs\gen\twospot-master.jar;D:\work\mscWolke\trunk\dev\Util\etc;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-annotations-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-client-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-continuation-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-http-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-io-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-jmx-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-jndi-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-plus-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-server-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-util-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-xml-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\servlet-api-2.5.jar
+2010-05-14 01:04:52,145: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.library.path=C:\Program Files (x86)\Java\jre6\bin;.;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files (x86)/Java/jre6/bin/client;C:/Program Files (x86)/Java/jre6/bin;c:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\TortoiseSVN\bin;C:\Program Files\SlikSvn\bin\;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\TortoiseGit\bin;C:\Program Files (x86)\Java\jdk1.6.0_19\bin;C:\Program Files (x86)\protobuf;C:\Python26;D:\work\mscWolke\trunk\dev\Tools\src;C:\ant\bin;C:\Python26\Scripts
+2010-05-14 01:04:52,148: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.io.tmpdir=C:\Users\jack\AppData\Local\Temp\
+2010-05-14 01:04:52,148: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.compiler=<NA>
+2010-05-14 01:04:52,148: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.name=Windows 7
+2010-05-14 01:04:52,149: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.arch=x86
+2010-05-14 01:04:52,149: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.version=6.1
+2010-05-14 01:04:52,149: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.name=jack
+2010-05-14 01:04:52,150: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.home=C:\Users\jack
+2010-05-14 01:04:52,150: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.dir=D:\work\mscWolke\trunk\dev\Frontend
+2010-05-14 01:04:52,151: [main] ZooKeeper, INFO, org.apache.zookeeper.ZooKeeper: Initiating client connection, connectString=192.168.178.13:2222 sessionTimeout=4000 watcher=org.prot.util.zookeeper.ZooHelper@16f0be8
+2010-05-14 01:04:52,152: [main] ClientCnxn, INFO, org.apache.zookeeper.ClientCnxn: zookeeper.disableAutoWatchReset is false
+2010-05-14 01:04:52,184: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-14 01:04:52,184: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-14 01:04:52,189: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Priming connection to java.nio.channels.SocketChannel[connected local=/192.168.178.12:57468 remote=/192.168.178.13:2222]
+2010-05-14 01:04:52,195: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Server connection successful
+2010-05-14 01:04:52,203: [main-EventThread] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: ZooKeeper event
+2010-05-14 01:04:52,204: [main-EventThread] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: Unhandled ZooKeeper event
+2010-05-14 01:04:53,185: [main] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: Connected with ZooKeeper
+2010-05-14 01:04:53,197: [main] JobQueue, INFO, org.prot.util.zookeeper.JobQueue: processing job: org.prot.util.zookeeper.jobs.CreateZNodeStructure
+2010-05-14 01:04:53,257: [main] JobQueue, INFO, org.prot.util.zookeeper.JobQueue: processing job: org.prot.frontend.zookeeper.jobs.WatchMaster
+2010-05-14 01:04:53,266: [main] WatchMaster, INFO, org.prot.frontend.zookeeper.jobs.WatchMaster: Updating configuration with the Manager
+2010-05-14 01:05:18,879: [qtp120224-20] ExceptionSafeFrontendProxy, DEBUG, org.prot.frontend.ExceptionSafeFrontendProxy: Connecting with master: 192.168.178.12
+2010-05-14 01:05:19,036: [qtp120224-20] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:05:32,659: [qtp120224-30] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:05:51,702: [qtp120224-15] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:06:08,909: [qtp120224-25] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:07:04,798: [qtp120224-25] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:12:58,981: [qtp120224-25] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:13:30,045: [qtp120224-19] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:16:34,225: [qtp120224-13] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:16:57,516: [qtp120224-30] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:17:20,207: [qtp120224-13] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:19:09,277: [qtp120224-22] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:21:58,658: [qtp120224-22] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:22:37,289: [qtp120224-20] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:22:46,135: [qtp120224-31] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:26:41,607: [qtp120224-31] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:26:53,488: [qtp120224-29] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:27:04,993: [qtp120224-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:27:46,646: [qtp120224-29] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:27:54,534: [qtp120224-22] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:28:15,445: [qtp120224-27] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:28:26,122: [qtp120224-29] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:28:45,411: [qtp120224-27] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:28:57,866: [qtp120224-29] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:29:04,651: [qtp120224-23] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:29:19,502: [qtp120224-29] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:29:49,480: [qtp120224-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:30:32,603: [qtp120224-20] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:33:07,987: [qtp120224-21] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:33:26,683: [qtp120224-27] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:33:39,417: [qtp120224-30] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:35:07,385: [qtp120224-19] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:35:22,983: [qtp120224-23] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:35:53,322: [qtp120224-31] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:36:04,703: [qtp120224-28] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:38:16,342: [qtp120224-23] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:38:23,852: [qtp120224-31] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:38:35,338: [qtp120224-25] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:38:44,867: [qtp120224-23] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:39:38,772: [qtp120224-31] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:39:45,966: [qtp120224-27] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:39:58,645: [qtp120224-27] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:47:47,909: [qtp120224-28] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:47:53,913: [qtp120224-21] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:54:10,436: [qtp120224-17] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:54:21,538: [qtp120224-28] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:54:37,176: [qtp120224-20] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:54:44,262: [qtp120224-20] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:55:00,583: [qtp120224-27] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:55:08,990: [qtp120224-25] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:55:18,856: [qtp120224-17] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:57:04,015: [qtp120224-56] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:57:13,875: [qtp120224-53] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 01:57:24,127: [qtp120224-43] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 02:01:38,078: [qtp120224-45] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 02:01:45,782: [qtp120224-37] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 02:01:55,143: [qtp120224-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 02:04:22,925: [qtp120224-56] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 02:04:28,874: [qtp120224-26] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 02:04:39,176: [qtp120224-37] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 02:06:47,853: [qtp120224-20] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 02:06:53,918: [qtp120224-53] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 02:07:08,019: [qtp120224-57] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 02:07:36,185: [qtp120224-47] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 02:07:45,610: [qtp120224-60] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 02:07:54,227: [qtp120224-62] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 02:08:11,773: [qtp120224-25] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 02:08:18,977: [qtp120224-61] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-14 02:08:33,887: [qtp120224-65] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:23:21,664: [main] XmlBeanDefinitionReader, INFO, org.springframework.beans.factory.xml.XmlBeanDefinitionReader: Loading XML bean definitions from class path resource [/etc/spring.xml]
+2010-05-18 13:23:21,773: [main] XmlBeanDefinitionReader, INFO, org.springframework.beans.factory.xml.XmlBeanDefinitionReader: Loading XML bean definitions from class path resource [/etc/zookeeper.xml]
+2010-05-18 13:23:21,929: [main] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: ZooKeeper is connecting...
+2010-05-18 13:23:21,960: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:zookeeper.version=3.2.1-808558, built on 08/27/2009 18:48 GMT
+2010-05-18 13:23:21,960: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:host.name=gogo.twospot.local
+2010-05-18 13:23:21,960: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.version=1.6.0_19
+2010-05-18 13:23:21,960: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.vendor=Sun Microsystems Inc.
+2010-05-18 13:23:21,960: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.home=C:\Program Files (x86)\Java\jre6
+2010-05-18 13:23:21,960: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.class.path=D:\work\mscWolke\trunk\dev\Frontend\bin;D:\work\mscWolke\trunk\dev\Libs\lib\log4j-1.2.15\log4j-1.2.15.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\modules\spring-core.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\spring-sources.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\spring.jar;D:\work\mscWolke\trunk\dev\Libs\lib\apache_commons\commons-logging-1.1.1.jar;D:\work\mscWolke\trunk\dev\Libs\lib\zookeeper-3.2.1\zookeeper-3.2.1.jar;D:\work\mscWolke\trunk\dev\Libs\gen\twospot-util.jar;D:\work\mscWolke\trunk\dev\Libs\gen\twospot-master.jar;D:\work\mscWolke\trunk\dev\Util\etc;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-annotations-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-client-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-continuation-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-http-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-io-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-jmx-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-jndi-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-plus-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-server-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-util-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-xml-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\servlet-api-2.5.jar
+2010-05-18 13:23:21,960: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.library.path=C:\Program Files (x86)\Java\jre6\bin;.;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files (x86)/Java/jre6/bin/client;C:/Program Files (x86)/Java/jre6/bin;c:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\TortoiseSVN\bin;C:\Program Files\SlikSvn\bin\;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\TortoiseGit\bin;C:\Program Files (x86)\Java\jdk1.6.0_19\bin;C:\Program Files (x86)\protobuf;C:\Python26;D:\work\mscWolke\trunk\dev\Tools\src;C:\ant\bin;C:\Python26\Scripts;C:\Program Files (x86)\Git\bin
+2010-05-18 13:23:21,960: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.io.tmpdir=C:\Users\jack\AppData\Local\Temp\
+2010-05-18 13:23:21,960: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.compiler=<NA>
+2010-05-18 13:23:21,960: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.name=Windows 7
+2010-05-18 13:23:21,960: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.arch=x86
+2010-05-18 13:23:21,960: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.version=6.1
+2010-05-18 13:23:21,960: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.name=jack
+2010-05-18 13:23:21,960: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.home=C:\Users\jack
+2010-05-18 13:23:21,976: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.dir=D:\work\mscWolke\trunk\dev\Frontend
+2010-05-18 13:23:21,976: [main] ZooKeeper, INFO, org.apache.zookeeper.ZooKeeper: Initiating client connection, connectString=192.168.178.13:2222 sessionTimeout=4000 watcher=org.prot.util.zookeeper.ZooHelper@1d62270
+2010-05-18 13:23:21,976: [main] ClientCnxn, INFO, org.apache.zookeeper.ClientCnxn: zookeeper.disableAutoWatchReset is false
+2010-05-18 13:23:22,101: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:22,101: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:23:23,101: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:24,102: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:25,107: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:26,102: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@888e6c
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:23:26,103: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:23:26,103: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:23:26,116: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:27,131: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:27,654: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:23:28,131: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:29,131: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:30,132: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:31,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:31,654: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@104c575
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:23:31,654: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:23:31,654: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:23:32,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:32,777: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:23:33,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:34,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:35,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:36,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:36,777: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@3fa5ac
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:23:36,777: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:23:36,777: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:23:37,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:38,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:38,745: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:23:39,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:40,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:41,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:42,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:42,749: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@19bb25a
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:23:42,749: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:23:42,750: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:23:43,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:44,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:44,708: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:23:45,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:46,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:47,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:48,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:48,708: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@b9e45a
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:23:48,708: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:23:48,708: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:23:49,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:50,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:50,437: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:23:51,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:52,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:53,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:54,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:54,437: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@14e8cee
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:23:54,437: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:23:54,437: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:23:55,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:56,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:56,317: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:23:57,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:58,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:23:59,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:00,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:00,317: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@97d01f
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:24:00,317: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:00,317: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:01,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:01,732: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:24:02,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:03,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:04,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:05,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:05,733: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@e0a386
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:24:05,733: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:05,733: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:06,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:06,912: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:24:07,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:08,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:09,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:10,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:10,912: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@feb48
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:24:10,912: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:10,912: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:11,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:12,082: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:24:12,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:13,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:14,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:15,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:16,082: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@11ff436
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:24:16,082: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:16,082: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:16,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:17,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:17,227: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:24:18,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:19,133: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:20,135: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:21,135: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:21,227: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@da3a1e
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:24:21,227: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:21,227: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:22,135: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:22,390: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:24:23,135: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:24,135: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:25,135: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:26,135: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:26,390: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@16546ef
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:24:26,390: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:26,390: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:27,135: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:28,135: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:28,308: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:24:29,135: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:30,135: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:31,135: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:32,135: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:32,308: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@1428ea
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:24:32,308: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:32,309: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:33,135: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:34,135: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:34,300: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:24:35,135: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:36,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:37,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:38,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:38,300: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@18a49e0
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:24:38,300: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:38,300: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:39,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:39,637: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:24:40,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:41,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:42,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:43,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:43,637: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@16d2633
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:24:43,637: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:43,637: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:44,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:44,878: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:24:45,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:46,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:47,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:48,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:48,878: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@e70e30
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:24:48,878: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:48,878: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:49,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:50,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:50,312: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:24:51,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:52,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:53,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:54,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:54,312: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@3c9217
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:24:54,312: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:54,312: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:24:55,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:56,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:56,412: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:24:57,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:58,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:24:59,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:00,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:00,412: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@9b42e6
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:25:00,412: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:00,412: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:01,136: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:02,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:02,473: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:25:03,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:04,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:05,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:06,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:06,473: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@14520eb
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:25:06,473: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:06,473: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:07,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:08,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:08,236: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:25:09,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:10,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:11,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:12,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:12,236: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@1742700
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:25:12,236: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:12,237: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:13,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:13,496: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:25:14,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:15,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:16,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:17,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:17,496: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@194d372
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:25:17,496: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:17,496: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:18,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:19,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:19,326: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:25:20,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:21,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:22,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:23,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:23,326: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@1b5340c
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:25:23,326: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:23,326: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:24,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:24,727: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:25:25,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:26,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:27,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:28,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:28,727: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@16c163f
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:25:28,727: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:28,727: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:29,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:30,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:30,380: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:25:31,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:32,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:33,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:34,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:34,380: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@12884e0
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:25:34,380: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:34,380: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:35,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:35,720: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:25:36,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:37,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:38,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:39,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:39,720: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@12bcd4b
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:25:39,720: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:39,720: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:40,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:41,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:41,414: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:25:42,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:43,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:44,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:45,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:45,414: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@b307f0
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:25:45,414: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:45,414: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:46,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:47,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:47,339: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:25:48,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:49,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:50,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:51,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:51,339: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@1ce3fc5
+java.io.IOException: TIMED OUT
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:906)
+2010-05-18 13:25:51,339: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:51,339: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.net.SocketException: Socket is not connected: shutdown
+	at sun.nio.ch.SocketChannelImpl.shutdown(Native Method)
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-05-18 13:25:52,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:52,707: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.13:2222
+2010-05-18 13:25:53,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:54,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:55,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:25:56,137: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:26:14,652: [main] XmlBeanDefinitionReader, INFO, org.springframework.beans.factory.xml.XmlBeanDefinitionReader: Loading XML bean definitions from class path resource [/etc/spring.xml]
+2010-05-18 13:26:14,689: [main] XmlBeanDefinitionReader, INFO, org.springframework.beans.factory.xml.XmlBeanDefinitionReader: Loading XML bean definitions from class path resource [/etc/zookeeper.xml]
+2010-05-18 13:26:14,768: [main] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: ZooKeeper is connecting...
+2010-05-18 13:26:14,784: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:zookeeper.version=3.2.1-808558, built on 08/27/2009 18:48 GMT
+2010-05-18 13:26:14,785: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:host.name=gogo.twospot.local
+2010-05-18 13:26:14,785: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.version=1.6.0_19
+2010-05-18 13:26:14,785: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.vendor=Sun Microsystems Inc.
+2010-05-18 13:26:14,786: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.home=C:\Program Files (x86)\Java\jre6
+2010-05-18 13:26:14,786: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.class.path=D:\work\mscWolke\trunk\dev\Frontend\bin;D:\work\mscWolke\trunk\dev\Libs\lib\log4j-1.2.15\log4j-1.2.15.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\modules\spring-core.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\spring-sources.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\spring.jar;D:\work\mscWolke\trunk\dev\Libs\lib\apache_commons\commons-logging-1.1.1.jar;D:\work\mscWolke\trunk\dev\Libs\lib\zookeeper-3.2.1\zookeeper-3.2.1.jar;D:\work\mscWolke\trunk\dev\Libs\gen\twospot-util.jar;D:\work\mscWolke\trunk\dev\Libs\gen\twospot-master.jar;D:\work\mscWolke\trunk\dev\Util\etc;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-annotations-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-client-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-continuation-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-http-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-io-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-jmx-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-jndi-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-plus-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-server-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-util-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-xml-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\servlet-api-2.5.jar
+2010-05-18 13:26:14,787: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.library.path=C:\Program Files (x86)\Java\jre6\bin;.;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files (x86)/Java/jre6/bin/client;C:/Program Files (x86)/Java/jre6/bin;c:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\TortoiseSVN\bin;C:\Program Files\SlikSvn\bin\;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\TortoiseGit\bin;C:\Program Files (x86)\Java\jdk1.6.0_19\bin;C:\Program Files (x86)\protobuf;C:\Python26;D:\work\mscWolke\trunk\dev\Tools\src;C:\ant\bin;C:\Python26\Scripts;C:\Program Files (x86)\Git\bin
+2010-05-18 13:26:14,788: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.io.tmpdir=C:\Users\jack\AppData\Local\Temp\
+2010-05-18 13:26:14,788: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.compiler=<NA>
+2010-05-18 13:26:14,788: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.name=Windows 7
+2010-05-18 13:26:14,789: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.arch=x86
+2010-05-18 13:26:14,789: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.version=6.1
+2010-05-18 13:26:14,789: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.name=jack
+2010-05-18 13:26:14,789: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.home=C:\Users\jack
+2010-05-18 13:26:14,790: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.dir=D:\work\mscWolke\trunk\dev\Frontend
+2010-05-18 13:26:14,791: [main] ZooKeeper, INFO, org.apache.zookeeper.ZooKeeper: Initiating client connection, connectString=192.168.178.14:2222 sessionTimeout=4000 watcher=org.prot.util.zookeeper.ZooHelper@1fe1feb
+2010-05-18 13:26:14,791: [main] ClientCnxn, INFO, org.apache.zookeeper.ClientCnxn: zookeeper.disableAutoWatchReset is false
+2010-05-18 13:26:14,821: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-18 13:26:14,823: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.14:2222
+2010-05-18 13:26:14,824: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Priming connection to java.nio.channels.SocketChannel[connected local=/192.168.178.12:49417 remote=/192.168.178.14:2222]
+2010-05-18 13:26:14,863: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Server connection successful
+2010-05-18 13:26:15,435: [main-EventThread] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: ZooKeeper event
+2010-05-18 13:26:15,435: [main-EventThread] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: Unhandled ZooKeeper event
+2010-05-18 13:26:15,821: [main] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: Connected with ZooKeeper
+2010-05-18 13:26:15,827: [main] JobQueue, INFO, org.prot.util.zookeeper.JobQueue: processing job: org.prot.util.zookeeper.jobs.CreateZNodeStructure
+2010-05-18 13:26:15,972: [main] JobQueue, INFO, org.prot.util.zookeeper.JobQueue: processing job: org.prot.frontend.zookeeper.jobs.WatchMaster
+2010-05-18 13:26:15,979: [main] WatchMaster, INFO, org.prot.frontend.zookeeper.jobs.WatchMaster: Could not find /master in the ZooKeeper. Waiting for the ZNode
+2010-05-18 13:26:22,441: [main-EventThread] WatchMaster, INFO, org.prot.frontend.zookeeper.jobs.WatchMaster: Processing Watcher: /master
+2010-05-18 13:26:22,441: [main-EventThread] JobQueue, INFO, org.prot.util.zookeeper.JobQueue: processing job: org.prot.frontend.zookeeper.jobs.WatchMaster
+2010-05-18 13:26:22,458: [main-EventThread] WatchMaster, INFO, org.prot.frontend.zookeeper.jobs.WatchMaster: Updating configuration with the Manager
+2010-05-18 13:26:31,067: [qtp30408372-17] ExceptionSafeFrontendProxy, DEBUG, org.prot.frontend.ExceptionSafeFrontendProxy: Connecting with master: 192.168.178.12
+2010-05-18 13:26:31,233: [qtp30408372-17] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:26:37,225: [qtp30408372-17] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:27:38,757: [qtp30408372-17] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:27:48,578: [qtp30408372-28] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:30:29,045: [qtp30408372-26] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:30:52,999: [qtp30408372-21] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:31:30,777: [qtp30408372-27] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:31:37,269: [qtp30408372-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:31:47,066: [qtp30408372-19] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:32:02,629: [qtp30408372-18] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:32:18,718: [qtp30408372-21] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:33:36,278: [qtp30408372-30] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:33:48,865: [qtp30408372-16] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:33:58,278: [qtp30408372-30] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:35:54,985: [qtp30408372-25] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:36:20,037: [qtp30408372-19] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:37:34,998: [qtp30408372-28] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:37:42,259: [qtp30408372-19] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:37:52,071: [qtp30408372-23] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:38:36,774: [qtp30408372-28] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:38:42,130: [qtp30408372-28] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-18 13:38:52,238: [qtp30408372-23] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
