@@ -64,6 +64,8 @@ public final class DbBrowserService {
 			}
 		}
 
+		logger.debug("Builded: " + entityMessages.size());
+
 		return entityMessages;
 	}
 }

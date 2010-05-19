@@ -4,10 +4,11 @@
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
 	<appender name="SocketAppender" class="org.apache.log4j.net.SocketAppender">
-
-		<param name="Port" value="4445" />
-		<param name="RemoteHost" value="jack3" />
-		<appender-ref ref="Rolling" />
+		<!-- <appender-ref ref="Rolling" /> -->
+		
+			<param name="Port" value="4445" /> <param name="RemoteHost"
+			value="localhost" /> <appender-ref ref="Rolling" />
+		
 	</appender>
 
 	<appender name="ConsoleAppender" class="org.apache.log4j.ConsoleAppender">
