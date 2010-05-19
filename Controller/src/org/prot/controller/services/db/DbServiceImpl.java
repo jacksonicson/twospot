@@ -21,9 +21,8 @@ public class DbServiceImpl implements DbService {
 
 		Storage storage = new StorageImpl();
 		List<byte[]> data = storage.scanEntities(appId, kind);
-		for (byte[] test : data) {
-			logger.info("Data: " + new String(test));
-		}
+
+		logger.info("Fetched: " + data.size());
 
 		return data;
 	}
