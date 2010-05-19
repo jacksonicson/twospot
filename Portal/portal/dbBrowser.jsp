@@ -39,33 +39,9 @@
 
 <br/>
 
-<table border="1">
-	<c:forEach var="entity" items="${data}">
-     <tr>
-          <td>${entity.className}</td>
-          <td>
-          	<table cellspacing="10">
-         	 <c:forEach var="index" items="${entity.indexMessages}">
-          		<tr>
-          			<td>${index.fieldNumber}</td>
-          			<td>${index.fieldName}</td>
-          			<td>${index.fieldType}</td>
-          			<td><%
-          			
-          				org.prot.jdo.storage.messages.EntityMessage entityMessage = (org.prot.jdo.storage.messages.EntityMessage)pageContext.getAttribute("entity");
-          				org.prot.jdo.storage.messages.IndexMessage indexMessage = (org.prot.jdo.storage.messages.IndexMessage)pageContext.getAttribute("index");
-          				
-          				org.prot.jdo.storage.messages.types.IStorageProperty storageProperty = entityMessage.getProperty(indexMessage.getFieldName());
-          				out.print(storageProperty.getValue());
-          				
-          			 %></td>
-          		</tr>
-          	</c:forEach>
-          	</table>
-          </td>
-     </tr>
-     </c:forEach>
-</table>
+
+${data}
+
 
 </div>
 

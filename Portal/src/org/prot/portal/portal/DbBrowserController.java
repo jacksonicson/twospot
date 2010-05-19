@@ -13,21 +13,21 @@ import org.prot.app.services.db.DbBrowserServiceFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
-public class DbBrowserController implements Controller
-{
+public class DbBrowserController implements Controller {
 	private static final Logger logger = Logger.getLogger(DbBrowserController.class);
 
 	@Override
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
-			throws Exception
-	{
+			throws Exception {
 		String appId = request.getParameter("appId");
 		if (appId == null)
 			return null;
 		appId = appId.toLowerCase();
+		String table = request.getParameter("table");
 
 		DbQueryCommand queryCommand = new DbQueryCommand();
 		queryCommand.setAppId(appId);
+		queryCommand.setTable(table);
 
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("queryCommand", queryCommand);
