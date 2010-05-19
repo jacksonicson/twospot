@@ -42,10 +42,11 @@
 		<copy todir="${dest}/conf/appserver">
 			<fileset dir="../AppServer/etc/" />
 		</copy>
+		<delete file="${dest}/conf/appserver/etc/log4j.xml" />
+		<rename dest="${dest}/conf/appserver/etc/log4j.xml" src="${dest}/conf/appserver/etc/log4j_dev.xml" />
 
 		<!-- copy the classpath -->
-		<copyfile src="../AppServer/classpath.txt"
-		          dest="${dest}/appserver_classpath.txt" />
+		<copyfile src="../AppServer/classpath.txt" dest="${dest}/appserver_classpath.txt" />
 
 		<!-- copy the tools python script -->
 		<copy todir="${dest}">
@@ -56,12 +57,10 @@
 
 		<!-- Swap the configuration files -->
 		<delete file="${dest}/conf/appserver/etc/appServer.properties" />
-		<move file="${dest}/conf/appserver/etc/appServer.properties_dev"
-		      tofile="${dest}/conf/appserver/etc/appServer.properties" />
+		<move file="${dest}/conf/appserver/etc/appServer.properties_dev" tofile="${dest}/conf/appserver/etc/appServer.properties" />
 
 		<delete file="${dest}/conf/appserver/etc/jdoDefault.properties" />
-		<move file="${dest}/conf/appserver/etc/jdoDefault.properties_dev"
-		      tofile="${dest}/conf/appserver/etc/jdoDefault.properties" />
+		<move file="${dest}/conf/appserver/etc/jdoDefault.properties_dev" tofile="${dest}/conf/appserver/etc/jdoDefault.properties" />
 
 
 		<!-- Copy the Mock implementation of core portal services -->
