@@ -1433,3 +1433,117 @@ java.net.SocketException: Socket is not connected: shutdown
 2010-05-18 13:38:36,774: [qtp30408372-28] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
 2010-05-18 13:38:42,130: [qtp30408372-28] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
 2010-05-18 13:38:52,238: [qtp30408372-23] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:29:52,467: [main] XmlBeanDefinitionReader, INFO, org.springframework.beans.factory.xml.XmlBeanDefinitionReader: Loading XML bean definitions from class path resource [/etc/spring.xml]
+2010-05-19 15:29:52,534: [main] XmlBeanDefinitionReader, INFO, org.springframework.beans.factory.xml.XmlBeanDefinitionReader: Loading XML bean definitions from class path resource [/etc/zookeeper.xml]
+2010-05-19 15:29:52,640: [main] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: ZooKeeper is connecting...
+2010-05-19 15:29:52,657: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:zookeeper.version=3.2.1-808558, built on 08/27/2009 18:48 GMT
+2010-05-19 15:29:52,658: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:host.name=gogo.twospot.local
+2010-05-19 15:29:52,658: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.version=1.6.0_19
+2010-05-19 15:29:52,659: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.vendor=Sun Microsystems Inc.
+2010-05-19 15:29:52,659: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.home=C:\Program Files (x86)\Java\jre6
+2010-05-19 15:29:52,659: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.class.path=D:\work\mscWolke\trunk\dev\Frontend\bin;D:\work\mscWolke\trunk\dev\Libs\lib\log4j-1.2.15\log4j-1.2.15.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\modules\spring-core.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\spring-sources.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\spring.jar;D:\work\mscWolke\trunk\dev\Libs\lib\apache_commons\commons-logging-1.1.1.jar;D:\work\mscWolke\trunk\dev\Libs\lib\zookeeper-3.2.1\zookeeper-3.2.1.jar;D:\work\mscWolke\trunk\dev\Libs\gen\twospot-util.jar;D:\work\mscWolke\trunk\dev\Libs\gen\twospot-master.jar;D:\work\mscWolke\trunk\dev\Util\etc;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-annotations-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-client-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-continuation-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-http-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-io-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-jmx-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-jndi-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-plus-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-server-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-util-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-xml-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\servlet-api-2.5.jar
+2010-05-19 15:29:52,660: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.library.path=C:\Program Files (x86)\Java\jre6\bin;.;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files (x86)/Java/jre6/bin/client;C:/Program Files (x86)/Java/jre6/bin;c:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\TortoiseSVN\bin;C:\Program Files\SlikSvn\bin\;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\TortoiseGit\bin;C:\Program Files (x86)\Java\jdk1.6.0_19\bin;C:\Program Files (x86)\protobuf;C:\Python26;D:\work\mscWolke\trunk\dev\Tools\src;C:\ant\bin;C:\Python26\Scripts;C:\Program Files (x86)\Git\bin
+2010-05-19 15:29:52,661: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.io.tmpdir=C:\Users\jack\AppData\Local\Temp\
+2010-05-19 15:29:52,661: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.compiler=<NA>
+2010-05-19 15:29:52,662: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.name=Windows 7
+2010-05-19 15:29:52,662: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.arch=x86
+2010-05-19 15:29:52,662: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.version=6.1
+2010-05-19 15:29:52,663: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.name=jack
+2010-05-19 15:29:52,663: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.home=C:\Users\jack
+2010-05-19 15:29:52,663: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.dir=D:\work\mscWolke\trunk\dev\Frontend
+2010-05-19 15:29:52,664: [main] ZooKeeper, INFO, org.apache.zookeeper.ZooKeeper: Initiating client connection, connectString=192.168.178.14:2222 sessionTimeout=4000 watcher=org.prot.util.zookeeper.ZooHelper@16f0be8
+2010-05-19 15:29:52,666: [main] ClientCnxn, INFO, org.apache.zookeeper.ClientCnxn: zookeeper.disableAutoWatchReset is false
+2010-05-19 15:29:52,694: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-05-19 15:29:52,694: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.14:2222
+2010-05-19 15:29:52,695: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Priming connection to java.nio.channels.SocketChannel[connected local=/192.168.178.12:50424 remote=/192.168.178.14:2222]
+2010-05-19 15:29:52,700: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Server connection successful
+2010-05-19 15:29:52,707: [main-EventThread] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: ZooKeeper event
+2010-05-19 15:29:52,707: [main-EventThread] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: Unhandled ZooKeeper event
+2010-05-19 15:29:53,694: [main] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: Connected with ZooKeeper
+2010-05-19 15:29:53,700: [main] JobQueue, INFO, org.prot.util.zookeeper.JobQueue: processing job: org.prot.util.zookeeper.jobs.CreateZNodeStructure
+2010-05-19 15:29:53,776: [main] JobQueue, INFO, org.prot.util.zookeeper.JobQueue: processing job: org.prot.frontend.zookeeper.jobs.WatchMaster
+2010-05-19 15:29:53,780: [main] WatchMaster, INFO, org.prot.frontend.zookeeper.jobs.WatchMaster: Updating configuration with the Manager
+2010-05-19 15:30:06,550: [qtp120224-18] ExceptionSafeFrontendProxy, DEBUG, org.prot.frontend.ExceptionSafeFrontendProxy: Connecting with master: 192.168.178.12
+2010-05-19 15:30:06,713: [qtp120224-18] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:30:24,287: [qtp120224-29] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:30:44,578: [qtp120224-21] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:31:04,571: [qtp120224-22] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:31:15,574: [qtp120224-17] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:31:51,991: [qtp120224-17] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:31:59,952: [qtp120224-17] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:32:21,324: [qtp120224-21] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:35:38,184: [qtp120224-20] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:35:45,037: [qtp120224-31] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:35:55,001: [qtp120224-25] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:37:49,672: [qtp120224-15] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:38:04,183: [qtp120224-20] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:38:09,212: [qtp120224-25] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:38:14,840: [qtp120224-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:38:24,916: [qtp120224-19] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:38:32,272: [qtp120224-22] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:38:34,765: [qtp120224-19] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:38:39,360: [qtp120224-22] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:39:42,198: [qtp120224-19] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:39:49,539: [qtp120224-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:40:18,643: [qtp120224-27] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:40:42,525: [qtp120224-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:40:49,833: [qtp120224-30] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:42:56,389: [qtp120224-31] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:43:09,601: [qtp120224-30] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:43:21,259: [qtp120224-19] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:43:29,787: [qtp120224-30] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:43:44,710: [qtp120224-18] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:44:41,697: [qtp120224-18] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:45:06,045: [qtp120224-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:45:35,595: [qtp120224-23] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:45:44,324: [qtp120224-15] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:45:45,962: [qtp120224-31] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:46:32,205: [qtp120224-15] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:46:33,397: [qtp120224-23] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:46:40,081: [qtp120224-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:46:41,935: [qtp120224-27] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:47:22,354: [qtp120224-30] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:47:58,905: [qtp120224-31] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:48:02,502: [qtp120224-30] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:48:04,709: [qtp120224-27] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:48:12,413: [qtp120224-30] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:48:25,756: [qtp120224-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:48:29,620: [qtp120224-19] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:54:35,094: [qtp120224-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:56:29,356: [qtp120224-31] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 15:56:39,924: [qtp120224-22] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:01:41,929: [qtp120224-18] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:03:50,369: [qtp120224-26] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:04:59,538: [qtp120224-22] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:06:21,192: [qtp120224-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:06:29,709: [qtp120224-20] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:08:46,146: [qtp120224-19] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:08:55,011: [qtp120224-22] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:09:04,825: [qtp120224-23] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:23:16,796: [qtp120224-29] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:23:24,455: [qtp120224-20] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:23:34,911: [qtp120224-28] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:23:47,360: [qtp120224-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:23:58,647: [qtp120224-21] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:24:00,901: [qtp120224-15] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:24:04,483: [qtp120224-26] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:24:14,441: [qtp120224-29] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:24:20,441: [qtp120224-29] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:26:03,436: [qtp120224-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:26:09,381: [qtp120224-15] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:26:15,478: [qtp120224-19] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:27:54,066: [qtp120224-23] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:28:00,920: [qtp120224-28] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:28:33,638: [qtp120224-21] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:28:39,975: [qtp120224-28] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:28:43,074: [qtp120224-15] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:28:50,357: [qtp120224-29] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:28:59,826: [qtp120224-18] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:29:03,482: [qtp120224-22] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:30:56,758: [qtp120224-30] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:31:14,856: [qtp120224-26] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:31:30,712: [qtp120224-22] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:41:52,121: [qtp120224-20] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:42:36,977: [qtp120224-30] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:42:48,354: [qtp120224-15] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-05-19 16:42:51,862: [qtp120224-30] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
