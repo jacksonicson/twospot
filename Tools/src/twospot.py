@@ -7,6 +7,7 @@ import sys
 import urllib
 import yaml
 import zipfile
+import shutil
 
 ###########################################
 # Properties
@@ -216,6 +217,18 @@ def compileBuildfile(file, target, params):
     ftarget.close()
     file.close()
 
+def copyLibs(sourceDir, destDir):
+    for root, dirs, files in os.walk(sourceDir):
+        # Get the realtive directory
+        relRoot = root.replace(sourceDir, "")
+        print "adding files from: %s to: %s" % (root, relRoot)
+
+        # Iterate over all files in the directory
+        for file in files:
+            # Check if its a file
+            if os.path.isfile(root + os.sep + file):
+                print "copy %s" % (root + os.sep + file)
+                shutil.copy(root + os.sep + file, destDir)  
 
 def createProject(directory, projectType, projectName):
     if not os.path.isdir(directory):
@@ -257,6 +270,11 @@ def createProject(directory, projectType, projectName):
         buildfile = os.path.dirname(__file__) + os.sep + "java" + os.sep + "info.txt"
         buildfileTarget = directory + os.sep + "lib" + os.sep + "info.txt"
         compileBuildfile(buildfile, buildfileTarget, tokens)
+        
+        # Copy libs
+        devDir = os.path.dirname(__file__) + os.sep + "dev" + os.sep
+        libDir = directory + os.sep + "lib"
+        copyLibs(devDir, libDir)
         
     elif projectType == "python":
         os.mkdir(directory + os.sep + "WEB-INF")

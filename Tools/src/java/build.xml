@@ -3,10 +3,15 @@
 
 	<property name="src" value="./src" />
 	<property name="dest" value="./WEB-INF/classes" />
+
 	<property name="libdir" value="./lib" />
+	<property name="libdirWebInf" value="./WEB-INF/lib" />
 
 	<path id="classpath">
 		<fileset dir="${libdir}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${libdirWebInf}">
 			<include name="*.jar" />
 		</fileset>
 	</path>
@@ -17,13 +22,9 @@
 			<pathelement location="${dest}" />
 		</path>
 
-		<taskdef name="enhance"
-		         classpathref="enhancer.classpath"
-		         classname="org.datanucleus.enhancer.tools.EnhancerTask" />
+		<taskdef name="enhance" classpathref="enhancer.classpath" classname="org.datanucleus.enhancer.tools.EnhancerTask" />
 
-		<enhance classpathref="enhancer.classpath"
-		         failonerror="true"
-		         verbose="false">
+		<enhance classpathref="enhancer.classpath" failonerror="true" verbose="false">
 
 			<jvmarg line="-Dlog4j.configuration=${log4j.config.file}" />
 
