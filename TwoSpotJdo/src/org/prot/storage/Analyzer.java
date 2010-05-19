@@ -41,7 +41,7 @@ public class Analyzer {
 
 		byte[] key = (appId + "/").getBytes();
 		byte[] scanKey = key;
-		byte[] scanEnd = KeyHelper.incrementByteArray(appId.getBytes());
+		byte[] scanEnd = Bytes.add((appId + "/").getBytes(), KeyHelper.getArrayOfOnes());
 		int i = 0;
 		while (i++ < 100) {
 			Scan scan = new Scan(scanKey, scanEnd);
@@ -92,7 +92,7 @@ public class Analyzer {
 		}
 
 		logger.info("Fetched: " + entities.size());
-		
+
 		return entities;
 	}
 }
