@@ -65,6 +65,15 @@ public class KeyHelper
 
 		return ones;
 	}
+	
+	public static byte[] getArrayOfZeros()
+	{
+		byte[] ones = new byte[1024];
+		for (int i = 0; i < ones.length; i++)
+			ones[i] = (byte) 0x00;
+
+		return ones;
+	}
 
 	public static byte[] incrementByteArray(byte[] input)
 	{

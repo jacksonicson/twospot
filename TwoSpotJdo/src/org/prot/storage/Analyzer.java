@@ -41,7 +41,7 @@ public class Analyzer {
 
 		byte[] key = (appId + "/").getBytes();
 		byte[] scanKey = key;
-		byte[] scanEnd = Bytes.add(KeyHelper.incrementByteArray(appId.getBytes()), "/".getBytes());
+		byte[] scanEnd = KeyHelper.incrementByteArray(appId.getBytes());
 		int i = 0;
 		while (i++ < 100) {
 			Scan scan = new Scan(scanKey, scanEnd);
@@ -55,9 +55,10 @@ public class Analyzer {
 				kinds.add(sKey);
 
 				byte[] kind = sKey.getBytes();
-				scanKey = Bytes.add(key, KeyHelper.incrementByteArray(kind));
+				scanKey = Bytes.add(Bytes.add(Bytes.add(key, kind), "/".getBytes()), KeyHelper
+						.getArrayOfOnes());
 
-				logger.info(new String(scanKey));
+				logger.info("Scanned: " + new String(scanKey));
 
 			} else
 				break;
@@ -71,8 +72,8 @@ public class Analyzer {
 		HTable tableEntities = StorageUtils.getTableEntity(connection);
 		HTable tableIndexByKind = StorageUtils.getTableIndexByKind(connection);
 
-		byte[] scanStart = (appId + "/").getBytes();
-		byte[] scanEnd = Bytes.add(KeyHelper.incrementByteArray(appId.getBytes()), "/".getBytes());
+		byte[] scanStart = (appId + "/" + kind + "/").getBytes();
+		byte[] scanEnd = Bytes.add((appId + "/" + kind + "/").getBytes(), KeyHelper.getArrayOfOnes());
 
 		List<byte[]> entities = new ArrayList<byte[]>();
 
@@ -90,6 +91,8 @@ public class Analyzer {
 			entities.add(entity);
 		}
 
+		logger.info("Fetched: " + entities.size());
+		
 		return entities;
 	}
 }
