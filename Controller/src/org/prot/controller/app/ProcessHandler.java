@@ -7,7 +7,13 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.naming.ConfigurationException;
+
 import org.apache.log4j.Logger;
+import org.prot.controller.app.lifecycle.appconfig.AppConfigurer;
+import org.prot.controller.app.lifecycle.appfetch.HttpAppFetcher;
+import org.prot.controller.app.lifecycle.extract.AppExtractor;
+import org.prot.controller.app.lifecycle.extract.WarExtractor;
 import org.prot.controller.config.Configuration;
 
 class ProcessHandler {
@@ -40,14 +46,68 @@ class ProcessHandler {
 		stopAndClean(appProcess);
 	}
 
+	private byte[] loadApp(String appId) {
+		HttpAppFetcher fetcher = new HttpAppFetcher();
+		fetcher.setUrl("http://localhost:5050/");
+		byte[] archive = fetcher.fetchApp(appId);
+		return archive;
+	}
+
+	private final boolean extractApp(String appId, String destPath, byte[] archive) {
+		AppExtractor extractor = new WarExtractor();
+
+		try {
+			extractor.extract(archive, destPath, appId);
+		} catch (IOException e) {
+			logger.error("Error while extracting application package", e);
+			return false;
+		}
+
+		return true;
+	}
+
 	boolean execute(AppInfo appInfo, AppProcess appProcess) {
+		logger.debug("Downloading application archive...");
+		byte[] archive = loadApp(appInfo.getAppId());
+		if (archive == null) {
+			logger.error("Could not download application archive: " + appInfo.getAppId());
+			return false;
+		}
+
+		logger.debug("Extracting appplication archive...");
+		String baseDir = "C:/temp";
+		String appDir = "/" + appInfo.getPort();
+
+		boolean extracted = extractApp(appInfo.getAppId(), appDir, archive);
+		if (extracted == false) {
+			return false;
+		}
+
+		logger.debug("Reading configuration...");
+		AppConfigurer configurer = new AppConfigurer();
+		String runtime;
+		try {
+			runtime = configurer.configure(appDir);
+		} catch (ConfigurationException e1) {
+			logger.error("Could not read application configuration");
+			return false;
+		}
+
 		logger.debug("Starting AppServer...");
 
 		// Kill the old process if exists
 		stopAndClean(appProcess);
 
 		// Create the command line
-		List<String> command = createCommand(appInfo);
+		List<String> command = null;
+		if (runtime.equals("java"))
+			command = createCommandJava(appInfo, baseDir);
+		else if (runtime.equals("js"))
+			command = createCommandJs(appInfo, baseDir);
+		else {
+			logger.error("Invalid runtime type: " + runtime);
+			return false;
+		}
 
 		// configure the process
 		ProcessBuilder procBuilder = new ProcessBuilder();
@@ -78,45 +138,23 @@ class ProcessHandler {
 		}
 	}
 
-	private List<String> createCommand_jsCppServer(AppInfo appInfo) {
+	private List<String> createCommandJs(AppInfo appInfo, String baseDir) {
 		List<String> command = new LinkedList<String>();
 		command.add("D:/work/mscWolke/trunk/devc/server/server/Debug/Server.exe");
-		
-		 command.add("--appId");
-		 command.add(appInfo.getAppId());
-		
-		 command.add("--appSrvPort");
-		 command.add(appInfo.getPort() + "");
-		
-		logger.info("appInfo.getPort()" + appInfo.getPort());
-		// command.addAll(loadVmOptions());
-		//
-		// command.add("-classpath");
-		// command.add(loadClasspath());
-		//
-		// command.add("org.prot.appserver.Main");
-		//
-		// command.add("-appId");
-		// command.add(appInfo.getAppId());
-		//
-		// command.add("-appSrvPort");
-		// command.add(appInfo.getPort() + "");
-		//
-		// if (appInfo.isPrivileged())
-		// {
-		// command.add("-p");
-		// command.add(appInfo.getProcessToken());
-		// }
-		//
-		// String c = "";
-		// for (String cmd : command)
-		// c += cmd + " ";
-		// logger.debug("Command: " + c);
+
+		command.add("--appId");
+		command.add(appInfo.getAppId());
+
+		command.add("--appSrvPort");
+		command.add(appInfo.getPort() + "");
+
+		command.add("--tempDir");
+		command.add(baseDir);
 
 		return command;
 	}
 
-	private List<String> createCommand(AppInfo appInfo) {
+	private List<String> createCommandJava(AppInfo appInfo, String baseDir) {
 		List<String> command = new LinkedList<String>();
 		command.add("java");
 
@@ -132,6 +170,9 @@ class ProcessHandler {
 
 		command.add("-appSrvPort");
 		command.add(appInfo.getPort() + "");
+
+		command.add("-baseDir");
+		command.add(baseDir);
 
 		if (appInfo.isPrivileged()) {
 			command.add("-token");
