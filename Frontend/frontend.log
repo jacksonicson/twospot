@@ -1547,3 +1547,219 @@ java.net.SocketException: Socket is not connected: shutdown
 2010-05-19 16:42:36,977: [qtp120224-30] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
 2010-05-19 16:42:48,354: [qtp120224-15] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
 2010-05-19 16:42:51,862: [qtp120224-30] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 14:52:05,356: [main] XmlBeanDefinitionReader, INFO, org.springframework.beans.factory.xml.XmlBeanDefinitionReader: Loading XML bean definitions from class path resource [/etc/spring.xml]
+2010-06-03 14:52:05,742: [main] XmlBeanDefinitionReader, INFO, org.springframework.beans.factory.xml.XmlBeanDefinitionReader: Loading XML bean definitions from class path resource [/etc/zookeeper.xml]
+2010-06-03 14:52:06,071: [main] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: ZooKeeper is connecting...
+2010-06-03 14:52:06,215: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:zookeeper.version=3.2.1-808558, built on 08/27/2009 18:48 GMT
+2010-06-03 14:52:06,215: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:host.name=jack3
+2010-06-03 14:52:06,216: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.version=1.6.0_19
+2010-06-03 14:52:06,216: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.vendor=Sun Microsystems Inc.
+2010-06-03 14:52:06,221: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.home=C:\Program Files (x86)\Java\jre6
+2010-06-03 14:52:06,221: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.class.path=D:\work\mscWolke\trunk\dev\Frontend\bin;D:\work\mscWolke\trunk\dev\Libs\lib\log4j-1.2.15\log4j-1.2.15.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\modules\spring-core.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\spring-sources.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\spring.jar;D:\work\mscWolke\trunk\dev\Libs\lib\apache_commons\commons-logging-1.1.1.jar;D:\work\mscWolke\trunk\dev\Libs\lib\zookeeper-3.2.1\zookeeper-3.2.1.jar;D:\work\mscWolke\trunk\dev\Libs\gen\twospot-util.jar;D:\work\mscWolke\trunk\dev\Libs\gen\twospot-master.jar;D:\work\mscWolke\trunk\dev\Util\etc;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-annotations-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-client-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-continuation-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-http-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-io-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-jmx-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-jndi-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-plus-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-server-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-util-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-xml-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\servlet-api-2.5.jar
+2010-06-03 14:52:06,221: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.library.path=C:\Program Files (x86)\Java\jre6\bin;.;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files (x86)/Java/jre6/bin/client;C:/Program Files (x86)/Java/jre6/bin;C:\Ruby\bin;c:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\TortoiseSVN\bin;C:\Program Files\SlikSvn\bin\;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\TortoiseGit\bin;C:\Program Files (x86)\Java\jdk1.6.0_19\bin;C:\Program Files (x86)\protobuf;C:\Python26;D:\work\mscWolke\trunk\dev\Tools\src;C:\ant\bin;C:\Python26\Scripts;C:\Program Files (x86)\Git\bin
+2010-06-03 14:52:06,222: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.io.tmpdir=C:\Users\jack\AppData\Local\Temp\
+2010-06-03 14:52:06,222: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.compiler=<NA>
+2010-06-03 14:52:06,222: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.name=Windows 7
+2010-06-03 14:52:06,223: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.arch=x86
+2010-06-03 14:52:06,223: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.version=6.1
+2010-06-03 14:52:06,223: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.name=jack
+2010-06-03 14:52:06,223: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.home=C:\Users\jack
+2010-06-03 14:52:06,224: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.dir=D:\work\mscWolke\trunk\dev\Frontend
+2010-06-03 14:52:06,225: [main] ZooKeeper, INFO, org.apache.zookeeper.ZooKeeper: Initiating client connection, connectString=192.168.178.14:2222 sessionTimeout=4000 watcher=org.prot.util.zookeeper.ZooHelper@176cad3
+2010-06-03 14:52:06,228: [main] ClientCnxn, INFO, org.apache.zookeeper.ClientCnxn: zookeeper.disableAutoWatchReset is false
+2010-06-03 14:52:06,427: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-06-03 14:52:06,428: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.14:2222
+2010-06-03 14:52:07,427: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-06-03 14:52:07,480: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@39e5b5
+java.net.ConnectException: Connection refused: no further information
+	at sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)
+	at sun.nio.ch.SocketChannelImpl.finishConnect(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:933)
+2010-06-03 14:52:07,481: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.nio.channels.ClosedChannelException
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-06-03 14:52:07,481: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.nio.channels.ClosedChannelException
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-06-03 14:52:08,427: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-06-03 14:52:08,773: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.14:2222
+2010-06-03 14:52:09,427: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-06-03 14:52:09,769: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@95cfbe
+java.net.ConnectException: Connection refused: no further information
+	at sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)
+	at sun.nio.ch.SocketChannelImpl.finishConnect(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:933)
+2010-06-03 14:52:09,769: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.nio.channels.ClosedChannelException
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-06-03 14:52:09,769: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.nio.channels.ClosedChannelException
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-06-03 14:52:10,432: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-06-03 14:52:10,979: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.14:2222
+2010-06-03 14:52:11,432: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-06-03 14:52:11,993: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Exception closing session 0x0 to sun.nio.ch.SelectionKeyImpl@1950198
+java.net.ConnectException: Connection refused: no further information
+	at sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)
+	at sun.nio.ch.SocketChannelImpl.finishConnect(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:933)
+2010-06-03 14:52:11,993: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown input
+java.nio.channels.ClosedChannelException
+	at sun.nio.ch.SocketChannelImpl.shutdownInput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownInput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:999)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-06-03 14:52:11,993: [main-SendThread] ClientCnxn$SendThread, WARN, org.apache.zookeeper.ClientCnxn: Ignoring exception during shutdown output
+java.nio.channels.ClosedChannelException
+	at sun.nio.ch.SocketChannelImpl.shutdownOutput(Unknown Source)
+	at sun.nio.ch.SocketAdaptor.shutdownOutput(Unknown Source)
+	at org.apache.zookeeper.ClientCnxn$SendThread.cleanup(ClientCnxn.java:1004)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:970)
+2010-06-03 14:52:12,432: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-06-03 14:52:13,432: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-06-03 14:52:13,676: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.14:2222
+2010-06-03 14:52:35,960: [main] XmlBeanDefinitionReader, INFO, org.springframework.beans.factory.xml.XmlBeanDefinitionReader: Loading XML bean definitions from class path resource [/etc/spring.xml]
+2010-06-03 14:52:36,001: [main] XmlBeanDefinitionReader, INFO, org.springframework.beans.factory.xml.XmlBeanDefinitionReader: Loading XML bean definitions from class path resource [/etc/zookeeper.xml]
+2010-06-03 14:52:36,094: [main] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: ZooKeeper is connecting...
+2010-06-03 14:52:36,148: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:zookeeper.version=3.2.1-808558, built on 08/27/2009 18:48 GMT
+2010-06-03 14:52:36,149: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:host.name=jack3
+2010-06-03 14:52:36,149: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.version=1.6.0_19
+2010-06-03 14:52:36,150: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.vendor=Sun Microsystems Inc.
+2010-06-03 14:52:36,155: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.home=C:\Program Files (x86)\Java\jre6
+2010-06-03 14:52:36,155: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.class.path=D:\work\mscWolke\trunk\dev\Frontend\bin;D:\work\mscWolke\trunk\dev\Libs\lib\log4j-1.2.15\log4j-1.2.15.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\modules\spring-core.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\spring-sources.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\spring.jar;D:\work\mscWolke\trunk\dev\Libs\lib\apache_commons\commons-logging-1.1.1.jar;D:\work\mscWolke\trunk\dev\Libs\lib\zookeeper-3.2.1\zookeeper-3.2.1.jar;D:\work\mscWolke\trunk\dev\Libs\gen\twospot-util.jar;D:\work\mscWolke\trunk\dev\Libs\gen\twospot-master.jar;D:\work\mscWolke\trunk\dev\Util\etc;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-annotations-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-client-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-continuation-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-http-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-io-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-jmx-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-jndi-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-plus-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-server-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-util-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-xml-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\servlet-api-2.5.jar
+2010-06-03 14:52:36,157: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.library.path=C:\Program Files (x86)\Java\jre6\bin;.;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files (x86)/Java/jre6/bin/client;C:/Program Files (x86)/Java/jre6/bin;C:\Ruby\bin;c:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\TortoiseSVN\bin;C:\Program Files\SlikSvn\bin\;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\TortoiseGit\bin;C:\Program Files (x86)\Java\jdk1.6.0_19\bin;C:\Program Files (x86)\protobuf;C:\Python26;D:\work\mscWolke\trunk\dev\Tools\src;C:\ant\bin;C:\Python26\Scripts;C:\Program Files (x86)\Git\bin
+2010-06-03 14:52:36,157: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.io.tmpdir=C:\Users\jack\AppData\Local\Temp\
+2010-06-03 14:52:36,158: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.compiler=<NA>
+2010-06-03 14:52:36,158: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.name=Windows 7
+2010-06-03 14:52:36,159: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.arch=x86
+2010-06-03 14:52:36,159: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.version=6.1
+2010-06-03 14:52:36,159: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.name=jack
+2010-06-03 14:52:36,160: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.home=C:\Users\jack
+2010-06-03 14:52:36,161: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.dir=D:\work\mscWolke\trunk\dev\Frontend
+2010-06-03 14:52:36,162: [main] ZooKeeper, INFO, org.apache.zookeeper.ZooKeeper: Initiating client connection, connectString=192.168.178.16:2222 sessionTimeout=4000 watcher=org.prot.util.zookeeper.ZooHelper@1d62270
+2010-06-03 14:52:36,163: [main] ClientCnxn, INFO, org.apache.zookeeper.ClientCnxn: zookeeper.disableAutoWatchReset is false
+2010-06-03 14:52:36,191: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-06-03 14:52:36,191: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.16:2222
+2010-06-03 14:52:36,193: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Priming connection to java.nio.channels.SocketChannel[connected local=/192.168.178.14:50125 remote=/192.168.178.16:2222]
+2010-06-03 14:52:36,215: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Server connection successful
+2010-06-03 14:52:36,654: [main-EventThread] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: ZooKeeper event
+2010-06-03 14:52:36,655: [main-EventThread] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: Unhandled ZooKeeper event
+2010-06-03 14:52:37,192: [main] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: Connected with ZooKeeper
+2010-06-03 14:52:37,198: [main] JobQueue, INFO, org.prot.util.zookeeper.JobQueue: processing job: org.prot.util.zookeeper.jobs.CreateZNodeStructure
+2010-06-03 14:52:37,386: [main] JobQueue, INFO, org.prot.util.zookeeper.JobQueue: processing job: org.prot.frontend.zookeeper.jobs.WatchMaster
+2010-06-03 14:52:37,396: [main] WatchMaster, INFO, org.prot.frontend.zookeeper.jobs.WatchMaster: Could not find /master in the ZooKeeper. Waiting for the ZNode
+2010-06-03 14:53:41,161: [main] XmlBeanDefinitionReader, INFO, org.springframework.beans.factory.xml.XmlBeanDefinitionReader: Loading XML bean definitions from class path resource [/etc/spring.xml]
+2010-06-03 14:53:41,212: [main] XmlBeanDefinitionReader, INFO, org.springframework.beans.factory.xml.XmlBeanDefinitionReader: Loading XML bean definitions from class path resource [/etc/zookeeper.xml]
+2010-06-03 14:53:41,342: [main] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: ZooKeeper is connecting...
+2010-06-03 14:53:41,368: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:zookeeper.version=3.2.1-808558, built on 08/27/2009 18:48 GMT
+2010-06-03 14:53:41,368: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:host.name=jack3
+2010-06-03 14:53:41,369: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.version=1.6.0_19
+2010-06-03 14:53:41,369: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.vendor=Sun Microsystems Inc.
+2010-06-03 14:53:41,370: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.home=C:\Program Files (x86)\Java\jre6
+2010-06-03 14:53:41,370: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.class.path=D:\work\mscWolke\trunk\dev\Frontend\bin;D:\work\mscWolke\trunk\dev\Libs\lib\log4j-1.2.15\log4j-1.2.15.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\modules\spring-core.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\spring-sources.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\spring.jar;D:\work\mscWolke\trunk\dev\Libs\lib\apache_commons\commons-logging-1.1.1.jar;D:\work\mscWolke\trunk\dev\Libs\lib\zookeeper-3.2.1\zookeeper-3.2.1.jar;D:\work\mscWolke\trunk\dev\Libs\gen\twospot-util.jar;D:\work\mscWolke\trunk\dev\Libs\gen\twospot-master.jar;D:\work\mscWolke\trunk\dev\Util\etc;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-annotations-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-client-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-continuation-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-http-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-io-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-jmx-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-jndi-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-plus-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-server-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-util-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-xml-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\servlet-api-2.5.jar
+2010-06-03 14:53:41,372: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.library.path=C:\Program Files (x86)\Java\jre6\bin;.;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files (x86)/Java/jre6/bin/client;C:/Program Files (x86)/Java/jre6/bin;C:\Ruby\bin;c:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\TortoiseSVN\bin;C:\Program Files\SlikSvn\bin\;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\TortoiseGit\bin;C:\Program Files (x86)\Java\jdk1.6.0_19\bin;C:\Program Files (x86)\protobuf;C:\Python26;D:\work\mscWolke\trunk\dev\Tools\src;C:\ant\bin;C:\Python26\Scripts;C:\Program Files (x86)\Git\bin
+2010-06-03 14:53:41,372: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.io.tmpdir=C:\Users\jack\AppData\Local\Temp\
+2010-06-03 14:53:41,373: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.compiler=<NA>
+2010-06-03 14:53:41,373: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.name=Windows 7
+2010-06-03 14:53:41,373: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.arch=x86
+2010-06-03 14:53:41,374: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.version=6.1
+2010-06-03 14:53:41,374: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.name=jack
+2010-06-03 14:53:41,374: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.home=C:\Users\jack
+2010-06-03 14:53:41,375: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.dir=D:\work\mscWolke\trunk\dev\Frontend
+2010-06-03 14:53:41,376: [main] ZooKeeper, INFO, org.apache.zookeeper.ZooKeeper: Initiating client connection, connectString=192.168.178.16:2222 sessionTimeout=4000 watcher=org.prot.util.zookeeper.ZooHelper@176cad3
+2010-06-03 14:53:41,378: [main] ClientCnxn, INFO, org.apache.zookeeper.ClientCnxn: zookeeper.disableAutoWatchReset is false
+2010-06-03 14:53:41,427: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-06-03 14:53:41,474: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.16:2222
+2010-06-03 14:53:41,670: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Priming connection to java.nio.channels.SocketChannel[connected local=/192.168.178.14:50132 remote=/192.168.178.16:2222]
+2010-06-03 14:53:41,674: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Server connection successful
+2010-06-03 14:53:41,685: [main-EventThread] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: ZooKeeper event
+2010-06-03 14:53:41,685: [main-EventThread] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: Unhandled ZooKeeper event
+2010-06-03 14:53:42,427: [main] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: Connected with ZooKeeper
+2010-06-03 14:53:42,432: [main] JobQueue, INFO, org.prot.util.zookeeper.JobQueue: processing job: org.prot.util.zookeeper.jobs.CreateZNodeStructure
+2010-06-03 14:53:42,458: [main] JobQueue, INFO, org.prot.util.zookeeper.JobQueue: processing job: org.prot.frontend.zookeeper.jobs.WatchMaster
+2010-06-03 14:53:42,460: [main] WatchMaster, INFO, org.prot.frontend.zookeeper.jobs.WatchMaster: Could not find /master in the ZooKeeper. Waiting for the ZNode
+2010-06-03 14:53:43,058: [main-EventThread] WatchMaster, INFO, org.prot.frontend.zookeeper.jobs.WatchMaster: Processing Watcher: /master
+2010-06-03 14:53:43,059: [main-EventThread] JobQueue, INFO, org.prot.util.zookeeper.JobQueue: processing job: org.prot.frontend.zookeeper.jobs.WatchMaster
+2010-06-03 14:53:43,076: [main-EventThread] WatchMaster, INFO, org.prot.frontend.zookeeper.jobs.WatchMaster: Updating configuration with the Manager
+2010-06-03 14:54:31,494: [qtp23625340-20] ExceptionSafeFrontendProxy, DEBUG, org.prot.frontend.ExceptionSafeFrontendProxy: Connecting with master: 192.168.178.14
+2010-06-03 14:54:31,638: [qtp23625340-20] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 14:54:38,300: [qtp23625340-26] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 14:56:18,112: [qtp23625340-13] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 14:58:02,176: [qtp23625340-13] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 14:58:30,129: [qtp23625340-29] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 14:59:08,482: [qtp23625340-17] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 14:59:36,645: [qtp23625340-26] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 15:01:15,385: [qtp23625340-23] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 15:01:44,365: [qtp23625340-15] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 15:02:14,608: [qtp23625340-22] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 15:02:27,147: [qtp23625340-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 15:03:07,429: [qtp23625340-19] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 15:03:12,904: [qtp23625340-31] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 15:09:48,508: [qtp23625340-26] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 15:10:19,373: [qtp23625340-13] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 15:10:34,132: [qtp23625340-15] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 15:11:04,423: [qtp23625340-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 15:21:00,993: [qtp23625340-13] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 15:21:08,766: [qtp23625340-31] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 15:21:27,147: [qtp23625340-19] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 15:23:41,135: [qtp23625340-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 15:25:51,456: [qtp23625340-15] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 15:27:57,610: [qtp23625340-25] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 15:28:02,892: [qtp23625340-17] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 18:06:14,674: [main] XmlBeanDefinitionReader, INFO, org.springframework.beans.factory.xml.XmlBeanDefinitionReader: Loading XML bean definitions from class path resource [/etc/spring.xml]
+2010-06-03 18:06:14,737: [main] XmlBeanDefinitionReader, INFO, org.springframework.beans.factory.xml.XmlBeanDefinitionReader: Loading XML bean definitions from class path resource [/etc/zookeeper.xml]
+2010-06-03 18:06:14,928: [main] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: ZooKeeper is connecting...
+2010-06-03 18:06:14,962: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:zookeeper.version=3.2.1-808558, built on 08/27/2009 18:48 GMT
+2010-06-03 18:06:14,963: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:host.name=gogo.twospot.local
+2010-06-03 18:06:14,963: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.version=1.6.0_19
+2010-06-03 18:06:14,964: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.vendor=Sun Microsystems Inc.
+2010-06-03 18:06:14,969: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.home=C:\Program Files (x86)\Java\jre6
+2010-06-03 18:06:14,969: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.class.path=D:\work\mscWolke\trunk\dev\Frontend\bin;D:\work\mscWolke\trunk\dev\Libs\lib\log4j-1.2.15\log4j-1.2.15.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\modules\spring-core.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\spring-sources.jar;D:\work\mscWolke\trunk\dev\Libs\lib\spring-framework-2.5.6.SEC01\spring.jar;D:\work\mscWolke\trunk\dev\Libs\lib\apache_commons\commons-logging-1.1.1.jar;D:\work\mscWolke\trunk\dev\Libs\lib\zookeeper-3.2.1\zookeeper-3.2.1.jar;D:\work\mscWolke\trunk\dev\Libs\gen\twospot-util.jar;D:\work\mscWolke\trunk\dev\Libs\gen\twospot-master.jar;D:\work\mscWolke\trunk\dev\Util\etc;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-annotations-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-client-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-continuation-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-http-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-io-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-jmx-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-jndi-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-plus-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-server-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-util-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\jetty-xml-7.0.1.v20091125.jar;D:\work\mscWolke\trunk\dev\Libs\lib\jetty-7.0.1\servlet-api-2.5.jar
+2010-06-03 18:06:14,970: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.library.path=C:\Program Files (x86)\Java\jre6\bin;.;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files (x86)/Java/jre6/bin/client;C:/Program Files (x86)/Java/jre6/bin;C:\Ruby\bin;c:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\TortoiseSVN\bin;C:\Program Files\SlikSvn\bin\;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\TortoiseGit\bin;C:\Program Files (x86)\Java\jdk1.6.0_19\bin;C:\Program Files (x86)\protobuf;C:\Python26;D:\work\mscWolke\trunk\dev\Tools\src;C:\ant\bin;C:\Python26\Scripts;C:\Program Files (x86)\Git\bin
+2010-06-03 18:06:14,970: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.io.tmpdir=C:\Users\jack\AppData\Local\Temp\
+2010-06-03 18:06:14,971: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:java.compiler=<NA>
+2010-06-03 18:06:14,971: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.name=Windows 7
+2010-06-03 18:06:14,972: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.arch=x86
+2010-06-03 18:06:14,972: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:os.version=6.1
+2010-06-03 18:06:14,972: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.name=jack
+2010-06-03 18:06:14,973: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.home=C:\Users\jack
+2010-06-03 18:06:14,974: [main] Environment, INFO, org.apache.zookeeper.ZooKeeper: Client environment:user.dir=D:\work\mscWolke\trunk\dev\Frontend
+2010-06-03 18:06:14,975: [main] ZooKeeper, INFO, org.apache.zookeeper.ZooKeeper: Initiating client connection, connectString=192.168.178.16:2222 sessionTimeout=4000 watcher=org.prot.util.zookeeper.ZooHelper@1d62270
+2010-06-03 18:06:14,978: [main] ClientCnxn, INFO, org.apache.zookeeper.ClientCnxn: zookeeper.disableAutoWatchReset is false
+2010-06-03 18:06:15,141: [main] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: ZooKeeper is waiting for connection ...
+2010-06-03 18:06:15,207: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Attempting connection to server /192.168.178.16:2222
+2010-06-03 18:06:15,291: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Priming connection to java.nio.channels.SocketChannel[connected local=/192.168.178.14:52760 remote=/192.168.178.16:2222]
+2010-06-03 18:06:15,295: [main-SendThread] ClientCnxn$SendThread, INFO, org.apache.zookeeper.ClientCnxn: Server connection successful
+2010-06-03 18:06:15,321: [main-EventThread] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: ZooKeeper event
+2010-06-03 18:06:15,322: [main-EventThread] ZooHelper, DEBUG, org.prot.util.zookeeper.ZooHelper: Unhandled ZooKeeper event
+2010-06-03 18:06:16,144: [main] ZooHelper, INFO, org.prot.util.zookeeper.ZooHelper: Connected with ZooKeeper
+2010-06-03 18:06:16,148: [main] JobQueue, INFO, org.prot.util.zookeeper.JobQueue: processing job: org.prot.util.zookeeper.jobs.CreateZNodeStructure
+2010-06-03 18:06:16,210: [main] JobQueue, INFO, org.prot.util.zookeeper.JobQueue: processing job: org.prot.frontend.zookeeper.jobs.WatchMaster
+2010-06-03 18:06:16,226: [main] WatchMaster, INFO, org.prot.frontend.zookeeper.jobs.WatchMaster: Could not find /master in the ZooKeeper. Waiting for the ZNode
+2010-06-03 18:06:18,504: [main-EventThread] WatchMaster, INFO, org.prot.frontend.zookeeper.jobs.WatchMaster: Processing Watcher: /master
+2010-06-03 18:06:18,504: [main-EventThread] JobQueue, INFO, org.prot.util.zookeeper.JobQueue: processing job: org.prot.frontend.zookeeper.jobs.WatchMaster
+2010-06-03 18:06:18,509: [main-EventThread] WatchMaster, INFO, org.prot.frontend.zookeeper.jobs.WatchMaster: Updating configuration with the Manager
+2010-06-03 18:06:31,953: [qtp181086-20] ExceptionSafeFrontendProxy, DEBUG, org.prot.frontend.ExceptionSafeFrontendProxy: Connecting with master: 192.168.178.14
+2010-06-03 18:06:32,122: [qtp181086-20] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 18:06:44,573: [qtp181086-23] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 18:08:44,069: [qtp181086-23] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 18:09:03,963: [qtp181086-13] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 18:11:05,417: [qtp181086-24] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 18:12:01,825: [qtp181086-13] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 18:12:53,028: [qtp181086-13] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 18:13:15,678: [qtp181086-19] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 18:13:25,929: [qtp181086-13] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 18:13:32,500: [qtp181086-30] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
+2010-06-03 18:13:42,321: [qtp181086-15] CacheEntry, DEBUG, org.prot.frontend.cache.timeout.CacheEntry: Known controllers: 1
