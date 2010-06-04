@@ -10,22 +10,18 @@ import org.apache.log4j.Logger;
 import org.prot.appserver.app.AppInfo;
 import org.prot.appserver.runtime.AppRuntime;
 import org.prot.appserver.runtime.NoSuchRuntimeException;
-import org.prot.appserver.runtime.RuntimeConfigurer;
 import org.prot.appserver.runtime.RuntimeRegistry;
 import org.yaml.snakeyaml.Yaml;
 
-public class AppConfigurer
-{
+public class AppConfigurer {
 	private static final Logger logger = Logger.getLogger(AppConfigurer.class);
 
 	private static final String CONFIG_FILE = "app.yaml";
 
 	private RuntimeRegistry runtimeRegistry;
 
-	public AppInfo configure(String appDirectory) throws ConfigurationException
-	{
-		try
-		{
+	public AppInfo configure(String appDirectory) throws ConfigurationException {
+		try {
 			// Do the general configuration
 			Map<?, ?> yamlObj = loadFile(appDirectory);
 			AppInfo appInfo = loadBasicConfiguration(yamlObj);
@@ -36,23 +32,19 @@ public class AppConfigurer
 
 			return appInfo;
 
-		} catch (InvalidYamlFileException e)
-		{
+		} catch (InvalidYamlFileException e) {
 			logger.error("Invalid YAML application configuration", e);
 			throw new ConfigurationException();
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			logger.error("Error while reading the YAML application configuration", e);
 			throw new ConfigurationException();
-		} catch (NoSuchRuntimeException e)
-		{
+		} catch (NoSuchRuntimeException e) {
 			logger.error("Could not find the runtime configured in the YAML file", e);
 			throw new ConfigurationException();
 		}
 	}
 
-	private AppInfo loadBasicConfiguration(Map<?, ?> yaml)
-	{
+	private AppInfo loadBasicConfiguration(Map<?, ?> yaml) {
 		AppInfo appInfo = new AppInfo();
 
 		// Extract the AppId
@@ -66,8 +58,7 @@ public class AppConfigurer
 		return appInfo;
 	}
 
-	private Map<?, ?> loadFile(String appDirectory) throws InvalidYamlFileException, IOException
-	{
+	private Map<?, ?> loadFile(String appDirectory) throws InvalidYamlFileException, IOException {
 		File yamlFile = new File(appDirectory + "/" + CONFIG_FILE);
 		InputStream in = new FileInputStream(yamlFile);
 
@@ -80,8 +71,7 @@ public class AppConfigurer
 		return (Map<?, ?>) yamlObj;
 	}
 
-	public void setRuntimeRegistry(RuntimeRegistry runtimeRegistry)
-	{
+	public void setRuntimeRegistry(RuntimeRegistry runtimeRegistry) {
 		this.runtimeRegistry = runtimeRegistry;
 	}
 }

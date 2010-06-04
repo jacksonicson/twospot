@@ -6,8 +6,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.prot.appserver.app.AppInfo;
 
-public class Configuration
-{
+public class Configuration {
 	private static Logger logger = Logger.getLogger(Configuration.class);
 
 	// Singleton
@@ -67,10 +66,8 @@ public class Configuration
 	 * 
 	 * @return intance of the Configuration
 	 */
-	public static Configuration getInstance()
-	{
-		if (Configuration.configuration == null)
-		{
+	public static Configuration getInstance() {
+		if (Configuration.configuration == null) {
 			// Create a new Configuration
 			Configuration.configuration = new Configuration();
 
@@ -81,10 +78,8 @@ public class Configuration
 		return Configuration.configuration;
 	}
 
-	private static void initConfiguration(Configuration configuration)
-	{
-		try
-		{
+	private static void initConfiguration(Configuration configuration) {
+		try {
 			// Load all propertie files
 			properties.load(Configuration.class.getResourceAsStream("/etc/config.properties"));
 			properties.load(Configuration.class.getResourceAsStream("/etc/appServer.properties"));
@@ -105,8 +100,7 @@ public class Configuration
 			configuration.controllerDatagramPort = Integer.parseInt(properties
 					.getProperty("controller.datagramPort"));
 
-			switch (configuration.serverMode)
-			{
+			switch (configuration.serverMode) {
 			case SERVER:
 				configuration.controllerRmiRegistryPort = Integer.parseInt(properties
 						.getProperty("rmi.controller.registry.port"));
@@ -116,12 +110,10 @@ public class Configuration
 				break;
 			}
 
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			logger.error("Could not load the configuration properties", e);
 			System.exit(1);
-		} catch (NumberFormatException e)
-		{
+		} catch (NumberFormatException e) {
 			logger.error("Could not parse the configuration file");
 			System.exit(1);
 		}
@@ -131,8 +123,7 @@ public class Configuration
 	 * Executed after all propertie files and command line arguments have been
 	 * set
 	 */
-	void postInitialize()
-	{
+	void postInitialize() {
 		Configuration config = Configuration.configuration;
 
 		// Get the working directory
@@ -145,8 +136,7 @@ public class Configuration
 		while (workingDir.endsWith("/"))
 			workingDir = workingDir.substring(0, workingDir.length() - 1);
 
-		switch (configuration.serverMode)
-		{
+		switch (configuration.serverMode) {
 		case SERVER:
 			config.setAppDirectory(workingDir + "/" + config.getAppServerPort());
 			config.setAppScratchDir(config.getAppScratchDir() + "/" + config.getAppServerPort());
@@ -161,154 +151,124 @@ public class Configuration
 		logger.info("Configured AppDirectory: " + config.getAppDirectory());
 	}
 
-	public String getAppId()
-	{
+	public String getAppId() {
 		return appId;
 	}
 
-	public void setAppId(String appId)
-	{
+	public void setAppId(String appId) {
 		this.appId = appId;
 	}
 
-	public int getAppServerPort()
-	{
+	public int getAppServerPort() {
 		return appServerPort;
 	}
 
-	public void setAppServerPort(int appServerPort)
-	{
+	public void setAppServerPort(int appServerPort) {
 		this.appServerPort = appServerPort;
 	}
 
-	public String getWorkingDirectory()
-	{
+	public String getWorkingDirectory() {
 		return workingDirectory;
 	}
 
-	public void setWorkingDirectory(String workingDirectory)
-	{
+	public void setWorkingDirectory(String workingDirectory) {
 		this.workingDirectory = workingDirectory;
 	}
 
-	public String getAppDirectory()
-	{
+	public String getAppDirectory() {
 		return appDirectory;
 	}
 
-	void setAppDirectory(String appDirectory)
-	{
+	void setAppDirectory(String appDirectory) {
 		this.appDirectory = appDirectory;
 	}
 
-	public String getPythonLibs()
-	{
+	public String getPythonLibs() {
 		return pythonLibs;
 	}
 
-	public void setPythonLibs(String pythonLibs)
-	{
+	public void setPythonLibs(String pythonLibs) {
 		this.pythonLibs = pythonLibs;
 	}
 
-	public String getDjangoLibs()
-	{
+	public String getDjangoLibs() {
 		return djangoLibs;
 	}
 
-	public void setDjangoLibs(String djangoLibs)
-	{
+	public void setDjangoLibs(String djangoLibs) {
 		this.djangoLibs = djangoLibs;
 	}
 
-	public AppInfo getAppInfo()
-	{
+	public AppInfo getAppInfo() {
 		return appInfo;
 	}
 
-	public void setAppInfo(AppInfo appInfo)
-	{
+	public void setAppInfo(AppInfo appInfo) {
 		this.appInfo = appInfo;
 	}
 
-	public boolean isEnableStdOut()
-	{
+	public boolean isEnableStdOut() {
 		return enableStdOut;
 	}
 
-	public void setEnableStdOut(boolean enableStdOut)
-	{
+	public void setEnableStdOut(boolean enableStdOut) {
 		this.enableStdOut = enableStdOut;
 	}
 
-	public boolean isRequiresController()
-	{
+	public boolean isRequiresController() {
 		return requiresController;
 	}
 
-	public void setRequiresController(boolean requiresController)
-	{
+	public void setRequiresController(boolean requiresController) {
 		this.requiresController = requiresController;
 	}
 
-	public boolean isPrivileged()
-	{
+	public boolean isPrivileged() {
 		return privileged;
 	}
 
-	public void setPrivileged(boolean privileged)
-	{
+	public void setPrivileged(boolean privileged) {
 		this.privileged = privileged;
 	}
 
-	public String getAuthenticationToken()
-	{
+	public String getAuthenticationToken() {
 		return authenticationToken;
 	}
 
-	public void setAuthenticationToken(String authenticationToken)
-	{
+	public void setAuthenticationToken(String authenticationToken) {
 		logger.debug("Using authentication token: " + authenticationToken);
 		this.authenticationToken = authenticationToken;
 	}
 
-	public String getAppScratchDir()
-	{
+	public String getAppScratchDir() {
 		return appScratchDir;
 	}
 
-	void setAppScratchDir(String appScratchDir)
-	{
+	void setAppScratchDir(String appScratchDir) {
 		this.appScratchDir = appScratchDir;
 	}
 
-	public int getRmiRegistryPort()
-	{
+	public int getRmiRegistryPort() {
 		return controllerRmiRegistryPort;
 	}
 
-	public ServerMode getServerMode()
-	{
+	public ServerMode getServerMode() {
 		return serverMode;
 	}
 
-	public void setServerMode(ServerMode serverMode)
-	{
+	public void setServerMode(ServerMode serverMode) {
 		this.serverMode = serverMode;
 	}
 
-	public long getDosPreventionTime()
-	{
+	public long getDosPreventionTime() {
 		return dosPreventionTime;
 	}
 
-	public static Properties getProperties()
-	{
+	public static Properties getProperties() {
 		return properties;
 	}
 
-	public int getControllerDatagramPort()
-	{
+	public int getControllerDatagramPort() {
 		return controllerDatagramPort;
 	}
 }

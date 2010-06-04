@@ -10,30 +10,25 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Logger;
 
-public class ArgumentParser
-{
+public class ArgumentParser {
 	private static CommandLine cmd = null;
 
-	public static void dump()
-	{
+	public static void dump() {
 		Logger logger = Logger.getLogger(ArgumentParser.class);
 
-		if (cmd == null)
-		{
+		if (cmd == null) {
 			logger.error("Missing starup arguments");
 			return;
 		}
 
 		logger.info("Startup arguments:");
-		for (Option option : cmd.getOptions())
-		{
+		for (Option option : cmd.getOptions()) {
 			logger.info(option.getOpt() + " = " + option.getValue());
 		}
 	}
 
 	@SuppressWarnings("static-access")
-	public static void parseArguments(String args[])
-	{
+	public static void parseArguments(String args[]) {
 		Options options = new Options();
 
 		// AppId
@@ -60,13 +55,18 @@ public class ArgumentParser
 				"authentication token used to authenticate privileged applications").hasArg().create("token");
 		options.addOption(authenticationToken);
 
+		// Base directory where the application resides
+		Option baseDir = OptionBuilder.withArgName(
+				"base directory where the application and yaml configuration reside").hasArg().create(
+				"baseDir");
+		options.addOption(baseDir);
+
 		// Location of the decompressed application (for the standalone mode)
 		Option workingDirectory = OptionBuilder.withArgName("application directory").hasArg().create(
 				"workDir");
 		options.addOption(workingDirectory);
 
-		try
-		{
+		try {
 			// Parse the command line
 			CommandLineParser parser = new GnuParser();
 			CommandLine cmd = parser.parse(options, args);
@@ -85,29 +85,29 @@ public class ArgumentParser
 			if (cmd.hasOption("controller"))
 				config.setRequiresController(Boolean.parseBoolean(cmd.getOptionValue("controller")));
 
-			if (cmd.hasOption("token"))
-			{
+			if (cmd.hasOption("token")) {
 				config.setPrivileged(true);
 				config.setAuthenticationToken(cmd.getOptionValue("token"));
 			}
 
-			if (cmd.hasOption("workDir"))
-			{
+			if (cmd.hasOption("baseDir")) {
+				config.setWorkingDirectory(cmd.getOptionValue("baseDir"));
+			}
+
+			if (cmd.hasOption("workDir")) {
 				config.setWorkingDirectory(cmd.getOptionValue("workDir"));
 			}
 
 			// Finish the configuration process
 			config.postInitialize();
 
-		} catch (ParseException e)
-		{
+		} catch (ParseException e) {
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("AppServer", options);
 
 			// Exit process
 			System.exit(0);
-		} catch (NumberFormatException e)
-		{
+		} catch (NumberFormatException e) {
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("AppServer", options);
 

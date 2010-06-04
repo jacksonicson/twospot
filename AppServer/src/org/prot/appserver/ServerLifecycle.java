@@ -42,11 +42,22 @@ public class ServerLifecycle
 
 		prepareScratch();
 
-		loadApp();
+		// Is done in the Controller
+		// loadApp();
+		
+		// Is done in the Controller 
+		// extractApp();
+		
+		
 
-		extractApp();
-
+		// Start profiling
+		long currentTime = System.currentTimeMillis();
+		
 		configure();
+		
+		// Log time for profiling
+		currentTime = System.currentTimeMillis() - currentTime; 
+		logger.debug("TIME: " + currentTime);
 
 		launchRuntime();
 
