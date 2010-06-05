@@ -138,7 +138,7 @@ public class Configuration {
 
 		switch (configuration.serverMode) {
 		case SERVER:
-			config.setAppDirectory(workingDir + "/" + config.getAppServerPort());
+			config.setAppDirectory(workingDir);
 			config.setAppScratchDir(config.getAppScratchDir() + "/" + config.getAppServerPort());
 			break;
 
