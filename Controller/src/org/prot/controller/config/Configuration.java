@@ -9,8 +9,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.prot.util.net.AddressExtractor;
 
-public class Configuration
-{
+public class Configuration {
 	private static final Logger logger = Logger.getLogger(Configuration.class);
 
 	// Singleton instance
@@ -53,31 +52,29 @@ public class Configuration
 	// VM options which are used when starting the AppServer
 	private String vmOptions;
 
-	public static Configuration getConfiguration()
-	{
-		if (configuration == null)
-		{
+	// TwoSpotV8 appserver configuration
+	private String twoSpotV8Bin = "";
+
+	public static Configuration getConfiguration() {
+		if (configuration == null) {
 			configuration = new Configuration();
 		}
 
 		return configuration;
 	}
 
-	private final InetAddress getInetAddress(String networkInterface) throws SocketException
-	{
+	private final InetAddress getInetAddress(String networkInterface) throws SocketException {
 		return AddressExtractor.getInetAddress(networkInterface, false);
 	}
 
-	public Configuration()
-	{
+	public Configuration() {
 		// UID
 		this.UID = java.util.UUID.randomUUID().toString();
 
 		// Read the configuration files
 		InputStream utilIn = this.getClass().getResourceAsStream("/etc/config.properties");
 		InputStream controllerIn = this.getClass().getResourceAsStream("/etc/controller.properties");
-		try
-		{
+		try {
 			properties.load(utilIn);
 			properties.load(controllerIn);
 
@@ -100,92 +97,84 @@ public class Configuration
 
 			this.masterDatagramPort = Integer.parseInt(properties.getProperty("master.datagramPort"));
 
-		} catch (SocketException e)
-		{
+			this.twoSpotV8Bin = properties.getProperty("twospotv8.bin");
+
+		} catch (SocketException e) {
 			logger.error("Could not parse the configuration", e);
 			System.exit(1);
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			logger.error("Could not load configuration", e);
 			System.exit(1);
-		} catch (NumberFormatException e)
-		{
+		} catch (NumberFormatException e) {
 			logger.error("Could not parse the configuration", e);
 			System.exit(1);
-		} catch (NullPointerException e)
-		{
+		} catch (NullPointerException e) {
 			logger.error("Could not parse the configuration", e);
 			System.exit(1);
 		}
 	}
 
-	public Properties getProperties()
-	{
+	public Properties getProperties() {
 		return properties;
 	}
 
-	public String getProperty(String key)
-	{
+	public String getProperty(String key) {
 		return properties.getProperty(key);
 	}
 
-	public int getControllerPort()
-	{
+	public int getControllerPort() {
 		return controllerPort;
 	}
 
-	public String getPlatformDomain()
-	{
+	public String getPlatformDomain() {
 		return platformDomain;
 	}
 
-	public String getClasspathPrefix()
-	{
+	public String getClasspathPrefix() {
 		return classpathPrefix;
 	}
 
-	public String getAdditionalClasspath()
-	{
+	public String getAdditionalClasspath() {
 		return additionalClasspath;
 	}
 
-	public String getFileServerURL()
-	{
+	public String getFileServerURL() {
 		return fileServerURL;
 	}
 
-	public String getVmOptions()
-	{
+	public String getVmOptions() {
 		return vmOptions;
 	}
 
-	public String getUID()
-	{
+	public String getUID() {
 		return UID;
 	}
 
-	public String getAddress()
-	{
+	public String getAddress() {
 		return address;
 	}
 
-	public int getControllerDatagramPort()
-	{
+	public int getControllerDatagramPort() {
 		return controllerDatagramPort;
 	}
 
-	public int getMasterDatagramPort()
-	{
+	public int getMasterDatagramPort() {
 		return masterDatagramPort;
 	}
 
-	public String getMasterAddress()
-	{
+	public String getMasterAddress() {
 		return masterAddress;
 	}
 
-	public void setMasterAddress(String masterAddress)
-	{
+	public void setMasterAddress(String masterAddress) {
 		this.masterAddress = masterAddress;
+	}
+
+	public String getTwoSpotV8Bin() {
+		return twoSpotV8Bin;
+	}
+
+	public void setTwoSpotV8Bin(String twoSpotV8Bin) {
+		this.twoSpotV8Bin = twoSpotV8Bin;
 	}
 }

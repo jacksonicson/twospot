@@ -76,7 +76,7 @@ class ProcessHandler {
 
 		logger.debug("Extracting appplication archive...");
 		String baseDir = "C:/temp";
-		String appDir = "/" + appInfo.getPort();
+		String appDir = baseDir + "/" + appInfo.getPort();
 
 		boolean extracted = extractApp(appInfo.getAppId(), appDir, archive);
 		if (extracted == false) {
@@ -103,7 +103,7 @@ class ProcessHandler {
 		if (runtime.equals("java"))
 			command = createCommandJava(appInfo, baseDir);
 		else if (runtime.equals("js"))
-			command = createCommandJs(appInfo, baseDir);
+			command = createCommandJs(appInfo, appDir);
 		else {
 			logger.error("Invalid runtime type: " + runtime);
 			return false;
@@ -124,6 +124,13 @@ class ProcessHandler {
 			logger.debug("Waiting for AppServer...");
 			waitForAppServer(process);
 
+//			try {
+//				Thread.sleep(1000);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+
 			// Update the AppServer state
 			logger.debug("AppServer is ONLINE");
 			return true;
@@ -140,7 +147,7 @@ class ProcessHandler {
 
 	private List<String> createCommandJs(AppInfo appInfo, String baseDir) {
 		List<String> command = new LinkedList<String>();
-		command.add("D:/work/mscWolke/trunk/devc/server/server/Debug/Server.exe");
+		command.add(Configuration.getConfiguration().getTwoSpotV8Bin());
 
 		command.add("--appId");
 		command.add(appInfo.getAppId());
@@ -148,8 +155,11 @@ class ProcessHandler {
 		command.add("--appSrvPort");
 		command.add(appInfo.getPort() + "");
 
-		command.add("--tempDir");
+		command.add("--appDir");
 		command.add(baseDir);
+
+		command.add("--token");
+		command.add("null");
 
 		return command;
 	}

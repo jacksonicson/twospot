@@ -57,45 +57,6 @@ public class HttpAppFetcher implements AppFetcher {
 		}
 
 		return null;
-		/*
-		 * 
-		 * ContentExchange exchange = new ContentExchange(true) { protected void
-		 * onConnectionFailed(Throwable x) { super.onConnectionFailed(x);
-		 * logger.error("Connection failed while downloading WAR archive", x);
-		 * System.exit(1); }
-		 * 
-		 * protected void onException(Throwable x) { super.onException(x);
-		 * logger.error("Error while downloading WAR archive", x);
-		 * System.exit(1); } };
-		 * 
-		 * exchange.setMethod("GET"); String completeUrl = url + appId;
-		 * exchange.setURL(completeUrl);
-		 * logger.info("Loading application from: " + completeUrl);
-		 * 
-		 * try { startHttp();
-		 * 
-		 * httpClient.send(exchange); exchange.waitForDone();
-		 * 
-		 * // Check status int status = exchange.getResponseStatus(); if (status
-		 * != HttpStatus.OK_200) {
-		 * logger.error("Fileserver did return error status: " + status); return
-		 * null; }
-		 * 
-		 * // Check size (applications cannot be 0 bytes) if
-		 * (exchange.getResponseContentBytes().length == 0) {
-		 * logger.error("Fileserver returned an empty archive"); return null; }
-		 * 
-		 * appInfo.setWarFile(exchange.getResponseContentBytes());
-		 * appInfo.setAppId(Configuration.getInstance().getAppId());
-		 * 
-		 * stopHttp();
-		 * 
-		 * } catch (InterruptedException e) {
-		 * logger.error("Interrupted while downloading WAR archive", e);
-		 * System.exit(1); } catch (IOException e) {
-		 * logger.error("IOException while downloading WAR archive", e);
-		 * System.exit(1); }
-		 */
 	}
 
 	public void setUrl(String url) {

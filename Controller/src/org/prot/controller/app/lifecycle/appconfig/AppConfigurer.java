@@ -34,10 +34,19 @@ public class AppConfigurer {
 
 	private Map<?, ?> loadFile(String appDirectory) throws InvalidYamlFileException, IOException {
 		File yamlFile = new File(appDirectory + "/" + CONFIG_FILE);
-		InputStream in = new FileInputStream(yamlFile);
 
-		Yaml yaml = new Yaml();
-		Object yamlObj = yaml.load(in);
+		InputStream in = null;
+		Object yamlObj = null; 
+		try {
+			in = new FileInputStream(yamlFile);
+			Yaml yaml = new Yaml();
+			yamlObj = yaml.load(in);
+		} catch (IOException e) {
+			throw e; 
+		} finally {
+			if (in != null)
+				in.close();
+		}
 
 		if (yamlObj instanceof Map<?, ?> == false)
 			throw new InvalidYamlFileException();

@@ -80,8 +80,7 @@ public class WarExtractor implements AppExtractor {
 
 				// Extract the file
 				fileCounter++;
-				FileOutputStream fos = new FileOutputStream(dest);
-				BufferedOutputStream fo = new BufferedOutputStream(fos);
+				BufferedOutputStream fo = new BufferedOutputStream(new FileOutputStream(dest));
 
 				byte buffer[] = new byte[1024 * 1024];
 				int len = 0;
@@ -92,6 +91,8 @@ public class WarExtractor implements AppExtractor {
 				fo.close();
 			}
 		}
+
+		zipIn.close();
 
 		logger.debug("Done with " + fileCounter + " files extracted");
 	}
