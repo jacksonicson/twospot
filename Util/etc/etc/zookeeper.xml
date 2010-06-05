@@ -4,7 +4,7 @@
 <beans>
 	<bean id="ZooHelper" class="org.prot.util.zookeeper.ZooHelper">
 		<!-- Configure the ZooKeeper address and port -->
-		<constructor-arg index="0" value="192.168.178.16" />
+		<constructor-arg index="0" value="192.168.178.17" />
 		<constructor-arg index="1" value="2222" />
 	</bean>
 </beans>
