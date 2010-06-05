@@ -9,8 +9,7 @@ import org.eclipse.jetty.continuation.ContinuationSupport;
 import org.eclipse.jetty.server.HttpConnection;
 import org.eclipse.jetty.util.thread.ThreadPool;
 
-class ProcessWorker implements Runnable
-{
+class ProcessWorker implements Runnable {
 	private static final Logger logger = Logger.getLogger(ProcessWorker.class);
 
 	// Thread pool
@@ -20,38 +19,33 @@ class ProcessWorker implements Runnable
 	boolean running = false;
 
 	// Reference to the process handler (does the dirty work)
-	private final ProcessHandler processHandler = new ProcessHandler();
+	private ProcessHandler processHandler;
 
 	// Worker queue
 	private LinkedList<ProcessJob> jobQueue = new LinkedList<ProcessJob>();
 
-	class ProcessJob
-	{
+	class ProcessJob {
 		static final int START = 0;
 		static final int STOP = 1;
 
 		private final int type;
 		private final AppInfo appInfo;
 
-		ProcessJob(AppInfo appInfo, int type)
-		{
+		ProcessJob(AppInfo appInfo, int type) {
 			this.appInfo = appInfo;
 			this.type = type;
 		}
 
-		AppInfo getAppInfo()
-		{
+		AppInfo getAppInfo() {
 			return appInfo;
 		}
 
-		int getType()
-		{
+		int getType() {
 			return type;
 		}
 
 		@Override
-		public boolean equals(Object o)
-		{
+		public boolean equals(Object o) {
 			if (o == this)
 				return true;
 
@@ -63,43 +57,36 @@ class ProcessWorker implements Runnable
 		}
 	}
 
-	public void init()
-	{
+	public void init() {
 		if (!running)
 			running = threadPool.dispatch(this);
 
 		logger.debug("ProcessWorker thread running: " + running);
 	}
 
-	void scheduleKillProcess(Collection<AppInfo> deadApps)
-	{
+	void scheduleKillProcess(Collection<AppInfo> deadApps) {
 		logger.debug("Scheduling a STOP-Job");
 
-		synchronized (jobQueue)
-		{
-			for (AppInfo info : deadApps)
-			{
+		synchronized (jobQueue) {
+			for (AppInfo info : deadApps) {
 				jobQueue.addLast(new ProcessJob(info, ProcessJob.STOP));
 			}
 			jobQueue.notify();
 		}
 	}
 
-	void scheduleStartProcess(AppInfo info)
-	{
+	void scheduleStartProcess(AppInfo info) {
 		logger.debug("Scheduling a START-Job");
 
 		init();
 
-		synchronized (jobQueue)
-		{
+		synchronized (jobQueue) {
 			jobQueue.addLast(new ProcessJob(info, ProcessJob.START));
 			jobQueue.notify();
 		}
 	}
 
-	boolean waitForApplication(AppInfo appInfo)
-	{
+	boolean waitForApplication(AppInfo appInfo) {
 		// Get a continuation for connection of the current thread
 		HttpConnection con = HttpConnection.getCurrentConnection();
 		Continuation continuation = ContinuationSupport.getContinuation(con.getRequest());
@@ -108,8 +95,7 @@ class ProcessWorker implements Runnable
 		continuation.setTimeout(60000);
 
 		// Register the continuation and suspend it
-		if (appInfo.addContinuation(continuation))
-		{
+		if (appInfo.addContinuation(continuation)) {
 			continuation.suspend();
 			return true;
 		}
@@ -118,26 +104,20 @@ class ProcessWorker implements Runnable
 		return false;
 	}
 
-	public void run()
-	{
+	public void run() {
 		logger.debug("Starting AppMonitor worker thread...");
-		while (true)
-		{
+		while (true) {
 			// Next job
 			ProcessJob job;
 
 			// Get the next process from the worker queue
-			synchronized (jobQueue)
-			{
+			synchronized (jobQueue) {
 				// Spin lock until the jobQueue is not empty
-				while (jobQueue.isEmpty())
-				{
-					try
-					{
+				while (jobQueue.isEmpty()) {
+					try {
 						logger.debug("Waiting for process jobs...");
 						jobQueue.wait();
-					} catch (InterruptedException e)
-					{
+					} catch (InterruptedException e) {
 						logger.trace(e);
 					}
 				}
@@ -147,8 +127,7 @@ class ProcessWorker implements Runnable
 				jobQueue.removeFirst();
 			}
 
-			switch (job.getType())
-			{
+			switch (job.getType()) {
 			case ProcessJob.START:
 				startProcess(job.getAppInfo());
 				break;
@@ -159,8 +138,7 @@ class ProcessWorker implements Runnable
 		}
 	}
 
-	private void stopProcess(AppInfo appInfo)
-	{
+	private void stopProcess(AppInfo appInfo) {
 		// Stop the AppServer
 		logger.debug("Stopping AppServer...");
 		processHandler.stop(appInfo.getAppProcess());
@@ -172,22 +150,19 @@ class ProcessWorker implements Runnable
 		appInfo.setState(AppState.DEAD);
 	}
 
-	private void startProcess(AppInfo appInfo)
-	{
+	private void startProcess(AppInfo appInfo) {
 		// Start the AppServer
 		logger.debug("Starting AppServer...");
 		boolean success = processHandler.execute(appInfo, appInfo.getAppProcess());
 
 		// Update state
-		if (success)
-		{
+		if (success) {
 			appInfo.setState(AppState.ONLINE);
 
 			// Resume all continuations
 			logger.debug("Resuming all continuations waiting in the AppInfo");
 			appInfo.resumeContinuations();
-		} else
-		{
+		} else {
 			appInfo.setState(AppState.KILLED);
 
 			// Complete all continuations
@@ -196,8 +171,11 @@ class ProcessWorker implements Runnable
 		}
 	}
 
-	public void setThreadPool(ThreadPool threadPool)
-	{
+	public void setThreadPool(ThreadPool threadPool) {
 		this.threadPool = threadPool;
+	}
+
+	public void setProcessHandler(ProcessHandler processHandler) {
+		this.processHandler = processHandler;
 	}
 }

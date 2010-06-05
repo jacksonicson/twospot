@@ -3,18 +3,17 @@ package org.prot.controller.app;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.naming.ConfigurationException;
 
 import org.apache.log4j.Logger;
+import org.prot.controller.app.launcher.AppLauncher;
+import org.prot.controller.app.launcher.LauncherRegistry;
 import org.prot.controller.app.lifecycle.appconfig.AppConfigurer;
 import org.prot.controller.app.lifecycle.appfetch.HttpAppFetcher;
 import org.prot.controller.app.lifecycle.extract.AppExtractor;
 import org.prot.controller.app.lifecycle.extract.WarExtractor;
-import org.prot.controller.config.Configuration;
 
 class ProcessHandler {
 	// Logger
@@ -23,6 +22,9 @@ class ProcessHandler {
 	// Info sent by appserver
 	private static final String SERVER_ONLINE = "server online";
 	private static final String SERVER_FAILED = "server failed";
+
+	// Launcher registry
+	private LauncherRegistry launcherRegistry;
 
 	private void stopAndClean(AppProcess process) {
 		if (process.getProcess() == null)
@@ -98,16 +100,14 @@ class ProcessHandler {
 		// Kill the old process if exists
 		stopAndClean(appProcess);
 
-		// Create the command line
-		List<String> command = null;
-		if (runtime.equals("java"))
-			command = createCommandJava(appInfo, baseDir);
-		else if (runtime.equals("js"))
-			command = createCommandJs(appInfo, appDir);
-		else {
-			logger.error("Invalid runtime type: " + runtime);
+		AppLauncher launcher = launcherRegistry.getLauncher(runtime);
+		if (launcher == null) {
+			logger.error("Unknown launcher for " + runtime);
 			return false;
 		}
+
+		// Creating the launch command
+		List<String> command = launcher.createCommand(appInfo, appDir);
 
 		// configure the process
 		ProcessBuilder procBuilder = new ProcessBuilder();
@@ -124,13 +124,6 @@ class ProcessHandler {
 			logger.debug("Waiting for AppServer...");
 			waitForAppServer(process);
 
-//			try {
-//				Thread.sleep(1000);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-
 			// Update the AppServer state
 			logger.debug("AppServer is ONLINE");
 			return true;
@@ -143,118 +136,6 @@ class ProcessHandler {
 			stopAndClean(appProcess);
 			return false;
 		}
-	}
-
-	private List<String> createCommandJs(AppInfo appInfo, String baseDir) {
-		List<String> command = new LinkedList<String>();
-		command.add(Configuration.getConfiguration().getTwoSpotV8Bin());
-
-		command.add("--appId");
-		command.add(appInfo.getAppId());
-
-		command.add("--appSrvPort");
-		command.add(appInfo.getPort() + "");
-
-		command.add("--appDir");
-		command.add(baseDir);
-
-		command.add("--token");
-		command.add("null");
-
-		return command;
-	}
-
-	private List<String> createCommandJava(AppInfo appInfo, String baseDir) {
-		List<String> command = new LinkedList<String>();
-		command.add("java");
-
-		command.addAll(loadVmOptions());
-
-		command.add("-classpath");
-		command.add(loadClasspath());
-
-		command.add("org.prot.appserver.Main");
-
-		command.add("-appId");
-		command.add(appInfo.getAppId());
-
-		command.add("-appSrvPort");
-		command.add(appInfo.getPort() + "");
-
-		command.add("-baseDir");
-		command.add(baseDir);
-
-		if (appInfo.isPrivileged()) {
-			command.add("-token");
-			command.add(appInfo.getProcessToken());
-		}
-
-		String c = "";
-		for (String cmd : command)
-			c += cmd + " ";
-		logger.debug("Command: " + c);
-
-		return command;
-	}
-
-	private List<String> readClasspath() {
-		List<String> classpath = new ArrayList<String>();
-		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(ProcessHandler.class
-					.getResourceAsStream("/cpAppServer.txt")));
-
-			String buffer = "";
-			while ((buffer = reader.readLine()) != null)
-				classpath.add(buffer);
-
-			reader.close();
-
-		} catch (IOException e) {
-			logger.error("Could not read the classpath", e);
-		} catch (NullPointerException e) {
-			logger.error("Could not read classpath", e);
-		}
-
-		return classpath;
-	}
-
-	private List<String> loadVmOptions() {
-		String config = Configuration.getConfiguration().getVmOptions();
-		logger.debug("Using JVM options: " + config);
-
-		String[] options = config.split("\\s");
-		List<String> list = new ArrayList<String>();
-		for (String option : options) {
-			logger.trace("JVM option: " + option);
-			list.add(option);
-		}
-
-		return list;
-	}
-
-	private String loadClasspath() {
-		// Get the classpath separator
-		final String separator = System.getProperty("path.separator");
-
-		// Read the classpath file
-		List<String> libs = readClasspath();
-		String classpath = "";
-
-		// Load the classpath prefix
-		String prefix = Configuration.getConfiguration().getClasspathPrefix();
-
-		// Build the classpath from the classpath file
-		for (String lib : libs)
-			classpath += prefix + lib + separator;
-
-		// Add the additional classpath
-		String additionalClasspath = Configuration.getConfiguration().getAdditionalClasspath();
-		logger.debug("Using additional classpath: " + additionalClasspath);
-
-		additionalClasspath = additionalClasspath.replace(":", separator);
-		classpath += additionalClasspath;
-
-		return classpath;
 	}
 
 	private void waitForAppServer(Process process) throws IOException {
@@ -300,5 +181,9 @@ class ProcessHandler {
 				logger.trace(e);
 			}
 		}
+	}
+
+	public void setLauncherRegistry(LauncherRegistry launcherRegistry) {
+		this.launcherRegistry = launcherRegistry;
 	}
 }

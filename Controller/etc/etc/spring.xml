@@ -84,8 +84,22 @@
 	<bean id="AppRegistry" class="org.prot.controller.app.AppRegistry">
 	</bean>
 
+	<bean id="ProcessHandler" class="org.prot.controller.app.ProcessHandler">
+		<property name="launcherRegistry">
+			<bean class="org.prot.controller.app.launcher.LauncherRegistry">
+				<property name="launchers">
+					<list>
+						<bean class="org.prot.controller.app.launcher.JavaAppLauncher" />
+						<bean class="org.prot.controller.app.launcher.V8AppLauncher" />
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
 	<bean id="ProcessWorker" class="org.prot.controller.app.ProcessWorker">
 		<property name="threadPool" ref="ThreadPool" />
+		<property name="processHandler" ref="ProcessHandler" />
 	</bean>
 
 	<bean id="AppManager" class="org.prot.controller.app.AppManager"
