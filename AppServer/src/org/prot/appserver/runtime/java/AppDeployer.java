@@ -89,7 +89,7 @@ public class AppDeployer extends AbstractLifeCycle
 		
 		webAppContext.setServer(contexts.getServer());
 		webAppContext.setCompactPath(true);
-		webAppContext.setCopyWebDir(true);
+		webAppContext.setCopyWebDir(false);
 		webAppContext.setAliases(false);
 		
 		
@@ -105,12 +105,12 @@ public class AppDeployer extends AbstractLifeCycle
 		webAppContext.setServerClasses(ownServerClasses);
 
 		// Configure the session handler (Depends on the app configuration)
-		if (runtimeConfig.isUseDistributedSessions())
-		{
-			SessionHandler sessionHandler = new SessionHandler(sessionManager);
-			webAppContext.setSessionHandler(sessionHandler);
-			logger.info("Using distributed sesssion manager");
-		}
+//		if (runtimeConfig.isUseDistributedSessions())
+//		{
+//			SessionHandler sessionHandler = new SessionHandler(sessionManager);
+//			webAppContext.setSessionHandler(sessionHandler);
+//			logger.info("Using distributed sesssion manager");
+//		}
 
 		// Custom error handling
 //		webAppContext.setErrorHandler(new ErrorHandler());

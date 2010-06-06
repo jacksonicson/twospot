@@ -17,8 +17,7 @@ import org.prot.appserver.runtime.NoSuchRuntimeException;
 import org.prot.appserver.runtime.RuntimeRegistry;
 import org.prot.util.io.Directory;
 
-public class ServerLifecycle
-{
+public class ServerLifecycle {
 	private static final Logger logger = Logger.getLogger(ServerLifecycle.class);
 
 	private static final String SERVER_ONLINE = "server online";
@@ -34,8 +33,7 @@ public class ServerLifecycle
 
 	private AppInfo appInfo = null;
 
-	public void start()
-	{
+	public void start() {
 		logger.info("Starting AppServer...");
 
 		configuration = Configuration.getInstance();
@@ -44,19 +42,17 @@ public class ServerLifecycle
 
 		// Is done in the Controller
 		// loadApp();
-		
-		// Is done in the Controller 
+
+		// Is done in the Controller
 		// extractApp();
-		
-		
 
 		// Start profiling
 		long currentTime = System.currentTimeMillis();
-		
+
 		configure();
-		
+
 		// Log time for profiling
-		currentTime = System.currentTimeMillis() - currentTime; 
+		currentTime = System.currentTimeMillis() - currentTime;
 		logger.debug("TIME: " + currentTime);
 
 		launchRuntime();
@@ -64,29 +60,29 @@ public class ServerLifecycle
 		manageApp();
 	}
 
-	private final void prepareScratch()
-	{
+	private final void prepareScratch() {
+		long time = System.currentTimeMillis();
+
 		String scratch = configuration.getAppScratchDir();
 		File file = new File(scratch);
-		if (file.exists())
-		{
+		if (file.exists()) {
 			logger.info("Removing old scratchdir: " + scratch);
 			Directory.deleteFolder(file);
 		}
 
 		logger.info("Creating scratchdir: " + scratch);
 		file.mkdirs();
+
+		logger.info("Scratch dir created in " + (System.currentTimeMillis() - time) + " ms");
 	}
 
-	private final void loadApp()
-	{
+	private final void loadApp() {
 		logger.info("Loading app archive");
 
 		String appId = configuration.getAppId();
 		appInfo = appFetcher.fetchApp(appId);
 
-		if (appInfo == null)
-		{
+		if (appInfo == null) {
 			logger.error("Error while fetching app archive: " + appId);
 
 			// Use the original stdio to tell the controller
@@ -96,18 +92,15 @@ public class ServerLifecycle
 		}
 	}
 
-	private final void extractApp()
-	{
+	private final void extractApp() {
 		byte[] archive = appInfo.getWarFile();
 		String destPath = configuration.getAppDirectory();
 
 		logger.info("Extracting app archive to: " + destPath);
 
-		try
-		{
+		try {
 			appExtractor.extract(archive, destPath, appInfo.getAppId());
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			logger.error("Error while extracting application package", e);
 
 			// Use the original stdio to tell the controller
@@ -117,17 +110,16 @@ public class ServerLifecycle
 		}
 	}
 
-	private final void configure()
-	{
+	private final void configure() {
 		logger.info("Loading app configuration");
 
-		try
-		{
+		try {
 			// Does the general configuration and calls the runtime specific
 			// configuerer
+			long time = System.currentTimeMillis();
 			this.appInfo = appConfigurer.configure(configuration.getAppDirectory());
-		} catch (ConfigurationException e)
-		{
+			logger.info("Configuration took " + (System.currentTimeMillis() - time));
+		} catch (ConfigurationException e) {
 			logger.error("Configuration failed", e);
 
 			// Use the original stdio to tell the controller
@@ -137,18 +129,15 @@ public class ServerLifecycle
 		}
 	}
 
-	private final void manageApp()
-	{
-		try
-		{
+	private final void manageApp() {
+		try {
 			logger.debug("Registering runtime in the AppManager");
 
 			AppRuntime runtime = runtimeRegistry.getRuntime(appInfo.getRuntime());
 			RuntimeManagement management = runtime.getManagement();
 			appManager.manage(management);
 
-		} catch (NoSuchRuntimeException e)
-		{
+		} catch (NoSuchRuntimeException e) {
 			logger.error("Could not get runtime", e);
 
 			// Use the original stdio to tell the controller
@@ -158,25 +147,25 @@ public class ServerLifecycle
 		}
 	}
 
-	private final void launchRuntime()
-	{
+	private final void launchRuntime() {
 		logger.info("Launching runtime");
 
-		try
-		{
+		try {
 			AppRuntime runtime = runtimeRegistry.getRuntime(appInfo.getRuntime());
-			runtime.launch(this.appInfo);
 
-		} catch (NoSuchRuntimeException e)
-		{
+			long time = System.currentTimeMillis();
+			runtime.launch(this.appInfo);
+			time = System.currentTimeMillis() - time;
+			logger.info("Runtime took " + time + " ms");
+
+		} catch (NoSuchRuntimeException e) {
 			logger.error("Failed launching the runtime", e);
 
 			// Use the original stdio to tell the controller
 			IODirector.getInstance().forcedStdOutPrintln(SERVER_FAILED);
 
 			System.exit(1);
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			logger.error("Failed launching the runtime", e);
 
 			// Use the original stdio to tell the controller
@@ -190,28 +179,23 @@ public class ServerLifecycle
 		IODirector.getInstance().forcedStdOutPrintln(SERVER_ONLINE);
 	}
 
-	public void setAppFetcher(AppFetcher appFetcher)
-	{
+	public void setAppFetcher(AppFetcher appFetcher) {
 		this.appFetcher = appFetcher;
 	}
 
-	public void setAppExtractor(AppExtractor appExtractor)
-	{
+	public void setAppExtractor(AppExtractor appExtractor) {
 		this.appExtractor = appExtractor;
 	}
 
-	public void setRuntimeRegistry(RuntimeRegistry runtimeRegistry)
-	{
+	public void setRuntimeRegistry(RuntimeRegistry runtimeRegistry) {
 		this.runtimeRegistry = runtimeRegistry;
 	}
 
-	public void setAppConfigurer(AppConfigurer appConfigurer)
-	{
+	public void setAppConfigurer(AppConfigurer appConfigurer) {
 		this.appConfigurer = appConfigurer;
 	}
 
-	public void setAppManager(AppServerManager appManager)
-	{
+	public void setAppManager(AppServerManager appManager) {
 		this.appManager = appManager;
 	}
 }

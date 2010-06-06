@@ -79,11 +79,11 @@
 	<!-- Deployment -->
 	<bean id="AppDeployer" class="org.prot.appserver.runtime.java.AppDeployer">
 		<property name="contexts" ref="ContextCollectionHandler" />
-		<property name="sessionManager" ref="SessionManager" />
+		<!-- <property name="sessionManager" ref="SessionManager" /> -->
 	</bean>
 
 	<!-- Session -->
-	<bean id="SessionManager"
+	<!-- <bean id="SessionManager"
 		class="org.prot.appserver.runtime.java.DistributedSessionManager">
 		<property name="sessionDao" ref="SessionDao" />
 		<property name="idManager" ref="IdManager" />
@@ -95,7 +95,7 @@
 		<property name="sessionDao" ref="SessionDao" />
 	</bean>
 
-	<bean id="SessionDao" class="org.prot.appserver.runtime.java.data.JdoSessionDao" />
+	<bean id="SessionDao" class="org.prot.appserver.runtime.java.data.JdoSessionDao" /> -->
 
 </beans>
 
