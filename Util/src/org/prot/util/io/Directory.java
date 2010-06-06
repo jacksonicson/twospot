@@ -25,6 +25,9 @@ public class Directory {
 			success &= file.delete();
 		}
 
+		// Remove the folder itselfe
+		success &= folder.delete();
+
 		return success;
 	}
 }
