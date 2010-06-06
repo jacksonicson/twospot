@@ -1,0 +1,122 @@
+package services; 
+
+option java_package = "org.prot.controller.services.gen";
+option java_outer_classname = "Services";
+
+message User {
+	required string uid = 1;
+	optional string username = 2; 
+}
+
+message RegisterUser {
+	required string token = 1;
+	required string uid = 2; 
+	required string username = 3;
+	required string session = 4;  
+}
+
+message UrlRequest {
+	required string okUrl = 1; 
+	required string failedUrl = 2;
+	
+	optional string redirectUrl = 3;  
+}
+
+message Void {
+	// Empty message
+}
+
+message Boolean {
+}
+
+message String {
+}
+
+message RegisterDeployment {
+	required string token = 1; 
+	required string appId = 2; 
+	required string version = 3;
+	
+	optional bool status = 4;  
+}
+
+message AnnounceDeployment {
+	required string token = 1; 
+	required string appId = 2; 
+	required string version = 3; 
+	
+	optional String uploadToken = 4; 
+}
+
+message AppDeployed {
+	required string token = 1;
+	required string appId = 2; 
+	required string version = 3; 
+}
+
+
+message LogMessage {
+	required string token = 1; 
+	required string appid = 2; 
+	required string message = 3; 
+	required int32 severity = 4; 
+}
+
+message ListMessages {
+	required string token = 1; 
+	required string appId = 2; 
+	required int32 severity = 3;
+}
+
+message MessageList {
+	repeated LogMessage messages = 1; 
+}
+
+service LogService {
+	rpc log(LogMessage) returns (Void);
+	
+	rpc listMessages(ListMessages) returns (MessageList); 
+	
+}
+
+message TableList
+{
+	repeated string tableNames = 1; 
+}
+
+message TableData
+{
+	repeated bytes tableData = 1;
+}
+
+message FetchTable
+{
+	required string token = 1;
+	required string appId = 2;
+	required string kind = 3; 
+}
+
+service DbService {
+	rpc getTables(FetchTable) returns (TableList);
+	rpc getTableData(FetchTable) returns (TableData);  	
+}
+
+
+service DeployService {
+	rpc register(RegisterDeployment) returns (Boolean);
+
+	rpc announceDeploy(AnnounceDeployment) returns (String);
+
+	rpc appDeployed(AppDeployed) returns (Void); 
+}
+
+service UserService {
+
+	rpc getCurrentUser(User) returns (User);
+
+	rpc getLoginUrl(UrlRequest) returns (UrlRequest);  	
+
+	rpc unregisterUser(User) returns (Void); 
+
+	rpc registerUser(RegisterUser) returns (Void);
+}

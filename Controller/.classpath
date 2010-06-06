@@ -71,5 +71,6 @@
 	<classpathentry kind="lib" path="/Libs/lib/sigar/sigar.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar"/>
 	<classpathentry kind="lib" path="/Libs/lib/snakeyaml-1.5/snakeyaml-1.5.jar" sourcepath="/Libs/lib/snakeyaml-1.5/snakeyaml-1.5-sources.jar"/>
+	<classpathentry kind="lib" path="/Libs/lib/protobuf-socket-rpc-1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

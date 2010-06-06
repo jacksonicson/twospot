@@ -2,15 +2,14 @@ package org.prot.controller;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.prot.controller.config.Configuration;
+import org.prot.controller.services.RpcServer;
 import org.prot.jdo.storage.StorageHelper;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 
-public class Main
-{
-	public Main()
-	{
+public class Main {
+	public Main() {
 		// Configure logger
 		DOMConfigurator.configure(Main.class.getResource("/etc/log4j.xml"));
 
@@ -31,19 +30,20 @@ public class Main
 
 		// Start the RMI-Services
 		factory.getBean("DeployServiceExporter");
-		factory.getBean("UserServiceExporter");
 		factory.getBean("DbServiceExporter");
 		factory.getBean("LogServiceExporter");
 
 		// Start Management
 		factory.getBean("UdpListener");
 
+		// Start Services
+		new RpcServer();
+
 		Controller controller = (Controller) factory.getBean("Controller");
 		controller.start();
 	}
 
-	public static void main(String arg[])
-	{
+	public static void main(String arg[]) {
 		new Main();
 	}
 }
