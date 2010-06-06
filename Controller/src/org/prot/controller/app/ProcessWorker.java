@@ -141,7 +141,7 @@ class ProcessWorker implements Runnable {
 	private void stopProcess(AppInfo appInfo) {
 		// Stop the AppServer
 		logger.debug("Stopping AppServer...");
-		processHandler.stop(appInfo.getAppProcess());
+		processHandler.stop(appInfo, appInfo.getAppProcess());
 
 		// Finish all continuations waiting for the killed AppServer
 		appInfo.finishContinuations();

@@ -1,6 +1,7 @@
 package org.prot.controller.app;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.prot.controller.app.lifecycle.appconfig.AppConfigurer;
 import org.prot.controller.app.lifecycle.appfetch.HttpAppFetcher;
 import org.prot.controller.app.lifecycle.extract.AppExtractor;
 import org.prot.controller.app.lifecycle.extract.WarExtractor;
+import org.prot.util.io.Directory;
 
 class ProcessHandler {
 	// Logger
@@ -26,7 +28,14 @@ class ProcessHandler {
 	// Launcher registry
 	private LauncherRegistry launcherRegistry;
 
-	private void stopAndClean(AppProcess process) {
+	private void stopAndClean(AppInfo appInfo, AppProcess process) {
+
+		String baseDir = "C:/temp";
+		String appDir = baseDir + "/" + appInfo.getPort();
+		File fAppDir = new File(appDir);
+		if (fAppDir.exists())
+			Directory.deleteFolder(new File(appDir));
+
 		if (process.getProcess() == null)
 			return;
 
@@ -43,9 +52,9 @@ class ProcessHandler {
 		}
 	}
 
-	void stop(AppProcess appProcess) {
+	void stop(AppInfo appInfo, AppProcess appProcess) {
 		logger.debug("Stopping AppServer...");
-		stopAndClean(appProcess);
+		stopAndClean(appInfo, appProcess);
 	}
 
 	private byte[] loadApp(String appId) {
@@ -69,6 +78,10 @@ class ProcessHandler {
 	}
 
 	boolean execute(AppInfo appInfo, AppProcess appProcess) {
+
+		// Kill the old process if exists
+		stopAndClean(appInfo, appProcess);
+
 		logger.debug("Downloading application archive...");
 		byte[] archive = loadApp(appInfo.getAppId());
 		if (archive == null) {
@@ -97,9 +110,6 @@ class ProcessHandler {
 
 		logger.debug("Starting AppServer...");
 
-		// Kill the old process if exists
-		stopAndClean(appProcess);
-
 		AppLauncher launcher = launcherRegistry.getLauncher(runtime);
 		if (launcher == null) {
 			logger.error("Unknown launcher for " + runtime);
@@ -110,6 +120,7 @@ class ProcessHandler {
 		List<String> command = launcher.createCommand(appInfo, appDir);
 
 		// configure the process
+		long time = System.currentTimeMillis();
 		ProcessBuilder procBuilder = new ProcessBuilder();
 		procBuilder.command(command);
 		procBuilder.redirectErrorStream(true);
@@ -125,7 +136,8 @@ class ProcessHandler {
 			waitForAppServer(process);
 
 			// Update the AppServer state
-			logger.debug("AppServer is ONLINE");
+			time = System.currentTimeMillis() - time;
+			logger.debug("AppServer is ONLINE (started in " + time + " ms)");
 			return true;
 
 		} catch (IOException e) {
@@ -133,7 +145,7 @@ class ProcessHandler {
 			logger.error("Could not start a new server process (AppId: " + appInfo.getAppId() + " Command: "
 					+ command.toString() + ")", e);
 
-			stopAndClean(appProcess);
+			stopAndClean(appInfo, appProcess);
 			return false;
 		}
 	}
