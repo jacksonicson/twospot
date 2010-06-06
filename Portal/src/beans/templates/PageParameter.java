@@ -5,32 +5,26 @@ package beans.templates;
  * http://www.javaworld.com/jw-09-2000/jw-0915-jspweb.html?page=3
  * 
  */
-public class PageParameter
-{
+public class PageParameter {
 	private String content, direct;
 
-	public void setContent(String s)
-	{
+	public void setContent(String s) {
 		content = s;
 	}
 
-	public void setDirect(String s)
-	{
+	public void setDirect(String s) {
 		direct = s;
 	}
 
-	public String getContent()
-	{
+	public String getContent() {
 		return content;
 	}
 
-	public boolean isDirect()
-	{
+	public boolean isDirect() {
 		return Boolean.valueOf(direct).booleanValue();
 	}
 
-	public PageParameter(String content, String direct)
-	{
+	public PageParameter(String content, String direct) {
 		this.content = content;
 		this.direct = direct;
 	}
