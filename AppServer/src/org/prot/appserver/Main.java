@@ -16,6 +16,9 @@ import org.prot.appserver.runtime.AppRuntime;
 import org.prot.appserver.runtime.RuntimeRegistry;
 import org.prot.appserver.runtime.java.JavaRuntime;
 
+import com.googlecode.protobuf.socketrpc.SocketRpcChannel;
+import com.googlecode.protobuf.socketrpc.SocketRpcController;
+
 public class Main {
 	public Main() {
 
@@ -41,7 +44,7 @@ public class Main {
 			HardPolicy policy = new HardPolicy();
 			policy.refresh();
 			Policy.setPolicy(policy);
-			System.setSecurityManager(new SecurityManager());
+			// System.setSecurityManager(new SecurityManager());
 		}
 
 		// Log all startup arguments
@@ -113,6 +116,9 @@ public class Main {
 
 		// Get the beans
 		// factory.getBean("Lifecycle");
+
+		// Create channel
+		
 
 		// If the AppServer is running in Development mode - do some more
 		// initialization

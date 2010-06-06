@@ -8,16 +8,19 @@ import javax.servlet.http.Cookie;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.HttpConnection;
 import org.prot.appserver.config.Configuration;
+import org.prot.controller.services.gen.Services.RegisterUser;
+import org.prot.controller.services.gen.Services.UrlRequest;
+import org.prot.controller.services.gen.Services.User;
 import org.prot.util.Cookies;
 
-public final class UserServiceImpl implements UserService
-{
+import com.google.protobuf.RpcCallback;
+import com.googlecode.protobuf.socketrpc.SocketRpcChannel;
+import com.googlecode.protobuf.socketrpc.SocketRpcController;
+
+public final class UserServiceImpl implements UserService {
 	private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
 
-	private org.prot.controller.services.user.UserService proxy;
-
-	private String searchUID()
-	{
+	private String searchUID() {
 		HttpConnection httpConnection = HttpConnection.getCurrentConnection();
 		Cookie[] cookies = httpConnection.getRequest().getCookies();
 
@@ -26,10 +29,8 @@ public final class UserServiceImpl implements UserService
 			return null;
 
 		// Search the cookie named USER_ID
-		for (Cookie cookie : cookies)
-		{
-			if (cookie.getName().equals(Cookies.USER_ID))
-			{
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals(Cookies.USER_ID)) {
 				String uid = cookie.getValue();
 				return uid;
 			}
@@ -38,78 +39,124 @@ public final class UserServiceImpl implements UserService
 		return null;
 	}
 
-	protected UserServiceImpl(org.prot.controller.services.user.UserService proxy)
-	{
-		this.proxy = proxy;
-	}
-
-	public String getCurrentUser()
-	{
+	public String getCurrentUser() {
 		final String uid = searchUID();
-		if (uid == null)
-		{
+		if (uid == null) {
 			logger.debug("UID is null");
 			return null;
 		}
 
-		String user = AccessController.doPrivileged(new PrivilegedAction<String>()
-		{
+		String user = AccessController.doPrivileged(new PrivilegedAction<String>() {
+
+			private String returnValue;
+
 			@Override
-			public String run()
-			{
-				String user = proxy.getCurrentUser(uid);
-				return user;
+			public String run() {
+				SocketRpcChannel socketRpcChannel = new SocketRpcChannel("localhost", 6548);
+				SocketRpcController rpcController = socketRpcChannel.newRpcController();
+
+				org.prot.controller.services.gen.Services.UserService stub = org.prot.controller.services.gen.Services.UserService
+						.newStub(socketRpcChannel);
+
+				User.Builder builder = User.newBuilder();
+				builder.setUid(uid);
+				stub.getCurrentUser(rpcController, builder.build(), new RpcCallback<User>() {
+					@Override
+					public void run(User ret) {
+						returnValue = ret.getUsername();
+					}
+				});
+
+				return returnValue;
 			}
 		});
 
 		return (String) user;
 	}
 
-	public String getLoginUrl(String redirectUrl, String cancelUrl)
-	{
-		return proxy.getLoginUrl(redirectUrl, cancelUrl);
+	public String getLoginUrl(final String redirectUrl, final String cancelUrl) {
+
+		String retUrl = AccessController.doPrivileged(new PrivilegedAction<String>() {
+			private String retUrl;
+
+			@Override
+			public String run() {
+				SocketRpcChannel socketRpcChannel = new SocketRpcChannel("localhost", 6548);
+				SocketRpcController rpcController = socketRpcChannel.newRpcController();
+
+				org.prot.controller.services.gen.Services.UserService stub = org.prot.controller.services.gen.Services.UserService
+						.newStub(socketRpcChannel);
+
+				UrlRequest.Builder builder = UrlRequest.newBuilder();
+				builder.setOkUrl(redirectUrl);
+				builder.setFailedUrl(cancelUrl);
+				stub.getLoginUrl(rpcController, builder.build(), new RpcCallback<UrlRequest>() {
+					@Override
+					public void run(UrlRequest ret) {
+						retUrl = ret.getRedirectUrl();
+					}
+				});
+
+				return retUrl;
+			}
+		});
+
+		return retUrl;
 	}
 
-	public void registerUser(final String uid, final String username)
-	{
+	public void registerUser(final String uid, final String username) {
 		final String token = Configuration.getInstance().getAuthenticationToken();
 		assert (token != null);
 
-		AccessController.doPrivileged(new PrivilegedAction<String>()
-		{
+		AccessController.doPrivileged(new PrivilegedAction<String>() {
 			@Override
-			public String run()
-			{
-				proxy.registerUser(token, uid, username);
+			public String run() {
+				SocketRpcChannel socketRpcChannel = new SocketRpcChannel("localhost", 6548);
+				SocketRpcController rpcController = socketRpcChannel.newRpcController();
+
+				org.prot.controller.services.gen.Services.UserService stub = org.prot.controller.services.gen.Services.UserService
+						.newStub(socketRpcChannel);
+
+				RegisterUser.Builder builder = RegisterUser.newBuilder();
+				builder.setToken(token);
+				builder.setUid(uid);
+				builder.setUsername(username);
+				builder.setSession(uid);
+
+				stub.registerUser(rpcController, builder.build(), null);
+
 				return null;
 			}
 		});
 	}
 
-	public void unregisterUser()
-	{
+	public void unregisterUser() {
 		final String uid = searchUID();
 		if (uid == null)
 			return;
 
-		AccessController.doPrivileged(new PrivilegedAction<String>()
-		{
+		AccessController.doPrivileged(new PrivilegedAction<String>() {
 			@Override
-			public String run()
-			{
-				proxy.unregisterUser(uid);
+			public String run() {
+				SocketRpcChannel socketRpcChannel = new SocketRpcChannel("localhost", 6548);
+				SocketRpcController rpcController = socketRpcChannel.newRpcController();
+
+				org.prot.controller.services.gen.Services.UserService stub = org.prot.controller.services.gen.Services.UserService
+						.newStub(socketRpcChannel);
+
+				User.Builder builder = User.newBuilder();
+				builder.setUid(uid);
+				stub.unregisterUser(rpcController, builder.build(), null);
+
 				return null;
 			}
-
 		});
 
 		// Delete the UID-Cookie
 		HttpConnection httpConnection = HttpConnection.getCurrentConnection();
 		Cookie[] cookies = httpConnection.getRequest().getCookies();
-		for (Cookie cookie : cookies)
-		{
-			if (cookie.getName().equals(Cookies.USER_ID))
-			{
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals(Cookies.USER_ID)) {
 				logger.debug("Removing cookie");
 
 				cookie.setMaxAge(0);

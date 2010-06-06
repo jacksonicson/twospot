@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.prot.app.services.user.UserService;
-import org.prot.app.services.user.UserServiceFactory;
 import org.prot.appserver.config.Configuration;
 import org.prot.controller.services.db.DbService;
 import org.prot.jdo.storage.messages.EntityMessage;
@@ -24,10 +23,11 @@ public final class DbBrowserService {
 	}
 
 	private UserService getUserService() {
-		if (this.userService == null)
-			this.userService = UserServiceFactory.getUserService();
-
-		return this.userService;
+		// if (this.userService == null)
+		// this.userService = UserServiceFactory.getUserService();
+		//
+		// return this.userService;
+		return null;
 	}
 
 	public List<String> getTables(String appId) {
