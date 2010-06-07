@@ -27,6 +27,7 @@ message Void {
 }
 
 message Boolean {
+	required bool value = 1;
 }
 
 message String {
@@ -57,7 +58,7 @@ message AppDeployed {
 
 
 message LogMessage {
-	required string token = 1; 
+	optional string token = 1; 
 	required string appid = 2; 
 	required string message = 3; 
 	required int32 severity = 4; 
@@ -94,7 +95,7 @@ message FetchTable
 {
 	required string token = 1;
 	required string appId = 2;
-	required string kind = 3; 
+	optional string kind = 3; 
 }
 
 service DbService {

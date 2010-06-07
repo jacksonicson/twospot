@@ -57,6 +57,7 @@ public class LogServiceImpl extends LogService {
 				msgBuild.setAppid(request.getAppId());
 				msgBuild.setMessage(msg.getMessage());
 				msgBuild.setSeverity(msg.getSeverity());
+				msgBuild.setToken("null");
 				builder.addMessages(msgBuild.build());
 			}
 

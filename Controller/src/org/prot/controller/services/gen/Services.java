@@ -1400,15 +1400,26 @@ public final class Services {
       return org.prot.controller.services.gen.Services.internal_static_services_Boolean_fieldAccessorTable;
     }
     
+    // required bool value = 1;
+    public static final int VALUE_FIELD_NUMBER = 1;
+    private boolean hasValue;
+    private boolean value_ = false;
+    public boolean hasValue() { return hasValue; }
+    public boolean getValue() { return value_; }
+    
     private void initFields() {
     }
     public final boolean isInitialized() {
+      if (!hasValue) return false;
       return true;
     }
     
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
+      if (hasValue()) {
+        output.writeBool(1, getValue());
+      }
       getUnknownFields().writeTo(output);
     }
     
@@ -1418,6 +1429,10 @@ public final class Services {
       if (size != -1) return size;
     
       size = 0;
+      if (hasValue()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(1, getValue());
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
       return size;
@@ -1576,6 +1591,9 @@ public final class Services {
       
       public Builder mergeFrom(org.prot.controller.services.gen.Services.Boolean other) {
         if (other == org.prot.controller.services.gen.Services.Boolean.getDefaultInstance()) return this;
+        if (other.hasValue()) {
+          setValue(other.getValue());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -1601,10 +1619,32 @@ public final class Services {
               }
               break;
             }
+            case 8: {
+              setValue(input.readBool());
+              break;
+            }
           }
         }
       }
       
+      
+      // required bool value = 1;
+      public boolean hasValue() {
+        return result.hasValue();
+      }
+      public boolean getValue() {
+        return result.getValue();
+      }
+      public Builder setValue(boolean value) {
+        result.hasValue = true;
+        result.value_ = value;
+        return this;
+      }
+      public Builder clearValue() {
+        result.hasValue = false;
+        result.value_ = false;
+        return this;
+      }
       
       // @@protoc_insertion_point(builder_scope:services.Boolean)
     }
@@ -3161,7 +3201,7 @@ public final class Services {
       return org.prot.controller.services.gen.Services.internal_static_services_LogMessage_fieldAccessorTable;
     }
     
-    // required string token = 1;
+    // optional string token = 1;
     public static final int TOKEN_FIELD_NUMBER = 1;
     private boolean hasToken;
     private java.lang.String token_ = "";
@@ -3192,7 +3232,6 @@ public final class Services {
     private void initFields() {
     }
     public final boolean isInitialized() {
-      if (!hasToken) return false;
       if (!hasAppid) return false;
       if (!hasMessage) return false;
       if (!hasSeverity) return false;
@@ -3455,7 +3494,7 @@ public final class Services {
       }
       
       
-      // required string token = 1;
+      // optional string token = 1;
       public boolean hasToken() {
         return result.hasToken();
       }
@@ -4940,7 +4979,7 @@ public final class Services {
     public boolean hasAppId() { return hasAppId; }
     public java.lang.String getAppId() { return appId_; }
     
-    // required string kind = 3;
+    // optional string kind = 3;
     public static final int KIND_FIELD_NUMBER = 3;
     private boolean hasKind;
     private java.lang.String kind_ = "";
@@ -4952,7 +4991,6 @@ public final class Services {
     public final boolean isInitialized() {
       if (!hasToken) return false;
       if (!hasAppId) return false;
-      if (!hasKind) return false;
       return true;
     }
     
@@ -5240,7 +5278,7 @@ public final class Services {
         return this;
       }
       
-      // required string kind = 3;
+      // optional string kind = 3;
       public boolean hasKind() {
         return result.hasKind();
       }
@@ -6701,41 +6739,41 @@ public final class Services {
       "sterUser\022\r\n\005token\030\001 \002(\t\022\013\n\003uid\030\002 \002(\t\022\020\n\010" +
       "username\030\003 \002(\t\022\017\n\007session\030\004 \002(\t\"C\n\nUrlRe" +
       "quest\022\r\n\005okUrl\030\001 \002(\t\022\021\n\tfailedUrl\030\002 \002(\t\022" +
-      "\023\n\013redirectUrl\030\003 \001(\t\"\006\n\004Void\"\t\n\007Boolean\"" +
-      "\027\n\006String\022\r\n\005value\030\001 \002(\t\"S\n\022RegisterDepl" +
-      "oyment\022\r\n\005token\030\001 \002(\t\022\r\n\005appId\030\002 \002(\t\022\017\n\007" +
-      "version\030\003 \002(\t\022\016\n\006status\030\004 \001(\010\"j\n\022Announc" +
-      "eDeployment\022\r\n\005token\030\001 \002(\t\022\r\n\005appId\030\002 \002(",
-      "\t\022\017\n\007version\030\003 \002(\t\022%\n\013uploadToken\030\004 \001(\0132" +
-      "\020.services.String\"<\n\013AppDeployed\022\r\n\005toke" +
-      "n\030\001 \002(\t\022\r\n\005appId\030\002 \002(\t\022\017\n\007version\030\003 \002(\t\"" +
-      "M\n\nLogMessage\022\r\n\005token\030\001 \002(\t\022\r\n\005appid\030\002 " +
-      "\002(\t\022\017\n\007message\030\003 \002(\t\022\020\n\010severity\030\004 \002(\005\">" +
-      "\n\014ListMessages\022\r\n\005token\030\001 \002(\t\022\r\n\005appId\030\002" +
-      " \002(\t\022\020\n\010severity\030\003 \002(\005\"5\n\013MessageList\022&\n" +
-      "\010messages\030\001 \003(\0132\024.services.LogMessage\"\037\n" +
-      "\tTableList\022\022\n\ntableNames\030\001 \003(\t\"\036\n\tTableD" +
-      "ata\022\021\n\ttableData\030\001 \003(\014\"8\n\nFetchTable\022\r\n\005",
-      "token\030\001 \002(\t\022\r\n\005appId\030\002 \002(\t\022\014\n\004kind\030\003 \002(\t" +
-      "2x\n\nLogService\022+\n\003log\022\024.services.LogMess" +
-      "age\032\016.services.Void\022=\n\014listMessages\022\026.se" +
-      "rvices.ListMessages\032\025.services.MessageLi" +
-      "st2~\n\tDbService\0226\n\tgetTables\022\024.services." +
-      "FetchTable\032\023.services.TableList\0229\n\014getTa" +
-      "bleData\022\024.services.FetchTable\032\023.services" +
-      ".TableData2\304\001\n\rDeployService\022;\n\010register" +
-      "\022\034.services.RegisterDeployment\032\021.service" +
-      "s.Boolean\022@\n\016announceDeploy\022\034.services.A",
-      "nnounceDeployment\032\020.services.String\0224\n\013a" +
-      "ppDeployed\022\025.services.AppDeployed\032\016.serv" +
-      "ices.Void2\344\001\n\013UserService\0220\n\016getCurrentU" +
-      "ser\022\016.services.User\032\016.services.User\0229\n\013g" +
-      "etLoginUrl\022\024.services.UrlRequest\032\024.servi" +
-      "ces.UrlRequest\0220\n\016unregisterUser\022\016.servi" +
-      "ces.User\032\016.services.Void\0226\n\014registerUser" +
-      "\022\026.services.RegisterUser\032\016.services.Void" +
-      "B,\n org.prot.controller.services.genB\010Se" +
-      "rvices"
+      "\023\n\013redirectUrl\030\003 \001(\t\"\006\n\004Void\"\030\n\007Boolean\022" +
+      "\r\n\005value\030\001 \002(\010\"\027\n\006String\022\r\n\005value\030\001 \002(\t\"" +
+      "S\n\022RegisterDeployment\022\r\n\005token\030\001 \002(\t\022\r\n\005" +
+      "appId\030\002 \002(\t\022\017\n\007version\030\003 \002(\t\022\016\n\006status\030\004" +
+      " \001(\010\"j\n\022AnnounceDeployment\022\r\n\005token\030\001 \002(",
+      "\t\022\r\n\005appId\030\002 \002(\t\022\017\n\007version\030\003 \002(\t\022%\n\013upl" +
+      "oadToken\030\004 \001(\0132\020.services.String\"<\n\013AppD" +
+      "eployed\022\r\n\005token\030\001 \002(\t\022\r\n\005appId\030\002 \002(\t\022\017\n" +
+      "\007version\030\003 \002(\t\"M\n\nLogMessage\022\r\n\005token\030\001 " +
+      "\001(\t\022\r\n\005appid\030\002 \002(\t\022\017\n\007message\030\003 \002(\t\022\020\n\010s" +
+      "everity\030\004 \002(\005\">\n\014ListMessages\022\r\n\005token\030\001" +
+      " \002(\t\022\r\n\005appId\030\002 \002(\t\022\020\n\010severity\030\003 \002(\005\"5\n" +
+      "\013MessageList\022&\n\010messages\030\001 \003(\0132\024.service" +
+      "s.LogMessage\"\037\n\tTableList\022\022\n\ntableNames\030" +
+      "\001 \003(\t\"\036\n\tTableData\022\021\n\ttableData\030\001 \003(\014\"8\n",
+      "\nFetchTable\022\r\n\005token\030\001 \002(\t\022\r\n\005appId\030\002 \002(" +
+      "\t\022\014\n\004kind\030\003 \001(\t2x\n\nLogService\022+\n\003log\022\024.s" +
+      "ervices.LogMessage\032\016.services.Void\022=\n\014li" +
+      "stMessages\022\026.services.ListMessages\032\025.ser" +
+      "vices.MessageList2~\n\tDbService\0226\n\tgetTab" +
+      "les\022\024.services.FetchTable\032\023.services.Tab" +
+      "leList\0229\n\014getTableData\022\024.services.FetchT" +
+      "able\032\023.services.TableData2\304\001\n\rDeployServ" +
+      "ice\022;\n\010register\022\034.services.RegisterDeplo" +
+      "yment\032\021.services.Boolean\022@\n\016announceDepl",
+      "oy\022\034.services.AnnounceDeployment\032\020.servi" +
+      "ces.String\0224\n\013appDeployed\022\025.services.App" +
+      "Deployed\032\016.services.Void2\344\001\n\013UserService" +
+      "\0220\n\016getCurrentUser\022\016.services.User\032\016.ser" +
+      "vices.User\0229\n\013getLoginUrl\022\024.services.Url" +
+      "Request\032\024.services.UrlRequest\0220\n\016unregis" +
+      "terUser\022\016.services.User\032\016.services.Void\022" +
+      "6\n\014registerUser\022\026.services.RegisterUser\032" +
+      "\016.services.VoidB,\n org.prot.controller.s" +
+      "ervices.genB\010Services"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -6779,7 +6817,7 @@ public final class Services {
           internal_static_services_Boolean_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_services_Boolean_descriptor,
-              new java.lang.String[] { },
+              new java.lang.String[] { "Value", },
               org.prot.controller.services.gen.Services.Boolean.class,
               org.prot.controller.services.gen.Services.Boolean.Builder.class);
           internal_static_services_String_descriptor =
