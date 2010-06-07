@@ -31,7 +31,6 @@ public class Main {
 		// Start the RMI-Services
 		factory.getBean("DeployServiceExporter");
 		factory.getBean("DbServiceExporter");
-		factory.getBean("LogServiceExporter");
 
 		// Start Management
 		factory.getBean("UdpListener");
