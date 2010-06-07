@@ -30,6 +30,7 @@ message Boolean {
 }
 
 message String {
+	required string value = 1;
 }
 
 message RegisterDeployment {

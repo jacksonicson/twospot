@@ -29,14 +29,13 @@ public class Main {
 		factory.getBean("SynchronizationService");
 
 		// Start the RMI-Services
-		factory.getBean("DeployServiceExporter");
 		factory.getBean("DbServiceExporter");
 
 		// Start Management
 		factory.getBean("UdpListener");
 
 		// Start Services
-		new RpcServer();
+		factory.getBean("rpc");
 
 		Controller controller = (Controller) factory.getBean("Controller");
 		controller.start();

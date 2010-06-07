@@ -1645,15 +1645,26 @@ public final class Services {
       return org.prot.controller.services.gen.Services.internal_static_services_String_fieldAccessorTable;
     }
     
+    // required string value = 1;
+    public static final int VALUE_FIELD_NUMBER = 1;
+    private boolean hasValue;
+    private java.lang.String value_ = "";
+    public boolean hasValue() { return hasValue; }
+    public java.lang.String getValue() { return value_; }
+    
     private void initFields() {
     }
     public final boolean isInitialized() {
+      if (!hasValue) return false;
       return true;
     }
     
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
+      if (hasValue()) {
+        output.writeString(1, getValue());
+      }
       getUnknownFields().writeTo(output);
     }
     
@@ -1663,6 +1674,10 @@ public final class Services {
       if (size != -1) return size;
     
       size = 0;
+      if (hasValue()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeStringSize(1, getValue());
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
       return size;
@@ -1821,6 +1836,9 @@ public final class Services {
       
       public Builder mergeFrom(org.prot.controller.services.gen.Services.String other) {
         if (other == org.prot.controller.services.gen.Services.String.getDefaultInstance()) return this;
+        if (other.hasValue()) {
+          setValue(other.getValue());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -1846,10 +1864,35 @@ public final class Services {
               }
               break;
             }
+            case 10: {
+              setValue(input.readString());
+              break;
+            }
           }
         }
       }
       
+      
+      // required string value = 1;
+      public boolean hasValue() {
+        return result.hasValue();
+      }
+      public java.lang.String getValue() {
+        return result.getValue();
+      }
+      public Builder setValue(java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  result.hasValue = true;
+        result.value_ = value;
+        return this;
+      }
+      public Builder clearValue() {
+        result.hasValue = false;
+        result.value_ = getDefaultInstance().getValue();
+        return this;
+      }
       
       // @@protoc_insertion_point(builder_scope:services.String)
     }
@@ -2338,6 +2381,9 @@ public final class Services {
       if (!hasToken) return false;
       if (!hasAppId) return false;
       if (!hasVersion) return false;
+      if (hasUploadToken()) {
+        if (!getUploadToken().isInitialized()) return false;
+      }
       return true;
     }
     
@@ -6656,39 +6702,40 @@ public final class Services {
       "username\030\003 \002(\t\022\017\n\007session\030\004 \002(\t\"C\n\nUrlRe" +
       "quest\022\r\n\005okUrl\030\001 \002(\t\022\021\n\tfailedUrl\030\002 \002(\t\022" +
       "\023\n\013redirectUrl\030\003 \001(\t\"\006\n\004Void\"\t\n\007Boolean\"" +
-      "\010\n\006String\"S\n\022RegisterDeployment\022\r\n\005token" +
-      "\030\001 \002(\t\022\r\n\005appId\030\002 \002(\t\022\017\n\007version\030\003 \002(\t\022\016" +
-      "\n\006status\030\004 \001(\010\"j\n\022AnnounceDeployment\022\r\n\005" +
-      "token\030\001 \002(\t\022\r\n\005appId\030\002 \002(\t\022\017\n\007version\030\003 ",
-      "\002(\t\022%\n\013uploadToken\030\004 \001(\0132\020.services.Stri" +
-      "ng\"<\n\013AppDeployed\022\r\n\005token\030\001 \002(\t\022\r\n\005appI" +
-      "d\030\002 \002(\t\022\017\n\007version\030\003 \002(\t\"M\n\nLogMessage\022\r" +
-      "\n\005token\030\001 \002(\t\022\r\n\005appid\030\002 \002(\t\022\017\n\007message\030" +
-      "\003 \002(\t\022\020\n\010severity\030\004 \002(\005\">\n\014ListMessages\022" +
-      "\r\n\005token\030\001 \002(\t\022\r\n\005appId\030\002 \002(\t\022\020\n\010severit" +
-      "y\030\003 \002(\005\"5\n\013MessageList\022&\n\010messages\030\001 \003(\013" +
-      "2\024.services.LogMessage\"\037\n\tTableList\022\022\n\nt" +
-      "ableNames\030\001 \003(\t\"\036\n\tTableData\022\021\n\ttableDat" +
-      "a\030\001 \003(\014\"8\n\nFetchTable\022\r\n\005token\030\001 \002(\t\022\r\n\005",
-      "appId\030\002 \002(\t\022\014\n\004kind\030\003 \002(\t2x\n\nLogService\022" +
-      "+\n\003log\022\024.services.LogMessage\032\016.services." +
-      "Void\022=\n\014listMessages\022\026.services.ListMess" +
-      "ages\032\025.services.MessageList2~\n\tDbService" +
-      "\0226\n\tgetTables\022\024.services.FetchTable\032\023.se" +
-      "rvices.TableList\0229\n\014getTableData\022\024.servi" +
-      "ces.FetchTable\032\023.services.TableData2\304\001\n\r" +
-      "DeployService\022;\n\010register\022\034.services.Reg" +
-      "isterDeployment\032\021.services.Boolean\022@\n\016an" +
-      "nounceDeploy\022\034.services.AnnounceDeployme",
-      "nt\032\020.services.String\0224\n\013appDeployed\022\025.se" +
-      "rvices.AppDeployed\032\016.services.Void2\344\001\n\013U" +
-      "serService\0220\n\016getCurrentUser\022\016.services." +
-      "User\032\016.services.User\0229\n\013getLoginUrl\022\024.se" +
-      "rvices.UrlRequest\032\024.services.UrlRequest\022" +
-      "0\n\016unregisterUser\022\016.services.User\032\016.serv" +
-      "ices.Void\0226\n\014registerUser\022\026.services.Reg" +
-      "isterUser\032\016.services.VoidB,\n org.prot.co" +
-      "ntroller.services.genB\010Services"
+      "\027\n\006String\022\r\n\005value\030\001 \002(\t\"S\n\022RegisterDepl" +
+      "oyment\022\r\n\005token\030\001 \002(\t\022\r\n\005appId\030\002 \002(\t\022\017\n\007" +
+      "version\030\003 \002(\t\022\016\n\006status\030\004 \001(\010\"j\n\022Announc" +
+      "eDeployment\022\r\n\005token\030\001 \002(\t\022\r\n\005appId\030\002 \002(",
+      "\t\022\017\n\007version\030\003 \002(\t\022%\n\013uploadToken\030\004 \001(\0132" +
+      "\020.services.String\"<\n\013AppDeployed\022\r\n\005toke" +
+      "n\030\001 \002(\t\022\r\n\005appId\030\002 \002(\t\022\017\n\007version\030\003 \002(\t\"" +
+      "M\n\nLogMessage\022\r\n\005token\030\001 \002(\t\022\r\n\005appid\030\002 " +
+      "\002(\t\022\017\n\007message\030\003 \002(\t\022\020\n\010severity\030\004 \002(\005\">" +
+      "\n\014ListMessages\022\r\n\005token\030\001 \002(\t\022\r\n\005appId\030\002" +
+      " \002(\t\022\020\n\010severity\030\003 \002(\005\"5\n\013MessageList\022&\n" +
+      "\010messages\030\001 \003(\0132\024.services.LogMessage\"\037\n" +
+      "\tTableList\022\022\n\ntableNames\030\001 \003(\t\"\036\n\tTableD" +
+      "ata\022\021\n\ttableData\030\001 \003(\014\"8\n\nFetchTable\022\r\n\005",
+      "token\030\001 \002(\t\022\r\n\005appId\030\002 \002(\t\022\014\n\004kind\030\003 \002(\t" +
+      "2x\n\nLogService\022+\n\003log\022\024.services.LogMess" +
+      "age\032\016.services.Void\022=\n\014listMessages\022\026.se" +
+      "rvices.ListMessages\032\025.services.MessageLi" +
+      "st2~\n\tDbService\0226\n\tgetTables\022\024.services." +
+      "FetchTable\032\023.services.TableList\0229\n\014getTa" +
+      "bleData\022\024.services.FetchTable\032\023.services" +
+      ".TableData2\304\001\n\rDeployService\022;\n\010register" +
+      "\022\034.services.RegisterDeployment\032\021.service" +
+      "s.Boolean\022@\n\016announceDeploy\022\034.services.A",
+      "nnounceDeployment\032\020.services.String\0224\n\013a" +
+      "ppDeployed\022\025.services.AppDeployed\032\016.serv" +
+      "ices.Void2\344\001\n\013UserService\0220\n\016getCurrentU" +
+      "ser\022\016.services.User\032\016.services.User\0229\n\013g" +
+      "etLoginUrl\022\024.services.UrlRequest\032\024.servi" +
+      "ces.UrlRequest\0220\n\016unregisterUser\022\016.servi" +
+      "ces.User\032\016.services.Void\0226\n\014registerUser" +
+      "\022\026.services.RegisterUser\032\016.services.Void" +
+      "B,\n org.prot.controller.services.genB\010Se" +
+      "rvices"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -6740,7 +6787,7 @@ public final class Services {
           internal_static_services_String_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_services_String_descriptor,
-              new java.lang.String[] { },
+              new java.lang.String[] { "Value", },
               org.prot.controller.services.gen.Services.String.class,
               org.prot.controller.services.gen.Services.String.Builder.class);
           internal_static_services_RegisterDeployment_descriptor =

@@ -12,36 +12,34 @@ import java.net.URLConnection;
 import org.apache.log4j.Logger;
 import org.prot.controller.app.TokenChecker;
 import org.prot.controller.config.Configuration;
+import org.prot.controller.services.gen.Services.AnnounceDeployment;
+import org.prot.controller.services.gen.Services.AppDeployed;
+import org.prot.controller.services.gen.Services.Boolean;
+import org.prot.controller.services.gen.Services.DeployService;
+import org.prot.controller.services.gen.Services.RegisterDeployment;
+import org.prot.controller.services.gen.Services.Void;
 import org.prot.controller.zookeeper.SynchronizationService;
 
-public class DeployServiceImpl implements DeployService
-{
+import com.google.protobuf.RpcCallback;
+import com.google.protobuf.RpcController;
+
+public class DeployServiceImpl extends DeployService {
 	private static final Logger logger = Logger.getLogger(DeployServiceImpl.class);
 
 	private TokenChecker tokenChecker;
 
 	private SynchronizationService managementService;
 
+	
 	@Override
-	public boolean register(String token, String appId, String version)
-	{
+	public void announceDeploy(RpcController controller, AnnounceDeployment request,
+			RpcCallback<org.prot.controller.services.gen.Services.String> done) {
 		// Check the token
-		if (tokenChecker.checkToken(token) == false)
-			return false;
-
-		return managementService.registerApp(appId);
-	}
-
-	@Override
-	public String announceDeploy(String token, String appId, String version)
-	{
-		// Check the token
-		if (tokenChecker.checkToken(token) == false)
-			return null;
+		// if (tokenChecker.checkToken(token) == false)
+		// return null;
 
 		logger.debug("Announcing deployment");
-		try
-		{
+		try {
 			Configuration config = Configuration.getConfiguration();
 			String fileServerUrl = config.getFileServerURL() + "/announce";
 			logger.debug("Using FileServer URL: " + fileServerUrl);
@@ -57,37 +55,44 @@ public class DeployServiceImpl implements DeployService
 
 			logger.debug("Deployment token: " + deployToken);
 
-			return deployToken;
+			org.prot.controller.services.gen.Services.String.Builder builder = org.prot.controller.services.gen.Services.String
+					.newBuilder();
+			builder.setValue(deployToken);
+			done.run(builder.build());
 
-		} catch (MalformedURLException e)
-		{
+		} catch (MalformedURLException e) {
 			logger.error("Could not aquire an upload token", e);
-			return null;
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			logger.error("Connection with the FileServer failed", e);
-			return null;
 		}
 	}
 
 	@Override
-	public void appDeployed(String token, String appId, String version)
-	{
+	public void appDeployed(RpcController controller, AppDeployed request, RpcCallback<Void> done) {
 		// Check the token
-		if (tokenChecker.checkToken(token) == false)
-			return;
+		// if (tokenChecker.checkToken(token) == false)
+		// return;
 
 		// Update ZooKeeper data
-		managementService.deployApp(appId, version);
+		managementService.deployApp(request.getAppId(), request.getVersion());
 	}
 
-	public void setTokenChecker(TokenChecker tokenChecker)
-	{
+	@Override
+	public void register(RpcController controller, RegisterDeployment request, RpcCallback<Boolean> done) {
+		// Check the token
+		// if (tokenChecker.checkToken(token) == false)
+		// return false;
+
+		boolean success = managementService.registerApp(request.getAppId());
+		Boolean.Builder builder = Boolean.newBuilder();
+		done.run(builder.build());
+	}
+
+	public void setTokenChecker(TokenChecker tokenChecker) {
 		this.tokenChecker = tokenChecker;
 	}
 
-	public void setManagementService(SynchronizationService managementService)
-	{
+	public void setManagementService(SynchronizationService managementService) {
 		this.managementService = managementService;
 	}
 }
