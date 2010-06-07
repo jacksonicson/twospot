@@ -15,6 +15,7 @@ public final class PlatformServiceFactory {
 	}
 
 	private static PlatformService createPlatformService() {
+		return new PlatformService();
 		// DeployService deployService = AccessController.doPrivileged(new
 		// PrivilegedAction<DeployService>()
 		// {
@@ -39,11 +40,10 @@ public final class PlatformServiceFactory {
 		// });
 		//
 		// return new PlatformService(deployService);
-		return createMockPlatformService();
 	}
 
 	private static PlatformService createMockPlatformService() {
-		return new PlatformService(new MockDeployService());
+		return null;
 	}
 
 	public static PlatformService getPlatformService() {
