@@ -7,6 +7,7 @@ import javax.servlet.http.Cookie;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.HttpConnection;
+import org.prot.app.services.ChannelRegistry;
 import org.prot.appserver.config.Configuration;
 import org.prot.controller.services.gen.Services.RegisterUser;
 import org.prot.controller.services.gen.Services.UrlRequest;
@@ -14,6 +15,8 @@ import org.prot.controller.services.gen.Services.User;
 import org.prot.util.Cookies;
 
 import com.google.protobuf.RpcCallback;
+import com.google.protobuf.RpcChannel;
+import com.google.protobuf.RpcController;
 import com.googlecode.protobuf.socketrpc.SocketRpcChannel;
 import com.googlecode.protobuf.socketrpc.SocketRpcController;
 
@@ -52,15 +55,16 @@ public final class UserServiceImpl implements UserService {
 
 			@Override
 			public String run() {
-				SocketRpcChannel socketRpcChannel = new SocketRpcChannel("localhost", 6548);
-				SocketRpcController rpcController = socketRpcChannel.newRpcController();
+				ChannelRegistry registry = ChannelRegistry.getInstance();
+				RpcChannel channel = registry.getChannel();
+				RpcController controller = registry.getController(channel);
 
 				org.prot.controller.services.gen.Services.UserService stub = org.prot.controller.services.gen.Services.UserService
-						.newStub(socketRpcChannel);
+						.newStub(channel);
 
 				User.Builder builder = User.newBuilder();
 				builder.setUid(uid);
-				stub.getCurrentUser(rpcController, builder.build(), new RpcCallback<User>() {
+				stub.getCurrentUser(controller, builder.build(), new RpcCallback<User>() {
 					@Override
 					public void run(User ret) {
 						returnValue = ret.getUsername();
@@ -71,7 +75,7 @@ public final class UserServiceImpl implements UserService {
 			}
 		});
 
-		return (String) user;
+		return user;
 	}
 
 	public String getLoginUrl(final String redirectUrl, final String cancelUrl) {
@@ -81,16 +85,17 @@ public final class UserServiceImpl implements UserService {
 
 			@Override
 			public String run() {
-				SocketRpcChannel socketRpcChannel = new SocketRpcChannel("localhost", 6548);
-				SocketRpcController rpcController = socketRpcChannel.newRpcController();
+				ChannelRegistry registry = ChannelRegistry.getInstance();
+				RpcChannel channel = registry.getChannel();
+				RpcController controller = registry.getController(channel);
 
 				org.prot.controller.services.gen.Services.UserService stub = org.prot.controller.services.gen.Services.UserService
-						.newStub(socketRpcChannel);
+						.newStub(channel);
 
 				UrlRequest.Builder builder = UrlRequest.newBuilder();
 				builder.setOkUrl(redirectUrl);
 				builder.setFailedUrl(cancelUrl);
-				stub.getLoginUrl(rpcController, builder.build(), new RpcCallback<UrlRequest>() {
+				stub.getLoginUrl(controller, builder.build(), new RpcCallback<UrlRequest>() {
 					@Override
 					public void run(UrlRequest ret) {
 						retUrl = ret.getRedirectUrl();
@@ -111,11 +116,12 @@ public final class UserServiceImpl implements UserService {
 		AccessController.doPrivileged(new PrivilegedAction<String>() {
 			@Override
 			public String run() {
-				SocketRpcChannel socketRpcChannel = new SocketRpcChannel("localhost", 6548);
-				SocketRpcController rpcController = socketRpcChannel.newRpcController();
+				ChannelRegistry registry = ChannelRegistry.getInstance();
+				RpcChannel channel = registry.getChannel();
+				RpcController controller = registry.getController(channel);
 
 				org.prot.controller.services.gen.Services.UserService stub = org.prot.controller.services.gen.Services.UserService
-						.newStub(socketRpcChannel);
+						.newStub(channel);
 
 				RegisterUser.Builder builder = RegisterUser.newBuilder();
 				builder.setToken(token);
@@ -123,7 +129,7 @@ public final class UserServiceImpl implements UserService {
 				builder.setUsername(username);
 				builder.setSession(uid);
 
-				stub.registerUser(rpcController, builder.build(), null);
+				stub.registerUser(controller, builder.build(), null);
 
 				return null;
 			}

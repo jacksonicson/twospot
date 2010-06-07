@@ -3,16 +3,16 @@ package org.prot.app.services.platform;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
+import org.prot.app.services.ChannelRegistry;
 import org.prot.app.services.PrivilegedServiceException;
 import org.prot.appserver.config.Configuration;
 import org.prot.controller.services.gen.Services.AnnounceDeployment;
 import org.prot.controller.services.gen.Services.AppDeployed;
 import org.prot.controller.services.gen.Services.RegisterDeployment;
-import org.prot.controller.services.gen.Services.Void;
 
 import com.google.protobuf.RpcCallback;
-import com.googlecode.protobuf.socketrpc.SocketRpcChannel;
-import com.googlecode.protobuf.socketrpc.SocketRpcController;
+import com.google.protobuf.RpcChannel;
+import com.google.protobuf.RpcController;
 
 public final class PlatformService {
 	public String announceApp(final String appId, final String version) {
@@ -25,17 +25,18 @@ public final class PlatformService {
 
 			@Override
 			public String run() {
-				SocketRpcChannel socketRpcChannel = new SocketRpcChannel("localhost", 6548);
-				SocketRpcController rpcController = socketRpcChannel.newRpcController();
+				ChannelRegistry registry = ChannelRegistry.getInstance();
+				RpcChannel channel = registry.getChannel();
+				RpcController controller = registry.getController(channel);
 
 				org.prot.controller.services.gen.Services.DeployService stub = org.prot.controller.services.gen.Services.DeployService
-						.newStub(socketRpcChannel);
+						.newStub(channel);
 
 				AnnounceDeployment.Builder builder = AnnounceDeployment.newBuilder();
 				builder.setAppId(appId);
 				builder.setToken(token);
 
-				stub.announceDeploy(rpcController, builder.build(),
+				stub.announceDeploy(controller, builder.build(),
 						new RpcCallback<org.prot.controller.services.gen.Services.String>() {
 							@Override
 							public void run(org.prot.controller.services.gen.Services.String ret) {
@@ -54,27 +55,21 @@ public final class PlatformService {
 			throw new PrivilegedServiceException();
 
 		AccessController.doPrivileged(new PrivilegedAction<String>() {
-
 			@Override
 			public String run() {
-				SocketRpcChannel socketRpcChannel = new SocketRpcChannel("localhost", 6548);
-				SocketRpcController rpcController = socketRpcChannel.newRpcController();
+				ChannelRegistry registry = ChannelRegistry.getInstance();
+				RpcChannel channel = registry.getChannel();
+				RpcController controller = registry.getController(channel);
 
 				org.prot.controller.services.gen.Services.DeployService stub = org.prot.controller.services.gen.Services.DeployService
-						.newStub(socketRpcChannel);
+						.newStub(channel);
 
 				AppDeployed.Builder builder = AppDeployed.newBuilder();
 				builder.setAppId(appId);
 				builder.setToken(token);
 				builder.setVersion(version);
 
-				stub.appDeployed(rpcController, builder.build(), new RpcCallback<Void>() {
-					@Override
-					public void run(Void arg0) {
-
-					}
-				});
-
+				stub.appDeployed(controller, builder.build(), null);
 				return null;
 			}
 		});
@@ -91,22 +86,23 @@ public final class PlatformService {
 
 			@Override
 			public Boolean run() {
-				SocketRpcChannel socketRpcChannel = new SocketRpcChannel("localhost", 6548);
-				SocketRpcController rpcController = socketRpcChannel.newRpcController();
+				ChannelRegistry registry = ChannelRegistry.getInstance();
+				RpcChannel channel = registry.getChannel();
+				RpcController controller = registry.getController(channel);
 
 				org.prot.controller.services.gen.Services.DeployService stub = org.prot.controller.services.gen.Services.DeployService
-						.newStub(socketRpcChannel);
+						.newStub(channel);
 
 				RegisterDeployment.Builder builder = RegisterDeployment.newBuilder();
 				builder.setAppId(appId);
 				builder.setVersion("null");
 				builder.setToken(token);
 
-				stub.register(rpcController, builder.build(),
+				stub.register(controller, builder.build(),
 						new RpcCallback<org.prot.controller.services.gen.Services.Boolean>() {
 							@Override
 							public void run(org.prot.controller.services.gen.Services.Boolean success) {
-								result = true;
+								result = success.getValue();
 							}
 						});
 

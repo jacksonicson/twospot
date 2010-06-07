@@ -19,38 +19,7 @@ public class UserServiceFactory {
 	}
 
 	private static UserService createUserService() {
-
 		return new UserServiceImpl(); 
-		
-		
-		// UserService userService = AccessController.doPrivileged(new
-		// PrivilegedAction<UserService>()
-		// {
-		// public UserService run()
-		// {
-		// RmiProxyFactoryBean proxyFactory = new RmiProxyFactoryBean();
-		// proxyFactory.setServiceInterface(org.prot.controller.services.user.UserService.class);
-		// proxyFactory.setServiceUrl("rmi://" + CONTROLLER_ADDRESS + ":" +
-		// getRmiPort()
-		// + "/appserver/UserService");
-		// proxyFactory.afterPropertiesSet();
-		//
-		// Object object = proxyFactory.getObject();
-		// if (object == null)
-		// {
-		// logger.error("Could not connect with the UserService");
-		// throw new NullPointerException();
-		// }
-		//
-		// UserServiceImpl userService = new UserServiceImpl(
-		// (org.prot.controller.services.user.UserService) object);
-		//
-		// return userService;
-		// }
-		//
-		// });
-		//
-		// return userService;
 	}
 
 	private static UserService createMockUserService() {

@@ -16,30 +16,6 @@ public final class PlatformServiceFactory {
 
 	private static PlatformService createPlatformService() {
 		return new PlatformService();
-		// DeployService deployService = AccessController.doPrivileged(new
-		// PrivilegedAction<DeployService>()
-		// {
-		// public DeployService run()
-		// {
-		// RmiProxyFactoryBean proxyFactory = new RmiProxyFactoryBean();
-		// proxyFactory.setServiceInterface(DeployService.class);
-		// proxyFactory.setServiceUrl("rmi://" + CONTROLLER_ADDRESS + ":" +
-		// getRmiPort()
-		// + "/appserver/DeployService");
-		// proxyFactory.afterPropertiesSet();
-		//
-		// Object object = proxyFactory.getObject();
-		// if (object == null)
-		// {
-		// logger.error("Could not connect with the DeployService");
-		// throw new NullPointerException();
-		// }
-		//
-		// return (DeployService) object;
-		// }
-		// });
-		//
-		// return new PlatformService(deployService);
 	}
 
 	private static PlatformService createMockPlatformService() {

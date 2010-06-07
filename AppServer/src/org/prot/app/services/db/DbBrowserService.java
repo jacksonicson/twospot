@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.prot.app.services.ChannelRegistry;
 import org.prot.app.services.user.UserService;
 import org.prot.app.services.user.UserServiceFactory;
 import org.prot.appserver.config.Configuration;
@@ -17,8 +18,8 @@ import org.prot.jdo.storage.messages.EntityMessage;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.RpcCallback;
-import com.googlecode.protobuf.socketrpc.SocketRpcChannel;
-import com.googlecode.protobuf.socketrpc.SocketRpcController;
+import com.google.protobuf.RpcChannel;
+import com.google.protobuf.RpcController;
 
 public final class DbBrowserService {
 	private static final Logger logger = Logger.getLogger(DbBrowserService.class);
@@ -33,6 +34,7 @@ public final class DbBrowserService {
 	}
 
 	public List<String> getTables(final String appId) {
+		final String token = Configuration.getInstance().getAuthenticationToken();
 
 		String user = getUserService().getCurrentUser();
 		if (user == null) {
@@ -40,64 +42,65 @@ public final class DbBrowserService {
 			return null;
 		}
 
-		final String token = Configuration.getInstance().getAuthenticationToken();
+		List<String> tableNames = AccessController.doPrivileged(new PrivilegedAction<List<String>>() {
 
-		return AccessController.doPrivileged(new PrivilegedAction<List<String>>() {
-
-			List<String> names;
+			private List<String> tableNames;
 
 			@Override
 			public List<String> run() {
-				SocketRpcChannel socketRpcChannel = new SocketRpcChannel("localhost", 6548);
-				SocketRpcController rpcController = socketRpcChannel.newRpcController();
+				ChannelRegistry registry = ChannelRegistry.getInstance();
+				RpcChannel channel = registry.getChannel();
+				RpcController controller = registry.getController(channel);
 
 				org.prot.controller.services.gen.Services.DbService stub = org.prot.controller.services.gen.Services.DbService
-						.newStub(socketRpcChannel);
+						.newStub(channel);
 
 				FetchTable.Builder builder = FetchTable.newBuilder();
 				builder.setAppId(appId);
 				builder.setToken(token);
-				builder.setKind("null");
 
-				stub.getTables(rpcController, builder.build(), new RpcCallback<TableList>() {
+				stub.getTables(controller, builder.build(), new RpcCallback<TableList>() {
 					@Override
 					public void run(TableList result) {
-						names = result.getTableNamesList();
+						tableNames = result.getTableNamesList();
 					}
 				});
 
-				return names;
+				return tableNames;
 			}
 		});
+
+		return tableNames;
 	}
 
 	public List<EntityMessage> getTableData(final String appId, final String kind) {
+		final String token = Configuration.getInstance().getAuthenticationToken();
+
 		String user = getUserService().getCurrentUser();
 		if (user == null) {
 			logger.debug("User msut be logged in to browse tables");
 			return null;
 		}
 
-		final String token = Configuration.getInstance().getAuthenticationToken();
-
 		List<byte[]> result = AccessController.doPrivileged(new PrivilegedAction<List<byte[]>>() {
 
-			List<byte[]> data;
+			private List<byte[]> data;
 
 			@Override
 			public List<byte[]> run() {
-				SocketRpcChannel socketRpcChannel = new SocketRpcChannel("localhost", 6548);
-				SocketRpcController rpcController = socketRpcChannel.newRpcController();
+				ChannelRegistry registry = ChannelRegistry.getInstance();
+				RpcChannel channel = registry.getChannel();
+				RpcController controller = registry.getController(channel);
 
 				org.prot.controller.services.gen.Services.DbService stub = org.prot.controller.services.gen.Services.DbService
-						.newStub(socketRpcChannel);
+						.newStub(channel);
 
 				FetchTable.Builder builder = FetchTable.newBuilder();
 				builder.setAppId(appId);
 				builder.setKind(kind);
 				builder.setToken(token);
 
-				stub.getTableData(rpcController, builder.build(), new RpcCallback<TableData>() {
+				stub.getTableData(controller, builder.build(), new RpcCallback<TableData>() {
 
 					@Override
 					public void run(TableData arg0) {

@@ -16,35 +16,6 @@ public class LogServiceFactory {
 
 	private static LogService createLogService() {
 		return new LogServiceImpl();
-
-		// LogService logService = AccessController.doPrivileged(new
-		// PrivilegedAction<LogService>()
-		// {
-		// public LogService run()
-		// {
-		// RmiProxyFactoryBean proxyFactory = new RmiProxyFactoryBean();
-		// proxyFactory.setServiceInterface(org.prot.controller.services.log.LogService.class);
-		// proxyFactory.setServiceUrl("rmi://" + CONTROLLER_ADDRESS + ":" +
-		// getRmiPort()
-		// + "/appserver/LogService");
-		// proxyFactory.afterPropertiesSet();
-		//
-		// Object object = proxyFactory.getObject();
-		// if (object == null)
-		// {
-		// logger.error("Could not connect with the DbServices");
-		// throw new NullPointerException();
-		// }
-		//
-		// LogService service = new
-		// LogServiceImpl((org.prot.controller.services.log.LogService) object);
-		//
-		// // Object o = userService;
-		// return service;
-		// }
-		// });
-		//
-		// return logService;
 	}
 
 	private static LogService createMockLogService() {
