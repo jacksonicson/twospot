@@ -29,7 +29,6 @@ public class Main {
 		factory.getBean("SynchronizationService");
 
 		// Start the RMI-Services
-		factory.getBean("DbServiceExporter");
 
 		// Start Management
 		factory.getBean("UdpListener");

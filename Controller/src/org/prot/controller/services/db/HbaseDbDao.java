@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 import org.prot.storage.Storage;
 import org.prot.storage.StorageImpl;
 
-class HbaseDbDao implements DbDao {
+public class HbaseDbDao implements DbDao {
 	private static final Logger logger = Logger.getLogger(HbaseDbDao.class);
 
 	@Override
