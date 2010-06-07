@@ -46,7 +46,7 @@ public class DbBrowserServiceFactory {
 		//
 		// return browserService;
 
-		return createMockDbBrowserService();
+		return new DbBrowserService();
 	}
 
 	private static DbBrowserService createMockDbBrowserService() {
