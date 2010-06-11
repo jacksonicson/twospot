@@ -18,9 +18,10 @@
 		<delete dir="${build}" />
 	</target>
 
-	<!-- ATTENTION: Requires the Google ProtoBuf-Compiler (http://code.google.com/p/protobuf/) -->  
+	<!-- ATTENTION: Requires the Google ProtoBuf-Compiler (http://code.google.com/p/protobuf/) -->
+	<!-- Binary is located in the ProtoBuf project -->
 	<target name="protoc">
-		<exec executable="protoc">
+		<exec executable="../ProtoBuf/protoc">
 			<arg value="-I=${src}" />
 			<arg value="--java_out=${src}" />
 			<arg value="${src}/management.proto" />
