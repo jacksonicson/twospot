@@ -50,13 +50,6 @@
 <pathelement location="../Libs/lib/jetty-7.0.1/jetty-websocket-7.0.1.v20091125.jar" />
 <pathelement location="../Libs/lib/jetty-7.0.1/jetty-xml-7.0.1.v20091125.jar" />
 <pathelement location="../Libs/lib/jetty-7.0.1/servlet-api-2.5.jar" />
-<pathelement location="../Libs/lib/sigar/libsigar-amd64-linux.so" />
-<pathelement location="../Libs/lib/sigar/libsigar-ia64-linux.so" />
-<pathelement location="../Libs/lib/sigar/libsigar-x86-linux.so" />
-<pathelement location="../Libs/lib/sigar/sigar-amd64-winnt.dll" />
-<pathelement location="../Libs/lib/sigar/sigar-x86-winnt.dll" />
-<pathelement location="../Libs/lib/sigar/sigar-x86-winnt.lib" />
-<pathelement location="../Libs/lib/sigar/sigar.jar" />
 <pathelement location="../Libs/lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar" />
 <pathelement location="../Libs/lib/snakeyaml-1.5/snakeyaml-1.5.jar" />
 <pathelement location="../Libs/lib/snakeyaml-1.5/snakeyaml-1.5-sources.jar" />
@@ -113,13 +106,6 @@
 <include name="Libs/lib/jetty-7.0.1/jetty-websocket-7.0.1.v20091125.jar" />
 <include name="Libs/lib/jetty-7.0.1/jetty-xml-7.0.1.v20091125.jar" />
 <include name="Libs/lib/jetty-7.0.1/servlet-api-2.5.jar" />
-<include name="Libs/lib/sigar/libsigar-amd64-linux.so" />
-<include name="Libs/lib/sigar/libsigar-ia64-linux.so" />
-<include name="Libs/lib/sigar/libsigar-x86-linux.so" />
-<include name="Libs/lib/sigar/sigar-amd64-winnt.dll" />
-<include name="Libs/lib/sigar/sigar-x86-winnt.dll" />
-<include name="Libs/lib/sigar/sigar-x86-winnt.lib" />
-<include name="Libs/lib/sigar/sigar.jar" />
 <include name="Libs/lib/datanucleus/datanucleus-enhancer-2.0.0-m3.jar" />
 <include name="Libs/lib/snakeyaml-1.5/snakeyaml-1.5.jar" />
 <include name="Libs/lib/snakeyaml-1.5/snakeyaml-1.5-sources.jar" />
